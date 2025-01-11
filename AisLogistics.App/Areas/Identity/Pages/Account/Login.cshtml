@@ -1,0 +1,255 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Вход в систему";
+}
+
+
+
+<style>
+    .in{
+        border-radius: 4px;
+        background: linear-gradient(90deg, #5a8dee 50%, transparent 50%);
+        opacity: 100%;
+    }
+    
+    input:-webkit-autofill, input:-webkit-autofill:focus {
+        background: #F2F2F2  !important;
+        color: #BEBEBE !important;
+    }
+    
+    input[type="password"],input[type="text"] {
+        border-color: #F2F2F2 !important;
+        background: #F2F2F2 !important;
+        border-radius: 4px !important;
+        color:#BEBEBE;
+    }
+
+    input[type="password"]:hover, input[type="text"]:hover {
+            background: #F2F2F2 !important;
+    }
+
+    .light-style .select2-container--default .select2-selection{
+        border-color: #F2F2F2 !important;
+        background: #F2F2F2 !important;
+        border-radius: 4px !important;
+    }
+   
+    .input-group-text {
+        border-color: #F2F2F2 !important;
+        background: #F2F2F2 !important;
+        color:#BEBEBE;
+    }
+
+    .form-check-label {
+        letter-spacing: 0.035em !important;
+        color: #E0E0E0 !important;
+        font-style: normal !important;
+        font-weight: 400 !important;
+        font-size: 14px !important;
+    }
+
+    input[type="checkbox"]{
+        background: #E0E0E0;
+        border-radius: 2px !important;
+        width: 11px !important;
+        height: 11px !important;
+    }
+
+    input:-webkit-autofill, input:-webkit-autofill:focus {
+        transition: background-color 600000s 0s, color 600000s 0s;
+    }
+   
+    a small{
+        color: #077EFA;
+    }
+
+    input[type="password"].is-invalid {
+        border-top: 1px solid #ff5b5c !important;
+        border-bottom: 1px solid #ff5b5c !important;
+        border-radius: 0px !important;
+    }
+
+    input[type="text"].is-invalid {
+        border-top: 1px solid #ff5b5c !important;
+        border-right: 1px solid #ff5b5c !important;
+        border-bottom: 1px solid #ff5b5c !important;
+        border-radius: 0px !important;
+    }
+
+    .is-invalid + .input-group-text {
+        border-top: 1px solid #ff5b5c !important;
+        border-right: 1px solid #ff5b5c !important;
+        border-bottom: 1px solid #ff5b5c !important;
+        border-radius: 0px !important;
+    }
+    
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+</style>
+<!-- login -->
+<form id="formAuthentication" class="mb-3" method="POST" asp-route-returnUrl="@Model.ReturnUrl" novalidate="novalidate">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3">
+        <div class="h-100 w-100 ps-2 in">
+            <input asp-for="Input.Username" type="text" class="form-control" placeholder="Имя пользователя" required autofocus>
+        </div>
+    </div>
+    <div class="form-password-toggle">
+        <div class="h-100 w-100 ps-2 in">
+           <div class="input-group input-group-merge">
+                <input asp-for="Input.Password" type="password"  class="form-control" placeholder="Пароль" aria-describedby="password" required/>
+                <span id="password-control" class="input-group-text cursor-pointer"><i class="bi bi-eye"></i></span>
+           </div>
+        </div>
+        <div class="d-flex justify-content-between">
+             <div class="mt-3 mb-3">
+            <input asp-for="Input.RememberMe" class="form-check-input check-margin-right mt-2" type="checkbox">
+            <label asp-for="Input.RememberMe" class="form-check-label mt-1">
+                Запомнить меня
+            </label>
+        
+    </div>
+    <a class="mt-3 mb-3" asp-page="./ForgotPassword">
+                <small>Забыли пароль?</small>
+            </a>
+        </div>
+    </div>
+    <div class="mb-3 d-none">
+        <div class="h-100 w-100 ps-2 in">
+        <select asp-for="Input.OfficeId" class="select2 w-100" data-style="btn-default">
+            <option value="">Не выбрано</option>
+        </select>
+        </div>
+    </div>
+   
+    <div class="pt-5">
+        <button class="btn btn-primary d-grid w-100" type="button" id="nextStep">Далее</button>
+        <button class="btn btn-primary w-100 d-none" type="submit">Войти</button>
+    </div>
+</form>
+<!-- /login -->
+@section Scripts
+    {
+    <script>
+        let $form = document.querySelector('#formAuthentication');
+        let FormValidationAuth = null;
+
+        $(function () {
+            $('#Input_OfficeId').select2({
+                placeholder:"Место Работы"
+            });
+
+            const authentication = {
+                fields: {
+                    username: $("#Input_Username"),
+                    password: $("#Input_Password"),
+                    tosp: $("#Input_OfficeId")
+                },
+                firstStep: () => {
+                    authentication.fields.username.prop('readonly', true);
+                    authentication.fields.password.prop('readonly', true);
+                    authentication.fields.tosp.closest('.d-none').removeClass('d-none');
+
+                },
+                init: () => {
+                    $.ajax({
+                        type: "GET",
+                        url: "/Identity/Account/Login?handler=Tosp",
+                        data: { username: authentication.fields.username.val() },
+                        contentType: 'application/x-www-form-urlencoded',
+                        dataType: "json",
+                        beforeSend: () => {
+                            $("#nextStep").prop('disabled', true);
+                            authentication.firstStep();
+                        },
+                        success: (data) => {
+                            $("#nextStep").siblings("button[type='submit']").removeClass("d-none");
+                            $("#nextStep").addClass("d-none");
+                            if (data.length === 0) {
+                                $("#formAuthentication").submit();
+                            }
+                            else if (data.length === 1) {
+                                $.each(data, function (key, value) {
+                                    authentication.fields.tosp
+                                        .append($("<option></option>")
+                                            .attr("value", value.id)
+                                            .attr("selected", "selected")
+                                            .text(value.text));
+                                });
+                            }
+                            else {
+                                $.each(data, function (key, value) {
+                                    authentication.fields.tosp
+                                        .append($("<option></option>")
+                                            .attr("value", value.id)
+                                            .prop("selected", value.selected)
+                                            .text(value.text));
+                                });
+                            }
+                        }
+                    });
+                }
+            };
+
+            $("#nextStep").on("click", function () {
+                var $this = $(this);
+                FormValidationAuth.validate()
+            });
+
+            $("button[type='submit']").on("click", function () {
+                var $this = $(this);
+                $this.prop('disabled', true);
+                $this.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Подождите...');
+                $("#formAuthentication").submit();
+            });
+
+            FormValidationAuth = FormValidation.formValidation($form, {
+                locale: 'ru_RU',
+                localization: FormValidation.locales.ru_RU,
+                fields: {
+                    'Input.Username': {
+                        validators: {
+                            notEmpty: {}
+                        }
+                    },
+                    'Input.Password': {
+                        validators: {
+                            notEmpty: {}
+                        }
+                    },
+
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus(),
+                    submitButton: new FormValidation.plugins.SubmitButton()
+                },
+                init: instance => {
+                    instance.on('plugins.message.placed', function (e) {
+                        //* Move the error message out of the `input-group` element
+                        if (e.element.parentElement.classList.contains('input-group')) {
+                            e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
+                        }
+                    });
+                }
+            }).on('core.form.valid', () => { authentication.init();});
+
+            $('#password-control').click(function() {
+                if ($('#Input_Password').attr('type') == 'password') {
+                    $(this).find('i').removeClass('bi-eye');
+                    $(this).find('i').addClass('bi-eye-slash');
+                    $('#Input_Password').attr('type', 'text');
+                } else {
+                    $(this).find('i').removeClass('bi-eye-slash');
+                    $(this).find('i').addClass('bi-eye');
+                    $('#Input_Password').attr('type', 'password');
+                }
+            });
+        });
+    </script>
+}

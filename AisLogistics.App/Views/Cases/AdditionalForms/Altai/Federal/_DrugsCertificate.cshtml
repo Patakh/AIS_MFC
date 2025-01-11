@@ -1,0 +1,254 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.DrugsCertificateModel
+@{
+    IEnumerable<SelectListItem>? docList = Model.AppliedDocuments?.Select(i => new SelectListItem(i, i));
+    IEnumerable<SelectListItem>? errorList = Model.Errors?.Select(i => new SelectListItem(i, i));
+
+    IEnumerable<SelectListItem> customerTypeList = new List<SelectListItem>
+    {
+        new("лично", "1"),
+        new("по доверенности", "2")
+    };
+
+    IEnumerable<SelectListItem> applicationTypeList = new List<SelectListItem>
+    {
+        new("Получение справки", "1"),
+        new("Исправление опечаток", "2")
+    };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ApplicationType">Тип заявления</label>
+                    <select class="select2-nosearch" asp-items="@applicationTypeList" asp-for="ApplicationType">
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="CustomerType">Способ подачи заявления</label>
+                    <select class="select2-nosearch" asp-items="@customerTypeList" asp-for="CustomerType">
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3" id=fio style="display:none">
+                <div class="col-12">
+                    <label class="form-label" asp-for="CustomerFio">ФИО заявителя</label>
+                    <input type="text" asp-for="CustomerFio" class="form-control" placeholder="ФИО заявителя">
+                </div>
+            </div>
+            <div class="row mb-3" data-app-change style="display:none">
+                <div class="col-4">
+                    <label class="form-label" asp-for="ApplicationDate">Дата заявления</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="ApplicationDate" type="text"
+                               class="form-control pickdate" placeholder="Дата заявления">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="ApplicationNumber">Номер заявления</label>
+                    <input type="text" asp-for="ApplicationNumber" class="form-control" placeholder="Номер заявления">
+                </div>
+            </div>
+            <div class="row mb-3" data-app-change style="display:none">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Errors">Допущенные опечатки (ошибки)</label>
+                    <select class="select2" multiple="multiple" asp-items="@errorList" asp-for="Errors"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="AppliedDocuments">Приложенные документы</label>
+                    <select class="select2" multiple="multiple" asp-items="@docList" asp-for="AppliedDocuments"></select>
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Данные проверяемого лица</h6>
+            <div class="row mb-1">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Person.Fio">ФИО</label>
+                    <input type="text" asp-for="Person.Fio" class="form-control" placeholder="ФИО">
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Person.BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Person.BirthDate" type="text"
+                               class="form-control pickdate" placeholder="Дата рождения">
+                    </div>
+                </div>
+                <div class="col-8">
+                    <label class="form-label" asp-for="Person.BirthPlace">Место рождения</label>
+                    <input type="text" asp-for="Person.BirthPlace" class="form-control" placeholder="Место рождения">
+                </div>
+            </div>
+            <div class="row mb-1" id="address" style="display:none">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Person.Address">Адрес проживания</label>
+                    <input type="text" asp-for="Person.Address" class="form-control" placeholder="Адрес проживания">
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Документ, удостоверяющий личность</h6>
+            <div class="row mb-1">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Person.IdentityDoc.Series">Серия</label>
+                    <input type="text" class="form-control" placeholder="Серия" asp-for="Person.IdentityDoc.Series">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Person.IdentityDoc.Number">Номер</label>
+                    <input type="text" class="form-control" placeholder="Номер" asp-for="Person.IdentityDoc.Number">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Person.IdentityDoc.IssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Person.IdentityDoc.IssueDate" type="text"
+                               class="form-control pickdate" placeholder="Дата выдачи">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Person.IdentityDoc.Issuer">Кем выдан</label>
+                    <input type="text" class="form-control" placeholder="Кем выдан" asp-for="Person.IdentityDoc.Issuer">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function() {
+        additionalForm.find("select.select2-nosearch").each(function() {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"), для select модального окна
+                minimumResultsForSearch: Infinity
+            });
+        });
+
+        additionalForm.find("select.select2").each(function() {
+            $(this).select2({
+                //placeholder: "Приложенные документы",
+                tags: true,
+                minimumResultsForSearch: -1,
+                language: "ru",
+                allowClear: true,
+                showSearchBox: false
+            });
+        });
+
+        additionalForm.find("select.select2-search").each(function() {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function() {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+        additionalForm.find('[name$="IssuerCode"]').inputmask("999-999", options);
+        additionalForm.find('[name$="Snils"]').inputmask("999-999-999 99", options);
+        additionalForm.find('[name$="Email"]').inputmask("email", options);
+        additionalForm.find('[name$="Phone"]').inputmask("9{10}", options);
+
+        additionalForm.find('#ApplicationType').on('change', function() {
+            let $changeElList = $('[data-app-change]');
+            switch ($(this).val()) {
+                case '1':
+                    $changeElList.each(function() { $(this).hide() });
+                    break;
+                case '2':
+                    $changeElList.each(function() { $(this).show() });
+                    break;
+            }
+        });
+        additionalForm.find('#ApplicationType').trigger('change');
+
+        additionalForm.find('#CustomerType').on('change', function() {
+            let $fio = $('#fio');
+            switch ($(this).val()) {
+                case '1':
+                    $fio.hide();
+                    break;
+                case '2':
+                    $fio.show();
+                    break;
+            }
+        });
+
+        additionalForm.find('#CustomerType').trigger('change');
+
+        (function getDictionaries() {
+            let dicts = new Set();
+            $('[data-dictionary]').each(function() {
+                let $this = $(this);
+                let options = $this.data('dictionary');
+                if (!dicts.has(options.dictionary)) {
+                    dicts.add(options.dictionary);
+                    $.post(`/SmevBase/SmevGetDictionary`,
+                        {
+                            type: options.dictionary
+                        },
+                        function(dictionary) {
+                            if (dictionary.error) return;
+                            fillSelect(options.dictionary, dictionary);
+                        });
+                }
+            });
+        }());
+
+        function fillSelect(dictName, dictionary) {
+            $.each($(`[data-dictionary*='"${dictName}"']`),
+                function() {
+                    let $this = $(this);
+                    let items = dictionary;
+                    $this.empty();
+                    if (!$this.hasClass('required')) {
+                        $this.append(new Option('Не выбрано', ''));
+                    }
+                    if ($this.is('[data-value-value]')) {
+                        items.dictionary.forEach(function(item) {
+                            $this.append(new Option(item.value, item.value));
+                        });
+                    } else {
+                        items.dictionary.forEach(function(item) {
+                            $this.append(new Option(item.value, item.key));
+                        });
+                    }
+
+                    if ($this.data('dictionary').default_value) {
+                        let defVal = $this.data('dictionary').default_value;
+                        if (defVal) {
+                            $this.val(defVal).trigger('update');
+                            $this.attr('data-def', defVal);
+                        }
+                    } else {
+                        $this.val('').trigger('update');
+                    }
+                });
+        }
+    });
+</script>

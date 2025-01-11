@@ -1,0 +1,165 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+}
+
+<!-- table -->
+<section id="content-datatable">
+    <div class="row">
+        <div class="col-12">
+            @if (Model.IsVisibleTitle)
+            {
+                <div class="card-header">
+                    <h4 class="card-title">@Model.ViewTitle</h4>
+                </div>
+            }
+
+            <div class="row">
+                <div class="col-md-10">
+                    @if (Model.IsVisibleDescription)
+                    {
+                       <div class="b-s-14">@Model.ViewDescription</div>
+                    }
+                </div> 
+            </div>
+
+            <div class="table-responsive mt-3">
+                <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceRole" class="directory_names-items table"></table>
+            </div>
+        </div>
+    </div>
+</section>
+<!--/ table -->
+@section Scripts
+    {
+    <script>
+        const $table = $('#@(Model.TableName)'),
+            isCanAdd = $table.is('[data-action-add]'),
+            isCanEdit = $table.is('[data-action-edit]'),
+            isCanRemove = $table.is('[data-action-remove]');
+
+        $(document).ready(function () {
+            $table.DataTable({
+                sDom: "<'row align-items-center'<'col-md-6'f><'col-md-auto mt-auto ms-auto'<'#btnCreate'>>>" +
+                    "<'row'<'col-sm-12'tr>>",
+                processing: true,
+                serverSide: true,
+                filter: true,
+                searchDelay: 1500,
+                ajax: {
+                    url: $table.data('action-table'),
+                    type: "POST",
+                    datatype: "json",
+                    dataSrc: function (json) {
+                        return json.data;
+                    }
+                },
+                columnDefs: [
+                    {
+                        data: "id",
+                        targets: 0,
+                        title: '',
+                        visible: false,
+                        orderable: false
+                    },
+                    {
+                        targets: 1,
+                        title: 'Наименование',
+                        orderable: false
+                    },
+                    {
+                        targets: 2,
+                        title: 'Описание',
+                        orderable: false
+                    },
+                    {
+                        targets: 3,
+                        title: 'Сотрудник',
+                        orderable: false
+                    },
+                    {
+                        targets: 4,
+                        title: 'Статус',
+                        className: 'text-center editor-edit',
+                        orderable: false
+                    },
+                    {
+                        targets: -1,
+                        title: 'Действия',
+                        data: "id",
+                        className: 'text-center editor-edit',
+                        sorting: false,
+                        orderable: false
+                    }
+                ],
+                initComplete: function () {
+                    $('#btnCreate').append(`
+                                               <button data-btn-params='{"actionType":"@ActionType.Add"}' data-btn-type="add" data-for-table="@Model.TableName" type="button" class="btn btn-primary">
+                                <i class="bi bi-plus"></i> Добавить
+                            </button>`);
+                },
+                columns: [
+                    {},
+                    {
+                        data: "roleName",
+                        render: function (data, type, row) {
+                            return `<div class="b-s-14">${data}</div>`;
+                        }
+                    },
+                    {
+                        data: "description",
+                        render: function (data, type, row) {
+                            return `<div class="r-l-14">${data != '' ? data : 'Пусто'}</div>`;
+                        }
+                    },
+                    {
+                        data: "employeesFioAdd",
+                        render: function (data, type, row) {
+                            return `<div class="r-s-14">${data}</div>`;}
+                    },
+                    {
+                        data: "isRemove",
+                        render: function (data, type, row) {
+                            return `${data === true ? '<i class="bi bi-check-circle text-success"></i>' : '<i class="bi bi-x-circle text-danger m-2"></i>'}`;
+                        }
+                    },
+                    {
+                        render: function (data, type, row) {
+                            let content = "";
+                            if (isCanEdit === true)
+                                content += EditBtn(row.isRemove, { "id": data, "actionType": 1 });
+                            if (isCanRemove === true)
+                                content += DeleteBtn(row.isRemove, { "id": data });
+                            return content;
+                        }
+                    }
+                ]
+            });
+            $table.on("reload", () => {
+                $table.DataTable().ajax.reload(null, false);
+            });
+        });
+
+        $table.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        const EditBtn = (isRemoved, data) => {
+            if (isRemoved === true) return "";
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="edit" data-bs-toggle="tooltip" title="Изменить" class="btn btn-sm btn-icon text-body py-0">
+                            <i class="bi bi-pencil-square"></i></a>`;
+        }
+        const DeleteBtn = (isRemoved, data) => {
+            if (isRemoved === true) return "";
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="remove" data-bs-toggle="tooltip" title="Удалить" class="btn btn-sm btn-icon text-danger py-0">
+                            <i class="bi bi-trash"></i></a>`;
+        }
+    </script>
+}

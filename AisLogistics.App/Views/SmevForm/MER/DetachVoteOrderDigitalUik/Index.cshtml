@@ -1,0 +1,629 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new GetDetachVoteOrderDigitalUikQueryRequestData
+            {
+                Applicant = new DetachVoteOrderApplicant
+                {
+                    Fio = new FioType(),
+                    Address = new DetachVoteOrderAddress()
+                },
+                OrderReceptionPoint = new DetachVoteOrderReceptionPoint(),
+                OrderVoteUik = new DetachVoteOrderVoteUik()
+            };
+}
+<style>
+
+    #smev-data-form-content span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content .accordion-button {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content #listService .select2-selection.select2-selection--single {
+        height: auto !important;
+    }
+
+    #smev-data-form-content #listService .select2-selection__rendered {
+        white-space: normal !important;
+    }
+
+    #smev-data-form-content ul.address-list {
+        display: none;
+        width: 100%;
+        z-index: 1000;
+        position: absolute;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        background-clip: padding-box;
+    }
+
+        #smev-data-form-content ul.address-list li {
+            padding: 6px;
+        }
+
+            #smev-data-form-content ul.address-list li:hover {
+                color: white;
+                background-color: #5a8dee;
+                cursor: pointer
+            }
+</style>
+<div class="row justify-content-center" id="smev_request">
+    <div class="col-9">
+        
+        @* <div class="row mb-2 justify-content-center">
+            <div class="col-12 mt-3">
+                <label class="form-label" asp-for="@request.OrderReceptionPoint.Level">Уровень выборов</label>
+                <select class="select2-nosearch" asp-for="@request.OrderReceptionPoint.Level">
+                    <option value="Federal" selected>Федеральный уровень</option>
+                    <option value="Regional">Региональный уровень</option>
+                    <option value="AdministrativeCenterRegion">Уровень административного центра субъекта РФ</option>
+                    <option value="Municipal">Уровень территориальной единицы значения субъекта РФ</option>
+                    <option value="AdministrativeCenterMunicipal">Уровень административного центра территориальной единицы значения субъекта РФ</option>
+                    <option value="Settlement">Уровень территориальной единицы, входящей в состав территориальной единицы</option>
+                    <option value="AdministrativeCenterSettlement">Уровень административного центра территориальной единицы, входящей в состав</option>
+                    <option value="IntracityDistrict">Уровень территориальной единицы, входящей в состав сельсовета</option>
+                    <option value="UnionState">Уровень союзного государства</option>
+                </select>
+            </div>
+        </div> *@
+
+        <div class="row" data-person>
+            <div class="col-12 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Данные избирателя</div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Заявители</label>
+                <select class="form-select select2-nosearch applicants">
+                    <option value="">Выберите заявителя</option>
+                    @for (int i = 0; i < applicants.Count; i++)
+                    {
+                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Applicant.Fio.LastName">Фамилия</label>
+                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Applicant.Fio.LastName" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Applicant.Fio.FirstName">Имя</label>
+                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Applicant.Fio.FirstName" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Applicant.Fio.SecondName">Отчество</label>
+                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Applicant.Fio.SecondName" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Applicant.BirthDate">Дата Рождения</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar3"></i>
+                    </span>
+                    <input type="text" class="form-control pickdate required" placeholder="Дата рождения"
+                           asp-for="@request.Applicant.BirthDate" value="">
+                </div>
+            </div>
+
+            <div class="col-12" data-doc>
+                <div class="row">
+                    <div class="col-12 mx-auto">
+                        <div class="divider text-start">
+                            <div class="divider-text fs-5 b-s-16">Документ, идентифицирующий личность заявителя</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request.Applicant.DocType">Тип документа</label>
+                        <select class="select2-nosearch" asp-for="@request.Applicant.DocType">
+                            <option selected value="PassportRf">Паспорт гражданина РФ</option>
+                            <option value="TempDoc">Временное удостоверение личности</option>
+                        </select>
+                    </div>
+                    <div class="col-4" data-series>
+                        <label class="form-label" asp-for="@request.Applicant.PassSeries">Серия</label>
+                        <input type="text" class="form-control required" placeholder="Серия" asp-for="@request.Applicant.PassSeries" />
+                    </div>
+                    <div class="col-4" data-number>
+                        <label class="form-label" asp-for="@request.Applicant.PassNumber">Номер</label>
+                        <input type="text" class="form-control required" placeholder="Номер" asp-for="@request.Applicant.PassNumber" />
+                    </div>
+                    <div class="col-4" data-disabled data-temp-doc-number>
+                        <label class="form-label" asp-for="@request.Applicant.TempDocNum">Номер временного документа</label>
+                        <input type="text" class="form-control required" placeholder="Номер временного документа" asp-for="@request.Applicant.TempDocNum" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12" data-block>
+                <div class="row">
+                    <div class="col-12 mx-auto">
+                        <div class="divider text-start">
+                            <div class="divider-text fs-5 b-s-16">Адрес местожительства заявителя по прописке</div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.Applicant.RegIndicator">Тип документа</label>
+                        <select class="select2-nosearch" asp-for="@request.Applicant.RegIndicator">
+                            <option value="Persistent" selected>Постоянная регистрация</option>
+                            <option value="Temporary">Временная регистрация</option>
+                            <option value="WithoutRegistration">Без регистрации</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12" data-address>
+                        <div class="row">
+                            <div class="col-12 mt-3">
+                                <i class='bi bi-search'></i>
+                                <label class="form-label">Поиск по ГАР</label>
+                                <input type="text" class="form-control required" data-address-search data-not-clean>
+                                <div class="input-group">
+                                    <ul class="list-group address-list">
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.Applicant.Address.RegionCode">Регион</label>
+                                <select class="select2-search" asp-for="@request.Applicant.Address.RegionCode"
+                                        data-dictionary='{"dictionary":"FnsRegionCodes"}'>
+                                </select>
+                            </div>
+
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.Applicant.Address.District">Муниципальный район</label>
+                                <input type="text" class="form-control" asp-for="@request.Applicant.Address.District">
+                                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" title="Муниципальный район места жительства согласно ДУЛ. Заполняется полностью с уровнем без сокращений значением района субъекта РФ (как правило это сельские районы). Для городов прямого подчинения (областного, краевого, республиканского), центров субъектов РФ и городов федерального значения - не заполняется. Не допускается указывать значения, соответствующие наименованию субъекта РФ. Недопустимо заполнять поле наименованием городов, районов города, микрорайонов городов, административных и муниципальных округов для городов федерального значения. Например: «Ленинский район»."></i>
+                            </div>
+
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.Applicant.Address.Settlement">Населенный пункт</label>
+                                <input type="text" class="form-control" asp-for="@request.Applicant.Address.Settlement">
+                                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" title="Населенный пункт места жительства согласно ДУЛ. Заполняется полностью с уровенем без сокращений, либо без указания уровня, значением городов прямого подчинения (областного, краевого, республиканского), центров субъектов РФ и городов федерального значения, а также значениями городов, имеющих другие подчинения.В этом поле указываются иные населенные пункты (поселки городского типа, села, станицы, деревни, поселки, хутора, аулы и т.д.). Если населенный пункт расположен под другим населенным пунктом, то следует ввести его значение через запятую, после значения населенного пункта в который данный населенный пункт входит. Если населенный пункт находится под городом федерального значения, то в поле сначала вносится наименование города федерального значения, а затем через запятую наименование подчиненного населенного пункта.Например: «Москва,Троицк» — без указания уровня, «город Москва, город Троицк» — с указанием уровня без сокращений."></i>
+                            </div>
+
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.Applicant.Address.Street">Улица (микрорайон)</label>
+                                <input type="text" class="form-control" asp-for="@request.Applicant.Address.Street">
+                                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" title="Улица (микрорайон) места жительства согласно ДУЛ. Заполняется полностью с уровнем без сокращений, либо без указания уровня. Если в состав адреса места жительства входит микрорайон и улица, то заполняются только сведения для улицы. Данные микрорайона в этом случае не заполняются. Если улица отсутствует, и дома расположены непосредственно под микрорайоном, то поле заполняется"></i>
+                            </div>
+
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Applicant.Address.House">Дом</label>
+                                <input type="text" class="form-control" asp-for="@request.Applicant.Address.House">
+                                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" title="Дом места жительства согласно ДУЛ. Заполняется в соответствии с паспортом гражданина РФ. Строго в поле уровня «Дом» указывается только значение, т.е.номер дома. Указание полного уровня, например: «дом хх» или его сокращений «д.хх», «д хх» и т.д. - не допускается."></i>
+                            </div>
+
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Applicant.Address.Building">Корпус (строение, владение)</label>
+                                <input type="text" class="form-control" asp-for="@request.Applicant.Address.Building">
+                                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" title="Корпус (строение, владение) места жительства согласно ДУЛ. Заполняется в соответствии с паспортом гражданина РФ. Строго в поле уровня «Корпус, (строение, владение)» указывается только значение, т.е.номер корпуса, строения, владения. Указание полного уровня, например: «корпус хх» или его сокращений «к.хх», «к хх» и т.д. - не допускается. Эти требования относятся к строению и владению."></i>
+                            </div>
+
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Applicant.Address.Flat">Квартира (комната)</label>
+                                <input type="text" class="form-control" asp-for="@request.Applicant.Address.Flat">
+                                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" title="Квартира (комната) места жительства согласно ДУЛ. Заполняется в соответствии с паспортом гражданина РФ. Строго в поле уровня «Квартира (комната)» указывается только значение, т. е. номер квартиры или комнаты. Указание полного уровня, например: «квартира хх» или его сокращений «к.хх», «кв хх» «комната хх» и т.д. - не допускается. Эти требования относятся и к указанию значений комнате."></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-4" data-disabled data-registration-date>
+                        <label class="form-label" asp-for="@request.Applicant.RegistrationDate">Дата начала временной регистрации</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input type="text" class="form-control pickdate required" placeholder="Дата"
+                                   asp-for="@request.Applicant.RegistrationDate" value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-12 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Данные избирательного участка</div>
+                </div>
+            </div>
+
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.OrderReceptionPoint.VoteDate">Дата выборов</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar3"></i>
+                    </span>
+                    <input type="text" class="form-control pickdate required" placeholder="Дата"
+                           asp-for="@request.OrderReceptionPoint.VoteDate" value="">
+                </div>
+            </div>
+
+            <div class="col-8">
+                <label class="form-label" asp-for="@request.OrderReceptionPoint.VoteVrn">VRN</label>
+                <input type="text" class="form-control required" placeholder="VRN" asp-for="@request.OrderReceptionPoint.VoteVrn" />
+            </div>
+
+            <div class="col-4">
+                <label class="form-label" for="uikRegion">Субъект РФ</label>
+                <select class="select2-search required" id="uikRegion" name="uikRegion">
+                </select>
+            </div>
+
+            <div class="col-4">
+                <label class="form-label" for="uikId">Адрес УИК</label>
+                <select class="select2-search required" id="uikId" name="uikId">
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var applicants = @Json.Serialize(applicants);
+    // регион голосования.
+    var region = '';
+    function ShowErrorInputs() { };
+    getDictionaries();
+
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                $(formContent).find('.required').each(function () {
+                    addValidation($(this));
+                });
+
+                $(formContent).find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                let options = { clearIncomplete: true, showMaskOnHover: false };
+                $(formContent).find('.phone').inputmask("9{10}", options);
+                $(formContent).find('.email').inputmask("email", options);
+                $(formContent).find('[name$="PassSeries"]').inputmask("9{4}", options);
+                $(formContent).find('[name$="PassNumber"]').inputmask("9{6}", options);
+                $(formContent).find(".pickdate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                });
+                $(formContent).find(".pickdate").inputmask("99.99.9999", options);
+                select2Init($(formContent));
+
+                $(formContent).find('[name$="DocType"]').on('change',
+                    function () {
+                        const $block = $(this).closest('[data-doc]');
+                        const $series = $block.find('[data-series]');
+                        const $number = $block.find('[data-number]');
+                        const $tempDocNumber = $block.find('[data-temp-doc-number]');
+                        switch ($(this).val()) {
+                            case 'PassportRf':
+                                visibilityBlock($series, false, false);
+                                visibilityBlock($number, false, false);
+                                visibilityBlock($tempDocNumber, true, true);
+                                break;
+                            case 'TempDoc':
+                                visibilityBlock($series, true, true);
+                                visibilityBlock($number, true, true);
+                                visibilityBlock($tempDocNumber, false, false);
+                                break;
+                        }
+                    });
+
+                $(formContent).find('[name$="RegIndicator"]').on('change',
+                    function () {
+                        const $block = $(this).closest('[data-block]');
+                        const $address = $block.find('[data-address]');
+                        const $date = $block.find('[data-registration-date]');
+                        switch ($(this).val()) {
+                            case 'Persistent':
+                                visibilityBlock($address, false, false);
+                                visibilityBlock($date, true, true);
+                                break;
+                            case 'Temporary':
+                                visibilityBlock($address, true, true);
+                                visibilityBlock($date, false, false);
+                                break;
+                            case 'WithoutRegistration':
+                                visibilityBlock($address, true, true);
+                                visibilityBlock($date, true, true);
+                                break;
+                        }
+                    });
+            }
+        };
+
+    $('.applicants').on('change',
+        function () {
+            let id = $(this).val();
+            let $block = $(this).closest('[data-person]');
+            $block.find('input').val('');
+            if (id) {
+                $block.find('[name$="LastName"]').val(applicants[id].lastName);
+                $block.find('[name$="FirstName"]').val(applicants[id].firstName);
+                $block.find('[name$="SecondName"]').val(applicants[id].secondName);
+                $block.find('[name$="PassSeries"]').val(applicants[id].documentSerial);
+                $block.find('[name$="PassNumber"]').val(applicants[id].documentNumber);
+                $block.find('[name$="BirthDate"]').val(applicants[id].birthDate ? new Date(applicants[id].birthDate).toLocaleDateString() : '');
+            }
+        });
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').hide();
+                } else {
+                    $block.hide();
+                }
+                break;
+            case false:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').show();
+                } else {
+                    $block.removeClass('d-none');
+                    $block.show();
+                }
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        removeValidation($(this));
+                    }
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                    if ($(this).hasClass('required')) {
+                        addValidation($(this));
+                    }
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function () {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.ajax({
+                    url: '/SmevBase/SmevGetDictionary',
+                    type: 'POST',
+                    async: false,
+                    data: { type: options.dictionary },
+                    success: function (dictionary) {
+                        region = dictionary.defaultKey;
+                        fillSelect(options.dictionary, dictionary);
+                    }
+                });
+            }
+        });
+    };
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function () {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Не выбран', ''));
+                }
+
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+            }
+        );
+    }
+
+    var addresses = new Map();
+    $.each($('[data-address-search]'), function () {
+        var $input = $(this);
+        let $adrList = $input.closest('[data-address]').find('.address-list');
+        var url = '/SmevBase/GarSearchAddressExtended';
+        $input.keyup(garRequest).focusin(() => {
+            $adrList.show();
+        }).focusout(() => {
+            $adrList.delay(500).hide(0);
+        });
+    });
+
+    function garRequest(event) {
+        let $adrInput = $(event.target);
+        let $adrBlock = $adrInput.closest('[data-address]');
+        let $adrList = $adrBlock.find('.address-list');
+        let query = $adrInput.val();
+
+        addresses.clear();
+        if (query.length > 2) {
+            $.ajax({
+                url: '/SmevBase/GarSearchAddressExtended',
+                type: 'POST',
+                data: { SearchText: query },
+                success: function (data) {
+                    if (data.result.length > 0) {
+                        $adrList.empty();
+                        data.result.forEach((item, index) => {
+                            $('.address-list').append(`<li data-index='${index}'>${createAddressText(item)}</li>`);
+                            addresses.set(`${index}`, item);
+                        });
+                        $adrList.show();
+                    }
+                }
+            });
+        } else {
+            $adrInput.parent('.location-control').removeClass('open');
+        }
+    }
+
+    function createAddressText(adr) {
+        let elements = [];
+
+        if (adr.region) {
+            elements.push(`${adr.region.shortName} ${adr.region.value}`);
+        }
+        if (adr.area) {
+            elements.push(`${adr.area.shortName} ${adr.area.value}`);
+        }
+        if (adr.city) {
+            elements.push(`${adr.city.shortName} ${adr.city.value}`);
+        }
+        if (adr.cityAndRuralSettlements) {
+            elements.push(`${adr.cityAndRuralSettlements.shortName} ${adr.cityAndRuralSettlements.value}`);
+        }
+        if (adr.intracityDistrict) {
+            elements.push(`${adr.intracityDistrict.shortName} ${adr.intracityDistrict.value}`);
+        }
+        if (adr.settlement) {
+            elements.push(`${adr.settlement.shortName} ${adr.settlement.value}`);
+        }
+        if (adr.street) {
+            elements.push(`${adr.street.shortName} ${adr.street.value}`);
+        }
+        if (adr.house) {
+            if (adr.house.houseNum) elements.push(`${adr.house.shortName} ${adr.house.houseNum}`);
+            if (adr.house.buildNum) elements.push(`корп ${adr.house.buildNum}`);
+            if (adr.house.structNum) elements.push(`стр ${adr.house.structNum}`);
+        }
+        if (adr.room) {
+            elements.push(`кв ${adr.room.flatNumber}`);
+        }
+
+        return elements.join(', ');
+    }
+
+    $('.address-list').on('click',
+        function (event) {
+            let $selectedAdr = $(event.target);
+            let $adrBlock = $selectedAdr.closest('[data-address]');
+            let adrText = $selectedAdr.text();
+            $adrBlock.find('[data-address-search]').val(adrText);
+            fillAddress(addresses.get($selectedAdr.attr('data-index')), $selectedAdr);
+            $selectedAdr.closest('.address-list').empty();
+        });
+
+    function fillAddress(adrData, $el) {
+        let $addressBlock = $el.closest('[data-address]');
+        $addressBlock.find('[id$="RegionCode"]').val(adrData.region.regionCode.padStart(2, '0')).trigger('change');
+
+        if (adrData.area) {
+            $addressBlock.find('[id$="District"]').val(`${adrData.area.shortName} ${adrData.area.value}`);
+        }
+
+        if (adrData.city) {
+            $addressBlock.find('[id$="Settlement"]').val(adrData.city.value);
+        }
+
+        if (adrData.settlement) {
+            $addressBlock.find('[id$="Settlement"]').val(adrData.settlement.value);
+        }
+
+        if (adrData.intracityDistrict) {
+            $addressBlock.find('[id$="Street"]').val(adrData.intracityDistrict.value);
+        }
+
+        if (adrData.street) {
+            $addressBlock.find('[id$="Street"]').val(adrData.street.value);
+        }
+
+        if (adrData.house) {
+            $addressBlock.find('[id$="House"]').val(adrData.house.houseNum);
+            $addressBlock.find('[id$="Building"]').val(adrData.house.buildNum);
+        }
+
+        if (adrData.room) {
+            $addressBlock.find('[id$="Flat"]').val(adrData.room.flatNumber);
+        }
+    }
+
+    $.ajax(
+        {
+            url: '/SmevMer/GetVoteDate',
+            type: 'Get',
+            success: function (data) {
+                $(formContent).find('[id$="VoteDate"]').val(data);
+            }
+        }
+    );
+
+    $.ajax(
+        {
+            url: '/SmevMer/GetRegions',
+            type: 'Get',
+            success: function (data) {
+                const uikRegion = $('#smev_request #uikRegion');
+                uikRegion.empty();
+                uikRegion.append('<option value="">Не выбрано</option>');
+                data.forEach(function (item, i, arr) {
+                    uikRegion.append('<option value=' + item.id + '>' + item.text + '</option>');
+                });
+                uikRegion.val(region).trigger('change');
+            }
+        }
+    );
+
+    $(formContent).find('#uikRegion').on('change',
+        function () {
+            const regionCode = $(this).val();
+            const uik = $('#smev_request #uikId');
+            uik.empty();
+
+            if (regionCode) {
+                $.ajax(
+                    {
+                        url: '/SmevMer/GetRegionUik',
+                        type: 'Get',
+                        data: { regionCode },
+                        success: function (data) {
+
+                            data.forEach(function (item, i, arr) {
+                                uik.append('<option value=' + item.id + '>' + item.text + '</option>');
+                            });
+                        }
+                    }
+                );
+            }
+        });
+
+    $(formContent).find('.applicants').val('0').trigger('change');
+</script>

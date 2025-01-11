@@ -1,0 +1,104 @@
+﻿@model _28_1_EnrollmentEducationalInstitutionModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto"> 
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ShefFIO">Директор ФИО</label>
+                    <input type="text" asp-for="ShefFIO" class="form-control">
+                </div> 
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="MOUNumber">МОУ N</label>
+                    <input type="text" asp-for="MOUNumber" class="form-control">
+                </div> 
+            </div>
+            <br />
+            <h6 class="my-2">Ребенок</h6> 
+            <div class="row mb-3">
+                <div class="col-sm-8">
+                    <label class="form-label" asp-for="ChildFIO">ФИО</label>
+                    <input type="text" asp-for="ChildFIO" class="form-control">
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" asp-for="ChildBirdsDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="ChildBirdsDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="InClass">в какой класс</label>
+                    <input type="text" asp-for="InClass" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="MOU">учреждение</label>
+                    <input type="text" asp-for="MOU" class=" form-control">
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">Мать</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Mother!.FIO">ФИО</label>
+                    <input type="text" asp-for="Mother!.FIO" class=" form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Mother!.PlaceWork">Место работы</label>
+                    <input type="text" asp-for="Mother!.PlaceWork" class=" form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Mother!.Phone">Телефон</label>
+                    <input type="text" asp-for="Mother!.Phone" class=" form-control">
+                </div>
+            </div>
+            <h6 class="my-2">Отец</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Father!.FIO">Ф.И.О.</label>
+                    <input type="text" asp-for="Father!.FIO" class=" form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Father!.PlaceWork">Место работы</label>
+                    <input type="text" asp-for="Father!.PlaceWork" class=" form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Father!.Phone">Телефон</label>
+                    <input type="text" asp-for="Father!.Phone" class=" form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () {
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+    });
+     
+</script>

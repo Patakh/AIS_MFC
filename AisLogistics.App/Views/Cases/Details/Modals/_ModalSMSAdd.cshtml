@@ -1,0 +1,92 @@
+﻿@model AisLogistics.App.Models.DTO.Cases.CasesSMSSaveDto
+
+<style>
+    .message {
+        min-height: 150px !important;
+    }
+</style>
+
+<form asp-controller="Cases" asp-action="SMSCasesSave" id="sendingForm" method="post" role="form">
+    <fieldset>
+        @Html.HiddenFor(m => m.CasesId)
+        @Html.HiddenFor(m => m.CustomerName)
+        @Html.HiddenFor(m => m.CustomerPhone)
+        <div class="row">
+            <div class="col-12 mb-4">
+                <textarea asp-for="Text" class="form-control message" maxlength="250" title="не более 250 символов" placeholder="Сообщение..."></textarea>
+            </div>  
+        </div>
+    </fieldset>
+</form>
+
+<script>
+    $(function () {
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    'Text': {
+                        validators: {
+                            notEmpty: {}
+                        }
+                    }
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+        }).on('core.form.valid', function () {
+                var $form = $("#sendingForm");
+                $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $form.spinnerBtn("stop");
+                        //document.location.reload();
+                    }
+                return false;
+        });
+    });
+
+
+    //$(function () { 
+    //    FormValidation.formValidation(document.getElementById('sendingForm'),
+    //    {
+    //        fields: {
+    //            'Text': {
+    //                validators: {
+    //                    notEmpty: {
+    //                        message: '@MessageDescription.FieldIsRequired'
+    //                    }
+    //                }
+    //            }
+    //        },
+    //        plugins: {
+    //            trigger: new FormValidation.plugins.Trigger(),
+    //            submitButton: new FormValidation.plugins.SubmitButton(),
+    //            bootstrap5: new FormValidation.plugins.Bootstrap5(),
+    //            autoFocus: new FormValidation.plugins.AutoFocus()
+    //        }
+    //    }).on('core.form.valid', function () {
+    //        var $form = $("#sendingForm");
+    //        $.ajax({
+    //            type: $form.attr('method'),
+    //            url: $form.attr('action'),
+    //            data: $form.serialize(),
+    //            beforeSend: () => {
+    //                $form.spinnerBtn("start");
+    //            },
+    //            complete: () => {
+    //                document.location.reload();
+    //            }
+    //        });
+    //        return false;
+    //    });
+    //})
+</script>

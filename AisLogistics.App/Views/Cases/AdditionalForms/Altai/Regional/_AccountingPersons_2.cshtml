@@ -1,0 +1,108 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Regional.AccountingPersons2
+  
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">Заявитель</h5>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.F">Фамилия</label>
+                    <input type="text" asp-for="Applicant.F" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.I">Имя</label>
+                    <input type="text" asp-for="Applicant.I" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.O"> Отчество (при наличии)</label>
+                    <input type="text" asp-for="Applicant.O" class="form-control">
+                </div>
+            </div>
+            <h6 class="my-2">Сведения об основном документе, удостоверяющем личность (паспорт):</h6>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.DocSeries">Серия</label>
+                    <input type="text" class="form-control" asp-for="Applicant.DocSeries">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.DocNumber">Номер</label>
+                    <input type="text" class="form-control" asp-for="Applicant.DocNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.DocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Applicant.DocIssueDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="Applicant.DocIssuer">Кем выдан</label>
+                    <input type="text" class="form-control" asp-for="Applicant.DocIssuer">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Applicant.DocDevision">Код подразделения</label>
+                    <input type="text" class="form-control" asp-for="Applicant.DocDevision">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Applicant.Address">Адрес места жительства (пребывания) в Российской Федерации</label>
+                    <input type="text" class="form-control" asp-for="Applicant.Address">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+
+<script>
+    var additionalForm = $('#additional-data-content'); 
+    var btnNext = $('.btn-next');
+
+    var applicant = {
+        f: $("#Applicant_F"),
+        i: $("#Applicant_I"),
+        o: $("#Applicant_O"), 
+        adress: $("#Applicant_Address"), 
+        docSeries: $("#Applicant_DocSeries"),
+        docNumber: $("#Applicant_DocNumber"),
+        docIssueDate: $("#Applicant_DocIssueDate"),
+        docIssuer: $("#Applicant_DocIssuer"),
+        docDevision: $("#Applicant_DocDevision"),
+    };
+
+    $(function () {
+
+        if (btnNext.length > 0) {
+            btnNext.on('click', function appContent() {
+                applicant.f.val($("#customer_LastName").val());
+                applicant.i.val($("#customer_FirstName").val());
+                applicant.o.val($("#customer_SecondName").val()); 
+                applicant.adress.val($("#customer_CustomerAddressResidence").val());
+                applicant.docSeries.val($("#customer_DocumentSerial").val());
+                applicant.docNumber.val($("#customer_DocumentNumber").val());
+                applicant.docIssueDate.val($("#customer_DocumentIssueDate").val());
+                applicant.docIssuer.val($("#customer_DocumentIssueBody").val());
+                applicant.docDevision.val($("#customer_DocumentCode").val());
+                
+            });
+        };
+           
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('[id$="_DocSeries"]').inputmask("9999", options);
+        additionalForm.find('[id$="_DocNumber"]').inputmask("999999", options);  
+        additionalForm.find('[id$="_DocDevision"]').inputmask("999-999", options);
+        
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+         
+    });
+     
+     
+</script>

@@ -1,0 +1,304 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.TestQuestionsModelDto
+  
+@{
+    int idx = 0;
+}
+
+<div id="test-questions-form-content">
+    <form asp-controller="Reference" asp-action="QuestionsSave" id="sendingForm" method="post" role="form">
+        <div class="form-body pt-1">
+            <fieldset>
+                @Html.HiddenFor(m => m.Id)
+
+                <div class="row">
+                    <div class="col-12 mb-3">
+                            <label class="form-label" asp-for="QuestionName">Наименование</label>
+                            <input type="text" asp-for="QuestionName" maxlength="255" class="form-control" placeholder="Наименование">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 mb-3">
+                            <label class="form-label" asp-for="TestDirectionId">Направления</label>
+                            <select asp-for="TestDirectionId" asp-items="@ViewBag.Directions" class="form-control" placeholder="Выберите направление">
+                                <option value="@Guid.Empty">Все</option>
+                            </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <input type="checkbox" asp-for="IsActive" class="checkbox" placeholder="Активность вопроса">
+                        <label class="form-label" asp-for="IsActive">Активность вопроса</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 b-s-14">
+                        Ответы
+                    </div>
+                </div>
+                <hr class="mt-1 mb-3"/>
+
+                <div class="row justify-content-center mb-1">
+                    <div class="col-12" id="PreviousNames">
+                        @if (Model.TestQuestionsAnswers != null)
+                        {
+                            foreach (var answer in Model.TestQuestionsAnswers)
+                            {
+                                <div class="row" id=@($"clone{idx}") data-id="@idx" data-clone>
+                                    <div class="col-11">
+                                        <div class="row form-group">
+                                            <div class="col-1 d-flex justify-content-center">
+                                                <input type="checkbox" class="checkbox" asp-for="TestQuestionsAnswers[idx].IsRight" placeholder="Правильность ответа">
+                                            </div>
+                                            <div class="col-11">
+                                                <textarea asp-for="TestQuestionsAnswers[idx].AnswerName" class="w-100" placeholder="Текст ответа"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-1 my-auto">
+                                        <button type="button" class="btn btn-danger" onclick="blockRemove(this, '#PreviousNames')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                { idx++; }
+                                
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div class="justify-content-center row mb-3" id="add-button">
+                    <div class="col-2">
+                        <div class="text-center mt-3">
+                            <button type="button" id="add-PreviousNames" class="btn btn-primary">
+                                Добавить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </fieldset>
+        </div>
+    </form>
+
+    <div class="row" id="previousNamesOriginal">
+        <div class="col-11">
+            <div class="row form-group">
+                <div class="col-1 d-flex justify-content-center">
+                    <input type="checkbox" class="checkbox" id=@($"TestQuestionsAnswers_{idx}__IsRight") name=@($"TestQuestionsAnswers[{idx}].IsRight") placeholder="Правильность ответа">
+                </div>
+                <div class="col-11">
+                    <textarea id=@($"TestQuestionsAnswers_{idx}__AnswerName") name=@($"TestQuestionsAnswers[{idx}].AnswerName") class="w-100" placeholder="Текст ответа"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="col-1 my-auto">
+            <button type="button" class="btn btn-danger" onclick="blockRemove(this, '#PreviousNames')">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+    var formContent = document.getElementById("test-questions-form-content");
+    var QuestionDataFormValidation = null;
+
+    $('#TestDirectionId').select2({
+        placeholder: "Выберите направление",
+        dropdownParent: $('#mainModal'),
+    });
+
+    function blockRemove(el, cloneListId) {
+        el.closest('[data-clone]').remove();
+        formContent.querySelectorAll(`${cloneListId} [data-clone]`).forEach((item, index) => renameBlock(item, index));
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').hide();
+                } else {
+                    $block.hide();
+                }
+                break;
+            case false:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').show();
+                } else {
+                    $block.removeClass('d-none')
+                    $block.show();
+                }
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    //if ($(this).attr('name') in QuestionDataFormValidation.fields) {
+                    //    removeValidation($(this));
+                    //}
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                    if ($(this).hasClass('required')) {
+                        addValidation($(this));
+                    }
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+        let cloneList = formContent.querySelector(`#${cloneListId}`);
+        let original = formContent.querySelector(`#${originalId}`);
+        let cloneBlock = original.cloneNode(true);
+        cloneBlock.classList.remove('d-none');
+        cloneBlock.removeAttribute('disabled');
+        let index = cloneList.querySelectorAll('[data-clone]').length;
+        renameBlock(cloneBlock, index);
+        blockInit(cloneBlock);
+        cloneList.appendChild(cloneBlock);
+    }
+
+    function blockInit(block) {
+        visibilityBlock($(block), false, false);
+        $(block).find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                dropdownParent: $("#mainModal"),
+                minimumResultsForSearch: Infinity
+            });
+        });
+
+        $(block).find("select.select2-search").each(function () {
+            $(this).select2({
+                dropdownParent: $("#mainModal")
+            });
+        });
+        let options = { clearIncomplete: true, showMaskOnHover: false }
+        $(block).find('[name$="Inn"]').inputmask("9{12}", options);
+        $(block).find('[name$="Email"]').inputmask("email", options);
+        $(block).find('input.required').each(function () {
+            addValidation($(this));
+        });
+        $(block).find("select").each(function () {
+            if ($(this).data('def')) {
+                $(this).val($(this).data('def')).trigger('change');
+            } else {
+                $(this).prop("selectedIndex", 0);
+            }
+        });
+    }
+
+
+    function renameBlock(cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            cloneBlock.id = `clone${indexId}`;
+            cloneBlock.dataset.id = indexId;
+            cloneBlock.setAttribute('data-clone', '');
+        }
+
+        cloneBlock.querySelectorAll('input').forEach(item => {
+            item.id = item.id.replace(/\d+/, indexId);
+            item.name = item.name.replace(/\d+/, indexId);
+        });
+
+        cloneBlock.querySelectorAll('label').forEach(item => {
+            item.setAttribute('for', item.getAttribute('for').replace(/\d+/, indexId));
+        });
+
+        cloneBlock.querySelectorAll('select').forEach(item => {
+            item.id ? item.id = item.id.replace(/\d+/, indexId) : void 0;
+            item.name ? item.name = item.name.replace(/\d+/, indexId) : void 0;
+            item.hasAttribute('data-select2-id') ? item.removeAttribute('data-select2-id') : void 0;
+        });
+
+        cloneBlock.querySelectorAll('textarea').forEach(item => {
+            item.id = item.id.replace(/\d+/, indexId);
+            item.name = item.name.replace(/\d+/, indexId);
+        });
+    }
+
+    function removeValidation($el) {
+        //if ($el.attr('name') in QuestionDataFormValidation.fields) {
+        //    QuestionDataFormValidation.removeField($el.attr('name'));
+        //}
+    }
+
+    $(document).ready(function () {
+        if(@idx==0) {
+             addForm('PreviousNames', 'previousNamesOriginal');
+        }
+        renameBlock(formContent.querySelector('#previousNamesOriginal'), 100, true);
+        
+        $('#add-PreviousNames').on('click', function () {
+            addForm('PreviousNames', 'previousNamesOriginal');
+        });
+        visibilityBlock($('#previousNamesOriginal'), true, true);
+
+        QuestionDataFormValidation = FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    QuestionName: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    QuestionType: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    TestDirectionId: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }).on('core.form.valid', function () {
+                var $form = $("#sendingForm");
+                $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $table.DataTable().ajax.reload(null, false);
+                        $form.spinnerBtn("stop");
+                        $("#mainModal").modal('hide');
+                    }
+                });
+                return false;
+            });
+    });
+</script>

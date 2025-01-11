@@ -1,0 +1,147 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new GetVipIpRequestData
+            {
+                Fio = new()
+            };
+
+}
+<style>
+    #smev-data-form-content .accordion-button {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content li.active {
+        background-color: #e5edfc !important;
+        color: black !important;
+    }
+
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+</style>
+
+<div class="container m-0 p-0" id="smev_request">
+    <div class="row justify-content-center">
+        <div class="col-8" data-person>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label">Заявители</label>
+                    <select class="form-select select2-nosearch applicants">
+                        <option value="">Выберите заявителя</option>
+                        @for (int i = 0; i < applicants.Count; i++)
+                        {
+                            <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Fio.LastName">Фамилия</label>
+                    <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Fio.LastName" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Fio.FirstName">Имя</label>
+                    <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Fio.FirstName">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Fio.SecondName">Отчество</label>
+                    <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Fio.SecondName">
+                </div>
+                <div class="col-4">
+                    <label class="form-label">Тип</label>
+                    <select class="select2-nosearch required" asp-for="@request.QueryType">
+                        <option value="InnFl" selected>ИНН</option>
+                        <option value="OgrnIp">ОГРН</option>
+                    </select>
+                </div>                
+                <div class="col-4">
+                    <label class="form-label" id="labelQuery" asp-for="@request.Query">ИНН</label>
+                    <input type="text" class="form-control required" asp-for="@request.Query">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var applicants = @Json.Serialize(applicants);
+    var $formContent = $("#smev-data-form-content");
+    var smevForm = {
+        init: () => {
+            $formContent.find('.required').each(function() {
+                addValidation($(this));
+            });
+
+            let options = { clearIncomplete: true, showMaskOnHover: false }
+
+            $formContent.find('[name$="Query"]').inputmask("9{12}", options);
+           
+            $formContent.find("select.select2-nosearch").select2({
+                dropdownParent: $("#mainModal"),
+                minimumResultsForSearch: Infinity
+            });
+
+
+            $formContent.find("select.select2-search").select2({
+                dropdownParent: $("#mainModal")
+            });
+        }
+    };
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+    $formContent.find('[name$="QueryType"]').on('change', function(e) {
+        var $this = $(this);
+        var $target_label = $('#labelQuery');
+        var $target_input = $('#request_Query');
+        let options = { clearIncomplete: true, showMaskOnHover: false }
+        switch ($this.val()) {
+            case 'InnFl':
+                $target_label.text("ИНН");
+                $target_input.inputmask("", options);
+                $target_input.inputmask("9{12}", options);
+                break;
+            case 'OgrnIp':
+                $target_label.text("ОГРН");
+                $target_input.inputmask("9{15}", options);
+                break;
+        }
+    });
+
+    $('select.applicants').each(function() {
+        $(this).on('change',
+            function() {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]').each(function() {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$=".LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$=".FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$=".SecondName"]').val(applicants[id].secondName);
+                    $block.find('[name$="Query"]').val(applicants[id].inn);
+                }
+            });
+    });
+
+</script>

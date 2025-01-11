@@ -1,0 +1,212 @@
+﻿@model ViewModelBuilder
+@using AisLogistics.App.Extensions
+@{
+    string Id = ViewData["Id"]?.ToString() ?? string.Empty;
+}
+<style>
+    .nav-link.active {
+        color: #5a8dee !important;
+    }
+</style>
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                @if (Model.IsVisibleDescription)
+                {
+                    <div class="b-s-14">@Model.ViewDescription</div>
+                }
+            </div>
+
+            <div class="col-6 pull-right">
+                @if (User.HasClaim(AccessKeyNames.ReferenceService, AccessKeyValues.Add))
+                {
+                    <div class="col-auto text-md-end">
+                        <a href="javascript:void(0);" class="r-a-14" id="btn-services-waysget-add">
+                            <i class="bi bi-plus"></i> Добавить
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <ul class="nav nav-custom nav-justified" id="services-waysget-tab">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-services-waysget-tab="@((int)ServiceWayGetType.ForService)" href="javascript:void(0);">@Html.Raw(ServiceWayGetType.ForService.GetDisplayName())</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-services-waysget-tab="@((int)ServiceWayGetType.ForResult)" href="javascript:void(0);">@Html.Raw(ServiceWayGetType.ForResult.GetDisplayName())</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive mt-3">
+                    <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceService" class="directory_names-items table table-striped"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* <div class="row directory_names" id="content-waysget">
+    <div class="col-auto aside_menu">
+        <partial name="Services/Details/_NavLeft" model="navId" />
+    </div>
+    <div class="col">
+        <div class="directory_names-items popup_container" id="navs-tabs-default">
+
+            <div class="row justify-content-between align-items-center">
+                <div class="col">
+
+                    @if (Model.IsVisibleDescription)
+                    {
+                        <div class="b-s-14">@Model.ViewDescription</div>
+                    }
+                </div>
+                @if (User.HasClaim(AccessKeyNames.ReferenceService, AccessKeyValues.Add))
+                {
+                    <div class="col-auto text-md-end directory_search">
+                        <button data-btn-params='{"actionType":"@ActionType.Add", "serviceId" : "@Id", "wt" : "@wayType" }' data-btn-type="add" data-for-table="@Model.TableName" type="button" class="btn btn-primary">
+                            <i class="bi bi-plus"></i> Добавить
+                        </button>
+                    </div>
+                }
+            </div>
+            <navtabs-top>
+                <nav-tab id="@ServiceWayGetType.ForService" target="@Url.Action("ServiceWaysGet", "Reference", new { id = Id , wt = (int)ServiceWayGetType.ForService })">@Html.Raw(ServiceWayGetType.ForService.GetDisplayName())</nav-tab>
+                <nav-tab id="@ServiceWayGetType.ForResult" target="@Url.Action("ServiceWaysGet", "Reference", new { id = Id , wt = (int)ServiceWayGetType.ForResult })">@Html.Raw(ServiceWayGetType.ForResult.GetDisplayName())</nav-tab>
+            </navtabs-top>
+            <div class="row">
+                <div class="col-12">
+                    <div class="table-responsive mt-3">
+                        <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceService" class="directory_names-items table"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> *@
+
+
+<script>
+    $tableServicesWayGet = $('#@(Model.TableName)');
+    $(document).ready(function () {
+        let isCanAddServicesWayGet = $tableServicesWayGet.is('[data-action-add]'),
+            isCanEditServicesWayGet = $tableServicesWayGet.is('[data-action-edit]'),
+            isCanRemoveServicesWayGet = $tableServicesWayGet.is('[data-action-remove]');
+
+        $('#btn-services-waysget-add').click(function () {
+            $.ajax({
+                url: '/Reference/ServiceWaysGetChangeModal',
+                type: 'POST',
+                data: { actionType: 0, serviceId: "@Id", wt: activeServicesWaysGetTabId() },
+                beforeSend: () => {
+
+                },
+                complete: () => {
+
+                },
+                success: function (content) {
+                    $('#mainModal').html(content).modal('show');
+                }
+            });
+        });
+
+        $tableServicesWayGet.DataTable({
+            sDom: "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            processing: true,
+            serverSide: true,
+            filter: true,
+            searching: false,
+            ajax: {
+                url: $tableServicesWayGet.data('action-table'),
+                type: "POST",
+                data: function (data) {
+                    data.id = '@Id';
+                    data.wt = activeServicesWaysGetTabId();
+                }
+            },
+            initComplete: function () {
+                   
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    title: 'Наименование',
+                    orderable: false
+                },
+                {
+                    targets: -1,
+                    title: 'Действия',
+                    data: "id",
+                    width: "80px",
+                    className: 'text-center editor-edit',
+                    sorting: false,
+                    orderable: false
+                }
+            ],
+            columns: [
+                {},
+                {
+                    data: "nameWay"
+                },
+                {
+                    render: function (data, type, row) {
+                        let content = "";
+                        if (isCanEditServicesWayGet === true)
+                        content += EditBtnServicesWayGet({ "id": data, "actionType": 1, "serviceId": "@Id", "wt": activeServicesWaysGetTabId() });
+                        if (isCanRemoveServicesWayGet === true)
+                            content += DeleteBtnServicesWayGet({ "id": data });
+                        return content;
+                    }
+                }
+            ]
+        });
+        $tableServicesWayGet.on("reload", () => {
+            $tableServicesWayGet.DataTable().ajax.reload(null, false);
+        });
+
+        $('[data-services-waysget-tab]').click(function () {
+            $('[data-services-waysget-tab]').removeClass('active');
+            $(this).addClass('active');
+            $tableServicesWayGet.DataTable().ajax.reload();
+        });
+
+        $tableServicesWayGet.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        let EditBtnServicesWayGet = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="edit" data-bs-toggle="tooltip" title="Изменить" class="btn btn-sm btn-icon text-body">
+                        <i class="bi bi-pencil-square"></i></a>`;
+        }
+
+        let DeleteBtnServicesWayGet = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-service-remove-btn-type data-bs-toggle="tooltip" title="Удалить" class="btn btn-sm btn-icon text-danger">
+                        <i class="bi bi-trash"></i></a>`;
+        }
+
+    });
+
+    function activeServicesWaysGetTabId() {
+        return $('#services-waysget-tab').find('.active').data('services-waysget-tab');
+    }
+</script>

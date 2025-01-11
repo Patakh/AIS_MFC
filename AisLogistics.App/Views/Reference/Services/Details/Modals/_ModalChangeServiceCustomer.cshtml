@@ -1,0 +1,91 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.ServiceCustomerModelDto
+@{
+}
+
+<form asp-controller="Reference" asp-action="ServiceCustomerSave" id="sendingForm" method="post" role="form">
+    <div class="form-body pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.SServicesId)
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SServicesCustomerTypeId">Получатель</label>
+                    <select asp-for="SServicesCustomerTypeId" asp-items="@ViewBag.СustomerTypes" class="form-control" placeholder="Тип офиса">
+                        <option disabled selected value="">Не задано</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="RepresentativeList">Перечень представителей</label>
+                    <textarea asp-for="RepresentativeList" class="form-control" placeholder="Перечень представителей"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="RepresentativeDocument">Документ подтверждающий право представителя</label>
+                    <textarea asp-for="RepresentativeDocument" class="form-control" placeholder="Документ подтверждающий право представителя"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="RepresentativeSpecification">Требование к документу права представителя</label>
+                    <input type="text" asp-for="RepresentativeSpecification" class="form-control" placeholder="Требование к документу права представителя">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <input type="checkbox" asp-for="Representative" class="checkbox" placeholder="Возможность подачи заявления представителем">
+                    <label class="form-label" asp-for="Representative">Возможность подачи заявления представителем</label>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    $(function(){
+        $('#SServicesCustomerTypeId').select2({dropdownParent: $('#mainModal')});
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    SServicesCustomerTypeId: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            },
+                        }
+                    },
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }) .on('core.form.valid', function() {
+            var $form = $("#sendingForm");
+            $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $table.DataTable().ajax.reload(null, false);
+                        $tableCustomers.DataTable().ajax.reload(null, false);
+                        $form.spinnerBtn("stop");
+                        $("#mainModal").modal('hide');
+                    }
+                });
+            return false;
+        });
+    });
+</script>

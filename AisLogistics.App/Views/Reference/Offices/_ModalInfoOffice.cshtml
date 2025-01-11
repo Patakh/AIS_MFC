@@ -1,0 +1,350 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.OfficeModelDto
+
+<form asp-controller="Reference" asp-action="OfficeSave" id="sendingForm" method="post" role="form">
+    <div class="form-body pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+            <!-- Общие сведения START -->
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="b-s-14">Общие сведения</div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12 ">
+                    <label class="form-label" asp-for="OffcesParentName">Головная организация</label>
+                    <input type="text" asp-for="OffcesParentName" class="form-control" readonly>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="OfficesTypeName">Тип офиса</label>
+                    <input type="text" asp-for="OfficesTypeName" maxlength="30" class="form-control" readonly>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="OfficeMnemo">Мнемоника</label>
+                    <input type="text" asp-for="OfficeMnemo" maxlength="10" class="form-control" readonly>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="OfficeName">Наименование</label>
+                    <input type="text" asp-for="OfficeName" maxlength="255" class="form-control" readonly>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="OfficeNameSmall">Краткое наименование</label>
+                    <input type="text" asp-for="OfficeNameSmall" maxlength="100" class="form-control" readonly>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-8">
+                    <label class="form-label" asp-for="OfficeHeadName">Руководитель</label>
+                    <input type="text" asp-for="OfficeHeadName" class="form-control" readonly>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="OfficeSquare">Площадь</label>
+                    <input type="text" asp-for="OfficeSquare" maxlength="255" class="form-control" readonly>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="OfficeAdress">Адрес</label>
+                    <input type="text" asp-for="OfficeAdress" maxlength="255" class="form-control" readonly>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeInn">ИНН</label>
+                    <input type="text" asp-for="OfficeInn" class="form-control" readonly>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeOgrn">ОГРН</label>
+                    <input type="text" asp-for="OfficeOgrn" class="form-control" readonly>
+                </div>
+            </div>
+
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeKpp">КПП</label>
+                    <input type="text" asp-for="OfficeKpp" class="form-control" readonly>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeOkato">ОКАТО</label>
+                    <input type="text" asp-for="OfficeOkato" class="form-control" readonly>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeOktmo">ОКТМО</label>
+                    <input type="text" asp-for="OfficeOktmo" class="form-control" readonly>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeCountPopulation">Количество населения</label>
+                    <input type="number" asp-for="OfficeCountPopulation" class="form-control" readonly>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="ReceiveWindowsCount">Количество окон приема</label>
+                    <input type="text" asp-for="ReceiveWindowsCount" class="form-control" placeholder="Количество окон приема" readonly>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12 ">
+                    <div class="b-s-14">Координаты</div>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeLatitude">Широта</label>
+                    <input type="text" asp-for="OfficeLatitude" class="form-control" readonly>
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeLongitude">Долгота</label>
+                    <input type="text" asp-for="OfficeLongitude" class="form-control" readonly>
+                </div>
+            </div>
+            
+            
+
+            <!-- Общие сведения END -->
+
+            <!-- КОНТАКТЫ START -->
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="b-s-14">Контакты</div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficePhoneNumber">Телефон</label>
+                    <input type="text" asp-for="OfficePhoneNumber" class="form-control" readonly>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeEmail">Почта</label>
+                    <input type="text" asp-for="OfficeEmail" class="form-control" readonly>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeWebsite">Сайт</label>
+                    <input type="url" asp-for="OfficeWebsite" class="form-control" readonly>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeSkype">Скайп</label>
+                    <input type="text" asp-for="OfficeSkype" class="form-control" readonly>
+                </div>
+            </div>
+            
+            <!-- КОНТАКТЫ END -->
+
+            <!-- Электронная почта для рассылки START -->
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="b-s-14">Электронная почта для рассылки</div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeEmailLogin">Логин</label>
+                    <input type="text" asp-for="OfficeEmailLogin" class="form-control" readonly>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeEmailPass">Пароль</label>
+                    <input type="text" asp-for="OfficeEmailPass" class="form-control" readonly>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeEmailServer">Сервер</label>
+                    <input type="text" asp-for="OfficeEmailServer" class="form-control" readonly>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeEmailPort">Порт</label>
+                    <input type="number" asp-for="OfficeEmailPort" class="form-control" readonly>
+                </div>
+            </div>
+            
+
+            <!-- Электронная почта для рассылки END -->
+
+            <!-- Электронные сервисы START -->
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="b-s-14">Электронные сервисы</div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeMvdOpvId">Идентификатор МВД</label>
+                    <input type="text" asp-for="OfficeMvdOpvId" class="form-control" readonly>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeEpguId">Идентификатор организации на ЕПГУ</label>
+                    <input type="text" asp-for="OfficeEpguId" class="form-control" readonly>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeEsiaCentrId">Идентификатор ЕСИА</label>
+                    <input type="text" asp-for="OfficeEsiaCentrId" class="form-control" readonly>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="EsiaOperatorSnils">СНИЛС оператора ЕСИА</label>
+                    <input type="text" asp-for="EsiaOperatorSnils" class="form-control" readonly>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeVendorId">Номер для ИАС МКГУ</label>
+                    <input type="text" asp-for="OfficeVendorId" class="form-control" readonly>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="QueueId">Идентификатор ЭО</label>
+                    <input type="text" asp-for="QueueId" class="form-control" readonly>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="OfficeNum">Номер МФЦ для ViPNet</label>
+                    <input type="text" asp-for="OfficeNum" class="form-control" readonly>
+                </div>
+            </div>
+            
+            <!-- Электронные сервисы END -->
+
+            <!-- ФРГУ START -->
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="b-s-14">ФРГУ</div>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="OfficeFrguProviderId">Идентификатор</label>
+                    <input type="text" asp-for="OfficeFrguProviderId" class="form-control" readonly>
+                </div>
+                <div class="col-8">
+                    <label class="form-label" asp-for="OfficeFrguName">Наименование</label>
+                    <input type="text" asp-for="OfficeFrguName" class="form-control" readonly>
+                </div>
+            </div>
+           
+            <!-- ФРГУ END -->
+
+            <!-- МДМ START -->
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="b-s-14">МДМ</div>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="MdmUid">Идентификатор</label>
+                    <input type="text" asp-for="MdmUid" class="form-control" readonly>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="SendMdm">Отправка в МДМ</label>
+                    <select asp-for="SendMdm" asp-items="@SelectListViewModel.BoolTypeList" class="form-control" placeholder="Отправка в МДМ" disabled></select>
+                </div>
+            </div>
+
+            <!-- МДМ END -->
+
+            <!-- ЦИК START -->
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="b-s-14">ЦИК</div>
+                </div>
+            </div>                
+
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="OfficeCikId">Идентификатор</label>
+                    <input type="text" asp-for="OfficeCikId" class="form-control" readonly>
+                </div>
+                <div class="col-8">
+                    <label class="form-label" asp-for="OfficeCikName">Наименование</label>
+                    <input type="text" asp-for="OfficeCikName" class="form-control" readonly>
+                </div>
+            </div>                
+
+            <!-- ЦИК END -->
+
+            <!-- FTP START -->
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="b-s-14">FTP</div>
+                </div>
+            </div>                
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FtpServerName">Сервер</label>
+                    <input type="text" asp-for="FtpServerName" class="form-control" readonly>
+                </div>
+            </div>                
+
+            <!-- FTP END -->
+
+            <!-- Filter START -->
+            <div class="row  mb-3">
+                <div class="col-12">
+                    <div class="b-s-14">Фильтр</div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <div class="form-label-group">
+                        <label class="form-check-label ms-1" asp-for="IsReceptionCustomer">Ведет прием от заявителя</label>
+                        <input type="checkbox" asp-for="IsReceptionCustomer" class="form-check-input ms-1" disabled>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-label-group">
+                        <label class="form-check-label ms-1" asp-for="IsProviderService">Орган предоставляющий услугу</label>
+                        <input type="checkbox" asp-for="IsProviderService" class="form-check-input ms-1" disabled>
+                    </div>
+                </div>
+            </div>
+            <!-- Filter END -->
+        </fieldset>
+    </div>
+</form>

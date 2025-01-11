@@ -1,0 +1,435 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new FKExportPaymentRequestData
+            {
+                PayerOtherData = new()
+            };
+}
+
+<style>
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+</style>
+
+<div class="row justify-content-center g-3">
+    <div class="col-10">
+        <div class="divider text-start">
+            <div class="divider-text b-s-16">Данные запроса</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-7">
+                <label class="form-label" asp-for="@request.ConditionGetInfo">Тип запроса</label>
+                <select class="form-select select2-nosearch" asp-for="@request.Kind" data-dictionary='{"dictionary":"FkExportPaymentRequestTypes"}'>
+                </select>
+            </div>
+            <div class="col-5">
+                <label class="form-label" asp-for="@request.ConditionGetInfo">Метод получения информации</label>
+                <select class="form-select select2-nosearch" asp-for="@request.ConditionGetInfo" onchange="changeConditionGetInfo(this)">
+                    <option value="ChargesConditions">По УИН</option>
+                    <option value="PayersConditions" selected="selected">По идентификатору плательщика</option>
+                    <option value="PaymentsConditions">По идентификатору платежа</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center mb-3" id="ChargesConditions" data-disabled>
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-5" id="uinList">
+                <input type="text" class="form-control uin mb-2" asp-for="@request.SupplierBillId">
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-5 mb-3">
+                <button type="button" class="btn btn-primary w-100" id="add-uin"><i class="bi bi-plus"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center mb-3" id="PayersConditions" data-block data-disabled>
+    <div class="col-12">
+        <div class="row justify-content-center mb-3">
+            <div class="col-8">
+                <label class="form-label">Заявители</label>
+                <select class="form-select select2-nosearch applicants">
+                    <option value="">Выберите заявителя</option>
+                    @for (int i = 0; i < applicants.Count; i++)
+                    {
+                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="row mb-3">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ConditionGetInfo">Тип заявителя</label>
+                <select class="form-select select2-nosearch" asp-for="@request.PayerOtherData.PayerType" onchange="changePayerType(this)">
+                    <option value="PayerFlData" selected="selected">ФЛ</option>
+                    <option value="PayerIpData">ИП</option>
+                    <option value="PayerUlResidentData">ЮЛ РФ</option>
+                    <option value="PayerUlNonResidentData">ЮЛ инстр.</option>
+                </select>
+            </div>
+        </div>
+        <div class="row g-3" data-fl data-disabled>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.PayerOtherData.InnFl">ИНН</label>
+                <input type="text" class="form-control inn-fl" placeholder="ИНН" asp-for="@request.PayerOtherData.InnFl" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.PayerOtherData.Snils">СНИЛС</label>
+                <input type="text" class="form-control snils" placeholder="СНИЛС" asp-for="@request.PayerOtherData.Snils" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.PayerOtherData.DrivingLicense">Водительские удостоверение</label>
+                <input type="text" class="form-control" placeholder="Водительские удостоверение" asp-for="@request.PayerOtherData.DrivingLicense" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.PayerOtherData.BirthCertificate">Свидетельство о рождении</label>
+                <input type="text" class="form-control" placeholder="Свидетельство о рождении" asp-for="@request.PayerOtherData.BirthCertificate" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.PayerOtherData.PassportSeriesNumber">Серия номер паспорта</label>
+                <input type="text" class="form-control" placeholder="Серия номер паспорта" asp-for="@request.PayerOtherData.PassportSeriesNumber" />
+            </div>
+        </div>
+        <div class="row g-3" data-ip data-disabled>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.PayerOtherData.InnFl">ИНН</label>
+                <input type="text" class="form-control required inn-fl" placeholder="ИНН" asp-for="@request.PayerOtherData.InnFl" />
+            </div>
+        </div>
+        <div class="row g-3" data-ul-resident data-disabled>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.PayerOtherData.InnFl">ИНН</label>
+                <input type="text" class="form-control inn-ul required" placeholder="ИНН" asp-for="@request.PayerOtherData.InnFl" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.PayerOtherData.Kpp">КПП</label>
+                <input type="text" class="form-control kpp required" placeholder="КПП" asp-for="@request.PayerOtherData.Kpp" />
+            </div>
+        </div>
+        <div class="row g-3" data-ul-nonresident data-disabled>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.PayerOtherData.InnUl">ИНН</label>
+                <input type="text" class="form-control inn-ul" placeholder="ИНН" asp-for="@request.PayerOtherData.InnUl" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.PayerOtherData.Kio">КИО</label>
+                <input type="text" class="form-control kio" placeholder="КИО" asp-for="@request.PayerOtherData.Kio" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center mb-3" id="PaymentsConditions" data-disabled>
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-7" id="uipList">
+                <input type="text" class="form-control uip" asp-for="@request.PaymentId">
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-7 mb-3">
+                <button type="button" class="btn btn-primary w-100" id="add-uip"><i class="bi bi-plus"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<input type="text" class="form-control uin d-none" asp-for="@request.SupplierBillId" id="SupplierBillId" disabled="disabled">*@
+<div class="input-group mb-3 d-none" data-disabled id="SupplierBillId">
+    <input type="text" class="form-control uin" asp-for="@request.SupplierBillId">
+    <button class="btn btn-danger" type="button" onclick="deleteBlock(this)"><i class="bi bi-x"></i></button>
+</div>
+
+@*<input type="text" class="form-control uip d-none" asp-for="@request.PaymentId" id="PaymentId" disabled="disabled">*@
+<div class="input-group mb-3 d-none" data-disabled id="PaymentId">
+    <input type="text" class="form-control" asp-for="@request.PaymentId">
+    <button class="btn btn-danger" type="button" onclick="deleteBlock(this)"><i class="bi bi-x"></i></button>
+</div>
+
+<script>
+     var applicants = @Json.Serialize(applicants);
+     $('select.applicants').each(function() {
+        $(this).on('change',
+            function() {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-block]');
+                $block.find('[type="text"]').each(function() {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$="InnFl"]').val(applicants[id].inn);
+                    $block.find('[name$="Snils"]').val(applicants[id].snils);
+
+                    switch (applicants[id].documentTypeCode) {
+                        case '3':
+                            $block.find('[name$="BirthCertificate"]').val(`${applicants[id].documentSerial}${applicants[id].documentNumber}`);
+                            break;
+                        case '21':
+                            $block.find('[name$="PassportSeriesNumber"]').val(`${applicants[id].documentSerial}${applicants[id].documentNumber}`);
+                            break;
+                    }
+                }
+            });
+    });
+
+     var formContent = document.getElementById("smev-data-form-content");
+     var smevForm = {
+         init: () => {
+             $(formContent).find("select.select2-nosearch").each(function() {
+                 $(this).select2({
+                     dropdownParent: $("#mainModal"),
+                     minimumResultsForSearch: Infinity
+                 });
+             });
+             $(formContent).find("select.select2-search").each(function() {
+                 $(this).select2({
+                     dropdownParent: $("#mainModal")
+                 });
+             });
+
+            /* init datepicker */
+             $(formContent).find(".pickadate").datepicker({
+                 language: "ru",
+                 autoclose: true
+             });
+
+             var maskOptions = { clearIncomplete: true, showMaskOnHover: false };
+
+             /* init inputmask */
+             $(formContent).find(".pickadate").inputmask("99.99.9999", maskOptions);
+             $(formContent).find('.snils').inputmask("999-999-999 99", maskOptions);
+             $(formContent).find('.issuer-code').inputmask("999-999", maskOptions);
+             $(formContent).find('.guid').inputmask('[A|9]{8}-[A|9]{4}-[A|9]{4}-[A|9]{4}-[A|9]{12}', maskOptions);
+             $(formContent).find('.uin').inputmask('9{20,25}', maskOptions);
+             $(formContent).find('.uip').inputmask('9{32}', maskOptions);
+             $(formContent).find('.inn-fl').inputmask('9{12}', maskOptions);
+             $(formContent).find('.inn-ul').inputmask('9{10}', maskOptions);
+             $(formContent).find('.kio').inputmask('9{5}', maskOptions);
+
+             $(formContent).find('[data-disabled]').each(function() {
+                 visibilityBlock($(this), true, true);
+             });
+
+             $(formContent).find('#request_ConditionGetInfo').trigger('change');
+         }
+     };
+
+     $('#add-uin').on('click', function() {
+         addForm('uinList', 'SupplierBillId');
+     });
+
+     $('#add-uip').on('click', function() {
+         addForm('uipList', 'PaymentId');
+     });
+
+    function ShowErrorInputs() {
+
+     }
+
+     function changeConditionGetInfo(el) {
+         visibilityBlock($('#ChargesConditions'), true, true);
+         visibilityBlock($('#PayersConditions'), true, true);
+         visibilityBlock($('#PaymentsConditions'), true, true);
+
+         switch (el.value) {
+             case 'ChargesConditions':
+                 visibilityBlock($('#ChargesConditions'), false, false);
+                 break;
+             case 'PayersConditions':
+                 visibilityBlock($('#PayersConditions'), false, false);
+                 $('#PayersConditions select').trigger('change');
+                 break;
+             case 'PaymentsConditions':
+                 visibilityBlock($('#PaymentsConditions'), false, false);
+                 break;
+         }
+     }
+
+     (function getDictionaries() {
+         let dicts = new Set();
+         $('[data-dictionary]').each(function() {
+             let $this = $(this);
+             let options = $this.data('dictionary');
+             if (!dicts.has(options.dictionary)) {
+                 dicts.add(options.dictionary);
+                 $.post(`/SmevBase/SmevGetDictionary`,
+                     {
+                         type: options.dictionary
+                     },
+                     function(dictionary) {
+                         fillSelect(options.dictionary, dictionary);
+                     });
+             }
+         });
+     }());
+
+     function fillSelect(dictName, dictionary) {
+         $.each($(`[data-dictionary*='"${dictName}"']`),
+             function() {
+                 let $this = $(this);
+                 let items = dictionary;
+                 $this.empty();
+                 if ($this.is('[data-value-value]')) {
+                     items.dictionary.forEach(function(item) {
+                         $this.append(new Option(item.value, item.value));
+                     });
+                 } else {
+                     items.dictionary.forEach(function(item) {
+                         $this.append(new Option(item.value, item.key));
+                     });
+                 }
+
+                 if (items.defaultKey != null) {
+                     $this.val(items.defaultKey).trigger('update');
+                     $this.attr('data-def', items.defaultKey);
+                 } else {
+                     let defVal = $this.data('dictionary').default_value;
+                     if (defVal) {
+                         $this.val(defVal).trigger('update');
+                         $this.attr('data-def', defVal);
+                     }
+                 }
+             });
+     }
+
+     function changePayerType(el) {
+         $('#PayersConditions').find('[data-disabled]').each(function() {
+             visibilityBlock($(this), true, true);
+         });
+
+         switch(el.value) {
+             case 'PayerFlData':
+                 visibilityBlock($('[data-fl]'), false, false);
+                 break;
+             case 'PayerIpData':
+                 visibilityBlock($('[data-ip]'), false, false);
+                 break;
+             case 'PayerUlResidentData':
+                 visibilityBlock($('[data-ul-resident]'), false, false);
+                 break;
+             case 'PayerUlNonResidentData':
+                 visibilityBlock($('[data-ul-nonresident]'), false, false);
+                 break;
+         }
+     }
+
+     function visibilityBlock($block, hide, isDisabled ) {
+         switch(hide) {
+         case true:
+             if ($block.hasClass('accordion')) {
+                 $block.find('.accordion-body').hide();
+             } else {
+                 $block.hide();
+             }
+             break;
+         case false:
+             if ($block.hasClass('accordion')) {
+                 $block.find('.accordion-body').show();
+             } else {
+                 $block.show();
+             }
+             break;
+         }
+
+         switch (isDisabled) {
+         case true:
+             $block.find('input, select').each(function() {
+                 if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                     removeValidation($(this));
+                 }
+                 $(this).prop('disabled', true);
+             });
+             break;
+         case false:
+             $block.find('input, select').each(function() {
+                 $(this).prop('disabled', false);
+                 if ($(this).hasClass('required')) {
+                     addValidation($(this));
+                 }
+             });
+             $block.find('[data-disabled]').each(function () {
+                 visibilityBlock($(this), true, true);
+             });
+             break;
+         }
+     }
+
+     function deleteBlock(el) {
+         el.closest('div').remove();
+     }
+
+     function addValidation($el) {
+         SmevDataFormValidation.addField($el.attr('name'),
+             {
+                 validators: {
+                     notEmpty: {}
+                 }
+             });
+         SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+         $el.addClass('required');
+     }
+
+     function removeValidation($el) {
+         if ($el.attr('name') in SmevDataFormValidation.fields) {
+             SmevDataFormValidation.removeField($el.attr('name'));
+         }
+     }
+
+     function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+         let cloneList = formContent.querySelector(`#${cloneListId}`);
+         let original = formContent.querySelector(`#${originalId}`);
+         let cloneBlock = original.cloneNode(true);
+         cloneBlock.classList.remove('d-none');
+         cloneBlock.removeAttribute('disabled');
+         let index = cloneList.querySelectorAll('input').length;
+         renameBlock(cloneBlock, index);
+         blockInit(cloneBlock);
+         cloneList.appendChild(cloneBlock);
+     }
+
+     function blockInit(block) {
+         visibilityBlock($(block), false, false);
+         var maskOptions = { clearIncomplete: true, showMaskOnHover: false };
+
+         $(block).find('.uin').inputmask('9{20,25}', maskOptions);
+         $(block).find('.uip').inputmask('9{32}', maskOptions);
+     }
+
+     function renameBlock(cloneBlock, indexId, initOriginal = false) {
+         if (!initOriginal) {
+             cloneBlock.id = `clone${indexId}`;
+             cloneBlock.dataset.id = indexId;
+             cloneBlock.setAttribute('data-clone', '');
+         }
+
+         cloneBlock.querySelectorAll('input').forEach(item => {
+             item.id = item.id.replace(/\d+/, indexId);
+             item.name = item.name.replace(/\d+/, indexId);
+         });
+
+         cloneBlock.querySelectorAll('label').forEach(item => {
+             item.setAttribute('for', item.getAttribute('for').replace(/\d+/, indexId));
+         });
+
+         cloneBlock.querySelectorAll('select').forEach(item => {
+             item.id ? item.id = item.id.replace(/\d+/, indexId) : void 0;
+             item.name ? item.name = item.name.replace(/\d+/, indexId) : void 0;
+             item.hasAttribute('data-select2-id') ? item.removeAttribute('data-select2-id') : void 0;
+         });
+     }
+</script>

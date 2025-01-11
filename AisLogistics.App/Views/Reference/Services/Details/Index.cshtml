@@ -1,0 +1,229 @@
+﻿@using AisLogistics.App.Extensions
+@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    var serviceModel = Model.Model as AisLogistics.DataLayer.Common.Dto.Reference.ServiceModelDto;
+}
+
+<!-- table -->
+
+
+<div>
+    <div class="row">
+        <div class="col-6">
+            @if (Model.IsVisibleDescription)
+            {
+                <div class="b-s-14">@Model.ViewDescription</div>
+            }
+        </div>
+
+        <div class="col-6 text-end">
+            @if (User.HasClaim(AccessKeyNames.ReferenceEmployee, AccessKeyValues.Add))
+            {
+                <a asp-action="ServiceChangeModal" asp-route-id="@serviceModel.Id" asp-route-actiontype="edit" data-btn-type="modal" class="r-a-14">
+                    <i class="bi bi-pencil-square"></i> Изменить
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Мнемоника услуги
+        </div>
+        <div class="col-12 m-s-14">
+            @(serviceModel.ServiceMnemo ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Наименование
+        </div>
+        <div class="col-12 m-s-14" data-bs-toggle="tooltip" title="@serviceModel.ServiceName">
+            @(serviceModel.ServiceName.Length > 170 ? serviceModel.ServiceName.Substring(0, 170) + " ..." : serviceModel.ServiceName)
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Краткое наименование услуги
+        </div>
+        <div class="col-12 m-s-14" data-bs-toggle="tooltip" title="@serviceModel.ServiceNameSmall">
+            @(serviceModel.ServiceNameSmall.Length > 170 ? serviceModel.ServiceNameSmall.Substring(0, 170)+" ..." : serviceModel.ServiceNameSmall)
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Наименование для сайта
+        </div>
+        <div class="col-12 m-s-14" data-bs-toggle="tooltip" title="@serviceModel.ServiceNameSite">
+            @(string.IsNullOrEmpty(serviceModel.ServiceNameSite) ? "-" : serviceModel.ServiceNameSite.Length > 170 ? serviceModel.ServiceNameSite.Substring(0, 170) + " ..." : serviceModel.ServiceNameSite)
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Орган власти
+        </div>
+        <div class="col-12 m-s-14">
+            @serviceModel.OfficeName
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Тип услуги
+        </div>
+        <div class="col-12 m-s-14">
+            @serviceModel.SServicesTypeName
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Способ взаимодействия
+        </div>
+        <div class="col-12 m-s-14">
+            @serviceModel.SServicesInteractionName
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Расположение услуги
+        </div>
+        <div class="col-12 m-s-14">
+            @(((ServicePositionType)@serviceModel.ServicePosition).GetDisplayName())
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Реквизиты НПА
+        </div>
+        <div class="col-12 m-s-14">
+            @(serviceModel.LegalAct ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Описание подуслуги
+        </div>
+        <div class="col-12 m-s-14">
+            @(serviceModel.ServiceDescription ?? "-")
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Идентификатор ФРГУ
+        </div>
+        <div class="col-12 m-s-14">
+            @(serviceModel.FrguServiceId ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Наименование ФРГУ
+        </div>
+        <div class="col-12 m-s-14">
+            @(serviceModel.FrguName ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Срок хранения документов
+        </div>
+        <div class="col-12 m-s-14">
+            @(serviceModel.TimeStorage ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Жизненные ситуации
+        </div>
+        <div class="col-12 m-s-14">
+            @(serviceModel.ServiceLivingSituation.Any() ? String.Join(" ", serviceModel.ServiceLivingSituation.Select(s => "#" + s.Name)) : "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Хэштеги
+        </div>
+        <div class="col-12 m-s-14">
+            @(string.IsNullOrEmpty(serviceModel.Hashtag) ? "-" : serviceModel.Hashtag)
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Вывод в отчетах
+        </div>
+        <div class="col-12 m-s-14">
+            @(serviceModel.IsReportSelect ? "Да" : "Нет")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Возможность редактирования тарифа
+        </div>
+        <div class="col-12 m-s-14">
+            @(serviceModel.IsTariffEdit ? "Да" : "Нет")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Участие услуги в ИАС МКГУ
+        </div>
+        <div class="col-12 m-s-14">
+            @(serviceModel.IasMkgu ? "Да" : "Нет")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Учитывать в плане
+        </div>
+        <div class="col-12 m-s-14">
+            @(serviceModel.IsPlan ? "Да" : "Нет")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Выдача в ОИВ
+        </div>
+        <div class="col-12 m-s-14">
+            @(serviceModel.IsIssueAuthority ? "Да" : "Нет")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Отправка сообщений
+        </div>
+        <div class="col-12 m-s-14">
+            @(serviceModel.IsMessage ? "Да" : "Нет")
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Выгрузка для сайта
+        </div>
+        <div class="col-12 m-s-14">
+            @(serviceModel.IsUploadingSite ? "Да" : "Нет")
+        </div>
+    </div>
+
+</div>
+
+
+<!--/ table -->

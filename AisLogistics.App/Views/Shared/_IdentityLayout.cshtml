@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html lang="ru" class="light-style customizer-hide"
+      dir="ltr" data-theme="theme-default"
+      data-assets-path="/assets/" data-template="horizontal-menu-template">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-16">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="author" content="WebSystems">
+    <title>@ViewData["Title"] - @Resource.AppName</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/svg/logo/horizontal/svg/sm-color.svg" />
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="~/assets/vendor/fonts/fontawesome.css" />
+    <link rel="stylesheet" href="~/assets/vendor/fonts/flag-icons.css" />
+
+    <!-- Core CSS -->
+    @*   <link rel="stylesheet" href="~/assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />*@
+    <link rel="stylesheet" href="~/assets/vendor/css/rtl/theme-default.css" class="template-customizer-theme-css" />
+  @*  <link rel="stylesheet" href="~/assets/css/demo.css" />*@
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/typeahead-js/typeahead.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/bootstrap-select/bootstrap-select.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/select2/select2.css">
+    <!-- Vendor -->
+    <link rel="stylesheet" href="~/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
+
+    <!-- User Css -->
+    <link rel="stylesheet" href="~/assets/css/login.css" asp-append-version="true" />
+
+    <!-- Page CSS -->
+    <!-- Page -->
+    <link rel="stylesheet" href="~/assets/vendor/css/pages/page-auth.css">
+    <!-- Helpers -->
+    <script src="~/assets/vendor/js/helpers.js"></script>
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="~/assets/js/config.js"></script>
+
+    <!-- BEGIN: Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css" asp-append-version="true">
+    <!-- END: Custom CSS-->
+
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/assets/vendor/bi/bootstrap-icons.css" />
+</head>
+
+
+<body>
+    <style>
+
+        html,
+        body {
+            height: 100%;
+            background-color: #F5F5F5;
+        }
+
+        p {
+            width: 72% !important;
+            color: #172359 !important; 
+            font-weight: 500 !important;
+            font-size: 18px !important;
+            letter-spacing: 0.035em;
+        }
+
+        h1 {
+            width: 94% !important;
+            color: #172359 !important;
+            letter-spacing: 0.035em;
+            font-weight: 700;
+            font-size: 34px;
+        }
+
+        .foot {
+            color: rgba(23, 35, 89, 0.35) !important;
+            font-style: normal !important;
+            font-weight: 400 !important;
+            font-size: 14px !important;
+        }
+
+        .asy {
+            background-repeat: no-repeat;
+            background: url("/img/vivid-blurred-colorful-wallpaper-background 1.jpg") !important; 
+        }
+
+        .frame-img {
+            opacity: 25%;
+        }
+
+        .form-control:focus {
+            box-shadow: none !important;
+        }
+
+        body {
+            overflow-x: hidden !important;
+        }
+    </style>
+
+    <!-- Content -->
+    <div class="row px-0 mx-0 h-100">
+        <div class="row col-lg-6 col-xl-6 col-xxl-6 asy">
+            <div class="mt-auto ps-0">
+                <div class="col-12">
+                    <div class="col-11 ms-auto">
+                        <h1>Помогаем оказывать государственные и муниципиальные услуги</h1>
+                        <p>После авторизации вы получите доступ к ресурсам информационной системы в соответствии с вашей ролью</p>
+                    </div>
+                    <div class="frame-img">
+                        <img src="~/img/Frame 6.png" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-xl-6 col-xxl-6 mt-auto h-75">
+            <div class="col-12">
+                <div class="col-5 mx-auto pb-5">
+                    <img src="~/img/logo.svg" class="w-100" />
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-5 mx-auto pt-5">
+                    @RenderBody()
+                </div>
+            </div>
+            <div class="row h-25">
+                <div class="foot text-center mt-auto">
+                    © @DateTime.Now.Year WebSystems
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- / Content -->
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="~/assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="~/assets/vendor/libs/popper/popper.js"></script>
+    <script src="~/assets/vendor/js/bootstrap.js"></script>
+    <script src="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="~/assets/vendor/libs/hammer/hammer.js"></script>
+    <script src="~/assets/vendor/libs/i18n/i18n.js"></script>
+    <script src="~/assets/vendor/libs/typeahead-js/typeahead.js"></script>
+    <script src="~/assets/vendor/libs/select2/select2.js"></script>
+    <script src="~/assets/vendor/libs/select2/ru.min.js"></script>
+
+   @* <script src="~/assets/vendor/js/menu.js"></script>*@
+    <!-- endbuild -->
+    <!-- Vendors JS -->
+    <script src="~/assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js"></script>
+    <script src="~/assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js"></script>
+    <script src="~/assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js"></script>
+    <script src="~/assets/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
+    <!-- Main JS -->
+   @* <script src="~/assets/js/main.js"></script>*@
+
+    @await RenderSectionAsync("Scripts", required: false)
+    <!-- END: Page JS-->
+</body>
+</html>

@@ -1,0 +1,39 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    string url = ViewBag.Url + "/Page";
+}
+
+<link rel="stylesheet" href="~/assets/css/reports.css" asp-append-version="true" />
+
+<section id="content-report" class="row">
+    <div class="col-sm-12 col-lg-2">
+        <partial name="_NavLeft" model="Model.Model" />
+    </div>
+    <div class="col-sm-12 col-lg-10" id="navs-tabs-default">
+        <div class="row p-3 card h-auto mb-3">
+            <div class="col-12">
+                @{
+                    await Html.RenderPartialAsync(url, ViewBag.NavId as string);
+                 }
+            </div>
+            <hr class="mt-3">
+            <div class="col-auto pt-2 ms-auto">
+                <button id="reportPrint" data-report-print="ReportDataPrint" type="button" class="btn btn-danger d-none" disabled>Печать</button>
+                <a href="" id="reportDownload" data-report-upload="ReportDataDownLoad" type="button" class="btn btn-success d-none" target="_blank" disabled>Выгрузить</a>
+                <button id="reportSubmit" type="submit" class="btn btn-primary">Cформировать</button>
+            </div>
+        </div> 
+        <div class="row card">
+            <div class="col-12">
+            <div id="reportContent">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts
+{
+    <script src="~/assets/js/pages/reports.js" asp-append-version="true" type="text/javascript"></script>
+}

@@ -1,0 +1,247 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.KBR.Federal.AdoptiveFamilyCreationModel
+@{
+    if (Model.Children.Length == 0)
+        Model.Children = new[] { new AisLogistics.App.Models.AdditionalForms.KBR.Federal.AdoptiveFamilyCreationModel.Child() };
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="AdoptionTypeId" id="AdoptionTypeId1" class="form-check-input" type="radio" value="1">
+                        <label for="AdoptionTypeId1" class="form-check-label">
+                            прошу выдать мне заключение о возможности быть опекуном (попечителем)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="AdoptionTypeId" id="AdoptionTypeId2" class="form-check-input" type="radio" value="2">
+                        <label for="AdoptionTypeId2" class="form-check-label">
+                            прошу выдать мне заключение о возможности быть приемным родителем
+                        </label>
+                    </div>
+                    <div class="form-check" checkBlock>
+                        <input asp-for="AdoptionTypeId" id="AdoptionTypeId3" class="form-check-input" type="radio" value="3">
+                        <label for="AdoptionTypeId3" class="form-check-label">
+                            прошу передать мне под опеку (попечительство)
+                        </label>
+                    </div>
+                    <div class="form-check" checkBlock>
+                        <input asp-for="AdoptionTypeId" id="AdoptionTypeId4" class="form-check-input" type="radio" value="4">
+                        <label for="AdoptionTypeId4" class="form-check-label">
+                            прошу передать мне под опеку (попечительство) на возмездной основе
+                        </label>
+                    </div>
+
+                    <div class="row mb-3" checkBlockBody>
+                        <div id="childrenList" data-clone-list>
+                            @for (var i = 0; i < Model.Children.Length; i++)
+                            {
+                                <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                                    <hr />
+                                    <h6 class="my-2 title">Ребенок @(i + 1)</h6>
+                                    <div class="row mb-1 align-items-center">
+                                        <div class="col-10">
+                                            <label asp-for="Children[i].FullName" class="form-label">Ф.И.О.</label>
+                                            <input asp-for="Children[i].FullName" class="form-control" type="text">
+                                        </div>
+                                        <div class="col-1 mt-2">
+                                            <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <div class="col-4">
+                                            <label asp-for="Children[i].BirthDate" class="form-label">Дата рождения</label>
+                                            <input asp-for="Children[i].BirthDate" class="form-control pickdate" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-2">
+                                <button type="button" class="btn btn-primary" id="addChild"><i class="bi bi-plus"></i></button>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="AdditionalInformation" class="form-label">
+                        Дополнительно могу сообщить о себе следующее
+                    </label>
+                    <input asp-for="AdditionalInformation" class="form-control" type="text" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="OtherPersonFullName" class="form-label">
+                        Я не возражаю
+                    </label>
+                    <input asp-for="OtherPersonFullName" class="form-control" type="text" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label asp-for="OtherPersonKinship" class="form-label">
+                        чтобы мой (моя)
+                    </label>
+                    <input asp-for="OtherPersonKinship" class="form-control" type="text" />
+                </div>
+                <div class="col-6">
+                    <label class="form-label">
+                        стал(а) опекуном (попечителем) несовершеннолетнего
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="child" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Ребенок 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-10">
+                <label asp-for="Children[0].FullName" class="form-label">Ф.И.О.</label>
+                <input asp-for="Children[0].FullName" class="form-control" type="text">
+            </div>
+            <div class="col-1 mt-2">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-4">
+                <label asp-for="Children[0].BirthDate" class="form-label">Дата рождения</label>
+                <input asp-for="Children[0].BirthDate" class="form-control pickdate" type="text">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+        additionalForm.find('#addChild').on('click', () => addForm('childrenList', 'child'));
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", { clearIncomplete: true, showMaskOnHover: false });
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        togleFields();
+    })
+
+    function togleFields() {
+        additionalForm.find('[checkBlock] input[type="radio"], [checkBlock] input[type="checkbox"]').each(function () {
+            let $block = $(this).closest('[checkBlock]');
+
+            if ($(this).is(':checked')) {
+                visibilityBlock($block.find('[checkBlockBody]'), false, false);
+            } else {
+                visibilityBlock($block.find('[checkBlockBody]'), true, true);
+            }
+        })
+    }
+
+    function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+        let $cloneList = additionalForm.find(`#${cloneListId}`);
+        let $original = originalBlock.find(`#${originalId}`);
+        let $cloneBlock = $original.clone(true);
+        let indexId = $cloneList.find('[data-clone]').length;
+        renameBlock($cloneBlock, indexId);
+        blockInit($cloneBlock);
+        $cloneList.append($cloneBlock);
+    }
+
+    function blockInit($block) {
+        visibilityBlock($block, false, false);
+
+        $block.find("input").each(function () {
+            $(this).val("");
+        });
+        $block.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+        });
+    }
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

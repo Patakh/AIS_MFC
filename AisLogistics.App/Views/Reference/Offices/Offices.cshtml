@@ -1,0 +1,146 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+
+}
+
+
+<style>
+    .dataTables_filter .form-label {
+        display: none;
+    }
+</style>
+
+<!-- table -->
+<section id="content-datatable">
+    <div class="row">
+        <div class="col-12">
+           @*  @if (Model.IsVisibleTitle)
+            {
+                <div class="card-header">
+                    <h4 class="card-title">@Model.ViewTitle</h4>
+                </div>
+            }
+
+            <div class="row">
+                <div class="col-md-10">
+                    @if (Model.IsVisibleDescription)
+                    {
+                        <div class="b-s-14">@Model.ViewDescription</div>
+                    }
+                </div>
+            </div> *@
+            <div class="table-responsive">
+                <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceOffice" class="directory_names-items table ta"></table>
+            </div>
+        </div>
+    </div>
+</section>
+<!--/ table -->
+@* @section Scripts
+    { *@
+<script>
+    $tableOffices = $('#@(Model.TableName)');
+    isCanAdd = $tableOffices.is('[data-action-add]');
+    isCanEdit = $tableOffices.is('[data-action-edit]');
+    isCanRemove = $tableOffices.is('[data-action-remove]');
+
+    $(document).ready(function () {
+        $tableOffices.DataTable({
+            sDom: "<'row'<'col'f><'col-auto'<'#btnCreate'>>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            processing: true,
+            serverSide: true,
+            filter: true,
+            searchDelay: 1500,
+            ajax: {
+                url: $tableOffices.data('action-table'),
+                type: "POST",
+                datatype: "json",
+                dataSrc: function (json) {
+                    return json.data;
+                }
+            },
+            initComplete: function () {
+                if (`@(User.HasClaim(AccessKeyNames.ReferenceOffice, AccessKeyValues.Add))` == 'True') {
+                    $('#btnCreate').append(`
+                            <button data-btn-params='{"actionType":"@ActionType.Add", "officeType": "@ViewBag.typeId"}' data-btn-type="add" data-for-table="@Model.TableName" type="button" class="btn btn-primary ">
+                            <i class="bi bi-plus"></i> Добавить
+                        </button>`
+                    );
+                }
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    title: 'Наименование',
+                    orderable: false
+                },
+                {
+                    targets: -1,
+                    title: 'Действия',
+                    data: "id",
+                    className: 'text-center editor-edit',
+                    sorting: false,
+                    orderable: false
+                },
+
+
+            ],
+            columns: [
+                {},
+                {
+                    data: "officeName",
+                    render: function (data, type, row) {
+                        return `<a href="@Url.Action("OfficeInfoModal", "Reference")?id=${row.id}" data-btn-type="modal"><div class="b-s-14 reference">${data}</div></a>
+                                ${row.parentOfficeName === null ? '' : '<div class="r-l-12">' + row.parentOfficeName + '</div>'}`;
+                    }
+                },
+                {
+                    render: function (data, type, row) {
+                        let content = "";
+                        if (isCanEdit === true)
+                            content += EditBtn({ "id": data, "actionType": 1 });
+                        if (isCanRemove === true)
+                            content += DeleteBtn({ "id": data });
+                        return content;
+                    }
+                },
+            ]
+        });
+        $tableOffices.on("reload", () => {
+            $tableOffices.DataTable().ajax.reload(null, false);
+        });
+    });
+
+    $tableOffices.on('draw.dt', function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl, {
+                boundary: document.body
+            });
+        });
+    });
+
+    EditBtn = (data) => {
+        const params = JSON.stringify(data);
+        return `<span class="d-block"><a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="edit" data-bs-toggle="tooltip" title="Изменить" class="btn btn-sm btn-icon text-body py-0">
+                <i class="bi bi-pencil-square"></i></a>`;
+    }
+
+    DeleteBtn = (data) => {
+        const params = JSON.stringify(data);
+        return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="remove" data-bs-toggle="tooltip" title="Удалить" class="btn btn-sm btn-icon text-danger py-0">
+                <i class="bi bi-trash"></i></a></span>`;
+    }
+</script>
+@* } *@
+

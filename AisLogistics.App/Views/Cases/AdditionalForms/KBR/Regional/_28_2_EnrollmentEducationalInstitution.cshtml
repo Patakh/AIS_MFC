@@ -1,0 +1,53 @@
+﻿@model _28_2_EnrollmentEducationalInstitutionModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto"> 
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ShefFIO">Руководитель ФИО</label>
+                    <input type="text" asp-for="ShefFIO" class="form-control">
+                </div> 
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="MOUNumber">наименование общеобразовательного учреждения</label>
+                    <input type="text" asp-for="MOUNumber" class="form-control">
+                </div> 
+            </div>
+            <br />
+            <h6 class="my-2">Ребенок</h6> 
+            <div class="row mb-3">
+                <div class="col-sm-8">
+                    <label class="form-label" asp-for="ChildFIO">ФИО</label>
+                    <input type="text" asp-for="ChildFIO" class="form-control">
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" asp-for="ChildBirdsDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="ChildBirdsDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () {
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+    });
+     
+</script>

@@ -1,0 +1,436 @@
+﻿@using AisLogistics.App.ViewModels.Archive
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    var responseData = Model.Model as SearchArchiveCasesResponseData;
+}
+
+<style>
+    table tr {
+        cursor: pointer !important;
+    }
+</style>
+
+<section class="search-bar-wrapper mt-n2">
+    <!-- Search Bar -->
+    <form id="services-search-form">
+        <div class="row">
+            <div class="col-12">
+                <div class="search-bar">
+                    <!-- input search -->
+                    <fieldset class="page-search-input form-group position-relative m-0 pb-2">
+                       @*  <small class="text-light b-s-16">Параметры поиска обращений в архиве</small> *@
+                        <div class="accordion mt-1 accordion-header-primary" id="accordionArchive">
+                            <div class="card accordion-item active">
+                                <h2 class="accordion-header me-0">
+                                    <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#accordionArchive-person" aria-expanded="true">
+                                        <i class="bi bi-person me-2"></i>
+                                        Персональные данные
+                                    </button>
+                                </h2>
+
+                                <div id="accordionArchive-person" class="accordion-collapse collapse show">
+                                    <div class="accordion-body">
+                                        <div class="row mb-2">
+                                            <div class="col-2">
+                                                <label class="form-label" asp-for="@responseData.CustomerType">Тип заявителя</label>
+                                                <select asp-for="@responseData.CustomerType" class="form-control" placeholder="Тип заявителя">
+                                                    <option value="1">Физ. лицо</option>
+                                                    <option value="2">Юр. лицо</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-4 wrapper">
+                                                <label class="form-label" asp-for="@responseData.CustomerNameLegal">Наименование</label>
+                                                <input type="text" class="form-control" placeholder="Наименование" asp-for="@responseData.CustomerNameLegal" />
+                                            </div>
+                                            <div class="col-4 wrapper">
+                                                <label class="form-label" asp-for="@responseData.CustomerName">ФИО</label>
+                                                <input type="text" class="form-control" placeholder="ФИО" asp-for="@responseData.CustomerName" />
+                                            </div>
+                                            <div class="col-3 wrapper">
+                                                <label class="form-label" asp-for="@responseData.Serial">Серия и номер документа</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="Серия" asp-for="@responseData.Serial" />
+                                                    <input type="text" class="form-control" placeholder="Номер" asp-for="@responseData.Number">
+                                                </div>
+                                            </div>
+                                            <div class="col-2 wrapper">
+                                                <label class="form-label" asp-for="@responseData.Snils">СНИЛС</label>
+                                                <input type="text" class="form-control" placeholder="СНИЛС" asp-for="@responseData.Snils">
+                                            </div>
+                                            <div class="col-2">
+                                                <label class="form-label" asp-for="@responseData.Inn">ИНН</label>
+                                                <input type="text" class="form-control" placeholder="ИНН" asp-for="@responseData.Inn" />
+                                            </div>
+                                            <div class="col-2">
+                                                <label class="form-label" asp-for="@responseData.Phone">Телефон</label>
+                                                <input type="text" class="form-control" placeholder="Телефон" asp-for="@responseData.Phone" />
+                                            </div>
+                                            
+
+                                            @*<div class="col-3">
+                                                <label class="form-label" asp-for="@responseData.LastName">Фамилия</label>
+                                                <input type="text" class="form-control" placeholder="Фамилия" asp-for="@responseData.LastName" />
+                                            </div>
+                                            <div class="col-3">
+                                                <label class="form-label" asp-for="@responseData.FirstName">Имя</label>
+                                                <input type="text" class="form-control" placeholder="Имя" asp-for="@responseData.FirstName">
+                                            </div>
+                                            <div class="col-3">
+                                                <label class="form-label" asp-for="@responseData.SecondName">Отчество</label>
+                                                <input type="text" class="form-control" placeholder="Отчество" asp-for="@responseData.SecondName">
+                                            </div>
+                                            <div class="col-3">
+                                                <label class="form-label" asp-for="@responseData.Phone">Телефон</label>
+                                                <input type="text" class="form-control" placeholder="Телефон" asp-for="@responseData.Phone" />
+                                            </div>*@
+                                        </div>
+                                        <div class="row justify-content-end">
+                                            <div class="align-self-end pb-1 col-1">
+                                                <button type="submit" class="btn btn-icon btn-primary w-100">
+                                                    <span>Поиск</span>
+                                                    @*<i class="bi bi-search-alt-2"></i>*@
+                                                </button>
+                                            </div>
+                                        </div>
+                                        @*<div class="row">
+                                            <div class="col-3">
+                                                <label class="form-label" asp-for="@responseData.Serial">Серия и номер документа</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="Серия" asp-for="@responseData.Serial"/>
+                                                    <input type="text" class="form-control" placeholder="Номер" asp-for="@responseData.Number">
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <label class="form-label" asp-for="@responseData.Snils">СНИЛС</label>
+                                                <input type="text" class="form-control" placeholder="СНИЛС" asp-for="@responseData.Snils">
+                                            </div>
+                                            <div class="col-3">
+                                                <label class="form-label" asp-for="@responseData.Inn">ИНН</label>
+                                                <input type="text" class="form-control" placeholder="ИНН" asp-for="@responseData.Inn" />
+                                            </div>
+                                            <div class="col-2">
+                                                <label class="form-label" asp-for="@responseData.Year">Год обращения</label>
+                                                <input type="text" asp-for="@responseData.Year" placeholder="@DateTime.Today.Year" value="@DateTime.Today.Year" class="form-control input-datepicker" form="services-search-form" />
+                                            </div>
+                                            <div class="align-self-end col-1">
+                                                <button type="submit" class="btn btn-icon btn-primary">
+                                                    <span class="bi bi-search-alt-2"></span>
+                                                </button>
+                                            </div>
+                                        </div>*@
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*<div class="accordion-item card">
+                                <h2 class="accordion-header d-flex align-items-center">
+                                    <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionArchive-service" aria-expanded="false">
+                                        <i class="bi bi-briefcase me-2"></i>
+                                        Услуга
+                                    </button>
+                                </h2>
+                                <div id="accordionArchive-service" class="accordion-collapse collapse">
+                                    <div class="accordion-body">
+                                        <div class="row mb-3">
+                                           <div class="col-6">
+                                                <label asp-for="@responseData.OfficeId" class="form-label">Поставщик</label>
+                                                <select class="form-select" asp-for="@responseData.OfficeId" asp-items="@responseData.OfficesList" form="services-search-form"></select>
+                                           </div>
+                                            <div class="col-6">
+                                                <label asp-for="@responseData.ServiceId" class="form-label">Услуга</label>
+                                                <select class="form-select" asp-for="@responseData.ServiceId" asp-items="@responseData.ServicesList" form="services-search-form"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
+                        </div>
+                    </fieldset>
+                    <!--/ input search -->
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- Search Bar end -->
+    <!-- seach result section -->
+    <div class="card d-none">
+        <div class="card-body">
+            <!-- datatable start -->
+            <div class="table-responsive mt-3">
+                <table id="@Model.TableName" data-action-table="@Model.TableMethodAction" class="table table-sm table-striped"></table>
+            </div>
+            <!-- datatable ends -->
+        </div>
+    </div>
+    <div class="card" id="empty-table">
+        <div class="card-body">
+            <div class="alert alert-primary m-0" role="alert">
+                <h6 class="alert-heading mb-1">Внимание</h6>
+                <span>Воспользуйтесь поиском</span>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+@section Scripts
+    {
+    <script>
+        const $table = $("#@(Model.TableName)"),
+            type = $("#responseData_CustomerType"),
+            customerName = $('#responseData_CustomerName'),
+            customerNameLegal = $('#responseData_CustomerNameLegal'),
+            serial = $('#responseData_Serial'),
+            number = $('#responseData_Number'),
+            inn = $("#responseData_Inn"),
+            snils = $("#responseData_Snils"),
+            phone = $("#responseData_Phone");
+            //office = $("#responseData_OfficeId"),
+            //service = $("#responseData_ServiceId"),
+
+
+
+
+            type.change(function(e) {
+                if($(e.target).val()=="1") {
+                    customerNameLegal.parent('.wrapper').hide();
+                    customerName.parent('.wrapper').show();
+                    serial.parents('.wrapper').show();
+                    //number.parent('.wrapper').show();
+                    snils.parent('.wrapper').show();
+                }
+                else {
+                    customerNameLegal.parent('.wrapper').show();
+                    customerName.parent('.wrapper').hide();
+                    serial.parents('.wrapper').hide();
+                    //number.parent('.wrapper').hide();
+                    snils.parent('.wrapper').hide();
+                };
+            });
+
+            type.change();
+
+            //office.change(function(e) {
+
+            //    let arr = [];
+            //    arr.push({ name: 'providersId', value: $(e.target).val() })
+
+            //    $.ajax({
+            //        type: "GET",
+            //        url: 'Archive/GetServicesForProviderDataJson',
+            //        data: arr,
+            //        beforeSend: () => {
+            //            service.empty();
+            //            service.prop("disabled", true);
+            //        },
+            //        success: (data) => {
+            //           data.forEach(function(item) {
+            //               service.append($('<option>', {
+            //                value: item.id,
+            //                text:  item.serviceName
+            //                 }));
+            //           }); 
+            //        },
+            //        complete: () => {
+            //          service.prop("disabled", false);
+            //        }
+            //    });
+            //})
+
+
+        $(document).ready(function () {
+            const showTable = () => {
+                $("#empty-table").remove();
+                $table.closest(".card.d-none").removeClass("d-none");
+            };
+            $("select").select2({
+                placeholder: "Все",
+                language: "ru"
+            });
+            $(".input-datepicker").datepicker({
+                todayHighlight: true,
+                format: 'yyyy',
+                language: "ru",
+                viewMode: "years",
+                minViewMode: "years",
+                autoclose: true
+            });
+            phone.inputmask("+7(999) 999-99-99", { clearIncomplete: true, showMaskOnHover: false });
+            snils.inputmask("999-999-999 99", { clearIncomplete: true, showMaskOnHover: false });
+            inn.inputmask("999999999999", { clearIncomplete: true, showMaskOnHover: false });
+
+            $table.DataTable({
+                sDom: "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                processing: true,
+                serverSide: true,
+                ordering: false,
+                filter: false,
+                deferLoading: 0,
+                searchDelay: 1500,
+                ajax: {
+                    url: $table.data('action-table'),
+                    type: "POST",
+                    data: function (data) {
+                        let form = document.querySelector('#services-search-form');
+                        var formData = new FormData(form);
+                        for (var pair of formData.entries()) {
+                            let name = pair[0].split('.')[1];
+                            if (pair[1]) data[name] = pair[1];
+                        }
+                    }
+                },
+                columns: [
+                    {
+                        title:"Дата",
+                        className: "case-dateAdd-column text-center",
+                        name: 'dateAdd',
+                        data: 'archiveCasesMainDto.dateAdd'
+                    },
+                    {
+                        title: "Номер обращения",
+                        className: "case-number-column",
+                        name: 'caseId',
+                        data: 'archiveCasesMainDto.caseId',
+                    },
+                    {
+                        title: "Заявитель",
+                        className: "case-customer-column",
+                        name: 'customer',
+                        render: function (data, type, row) {
+                            let content = `<div>${row.archiveCasesMainDto.applicant.name}</div>`;
+                            if (row.archiveCasesMainDto.applicant.address !== null)
+                                content += `<div class="small"><i class="bi bi-geo-alt me-1"></i>${row.archiveCasesMainDto.applicant.address}</div>`;
+                            if (row.archiveCasesMainDto.applicant.phone !== null)
+                                content += `<div class="small"><i class="bi bi-telephone me-1"></i>${row.archiveCasesMainDto.applicant.phone}</div>`;
+                            return content;
+                        }
+                    },
+                    {
+                        title: "Услуга",
+                        className: "case-services-column",
+                        name: 'servicesId',
+                        render: function (data, type, row) {
+                            let str = row.archiveCasesMainDto.serviceName.length > 90 ? row.archiveCasesMainDto.serviceName.slice(0, 90) + "..." : row.archiveCasesMainDto.serviceName
+                            return `<div title="${row.archiveCasesMainDto.serviceName}">${str}</div>`;
+                        }
+                    },
+                    {
+                        title: "Орган власти",
+                        className: "case-offices-column",
+                        name: 'officesId',
+                        data: 'archiveCasesMainDto.providerName'
+                    },
+                    {
+                        title: "Сотрудник",
+                        className: "case-currentEmployee-column",
+                        name: 'currentEmployee',
+                        render: function (data, type, row) {
+                            return `<div>
+                                        <div class="b-s-14">Принял: ${row.archiveCasesMainDto.employeeNameAdd}</div>
+                                        <div class="b-s-14">Исполнитель: ${row.archiveCasesMainDto.employeeNameExecution}</div>
+                                   </div>`;
+                        }
+                    },
+                    {
+                        title: "Статус",
+                        className: "case-status-column",
+                        name: 'statusId',
+                        render: function (data, type, row) {
+                            let colorStatus = "";
+
+                            switch (row.archiveCasesMainDto.statusId) {
+                                case 0:
+                                    colorStatus = "bg-warning";
+                                    break;
+                                case 1:
+                                    colorStatus = "bg-success";
+                                    break;
+                                case 2:
+                                    colorStatus = "bg-secondary";
+                                    break;
+                                case 4:
+                                    colorStatus = "bg-secondary";
+                                    break;
+                                case 5:
+                                    colorStatus = "bg-danger";
+                                    break;
+                                case 6:
+                                    colorStatus = "bg-warning";
+                                    break;
+                            };
+
+                            return `<div class="badge ${colorStatus} text-white">${row.archiveCasesMainDto.statusName}</div>`;
+                        }
+                    },
+                    {
+                        title: "Этап",
+                        className: "case-stage-column",
+                        name: 'stageId',
+                        render: function (data, type, row) {
+                            let content = "";
+                            content += `<div class="text-danger">${row.archiveCasesMainDto.stageName}</div>`;
+
+                            return content;
+                        }
+                    },
+                ]
+            }).on('xhr.dt', function () {
+                showTable();
+            }).on('click', 'tbody tr', function () {
+                var val = $(this).find('td.case-number-column').text();
+                window.open(`Archive/Details?id=${val}`, "_blank");
+            });
+
+            $('#services-search-form').submit(function () {
+                $table.DataTable().ajax.reload();
+                return false;
+            });
+
+            const formValidation = FormValidation.formValidation(document.querySelector('#services-search-form'), {
+                fields: {
+                    //"responseData.CustomerName": {
+                    //    validators: {
+                    //        notEmpty: {}
+                    //    }
+                    //},
+                    //"responseData.FirstName": {
+                    //    validators: {
+                    //        notEmpty: {}
+                    //    }
+                    //},
+                    //"responseData.LastName": {
+                    //    validators: {
+                    //        notEmpty: {}
+                    //    }
+                    //},
+                    //"responseData.Year": {
+                    //    validators: {
+                    //        notEmpty: {}
+                    //    }
+                    //},
+                },
+                locale: 'ru_RU',
+                localization: FormValidation.locales.ru_RU,
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus(),
+                    submitButton: new FormValidation.plugins.SubmitButton()
+                },
+                init: instance => {
+                    instance.on('plugins.message.placed', function (e) {
+                        if (e.element.parentElement.classList.contains('input-group')) {
+                            e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
+                        }
+                    });
+                }
+            }).on('core.form.valid', () => {
+                $table.DataTable().ajax.reload();
+                return false;
+            });
+        });
+    </script>
+}

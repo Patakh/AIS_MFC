@@ -1,0 +1,62 @@
+﻿@model _132_LocationLandPlotModel
+@{
+    IEnumerable<SelectListItem> landPlotLegalType = new List<SelectListItem>
+    {
+        new ("собственность", "собственность"),
+        new ("аренда", "аренда"),
+        new ("постоянное (бессрочное) пользование", "постоянное (бессрочное) пользование"),
+    }; 
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="LandPlotAddress" class="form-label">адрес земельного участка</label>
+                    <input type="text" asp-for="LandPlotAddress" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label asp-for="LandPlotArrea" class="form-label">Площадь земельного участка</label>
+                    <input type="text" asp-for="LandPlotArrea" class="form-control">
+                </div>
+                <div class="col-6">
+                    <label asp-for="LandPlotKadastrNumber" class="form-label">Кадастровый квартал (номер) земельного участка</label>
+                    <input type="text" asp-for="LandPlotKadastrNumber" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="Rason" class="form-label">основание предоставления земельного участка без проведения торгов</label>
+                    <input type="text" asp-for="Rason" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="LandPlotLegalType" class="form-label">Вид права, на котором используется земельный участок (собственность или аренда, постоянное (бессрочное) пользование и др.)</label>
+                    <select asp-items="@landPlotLegalType" class="form-select select2-nosearch" asp-for="LandPlotLegalType"></select>
+                </div>
+            </div>  
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="Target" class="form-label">цель использования земельного участка</label>
+                    <input type="text" asp-for="Target" class="form-control">
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content'); 
+
+    $(function () { 
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+
+        }); 
+    }); 
+</script>

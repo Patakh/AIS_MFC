@@ -1,0 +1,37 @@
+﻿@model _69_1_AmountPensionsModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label">ПЕРИОД</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DateStart" type="text"
+                               class="form-control pickdate required">
+                               
+                        <span class="input-group-text"> по </span>
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DateEnd" type="text"
+                               class="form-control pickdate required">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    $(function () {
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+    });
+</script>

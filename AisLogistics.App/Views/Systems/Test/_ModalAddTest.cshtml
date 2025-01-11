@@ -1,0 +1,492 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Systems.TestModelDto
+
+<style>
+    .cursor-pointer {
+        cursor: pointer;
+    }
+    .active {
+        color: #077EFA;
+    }
+</style>
+
+<form asp-controller="Systems" asp-action="EmployeesTestSave" id="sendingForm" method="post" role="form">
+    <div class="form-body pt-1">
+        <div class="row">
+            <div class="col-4">
+                <div class="row">
+                    <div class="col-12">
+                        <fieldset>
+                            @Html.HiddenFor(m => m.Id)
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    Описание
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label class="form-label" asp-for="TestName">Наименование</label>
+                                    <input type="text" asp-for="TestName" maxlength="20" class="form-control" placeholder="Наименование" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12 ">
+                                    <label class="form-label" asp-for="TestOfficesId">Офис</label>
+                                    <select asp-for="TestOfficesId" asp-items="@ViewBag.Offices" class="form-control" placeholder="Офис"></select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12 ">
+                                    <label class="form-label" asp-for="TestEmployeeJobsId">Должность</label>
+                                    <select asp-for="TestEmployeeJobsId" asp-items="@ViewBag.Jobs" class="form-control" placeholder="Должность">
+                                         <option value="0">Все</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label class="form-label" asp-for="TestEmployeesId">Сотрудники</label>
+                                    <select asp-for="TestEmployeesId" class="form-control" placeholder="Сотрудники" multiple>
+                                        <option value="@Guid.Empty">Все</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label class="form-label" asp-for="TestDirectionId">Направления</label>
+                                    <select asp-for="TestDirectionId" asp-items="@ViewBag.Directions" class="form-control" placeholder="Направления">
+                                        <option value="@Guid.Empty">Все</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="CountQuestions">Количество вопросов</label>
+                                    <input type="number" asp-for="CountQuestions" class="form-control" placeholder="Количество" required>
+                                </div>
+                                <div class="col-6 ">
+                                    <label class="form-label" asp-for="TestTime">Количество минут</label>
+                                    <input type="number" asp-for="TestTime" class="form-control" placeholder="Количество" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="DateStartTest">Дата начала</label>
+                                    <div class="input-group input-group-merge">
+                                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                        <input asp-for="DateStartTest" type="text" class="form-control pickadate datepick" placeholder="Дата начала" value="@DateTime.Now.ToShortDateString()">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="TimeStartTest">Время начала</label>
+                                    <div class="input-group input-group-merge">
+                                        <span class="input-group-text"><i class="bi bi-clock-history"></i></span>
+                                        <input asp-for="TimeStartTest" type="text" class="form-control timepicker" placeholder="Время начала" value="@DateTime.Now.ToShortTimeString()">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-primary w-100" id="generateTest">Cформировать</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <fieldset>
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            Сотрудники
+                        </div>
+                    </div>
+                    <div id="employee_list__wrapper">
+                        <div class="text-center text-muted my-auto">Сформируйте тест</div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-4">
+                <fieldset>
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            Вопросы
+                        </div>
+                    </div>
+                    <div id="question_list__wrapper">
+                        <div class="text-center text-muted my-auto">Выберите сотрудника</div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<div class="row mb-3 border-bottom d-none"  data-employees-clone>
+    <div class="col-11 cursor-pointer" onclick="showEmployeesQuestion(this)">
+        <input type="hidden" id="employeeQuestion_100__id" name="employeeQuestion[100].id" />
+        <input type="hidden" id="employeeQuestion_100__officeId" name="employeeQuestion[100].officeId" />
+        <input type="hidden" id="employeeQuestion_100__jobPositionId" name="employeeQuestion[100].jobPositionId" />
+        <input type="hidden" id="employeeQuestion_100__employeeName" name="employeeQuestion[100].employeeName" />
+        <input type="hidden" id="employeeQuestion_100__officeName" name="employeeQuestion[100].officeName" />
+        <input type="hidden" id="employeeQuestion_100__jobPositionName" name="employeeQuestion[100].jobPositionName" />
+        <div data-employeeName></div>
+        <span class="d-block text-muted r-l-12" data-employeeJob></span>
+    </div>
+    <div class="col-1">
+        <button type="button" class="btn" onclick="refreshEmployessQuestions(this)"><i class="bi bi-arrow-clockwise"></i></button>
+    </div>
+</div>
+
+<div class="row d-none question" data-question-clone>
+    <ol class="list-group list-group-numbered"></ol>
+</div>
+
+<script>
+    var sendingForm = $('#sendingForm'),
+        jobs = $('#TestEmployeeJobsId'),
+        direction = $('#TestDirectionId'),
+        mfc = $('#TestOfficesId'),
+        employees = $('#TestEmployeesId'),
+        dateStart = $('#DateStartTest'),
+        timeStart = $('#TimeStartTest')
+        generateTest = $('#generateTest'),
+        FormValidationQuestion = null;
+      
+    $(document).ready(function () {
+
+        $('button[type="submit"]').attr('disabled', 'disabled');
+
+        jobs.select2({
+            placeholder: "Выберите должность",
+            dropdownParent: $('#mainModal'),
+        });
+
+        direction.select2({
+            placeholder: "Выберите направление",
+            dropdownParent: $('#mainModal'),
+        });
+        mfc.select2({
+            placeholder: "Выберите офис",
+            dropdownParent: $('#mainModal'),
+        });
+
+        employees.select2({
+            placeholder: "Выберите сотрудника",
+            dropdownParent: $('#mainModal'),
+        });
+
+        dateStart.datepicker({
+            language: "ru",
+            startDate: '0d',
+            toggleActive: true
+        });
+
+        timeStart.timepicker({
+            'timeFormat': 'H:i'
+        });
+
+        jobs.change(function (e) {
+            let arr = [];
+
+            $.each($(e.target).val(), function (index, val) {
+                arr.push({ name: 'jobsId', value: val });
+            })
+
+            $.ajax({
+                type: 'Get',
+                url: '/Systems/GetJobsDirections',
+                data: arr,
+                beforeSend: () => {
+                    direction.empty();
+                    direction.prop("disabled", true);
+                },
+                success: function (data) {
+                    data.forEach(function (item) {
+                        direction.append($("<option></option>")
+                            .attr("value", item.id)
+                            .text(item.name));
+                    });
+                },
+                complete: () => {
+                    direction.prop("disabled", false);
+                }
+            });
+
+            mfc.change();
+            
+        });
+
+
+        mfc.change(function (e) {
+            let arr = [];
+            arr.push({ name: 'officeId', value: $(e.target).val() });
+
+            $.each(jobs.val(), function (index, val) {
+                arr.push({ name: 'jobsId', value: val });
+            })
+
+            $.ajax({
+                type: 'Get',
+                url: '/Systems/GetEmployeesForOffice',
+                data: arr,
+                beforeSend: () => {
+                    employees.empty();
+                    employees.prop("disabled", true);
+                },
+                success: function (data) {
+                    data.forEach(function (item) {
+                        employees.append($("<option></option>")
+                            .attr("value", item.id)
+                            .text(item.officeName));
+                    });
+                },
+                complete: () => {
+                    employees.prop("disabled", false);
+                }
+            });
+            
+        });
+
+
+        FormValidationQuestion = FormValidation.formValidation(document.getElementById('sendingForm'),
+        {
+            fields: {
+                TestName: {
+                    validators: {
+                        notEmpty: {
+                            message: '@MessageDescription.FieldIsRequired'
+                        }
+                    }
+                },
+                TestEmployeeJobsId: {
+                    validators: {
+                        notEmpty: {
+                            message: '@MessageDescription.FieldIsRequired'
+                        }
+                    }
+                },
+                TestDirectionId: {
+                    validators: {
+                        notEmpty: {
+                            message: '@MessageDescription.FieldIsRequired'
+                        }
+                    }
+                },
+                TestOfficesId: {
+                    validators: {
+                        notEmpty: {
+                            message: '@MessageDescription.FieldIsRequired'
+                        }
+                    }
+                },
+                TestEmployeesId: {
+                    validators: {
+                        notEmpty: {
+                            message: '@MessageDescription.FieldIsRequired'
+                        }
+                    }
+                },
+                CountQuestions: {
+                    validators: {
+                        notEmpty: {
+                            message: '@MessageDescription.FieldIsRequired'
+                        }
+                    }
+                },
+                TestTime: {
+                    validators: {
+                        notEmpty: {
+                            message: '@MessageDescription.FieldIsRequired'
+                        }
+                    }
+                },
+                DateStartTest: {
+                    validators: {
+                        notEmpty: {
+                            message: '@MessageDescription.FieldIsRequired'
+                        }
+                    }
+                },
+                TimeStartTest: {
+                    validators: {
+                        notEmpty: {
+                            message: '@MessageDescription.FieldIsRequired'
+                        }
+                    }
+                },
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                submitButton: new FormValidation.plugins.SubmitButton(),
+                bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                autoFocus: new FormValidation.plugins.AutoFocus()
+            }
+        }).on('core.form.valid', function () {
+            let $target = $('#employee_list__wrapper');
+            let $targetQuestion = $('#question_list__wrapper');
+            $.ajax({
+                type: 'Post',
+                url: '/Systems/GetEmployeesQuestions',
+                data: sendingForm.serialize(),
+                beforeSend: () => {
+                    generateTest.attr('disabled', 'disabled');
+                },
+                success: function (data) {
+                    $target.empty();
+                    $targetQuestion.empty();
+                    $.each(data, function (i) {
+                        var rowEmployee = $('[data-employees-clone]').clone();
+                        $(rowEmployee).removeAttr('data-employees-clone');
+                        $(rowEmployee).attr('data-employees-id', data[i].employeeId);
+                        $(rowEmployee).find('[data-employeeName]').text(data[i].employeeName);
+                        $(rowEmployee).find('[data-employeeJob]').text(data[i].jobPositionName);
+                        $(rowEmployee).removeClass('d-none');
+
+                         renameBlock(rowEmployee, i);
+
+                        $(rowEmployee).find('[id$="id"]').val(data[i].employeeId);
+                        $(rowEmployee).find('[id$="officeId"]').val(data[i].officeId);
+                        $(rowEmployee).find('[id$="jobPositionId"]').val(data[i].jobPositionId);
+                            $(rowEmployee).find('[id$="employeeName"]').val(data[i].employeeName);
+                        $(rowEmployee).find('[id$="officeName"]').val(data[i].officeName);
+                        $(rowEmployee).find('[id$="jobPositionName"]').val(data[i].jobPositionName);
+
+
+                        $(rowEmployee).appendTo($target);
+
+                        var rowQuestion = $('[data-question-clone]').clone();
+                        $(rowQuestion).removeAttr('data-question-clone');
+                        $(rowQuestion).attr('id', data[i].employeeId);
+                        var listQuestion = rowQuestion.find('ol');
+
+                        $.map(data[i].employeesQuestionsInfo, function (value, index) {
+                            $('<li>', {
+                                class: "list-group-item border-0",
+                                text: `${value.name}`,
+                            }).append($('<input>', {
+                                value: `${value.id}`,
+                                name: `employeeQuestion[${i}].question[${index}].id`,
+                                type: 'hidden'
+                            })).append($('<input>', {
+                                    value: `${value.name}`,
+                                    name: `employeeQuestion[${i}].question[${index}].name`,
+                                    type:'hidden'
+                            })).appendTo(listQuestion);
+                        });
+
+                        $(rowQuestion).appendTo($targetQuestion);
+
+                        $('button[type="submit"]').removeAttr('disabled');
+
+                    });
+                },
+                complete: () => {
+                    generateTest.removeAttr('disabled');
+                }
+            });
+            return false;
+        });
+
+
+        generateTest.click(function () {
+           FormValidationQuestion.validate();
+        });
+
+
+        sendingForm.submit(function (ev) {
+            $.ajax({
+                type: sendingForm.attr('method'),
+                url: sendingForm.attr('action'),
+                data: sendingForm.serialize(),
+                beforeSend: () => {
+                    sendingForm.spinnerBtn("start");
+                },
+                success: function (responce) {
+                    if (typeof $table === 'undefined')
+                    {
+                        window.location.reload();
+                    }
+                    else
+                    {
+                        $table.DataTable().ajax.reload(null, false);
+                    }
+                    sendingForm.spinnerBtn("stop");
+                    $("#mainModal").modal('hide');
+                },
+                complete: () => {
+                   
+                }
+            });
+        });
+
+    });
+
+    function showEmployeesQuestion(e) {
+        $('.question').addClass('d-none');
+        $('[data-employeeName]').removeClass('active');
+
+        let id = $(e).parents('[data-employees-id]').data('employeesId');
+
+        $(e).find('[data-employeeName]').addClass('active');
+        $('#' + id).removeClass('d-none');
+    };
+
+    function refreshEmployessQuestions(e) {
+
+        let id = $(e).parents('[data-employees-id]').data('employeesId');
+        let formData = sendingForm.serialize() + '&testEmployeeId=' + id;
+        let $targetQuestion = $('#' + id).find('ol');
+        let idx = $(e).parents('[data-employees-id]').find('[id$="id"]').attr('id').match(/\d+/).shift();
+
+        $.ajax({
+            type: 'Post',
+            url: '/Systems/GetEmployeesRefreshQuestions',
+            data: formData,
+            beforeSend: () => {
+               
+            },
+            success: function (data) {
+
+               $targetQuestion.empty();
+
+               $.map(data.employeesQuestionsInfo, function (value, index) {
+                   $('<li>', {
+                       class: "list-group-item border-0",
+                       text: `${value.name}`,
+                       append: $('<input>', {
+                           value: `${value.id}`,
+                           name: `employeeQuestion[${idx}].questionId[${index}]`,
+                           type: 'hidden'
+                       })
+                    }).appendTo($targetQuestion);
+               });
+
+                $('.question').addClass('d-none');
+                $('[data-employeeName]').removeClass('active');
+
+                $(e).parents('[data-employees-id]').find('[data-employeeName]').addClass('active');
+                $('#' + id).removeClass('d-none');
+
+
+            },
+            complete: () => {
+                
+            }
+        });
+
+        return false;
+    };
+
+    function renameBlock(cloneBlock, indexId) {
+        $(cloneBlock).find('input').each(function () {
+            let name = $(this).attr('name');
+            let newName = name.replace(/\d+/, indexId);
+            $(this).attr('name', newName);
+
+            let id = $(this).attr('id');
+            let newId = id.replace(/\d+/, indexId);
+            $(this).attr('id', newId);
+        });
+    }
+</script>

@@ -1,0 +1,111 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+}
+@section Header
+{
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/fullcalendar/fullcalendar.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/css/pages/app-calendar.css" />
+    <style>
+        .btn-icon{
+            display: inline-flex !important;
+        }
+    </style>
+}
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <calendar asp-for="Model"></calendar>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts
+{
+    <script src="~/assets/vendor/libs/fullcalendar/fullcalendar.js"></script>
+
+    <script>
+        $(function() {
+            const calendarEl = document.getElementById('calendar'),
+                isCanEdit = calendarEl.hasAttribute('data-action-edit'),
+                calendarsColor = ["primary", "none", "success"];
+            let { dayGrid, interaction } = calendarPlugins;
+            var calendar = new Calendar(calendarEl, {
+                headerToolbar: {
+                  left: 'prev',
+                  center: 'title',
+                  right: 'next'
+                },
+                timeZone: 'Europe/Moscow',
+                locale: 'ru',
+                firstDay: 1,
+                plugins: [dayGrid, interaction],
+                initialView: 'dayGridMonth',
+                aspectRatio: 2,
+                eventContent: function({ event: calendarEvent }) {
+                    if (calendarEvent._def.extendedProps.dateType === 1) return {html:""};
+                    if(isCanEdit === false) return {html:`${calendarEvent.title}`};
+                    var params = JSON.stringify({id: calendarEvent.id });
+                    return {html : `${calendarEvent.title} <a data-btn-type="remove" data-btn-params='${params}' data-bs-toggle="tooltip" data-parent="#calendar" title="Удалить" class="btn btn-xs btn-icon text-danger"><i class="bi bi-trash"></i></a>`}
+                },
+                eventDidMount: function(info) {
+                    $(info.el.querySelector('[data-bs-toggle="tooltip"]')).tooltip();
+                },
+                eventSources: [
+                  {
+                    url: calendarEl.dataset.actionGet,
+                    method: "POST",
+                    startParam: "startDate",
+                    endParam: "endDate",
+                    failure: function(errorObj) {
+                        console.error(errorObj);
+                        $.notifi('error', 'Ошибка', 'Что-то пошло не так!');
+                    },
+                    rendering: "background"
+                  }
+                ],
+                dateClick: function(info) {
+                    if(isCanEdit) showEditModal(info.dateStr);
+                },
+                eventClassNames: function ({ event: calendarEvent }) {
+                    const colorName = calendarsColor[calendarEvent._def.extendedProps.dateType];
+                    return ['fc-event-' + colorName];
+                }
+              });
+
+            calendar.render();
+            
+            $(calendarEl).on('reload', function() {
+                calendar.refetchEvents();
+            });
+
+            $(document).on('refetch', function() {
+                calendar.refetchEvents();
+            });
+        });
+        
+        var showEditModal = function(date)
+        {
+            var $modalContainer = $('#mainModal');
+            $.ajax({
+                url: '@Model.EditMethodAction',
+                method: "POST",
+                data: {date : date},
+                async: false,
+                success: (data) => {
+                    $modalContainer.html(data);
+                    $modalContainer.modal("show");
+                },
+                error: (data, textStatus) => {
+                }
+            });
+        }
+
+</script>
+}

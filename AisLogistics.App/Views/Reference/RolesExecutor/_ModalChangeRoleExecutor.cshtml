@@ -1,0 +1,64 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.RoleExecutorModelDto
+@{
+}
+
+<form asp-controller="Reference" asp-action="RoleExecutorSave" id="sendingForm" method="post" role="form">
+    <div class="form-body pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="RoleName">Наименование</label>
+                    <input type="text" asp-for="RoleName" maxlength="70" class="form-control" placeholder="Наименование">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="Description">Описание</label>
+                    <input type="text" asp-for="Description" maxlength="255" class="form-control" placeholder="Описание">
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function() {
+        const fv = FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    RoleName: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }) .on('core.form.valid', function() {
+            var $form = $("#sendingForm");
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                dataType: 'json',
+                beforeSend: () => {
+                    $form.spinnerBtn("start");
+                },
+                complete: () => {
+                    $table.DataTable().ajax.reload(null, false);
+                    $form.spinnerBtn("stop");
+                    $("#mainModal").modal('hide');
+                }
+            });
+            return false;
+        });
+    });
+</script>

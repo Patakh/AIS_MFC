@@ -1,0 +1,109 @@
+﻿@model ViewModelBuilder
+@{
+    var items = Model.Model as List<ApplicantAdditionalDto>;
+}
+
+<!-- Detailed case Header starts -->
+<div class="case-detail-header">
+    <div class="case-header-left d-flex align-items-center">
+        <a href="#" class="" data-bs-toggle="tooltip" title="Назад">
+            <span class="go-back action-icon me-1">
+                <i class="bi bi-chevron-left bx-md"></i>
+            </span>
+        </a>
+        <h4 class="case-subject mb-0">@Model.ViewTitle</h4>
+    </div>
+    <div class="case-header-right ms-2 ps-1">
+        <ul class="list-inline m-0">
+         @*   <li class="list-inline-item">
+                <a asp-action="ServiceSmevCreate" asp-route-id="@ViewBag.Id" data-bs-toggle="tooltip" title="Добавить" data-btn-type="modal">
+                    <span class="action-icon favorite">
+                        <i class="bi bi-plus bx-md"></i>
+                    </span>
+                </a>
+            </li>*@
+        </ul>
+    </div>
+</div>
+<!-- Detailed case Header ends -->
+<!-- Detailed case Content starts -->
+<div class="case-scroll-area">
+    <div class="card rounded-0">
+        <div class="card-body mail-message-wrapper">
+            @if (items.Any())
+            {
+                <div class="table-responsive mt-3">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Тип</th>
+                                <th>ФИО</th>
+                                <th>Адрес</th>
+                                <th>Телефон</th>
+                                <th class="text-end">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in items)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="text-truncate">
+                                                @if (item.SubjectCustomerType == SubjectCustomerType.Physical)
+                                                {
+                                                    <span class="badge bg-label-primary" data-bs-toggle="tooltip" title="Физическое лицо">ФЛ</span>
+                                                }
+                                                @if (item.SubjectCustomerType == SubjectCustomerType.Legal)
+                                                {
+                                                    <span class="badge bg-label-secondary" data-bs-toggle="tooltip" title="Юридическое лицо">ЮР</span>
+                                                }
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            @if (item.SubjectCustomerType == SubjectCustomerType.Physical)
+                                            {
+                                                <span class="">@item.Name</span>
+                                                <small class="text-muted">@item.BirthDate?.ToShortDateString()</small>
+                                            }
+                                            @if (item.SubjectCustomerType == SubjectCustomerType.Legal)
+                                            {
+                                                <span class="">@($"{@item.LastName} {@item.FirstName} {@item.SecondName}")</span>
+                                                <small class="text-muted">@item.Name</small>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="text-truncate">@(item.Address ?? "-")</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="text-truncate">@(item.Phone ?? "-")</span>
+                                        </div>
+                                    </td>
+                                    <td class="text-end">
+                                        <a asp-controller="Cases" asp-action="ServiceCustomerAddModal" asp-route-id="@item.Id" asp-route-subjectCustomerType="@item.SubjectCustomerType" data-btn-type="modal" class="btn btn-sm btn-icon" data-bs-toggle="tooltip" title="Редактировать">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-primary" role="alert">
+                    <h6 class="alert-heading mb-1">Нет данных</h6>
+                    <span>Заявители отсутствуют</span>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Detailed case Content ends -->

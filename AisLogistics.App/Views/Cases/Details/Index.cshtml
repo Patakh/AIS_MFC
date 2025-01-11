@@ -1,0 +1,71 @@
+﻿@using AisLogistics.App.ViewModels.Cases
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    var requestModel = Model.Model as CaseDetailsResponseModel<CasesDto>;
+}
+
+<link rel="stylesheet" href="~/assets/vendor/libs/scanner.js/dist/scanner.css" />
+<link rel="stylesheet" href="~/assets/css/case-details.css" asp-append-version="true" />
+
+<section>
+    <div class="row">
+        <div class="detail-card card px-5 py-4">
+            @await Component.InvokeAsync("CaseInformation", new {caseDto = requestModel?.Data.casesMainDto})
+            <div class="case-app-body pt-4">
+                <div class="row h-100 w-100 m-0">
+                    <div class="col-lg-3 col-12 case-app-content ps-0">
+                        <div class="case-user-list ps">
+                            @await Component.InvokeAsync("ServiceInformation", new {CaseServiceDto = requestModel?.Data.Services})
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-12 case-app-content">
+                        <partial name="Details/_ManageNav" view-data="ViewData" />
+                        <div id="case-app-details"></div>
+                    </div>
+                    <div class="col-lg-3 col-12 case-app-content">
+                        <div class="caseStages-wrapper">
+                            <div class="case-route-header d-flex justify-content-between pt-3">
+                                <div class="col-auto b-s-14">Этапы</div>
+                                <div class="col-auto">
+                                    @if (User.HasClaim(AccessKeyNames.DataCaseServiceStage, AccessKeyValues.Add))
+                                    {
+                                        <a href="javascript:void(0);" class="flex d-flex text-primary fs-14" data-service-stages title="Добавить">
+                                           <strong class="me-2">+</strong>
+                                            Добавить
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                            <div class="" id=caseStages>
+                            </div>
+                        </div>
+                        <div class="blancs_and_files-wrapper mt-4 overflow-auto scroller">
+                            <ul class="nav nav-custom nav-justified" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active m-s-12 pt-3 " id="blancs-tab" data-bs-toggle="tab" data-bs-target="#Expired" href="#" role="tab" aria-controls="Expired" aria-selected="true">
+                                        Бланки
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link m-s-12 pt-3 " id="files-tab" data-bs-toggle="tab" href="#" role="tab" aria-controls="Lastday" aria-selected="false">
+                                        Файлы
+                                    </a>
+                                </li>
+                            </ul>
+                            <div id="blancsAndFiles-content" class="blancs-scroll-area">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts
+{
+    <script src="~/assets/vendor/libs/scanner.js/dist/scannerV2.js" type="text/javascript"></script>
+    <script src="~/assets/js/pages/case-details.js"></script>
+}

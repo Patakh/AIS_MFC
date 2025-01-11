@@ -1,0 +1,1016 @@
+﻿@using SmevRouter;
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var requestOne = new List<MvdGetRegistrationRequestData>
+    {
+        new()
+        {
+           Fio = new (),
+           Document = new()
+        }
+    };
+    var requestTwo = new List<GetFnsSvviplflRequestData>
+    {
+        new()
+        {
+        Fio = new ()
+        }
+    };
+    var request3 = new GetFssInfoPaymentsRequestData
+            {
+                Fio = new(),
+                DateStart = DateTime.Today.AddYears(-1),
+                DateEnd = DateTime.Today,
+            };
+    var request4 = new GetFnsZpvipegrRequestData
+            {
+                ApplicantFl = new FnsZpvipegrApplicantFl
+                {
+                    Fio = new FioType
+                    {
+                        LastName = applicants.First().LastName,
+                        FirstName = applicants.First().FirstName,
+                        SecondName = applicants.First().SecondName
+                    },
+                    InnFl = applicants.First().Inn
+                },
+                ApplicantUl = new FnsZpvipegrApplicantUl()
+            };
+}
+<style>
+    #smev-data-form-content .accordion-button {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content li.active {
+        background-color: #e5edfc !important;
+        color: black !important;
+    }
+
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+</style>
+
+<div class="container m-0 p-0" id="smev_request">
+    <div class="row justify-content-center">
+        <ul class="nav nav-tabs nav-justified tabs-line mb-3" id="smev-request-tablist" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#smev-request-tab1" type="button">Запрос 1</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#smev-request-tab2" type="button">Запрос 2</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#smev-request-tab3" type="button">Запрос 3</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#smev-request-tab4" type="button">Запрос 4</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="smev-request-tab-content">
+            <div class="tab-pane fade show active" id="smev-request-tab1" role="tabpanel">
+                <div class="row justify-content-center">
+                    <div class="col-3 border-end p-3">
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <button type="button" class="btn btn-primary w-100 px-0" id="addCustomer_">
+                                    <i class="bi bi-plus"></i>
+                                    Добавить нового заявителя
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-success w-100 px-0" id="chooseAllCustomer_">
+                                    <i class="bi bi-check2-square"></i>
+                                    Выбрать всех
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-danger w-100 px-0" id="removeAllCustomer_">
+                                    <i class="bi bi-square"></i>
+                                    Убрать всех
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="text-center fs-5 b-s-16" for="customers_">Заявители:</div>
+                                <ul class="list-group" id="customers_" name="customers_">
+                                    @for (int i = 0; i < applicants.Count; i++)
+                                    {
+                                        <li class="list-group-item" data-value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="cloneList_" class="col">
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade show" id="smev-request-tab2" role="tabpanel">
+                <div class="row justify-content-center">
+                    <div class="col-3 border-end p-3">
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <button type="button" class="btn btn-primary w-100 px-0" id="addCustomer">
+                                    <i class="bi bi-plus"></i>
+                                    Добавить нового заявителя
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-success w-100 px-0" id="chooseAllCustomer">
+                                    <i class="bi bi-check2-square"></i>
+                                    Выбрать всех
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-danger w-100 px-0" id="removeAllCustomer">
+                                    <i class="bi bi-square"></i>
+                                    Убрать всех
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="text-center fs-5 b-s-16" for="customers">Заявители:</div>
+                                <ul class="list-group" id="customers" name="customers">
+                                    @for (int i = 0; i < applicants.Count; i++)
+                                    {
+                                        <li class="list-group-item" data-value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="cloneList" class="col">
+                        <div class="row justify-content-center g-3">
+                            <div class="col-12 col-lg-8">
+                                <div class="row justify-content-center mb-3">
+                                    <div class="col-12">
+                                        <select class="form-select select2-nosearch" asp-for="@requestTwo[0].Period">
+                                            <option value="ForTwoYears">За прошлый и текущий годы</option>
+                                            <option value="ForCurrentYear">За текущий год</option>
+                                            <option value="ForLastYear">За прошлый год</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade show" id="smev-request-tab3" role="tabpanel">
+                <div class="row justify-content-center mt-3">
+                    <div class="col-10">
+                        <div class="divider text-start">
+                            <div class="divider-text fs-5 b-s-16">Детали запроса</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center mt-3">
+                    <div class="col-8">
+                        <div class="row justify-content-center">
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request3.RecipientCode">Получатель запроса</label>
+                                <select class="form-select select2-nosearch required" asp-for="@request3.RecipientCode" data-dictionary='{"dictionary":"FssDepartmentCodes"}'>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label w-100 text-center">Период получения сведений</label>
+                                <div class="row justify-content-center">
+                                    <div class="col-6">
+                                        <input asp-for="@request3.DateStart" type="text" class="form-control pickadate required" placeholder="Дата начала">
+                                    </div>
+                                    <div class="col-6">
+                                        <input asp-for="@request3.DateEnd" type="text" class="form-control pickadate required" placeholder="Дата окончания">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center mt-3">
+                    <div class="col-10">
+                        <div class="divider text-start">
+                            <div class="divider-text fs-5 b-s-16">Данные заявителя</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center m-1" data-person>
+                    <div class="col-12">
+                        <div class="row justify-content-center">
+                            <div class="col-8">
+                                <label class="form-label">Заявители</label>
+                                <select class="form-select select2-nosearch applicants">
+                                    <option value="">Выберите заявителя</option>
+                                    @for (int i = 0; i < applicants.Count; i++)
+                                    {
+                                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="row mt-1">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request3.Fio.LastName">Фамилия</label>
+                                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request3.Fio.LastName" />
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request3.Fio.FirstName">Имя</label>
+                                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request3.Fio.FirstName">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request3.Fio.SecondName">Отчество</label>
+                                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request3.Fio.SecondName">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request3.Snils">СНИЛС</label>
+                                <input type="text" class="form-control required snils" placeholder="СНИЛС" asp-for="@request3.Snils">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request3.BirthDate">Дата рождения</label>
+                                <div class="input-group input-group-merge">
+                                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                    <input asp-for="@request3.BirthDate" type="text" class="form-control pickadate required" placeholder="Дата рождения" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12 mx-auto">
+                                <div class="divider text-start">
+                                    <div class="divider-text fs-5 b-s-16">Документ, удостоверящий личность</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center mt-1">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request3.DocSeries">Серия</label>
+                                <input type="text" class="form-control required" placeholder="Серия" asp-for="@request3.DocSeries">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request3.DocNumber">Номер</label>
+                                <input type="text" class="form-control required" placeholder="Номер" asp-for="@request3.DocNumber">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade show" id="smev-request-tab4" role="tabpanel">
+                <div class="row g-3">
+                    <div class="col-12 col-lg-10 mx-auto">
+                        <div class="divider text-start">
+                            <div class="divider-text fs-5 b-s-16">Детали запроса</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-12 col-lg-8 mx-auto">
+                        <div class="row mb-3">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request4.Registry">Вид реестра</label>
+                                <select class="form-select select2-nosearch" asp-for="@request4.Registry">
+                                    <option value="Egrul">ЕГРЮЛ</option>
+                                    <option value="Egrip" selected="selected">ЕГРИП</option>
+                                </select>
+                            </div>
+                            <div class="col-8">
+                                <label class="form-label" asp-for="@request4.ApplicantType">Тип заявителя</label>
+                                <select class="form-select select2-nosearch" asp-for="@request4.ApplicantType">
+                                    <option value="PersonRf" selected>Физическое лицо</option>
+                                    <option value="Ip" selected="selected">Индивидуальный предприниматель</option>
+                                    <option value="ForeignPerson">Иностранный гражданин</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3" id="flBlock">
+                    <div class="col-12 col-lg-10 mx-auto">
+                        <div class="divider text-start">
+                            <div class="divider-text fs-5 b-s-16">Данные физического лица</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-8 mx-auto">
+                        <div class="row mb-3">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request4.ApplicantFl.Fio.LastName">Фамилия</label>
+                                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request4.ApplicantFl.Fio.LastName" />
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request4.ApplicantFl.Fio.FirstName">Имя</label>
+                                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request4.ApplicantFl.Fio.FirstName">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request4.ApplicantFl.Fio.SecondName">Отчество</label>
+                                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request4.ApplicantFl.Fio.SecondName">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request4.RequestValueType">Параметр запроса</label>
+                                <select class="form-select select2-nosearch" asp-for="@request4.RequestValueType" onchange="changeRequestValueType(this)">
+                                    <option value="InnFl" selected="selected">ИНН</option>
+                                    <option value="OgrnFl">ОГРН</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request4.ApplicantFl.InnFl">ИНН</label>
+                                <input type="text" class="form-control required" placeholder="ИНН" asp-for="@request4.ApplicantFl.InnFl" />
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request4.ApplicantFl.OgrnIp">ОГРНИП</label>
+                                <input type="text" class="form-control" placeholder="ОГРНИП" asp-for="@request4.ApplicantFl.OgrnIp" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3" data-disabled id="ulBlock">
+                    <div class="col-12 col-lg-10 mx-auto">
+                        <div class="divider text-start">
+                            <div class="divider-text fs-5 b-s-16">Данные юридического лица</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-8 mx-auto">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="form-label" asp-for="@request4.ApplicantUl.OrgName">Наименование организации</label>
+                                <input type="text" class="form-control required" placeholder="Наименование организации"
+                                       asp-for="@request4.ApplicantUl.OrgName" />
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request4.RequestValueType">Параметр запроса</label>
+                                <select class="form-select select2-nosearch" asp-for="@request4.RequestValueType" onchange="changeRequestValueType(this)">
+                                    <option value="InnUl">ИНН</option>
+                                    <option value="OgrnUl" selected="selected">ОГРН</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request4.ApplicantUl.InnUl">ИНН</label>
+                                <input type="text" class="form-control" placeholder="ИНН" asp-for="@request4.ApplicantUl.InnUl">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request4.ApplicantUl.Ogrn">ОГРН</label>
+                                <input type="text" class="form-control required" placeholder="ОГРН" asp-for="@request4.ApplicantUl.Ogrn">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="accordion row g-3 d-none" id="original_">
+    <div class="accordion-header rounded p-3 mb-0 pb-0 col-12">
+        <button class="fs-6 b-s-16  accordion-button collapsed" onclick="showAccordion(this)" type="button">
+            Заявитель
+        </button>
+    </div>
+    <div class="accordion-body col-12 mt-0 pt-0" data-disabled>
+        <div class="row justify-content-center g-3">
+            <div class="col-11">
+                <div class="divider text-start">
+                    <div class="divider-text b-s-16">Персональные данные</div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center g-3">
+            <div class="col-10">
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@requestOne[0].Fio.LastName">Фамилия</label>
+                        <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@requestOne[0].Fio.LastName" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@requestOne[0].Fio.FirstName">Имя</label>
+                        <input type="text" class="form-control required" placeholder="Имя" asp-for="@requestOne[0].Fio.FirstName" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@requestOne[0].Fio.SecondName">Отчество</label>
+                        <input type="text" class="form-control" placeholder="Отчество" asp-for="@requestOne[0].Fio.SecondName" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@requestOne[0].BirthDate">Дата рождения</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                            <input asp-for="@requestOne[0].BirthDate" type="text" class="form-control pickadate required" placeholder="Дата рождения" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="divider text-start">
+                        <div class="divider-text b-s-16">Документ, удостоверяющий личность</div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" for="requestOne_0__Document_DocumentType">Тип документа</label>
+                        <select class="form-select select2-nosearch" asp-for="@requestOne[0].Document.DocumentType">
+                            <option value="RussianPassport">Паспорт гражданина РФ</option>
+                            <option value="ForeignPassport">Загранпаспорт гражданина РФ</option>
+                            <option value="BirthCertificate">Свидетельство о рождении</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@requestOne[0].Document.Series">Серия</label>
+                        <input type="text" class="form-control" placeholder="Серия" asp-for="@requestOne[0].Document.Series" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@requestOne[0].Document.Number">Номер</label>
+                        <input type="text" class="form-control" placeholder="Номер" asp-for="@requestOne[0].Document.Number" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@requestOne[0].Document.IssueDate">Дата выдачи</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                            <input asp-for="@requestOne[0].Document.IssueDate" type="text" class="form-control pickadate required" placeholder="Дата выдачи" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="accordion row g-3 d-none" id="original">
+    <div class="accordion-header rounded p-3 mb-0 pb-0 col-12">
+        <button class="fs-6 b-s-16  accordion-button collapsed" onclick="showAccordion(this)" type="button">
+            Заявитель
+        </button>
+    </div>
+    <div class="accordion-body col-12 mt-0 pt-0" data-disabled>
+        <div class="row justify-content-center g-3">
+            <div class="col-11">
+                <div class="divider text-start">
+                    <div class="divider-text b-s-16">Персональные данные</div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center g-3">
+            <div class="col-10">
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@requestTwo[0].Fio.LastName">Фамилия</label>
+                        <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@requestTwo[0].Fio.LastName" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@requestTwo[0].Fio.FirstName">Имя</label>
+                        <input type="text" class="form-control required" placeholder="Имя" asp-for="@requestTwo[0].Fio.FirstName" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@requestTwo[0].Fio.SecondName">Отчество</label>
+                        <input type="text" class="form-control" placeholder="Отчество" asp-for="@requestTwo[0].Fio.SecondName" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@requestTwo[0].BirthDate">Дата рождения</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                            <input asp-for="@requestTwo[0].BirthDate" type="text" class="form-control pickadate required" placeholder="Дата рождения" />
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@requestTwo[0].Inn">ИНН</label>
+                        <input type="text" class="form-control inn" placeholder="ИНН" asp-for="@requestTwo[0].Inn" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@requestTwo[0].Snils">СНИЛС</label>
+                        <input type="text" class="form-control required snils" placeholder="СНИЛС" asp-for="@requestTwo[0].Snils" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var applicants = @Json.Serialize(applicants);
+    var formContent = document.getElementById("smev-data-form-content");
+    var smevForm = {
+                fields: {
+            registry: formContent.querySelector("#request4_Registry"),
+            applicantType: formContent.querySelector("#request4_ApplicantType"),
+            flLastName: formContent.querySelector("#request4_ApplicantFl_Fio_LastName"),
+            flFirstName: formContent.querySelector("#request4_ApplicantFl_Fio_FirstName"),
+            flSecondName: formContent.querySelector("#request4_ApplicantFl_Fio_SecondName"),
+            flInn: formContent.querySelector("#request4_ApplicantFl_InnFl"),
+            flOgrn: formContent.querySelector("#request4_ApplicantFl_OgrnIp"),
+            ulOgrName: formContent.querySelector("#request4_ApplicantUl_OrgName"),
+            ulInn: formContent.querySelector("#request4_ApplicantUl_InnUl"),
+            ulOgrn: formContent.querySelector("#request4_ApplicantUl_Ogrn"),
+            requestValue: formContent.querySelector("#request4_RequestValue"),
+        },
+        init: () => {
+            SmevDataFormValidation.addField(smevForm.fields.flLastName.getAttribute('name'), {
+                validators: {
+                    notEmpty: {}
+                }
+            }).addField(smevForm.fields.flFirstName.getAttribute('name'), {
+                validators: {
+                    notEmpty: {}
+                }
+            }).addField(smevForm.fields.ulOgrName.getAttribute('name'), {
+                validators: {
+                    notEmpty: {}
+                }
+            }).addField(smevForm.fields.ulOgrn.getAttribute('name'), {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+
+            $(formContent).find('.required').each(function() {
+                    addValidation($(this));
+                });
+
+            $(formContent).find('[data-disabled]').each(function () {
+                visibilityBlock($(this), true, true);
+            });
+
+            $(formContent).find('[data-disabled]').each(function () {
+                visibilityBlock($(this), true);
+            });
+
+            $(formContent).find("#smev-request-tab2 select.select2-nosearch, #smev-request-tab3 select.select2-nosearch, #smev-request-tab4 select.select2-nosearch").each(function () {
+                $(this).select2({
+                    dropdownParent: $("#mainModal"),
+                    minimumResultsForSearch: Infinity
+                });
+            })
+            addValidation($('#flBlock [id$="InnFl"]'));
+
+            $(smevForm.fields.registry).on('change',
+                (event) => {
+                    $(smevForm.fields.applicantType).empty();
+                    switch (event.target.value) {
+                        case 'Egrul':
+                            $(smevForm.fields.applicantType).append(new Option('Юридическое лицо', 'Company'));
+                            visibilityBlock($('#ulBlock'), false);
+                            visibilityBlock($('#flBlock'), true, true);
+                            $('#ulBlock [id$="RequestValueType"]').val('OgrnUl').trigger('change');
+                            break;
+                        case 'Egrip':
+                            $(smevForm.fields.applicantType).append(new Option('Физическое лицо', 'PersonRf'));
+                            $(smevForm.fields.applicantType).append(new Option('Индивидуальный предприниматель', 'Ip'));
+                            $(smevForm.fields.applicantType).append(new Option('Иностранный гражданин', 'ForeignPerson'));
+                            $(smevForm.fields.applicantType).val('Ip').trigger('change');
+                            visibilityBlock($('#flBlock'), false);
+                            visibilityBlock($('#ulBlock'), true, true);
+                            $('#flBlock [id$="RequestValueType"]').val('InnFl').trigger('change');
+                            break;
+                    }
+                });
+            var maskOptions = { clearIncomplete: true, showMaskOnHover: false };
+
+            /* init inputmask */
+            $(".pickadate").inputmask("99.99.9999", maskOptions);
+
+            $(smevForm.fields.flInn).inputmask("9{12}", maskOptions);
+            $(smevForm.fields.flOgrn).inputmask("9{15}", maskOptions);
+            $(smevForm.fields.ulInn).inputmask("9{10}", maskOptions);
+            $(smevForm.fields.ulOgrn).inputmask("9{13}", maskOptions);
+
+            blockClear(formContent.querySelector('#original'));
+            renameBlock(formContent.querySelector('#original'), 100, true);
+
+            blockClear(formContent.querySelector('#original_'));
+            renameBlock(formContent.querySelector('#original_'), 100, true);
+        }
+    };
+
+    function blockClear(block) {
+        block.querySelectorAll('input').forEach(i => i.value = '');
+    }
+
+    function ShowErrorInputs() {
+        let blocks = new Set();
+        document.querySelectorAll('#smev_request input').forEach(item => {
+            if (item.getAttribute('disabled') == null && item.classList.contains('required') && item.value == '') {
+                let but = item.closest('[data-clone]').querySelector('button');
+                if (but) blocks.add(but);
+            }
+        });
+        blocks.forEach(item => {
+            if (item.classList.contains('collapsed')) item.click();
+        });
+    }
+
+    function visibilityBlock($block, hide) {
+        if (hide) {
+            $block.hide();
+            //$block.find('input, select').each(function() {
+            //    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+            //        SmevDataFormValidation.removeField($(this).attr('name'));
+            //    }
+            //    if (isDisabled) $(this).prop('disabled', true);
+            //});
+        } else {
+            $block.show();
+            $block.find('input, select').each(function () {
+                //$(this).prop('disabled', false);
+                let $this = $(this);
+                if ($this.hasClass('required')) {
+                    SmevDataFormValidation.addField($this.attr('name'),
+                        {
+                            validators: {
+                                notEmpty: {}
+                            }
+                        });
+                    SmevDataFormValidation.elements[$this.attr('name')] = [$this[0]];
+                }
+            });
+
+            $block.find('[data-disabled]').each(function () {
+                visibilityBlock($(this), true);
+            });
+        }
+    }
+
+    document.getElementById('customers_').addEventListener('click',
+        (event) => {
+            let li = event.target;
+            if (li.classList.contains('active')) {
+                li.classList.remove('active');
+                let $block = $(formContent.querySelector(`#cloneList_ [data-customer-id="${li.dataset.value}"]`));
+                $block.find('input, select').each(function () {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        SmevDataFormValidation.removeField($(this).attr('name'));
+                    }
+                });
+                $block.remove();
+                formContent.querySelectorAll('#cloneList_ [data-clone]').forEach((item, index) => {
+                    renameBlock(item, index);
+                });
+            } else {
+                li.classList.add('active');
+                addForm('cloneList_', 'original_', li.dataset.value);
+                if (li.textContent.includes('Заявитель')) {
+                    fillForm1();
+                } else {
+                    fillForm1(li.dataset.value);
+                }
+            }
+        });
+
+    document.getElementById('customers').addEventListener('click',
+        (event) => {
+            let li = event.target;
+            if (li.classList.contains('active')) {
+                li.classList.remove('active');
+                let $block = $(formContent.querySelector(`#cloneList [data-customer-id="${li.dataset.value}"]`));
+                $block.find('input, select').each(function () {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        SmevDataFormValidation.removeField($(this).attr('name'));
+                    }
+                });
+                $block.remove();
+                formContent.querySelectorAll('#cloneList [data-clone]').forEach((item, index) => {
+                    renameBlock(item, index);
+                });
+            } else {
+                li.classList.add('active');
+                addForm('cloneList', 'original', li.dataset.value);
+                if (li.textContent.includes('Заявитель')) {
+                    fillForm();
+                } else {
+                    fillForm(li.dataset.value);
+                }
+            }
+        });
+
+    document.getElementById('addCustomer_').addEventListener('click', () => {
+        let index = ++document.querySelectorAll('#customers_ li').length;
+        $('#customers_').append(`<li class="list-group-item" data-value="${index}">Заявитель ${index}</li>`);
+    });
+
+    document.getElementById('addCustomer').addEventListener('click', () => {
+        let index = ++document.querySelectorAll('#customers li').length;
+        $('#customers').append(`<li class="list-group-item" data-value="${index}">Заявитель ${index}</li>`);
+    });
+
+    document.getElementById('chooseAllCustomer_').addEventListener('click', () => {
+        document.querySelectorAll('#customers_ li:not(.active)').forEach(item => {
+            item.click();
+        });
+    });
+    document.getElementById('chooseAllCustomer').addEventListener('click', () => {
+        document.querySelectorAll('#customers li:not(.active)').forEach(item => {
+            item.click();
+        });
+    });
+
+    document.getElementById('removeAllCustomer').addEventListener('click', () => {
+        document.querySelectorAll('#customers li.active').forEach(item => {
+            item.click();
+        });
+    });
+
+    document.getElementById('removeAllCustomer_').addEventListener('click', () => {
+        document.querySelectorAll('#customers_ li.active').forEach(item => {
+            item.click();
+        });
+    });
+    
+
+      $('select.applicants').each(function() {
+        $(this).on('change',
+            function() {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]').each(function() {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$="LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$="FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$="SecondName"]').val(applicants[id].secondName);
+                    $block.find('[name$="Snils"]').val(applicants[id].snils);
+                    $block.find('[name$="BirthDate"]').val(applicants[id].birthDate ? new Date(applicants[id].birthDate).toLocaleDateString() : '');
+                    $block.find('[name$="DocSeries"]').val(`${applicants[id].documentSerial.replace(' ', '')}`);
+                    $block.find('[name$="DocNumber"]').val(`${applicants[id].documentNumber}`);
+                }
+            });
+    });
+
+    function fillForm(customerId) {
+        if (customerId) {
+            let form = formContent.querySelector(`#cloneList [data-customer-id="${customerId}"]`);
+            $(form).find('button').text(`${applicants[customerId].lastName} ${applicants[customerId].firstName} ${applicants[customerId].secondName}`);
+            $(form).find('[name$="LastName"]').val(applicants[customerId].lastName);
+            $(form).find('[name$="FirstName"]').val(applicants[customerId].firstName);
+            $(form).find('[name$="SecondName"]').val(applicants[customerId].secondName);
+            $(form).find('[name$="Snils"]').val(applicants[customerId].snils);
+            $(form).find('[name$="Inn"]').val(applicants[customerId].inn);
+            $(form).find('[name$="BirthDate"]').val(applicants[customerId].birthDate ? new Date(applicants[customerId].birthDate).toLocaleDateString() : '');
+        }
+    }
+
+    function fillForm1(customerId) {
+        if (customerId) {
+            let form = formContent.querySelector(`[data-customer-id="${customerId}"]`);
+            $(form).find('button').text(`${applicants[customerId].lastName} ${applicants[customerId].firstName} ${applicants[customerId].secondName}`);
+            $(form).find('[name$="LastName"]').val(applicants[customerId].lastName);
+            $(form).find('[name$="FirstName"]').val(applicants[customerId].firstName);
+            $(form).find('[name$="SecondName"]').val(applicants[customerId].secondName);
+            $(form).find('[name$="Snils"]').val(applicants[customerId].snils);
+            $(form).find('[name$="Inn"]').val(applicants[customerId].inn);
+            $(form).find('[name$="BirthDate"]').val(applicants[customerId].birthDate ? new Date(applicants[customerId].birthDate).toLocaleDateString() : '');
+            switch (applicants[customerId].documentTypeCode)
+            {
+                case '21':
+                    $(form).find('[name$="DocumentType"]').html(`
+                    <option value="RussianPassport"> Паспорт гражданина РФ </option>
+                    <option value="ForeignPassport"> Загранпаспорт гражданина РФ </option>
+                    <option value="BirthCertificate"> Свидетельство о рождении </option>
+                   `);
+                   break; 
+                case '3':
+                    $(form).find('[name$="DocumentType"]').html(`
+                    <option value="BirthCertificate"> Свидетельство о рождении </option>
+                    <option value="RussianPassport"> Паспорт гражданина РФ </option>
+                    <option value="ForeignPassport"> Загранпаспорт гражданина РФ </option>
+                   `);
+                   break;
+                case '22':
+                    $(form).find('[name$="DocumentType"]').html(`
+                    <option value="ForeignPassport"> Загранпаспорт гражданина РФ </option>
+                    <option value="RussianPassport"> Паспорт гражданина РФ </option>
+                    <option value="BirthCertificate"> Свидетельство о рождении </option>
+                   `);
+                   break;
+            }
+            $(form).find('[name$="Series"]').val(applicants[customerId].documentSerial.replace(' ', ''));
+            $(form).find('[name$="Number"]').val(applicants[customerId].documentNumber);
+            $(form).find('[name$="IssueDate"]').val(applicants[customerId].documentIssueDate ? new Date(applicants[customerId].documentIssueDate).toLocaleDateString() : '');
+        }
+    }
+
+    function renameBlock(cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            cloneBlock.id = `clone${indexId}`;
+            cloneBlock.dataset.id = indexId;
+            cloneBlock.setAttribute('data-clone', '');
+        }
+
+        cloneBlock.querySelectorAll('input').forEach(item => {
+            item.id = item.id.replace(/\d+/, indexId);
+            item.name = item.name.replace(/\d+/, indexId);
+        });
+
+        cloneBlock.querySelectorAll('label').forEach(item => {
+            item.setAttribute('for', item.getAttribute('for').replace(/\d+/, indexId));
+        });
+
+        cloneBlock.querySelectorAll('select').forEach(item => {
+            item.id = item.id.replace(/\d+/, indexId);
+            item.name = item.name.replace(/\d+/, indexId);
+        });
+    }
+
+    function addForm(cloneListId, originalId, customerId) { //Динамическое добавление Принимает (Куда Откуда)
+        let cloneList = formContent.querySelector(`#${cloneListId}`);
+        let original = formContent.querySelector(`#${originalId}`);
+        let cloneBlock = original.cloneNode(true);
+        cloneBlock.classList.remove('d-none');
+        let indexId = cloneList.querySelectorAll('[data-clone]').length;
+        cloneBlock.setAttribute('data-customer-id', customerId);
+        renameBlock(cloneBlock, indexId);
+        blockInit(cloneBlock);
+        cloneList.appendChild(cloneBlock);
+    }
+
+    function showAccordion() {
+        let accordionBody = $(event.target).closest('.accordion').find('.accordion-body');
+        if ($(event.target).hasClass('collapsed')) {
+            visibilityBlock(accordionBody, false);
+        } else {
+            visibilityBlock(accordionBody, true);
+        }
+        $(event.target).toggleClass('collapsed');
+    };
+
+    function blockInit(block) {
+        visibilityBlock($(block), false);
+        $(block).find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                dropdownParent: $("#mainModal"),
+                minimumResultsForSearch: Infinity
+            });
+        });
+
+        $(block).find("select").each(function () {
+            if ($(this).data('def')) {
+                $(this).val($(this).data('def')).trigger('change');
+            } else {
+                $(this).prop("selectedIndex", 0);
+            }
+        });
+        $(block).find("select").each(function () {
+            if ($(this).data('def')) {
+                $(this).val($(this).data('def')).trigger('change');
+            } else {
+                $(this).prop("selectedIndex", 0);
+            }
+        });
+
+        /* init datepicker */
+        $(block).find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        });
+
+        var maskOptions = { clearIncomplete: true, showMaskOnHover: false };
+
+        /* init inputmask */
+        $(block).find(".pickdate").inputmask("99.99.9999", maskOptions);
+        $(block).find('.snils').inputmask("999-999-999 99", maskOptions);
+        $(block).find('.inn').inputmask("9{12}", maskOptions);
+    }
+    getDictionaries();
+    function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function () {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.ajax({
+                    url: '/SmevBase/SmevGetDictionary',
+                    type: 'POST',
+                    async: false,
+                    data: { type: options.dictionary },
+                    success: function (dictionary) {
+                        fillSelect(options.dictionary, dictionary);
+                    }
+                });
+            }
+        });
+    };
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function () {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Не выбран', ''));
+                }
+
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+            }
+        );
+
+    }
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+    function visibilityBlock($block, hide, isDisabled = false) {
+        if (hide) {
+            $block.hide();
+            $block.find('input, select').each(function () {
+                if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                    SmevDataFormValidation.removeField($(this).attr('name'));
+                }
+                if (isDisabled) $(this).prop('disabled', true);
+            });
+        } else {
+            $block.show();
+            $block.find('input, select').each(function () {
+                $(this).prop('disabled', false);
+                let $this = $(this);
+                if ($this.hasClass('required')) {
+                    SmevDataFormValidation.addField($this.attr('name'),
+                        {
+                            validators: {
+                                notEmpty: {}
+                            }
+                        });
+                    SmevDataFormValidation.elements[$this.attr('name')] = [$this[0]];
+                }
+            });
+
+            $block.find('[data-disabled]').each(function () {
+                visibilityBlock($(this), true, true);
+            });
+        }
+    }
+
+    function changeRequestValueType(el) {
+        switch (el.value) {
+            case 'InnFl':
+                addValidation($('#flBlock [id$="InnFl"]'));
+                removeValidation($('#flBlock [id$="OgrnIp"]'));
+                $('#flBlock [id$="OgrnIp"]').removeClass('is-invalid');
+                break;
+            case 'OgrnFl':
+                addValidation($('#flBlock [id$="OgrnIp"]'));
+                removeValidation($('#flBlock [id$="InnFl"]'));
+                $('#flBlock [id$="InnFl"]').removeClass('is-invalid');
+                break;
+            case 'InnUl':
+                addValidation($('#ulBlock [id$="InnUl"]'));
+                break;
+            case 'OgrnUl':
+                removeValidation($('#ulBlock [id$="InnUl"]'));
+                $('#ulBlock [id$="InnUl"]').removeClass('is-invalid');
+                break;
+        }
+    }
+
+    function ShowErrorInputs() {
+        for (let item of document.querySelectorAll('#smev_request input,select')) {
+            if (item.getAttribute('disabled') == null && item.classList.contains('required') && item.value == '') {
+                 $('#smev_request').find(`button[data-bs-target="#${item.closest('.tab-pane').id}"]`).trigger('click'); 
+                break;
+            }
+        };
+    }
+
+    $('[name^="customers"] li').trigger('click');
+</script>

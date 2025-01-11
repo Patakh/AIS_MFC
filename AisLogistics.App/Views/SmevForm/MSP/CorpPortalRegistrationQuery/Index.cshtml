@@ -1,0 +1,167 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new MspCorpPortalRegistrationQueryRequestData
+            {
+                Fio = new FioType()
+            };
+}
+<style>
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+</style>
+
+<div class="row justify-content-center mt-3">
+    <div class="col-10">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Детали запроса</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-5">
+                <label class="form-label" asp-for="@request.ApplicationType">Тип заявителя</label>
+                <select class="form-select select2-nosearch" asp-for="@request.ApplicationType">
+                    <option value="IpApplication">Индивидуальный предприниматель</option>
+                    <option value="LegalApplication">Юридическое лицо</option>
+                    <option value="PersonApplication">Физическое лицо</option>
+                </select>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center m-1" data-person>
+    <div class="col-12">
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <select class="form-select select2-nosearch applicants">
+                    <option value="">Выберите заявителя</option>
+                    @for (int i = 0; i < applicants.Count; i++)
+                    {
+                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="row mt-1">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Fio.LastName">Фамилия</label>
+                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Fio.LastName" />
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Fio.FirstName">Имя</label>
+                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Fio.FirstName">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Fio.SecondName">Отчество</label>
+                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Fio.SecondName">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Inn">ИНН</label>
+                <input type="text" class="form-control required" placeholder="ИНН" asp-for="@request.Inn" />
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-3">
+        <div class="col-10">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Контактные данные</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="row mt-1">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Phone">Номер телефона</label>
+                <input type="text" class="form-control phone" placeholder="Номер телефона" asp-for="@request.Phone">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Email">E-mail</label>
+                <input type="text" class="form-control email" placeholder="E-mail" asp-for="@request.Email">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ShowErrorInputs() {
+    }
+
+    var applicants = @Json.Serialize(applicants);
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                $(formContent).find('.required').each(function() {
+                    addValidation($(this));
+                });
+
+                let options = { clearIncomplete: true, showMaskOnHover: false };
+
+                /* init inputmask */
+
+                $(formContent).find("select.select2-nosearch").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+                $(formContent).find('[name$="Inn"]').inputmask('999999999999', options);
+                $(formContent).find('[name$="ApplicationType"]').on('change',
+                    function() {
+                        let options = { clearIncomplete: true, showMaskOnHover: false };
+                        let $inn = $(formContent).find('[name$="Inn"]');
+                        switch ($(this).val()) {
+                            case 'LegalApplication':
+                                $inn.inputmask('9999999999', options);
+                                break;
+                            default:
+                                $inn.inputmask('999999999999', options);
+                        }
+                    });
+            }
+        };
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+    $('select.applicants').each(function() {
+        $(this).on('change',
+            function() {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]').each(function() {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$="LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$="FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$="SecondName"]').val(applicants[id].secondName);
+                    $block.find('[name$="Phone"]').val(applicants[id].phone);
+                    $block.find('[name$="Inn"]').val(applicants[id].inn);
+                    $block.find('[name$="Email"]').val(applicants[id].email);
+                }
+            });
+    });
+</script>

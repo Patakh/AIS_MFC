@@ -1,0 +1,102 @@
+﻿@*@using AisLogistics.App.Models.DTO.Information
+@model List<EmployeeRatingDto>
+@{
+    int i = 1;
+}*@
+
+<!-- table -->
+<section id="content-datatable">
+    <div class="row">
+        <div class="col-12">
+            <div class="">
+                <div class="">
+                    <div class="table-responsive mt-3">
+                        <table id="tableRating" class="table table-sm"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--/ table -->
+
+<script>
+
+    $(document).ready(function () {
+        //let $table = $('#tableRating');
+
+        $('#tableRating').DataTable({
+            sDom: "<'row d-flex justify-content-between align-items-center'<'col-sm-12 col-md-5 'f><'col-sm-12 col-md-5'<'#offices'>>>" +
+                  "<'row'<'col-sm-12'tr>>",
+            /* "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",*/
+            processing: true,
+            serverSide: true,
+            filter: true,
+            searchDelay: 1500,
+            scrollY: 600,
+            //deferRender: true,
+            scroller: true,
+            info: false,
+            ajax: {
+                url: 'Home/GetEmployeeRatingDataJson',
+                type: "POST",
+                datatype: "json",
+                dataSrc: function (json) {
+                    return json.data;
+                }
+            }, 
+            initComplete: function () {
+                var mfcColumn = this.api().column(4);
+
+                var $providers = $('#offices');
+                //$providers.html('<label class="form-label" for="selectProviders">Сервисы</label>');
+                var $procedureSelect = $('<select id="selectProviders" class="form-select form-select-sm"><option selected value="">ВСЕ</option>@Html.Raw(ViewBag.Mfc)</select>')
+                    .appendTo($providers)
+                    .select2({
+                        dropdownParent: $("#mainModal"),
+                        language: "ru",
+                        containerCssClass: "form-select-sm"
+                    })
+                    .on('change', function () {
+                        mfcColumn.search($(this).val()).draw();
+                    });
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    orderable: false
+                },
+                {
+                    targets: 2,
+                    orderable: false
+                },
+                {
+                    targets: 3,
+                    orderable: false
+                },
+                {
+                    name: "mfc",
+                    targets: 4,
+                    visible: false,
+                    orderable: false
+                },
+            ],
+            columns: [
+                {data: "positionId"},
+                {data: "employeeName" },
+                { data: "officessName" },
+                { data: "employeePoint" }, 
+                {
+                    render: function (data, type, row) {
+                        return "";
+                    }
+                },
+            ]
+        });
+  
+    })
+</script>

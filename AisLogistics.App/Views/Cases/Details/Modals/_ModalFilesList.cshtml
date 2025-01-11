@@ -1,0 +1,35 @@
+﻿@model ViewModelBuilder
+@{
+    var items = Model.Model as List<CaseServiceBlank>;
+}
+
+@if (items.Any())
+{
+    <div class="table-responsive mt-3">
+        <table class="table table-sm">
+            <tbody class="table-border-bottom-0 overflow-auto">
+                @foreach (var item in items)
+                {
+                    <tr>
+                        <td>
+                            <a asp-action="DownloadFile" asp-controller="Cases" asp-route-id="@item.Id" asp-route-serviceId="@item.ServiceId" target="_blank" class="d-flex pb-2 pt-2">
+                                <i class="bi bi-filetype-@item.Expansion.Substring(1) me-4"></i>
+                                <p class="my-auto m-s-12">@(item.Name)@item.Expansion</p>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="col-12 text-center m-l-16 mt-4">
+        Нет Файлов
+    </div>
+}
+
+<script>
+    
+</script>

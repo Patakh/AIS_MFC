@@ -1,0 +1,119 @@
+﻿@using AisLogistics.App.Models.DTO.ReestrUnclaimedDocuments
+@model List<ReestrUnclaimedDocumentsDto>;
+<style>
+    .active_unclaimed {
+        border-left: 3px solid #5a8dee !important;
+    }
+</style>
+
+@foreach (var item in Model)
+{
+    <div data-unclaimed-id="@item.Id" class="card cursor-pointer mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between mb-1">
+
+                <div id="Unclaimed_text" data-reestr-number="@item.ReestrNumber" class="text-dark fw-bolder">
+                    № @item.ReestrNumber
+                    <span>
+                        <a href="javascript:void(0);"  data-edit-reestr class="btn btn-sm btn-icon text-body" title="Редактирование номера">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a href="javascript:void(0)" data-print-reestr class='btn btn-sm btn-icon text-primary'>
+                            <i class="bi bi-printer"></i>
+                        </a>
+                        <a href="javascript:void(0)" data-download-reestr class='btn btn-sm btn-icon text-success'>
+                            <i class='bi bi-download'></i>
+                        </a>
+                    </span>
+                </div>
+                <div class="text-muted"><span class="text-body">Количество:</span> @item.CountService</div>
+            </div>
+            <div class="text-muted mb-1"><span class="text-body">Дата:</span> @item.DateAdd</div>
+            <div class="text-muted mb-1"><span class="text-body">Услуга:</span> @item.ServiceName</div>
+            <div class="text-muted mb-1"><span class="text-body">Поставщик:</span> @item.ProviderName</div>
+            <div class="text-muted mb-1"><span class="text-body">Департамент:</span> @(item.DepartementName != null && item.DepartementName.Length > 0 ? item.DepartementName : "-")</div>
+            <div class="text-muted mb-1"><span class="text-body">Сотрудник:</span> @item.EmployeesFioAdd</div>
+        </div>
+    </div>
+}
+
+<script>
+    $('[data-unclaimed-id]').click(function () {
+
+        $('[data-unclaimed-id]').removeClass('active_unclaimed');
+        $(this).addClass('active_unclaimed');
+
+        let id = $(this).data('unclaimed-id');
+
+        let text = $(this).find('[data-reestr-number]').data('reestr-number');
+
+        $('#card_title').html("Реестр №" + text);
+        $.ajax({
+            url: '/ReestrUnclaimedDocuments/UnclaimedDocumentsChangeModalView',
+            type: 'POST',
+            data: { id: id },
+            beforeSend: () => {
+                $.pageBlock();
+            },
+            complete: () => {
+                $.unblockUI();
+                showTable();
+            },
+            success: function (content) {
+                $('#casesUnclaimed_Wrapper').empty();
+                $('#casesUnclaimed_Wrapper').html(content);
+            }
+        });
+    })
+
+     $('[data-edit-reestr]').click(function (e) {
+        let th = e.currentTarget;
+        e.stopPropagation();
+        let id = $(th).parents('[data-unclaimed-id]').data('unclaimed-id');
+
+        $.ajax({
+            url: '/ReestrUnclaimedDocuments/UnclaimedDocumentsChangeModalEdit',
+            type: 'POST',
+            data: { id: id },
+            beforeSend: () => {
+                $.pageBlock();
+            },
+            complete: () => {
+                $.unblockUI();
+            },
+            success: function (content) {
+                $('#mainModal').html(content).modal('show');
+            }
+        });
+    });
+
+    $('[data-print-reestr]').click(function (e) {
+        let th = e.currentTarget;
+        e.stopPropagation();
+        let id = $(th).parents('[data-unclaimed-id]').data('unclaimed-id');
+
+        $.ajax({
+            url: '/ReestrUnclaimedDocuments/UnclaimedDocumentsPrint',
+            type: 'POST',
+            data: { id: id },
+            beforeSend: () => {
+                $.pageBlock();
+            },
+            complete: () => {
+                $.unblockUI();
+            },
+            success: function (data) {
+                printPDF(data);
+            }
+        });
+    });
+
+    $('[data-download-reestr]').click(function (e) {
+        let th = e.currentTarget;
+        e.stopPropagation();
+        let id = $(th).parents('[data-unclaimed-id]').data('unclaimed-id');
+
+        let url = '@Url.Action("UnclaimedDocumentsDownload", "ReestrUnclaimedDocuments")/?id=' + id;
+        window.open(url, "_blank");
+    });
+</script>

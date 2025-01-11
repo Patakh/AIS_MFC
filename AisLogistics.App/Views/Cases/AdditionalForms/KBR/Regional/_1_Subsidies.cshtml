@@ -1,0 +1,554 @@
+﻿@model _1_SubsidiesModel
+@{
+    IEnumerable<SelectListItem> housingTypeId = new List<SelectListItem>
+    {
+        new ("МКД", "1"),
+        new ("частный", "2"),
+        new ("общежитие", "3"),
+    };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="HousingTypeId" class="form-label">Вид жилищного фонда</label>
+                    <select asp-items="@housingTypeId" class="form-select select2-nosearch" asp-for="HousingTypeId"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="RegionalStandardType" class="form-label">Вид регионального стандарта</label>
+                    <input asp-for="RegionalStandardType" class="form-control" type="text" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label asp-for="TotalSquare" class="form-label">Общая площадь</label>
+                    <input asp-for="TotalSquare" class="form-control" type="number" />
+                </div>
+                <div class="col-6">
+                    <label asp-for="HeatedSquare" class="form-label">Отапливаемая площадь</label>
+                    <input asp-for="HeatedSquare" class="form-control" type="number" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label asp-for="RoomAmount" class="form-label">Количество комнат</label>
+                    <input asp-for="RoomAmount" class="form-control" type="number" />
+                </div>
+                <div class="col-4">
+                    <label asp-for="Floor" class="form-label">Этаж</label>
+                    <input asp-for="Floor" class="form-control" type="number" />
+                </div>
+                <div class="col-4">
+                    <label asp-for="RoomerAmount" class="form-label">Количество жильцов</label>
+                    <input asp-for="RoomerAmount" class="form-control" type="number" />
+                </div>
+            </div>
+            <br />
+            <h5 class="my-2">Виды благоустройства жилья</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <td>№</td>
+                                <td>Виды благоустройства жилья</td>
+                                <td>Поставщик услуг</td>
+                                <td>№ лицевого счета</td>
+                                <td>Ежемесячное начисление</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1.</td>
+                                <td>
+                                    Тех. обслуживание жилья <br />
+                                    Лифт и мусоропровод
+                                </td>
+                                <td>
+                                    <textarea asp-for="PaymentHousing!.Provider" class="form-control" type="text"></textarea>
+                                </td>
+                                <td>
+                                    <textarea asp-for="PaymentHousing!.PersonalAccount" class="form-control" type="text"></textarea>
+                                </td>
+                                <td>
+                                    <textarea asp-for="PaymentHousing!.MonthlyAccrual" class="form-control" type="text"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2.</td>
+                                <td>
+                                    Капитальный ремонт МКД
+                                </td>
+                                <td>
+                                    <textarea asp-for="KR!.Provider" class="form-control" type="text"></textarea>
+                                </td>
+                                <td>
+                                    <textarea asp-for="KR!.PersonalAccount" class="form-control" type="text"></textarea>
+                                </td>
+                                <td>
+                                    <textarea asp-for="KR!.MonthlyAccrual" class="form-control" type="text"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3.</td>
+                                <td>
+                                    Электроснабжение <br />
+                                    Электроплита 
+                                </td>
+                                <td>
+                                    <textarea asp-for="Electric!.Provider" class="form-control" type="text"></textarea>
+                                </td>
+                                <td>
+                                    <textarea asp-for="Electric!.PersonalAccount" class="form-control" type="text"></textarea>
+                                </td>
+                                <td>
+                                    <textarea asp-for="Electric!.MonthlyAccrual" class="form-control" type="text"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4.</td>
+                                <td>
+                                    Газовая плита<br />
+                                    Колонка<br />
+                                    Газовое отопление
+                                </td>
+                                <td>
+                                    <textarea asp-for="MainsGas!.Provider" class="form-control" type="text"></textarea>
+                                </td>
+                                <td>
+                                    <textarea asp-for="MainsGas!.PersonalAccount" class="form-control" type="text"></textarea>
+                                </td>
+                                <td>
+                                    <textarea asp-for="MainsGas!.MonthlyAccrual" class="form-control" type="text"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>5.</td>
+                                <td>
+                                    Центральное отопление<br />
+                                    Центр. горячее водоснабжение
+                                </td>
+                                <td>
+                                    <textarea asp-for="CentralHeating!.Provider" class="form-control" type="text"></textarea>
+                                </td>
+                                <td>
+                                    <textarea asp-for="CentralHeating!.PersonalAccount" class="form-control" type="text"></textarea>
+                                </td>
+                                <td>
+                                    <textarea asp-for="CentralHeating!.MonthlyAccrual" class="form-control" type="text"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>6.</td>
+                                <td>
+                                    Водоснабжение в доме<br />
+                                    Канализация в доме<br />
+                                    Дворовая канализация
+                                </td>
+                                <td>
+                                    <textarea asp-for="Water!.Provider" class="form-control" type="text"></textarea>
+                                </td>
+                                <td>
+                                    <textarea asp-for="Water!.PersonalAccount" class="form-control" type="text"></textarea>
+                                </td>
+                                <td>
+                                    <textarea asp-for="Water!.MonthlyAccrual" class="form-control" type="text"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>6.</td>
+                                <td>
+                                   ТКО
+                                </td>
+                                <td>
+                                    <textarea asp-for="TKO!.Provider" class="form-control" type="text"></textarea>
+                                </td>
+                                <td>
+                                    <textarea asp-for="TKO!.PersonalAccount" class="form-control" type="text"></textarea>
+                                </td>
+                                <td>
+                                    <textarea asp-for="TKO!.MonthlyAccrual" class="form-control" type="text"></textarea>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+             <br />
+            <h5 class="my-2">Прилагаемые документы</h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedDocuments?.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Запись @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-9">
+                                <label asp-for="AppliedDocuments[i]!.Name" class="form-label">Наименование</label>
+                                <input asp-for="AppliedDocuments[i]!.Name" class="form-control" type="text">
+                            </div>
+                            <div class="col-2">
+                                <label asp-for="AppliedDocuments[i]!.PageAmount" class="form-label">Кол-во экз / страниц</label>
+                                <input asp-for="AppliedDocuments[i]!.PageAmount" class="form-control" type="text">
+                            </div>
+                            <div class="col-1 mt-2">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">
+                Состав семьи и ее доход, указываются на всех членов семьи, которые зарегистрированы по месту жительства в данном жилом
+                помещении за шесть месяцев, предшествующих дате подачи заявления
+            </h5>
+            <div id="familyMembersList" data-clone-list>
+                @for (var i = 0; i < Model.FamilyMembersList?.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Член семьи @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col">
+                                <div class="row mb-1 align-items-center">
+                                    <div class="col-7">
+                                        <label asp-for="FamilyMembersList[i]!.FIO" class="form-label">Ф.И.О.</label>
+                                        <input type="text" asp-for="FamilyMembersList[i]!.FIO" class="form-control">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="FamilyMembersList[i]!.BirthDate">Дата рождения</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="FamilyMembersList[i]!.BirthDate" type="text"
+                                                   class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <label class="form-label" asp-for="FamilyMembersList[i]!.FamilyRelations">Степень родства</label>
+                                        <input asp-for="FamilyMembersList[i]!.FamilyRelations" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-1 align-items-center">
+                                    <div class="col-12">
+                                        <label asp-for="FamilyMembersList[i]!.PassportData" class="form-label">
+                                            Данные паспорта
+                                            (свидетельства о рождении)
+                                        </label>
+                                        <input type="text" asp-for="FamilyMembersList[i]!.PassportData" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-1 align-items-center">
+                                    <div class="col-12">
+                                        <label asp-for="FamilyMembersList[i]!.SourceIncome" class="form-label">
+                                            Источник дохода
+                                        </label>
+                                        <input type="text" asp-for="FamilyMembersList[i]!.SourceIncome" class="form-control">
+                                    </div>
+                                </div>
+                                <h6 class="my-2">Месяцы</h6>
+                                <div class="row mb-1 align-items-center">
+                                    <div class="col-2">
+                                        <label asp-for="FamilyMembersList[i]!.MonthOne" class="form-label">I</label>
+                                        <input type="number" asp-for="FamilyMembersList[i]!.MonthOne" class="form-control" min="0">
+                                    </div>
+                                    <div class="col-2">
+                                        <label asp-for="FamilyMembersList[i]!.MonthTwo" class="form-label">II</label>
+                                        <input type="number" asp-for="FamilyMembersList[i]!.MonthTwo" class="form-control" min="0">
+                                    </div>
+                                    <div class="col-2">
+                                        <label asp-for="FamilyMembersList[i]!.MonthThree" class="form-label">III</label>
+                                        <input type="number" asp-for="FamilyMembersList[i]!.MonthThree" class="form-control" min="0">
+                                    </div>
+                                    <div class="col-2">
+                                        <label asp-for="FamilyMembersList[i]!.MonthFour" class="form-label">IV</label>
+                                        <input type="number" asp-for="FamilyMembersList[i]!.MonthFour" class="form-control" min="0">
+                                    </div>
+                                    <div class="col-2">
+                                        <label asp-for="FamilyMembersList[i]!.MonthFive" class="form-label">V</label>
+                                        <input type="number" asp-for="FamilyMembersList[i]!.MonthFive" class="form-control" min="0">
+                                    </div>
+                                    <div class="col-2">
+                                        <label asp-for="FamilyMembersList[i]!.MonthSix" class="form-label">VI</label>
+                                        <input type="number" asp-for="FamilyMembersList[i]!.MonthSix" class="form-control" min="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addFamilyMembers"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2 title">Решение Министерства труда и социальной защиты КБР</h5>
+            <h6 class="my-2 title">I. Период</h6>
+            <div class="row mb-1 align-items-center">
+                <div class="col-6">
+                    <label class="form-label" asp-for="DateStart">С</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DateStart" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="DateStop">По</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DateStop" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-1 align-items-center">
+                <div class="col-12">
+                    <label asp-for="Deny" class="form-label">II. Отказать в предоставлении субсидии на оплату ЖКУ по следующим причинам </label>
+                    <input type="text" asp-for="Deny" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="familyMembers" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Член семьи 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col">
+                <div class="row mb-1 align-items-center">
+                    <div class="col-7">
+                        <label asp-for="FamilyMembersList[0]!.FIO" class="form-label">Ф.И.О.</label>
+                        <input type="text" asp-for="FamilyMembersList[0]!.FIO" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="FamilyMembersList[0]!.BirthDate">Дата рождения</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="FamilyMembersList[0]!.BirthDate" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <label class="form-label" asp-for="FamilyMembersList[0]!.FamilyRelations">Степень родства</label>
+                        <input asp-for="FamilyMembersList[0]!.FamilyRelations" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-1 align-items-center">
+                    <div class="col-12">
+                        <label asp-for="FamilyMembersList[0]!.PassportData" class="form-label">
+                            Данные паспорта
+                            (свидетельства о рождении)
+                        </label>
+                        <input type="text" asp-for="FamilyMembersList[0]!.PassportData" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-1 align-items-center">
+                    <div class="col-12">
+                        <label asp-for="FamilyMembersList[0]!.SourceIncome" class="form-label">
+                            Источник дохода
+                        </label>
+                        <input type="text" asp-for="FamilyMembersList[0]!.SourceIncome" class="form-control">
+                    </div>
+                </div>
+                <h6 class="my-2">Месяцы</h6>
+                <div class="row mb-1 align-items-center">
+                    <div class="col-2">
+                        <label asp-for="FamilyMembersList[0]!.MonthOne" class="form-label">I</label>
+                        <input type="number" asp-for="FamilyMembersList[0]!.MonthOne" class="form-control">
+                    </div>
+                    <div class="col-2">
+                        <label asp-for="FamilyMembersList[0]!.MonthTwo" class="form-label">II</label>
+                        <input type="number" asp-for="FamilyMembersList[0]!.MonthTwo" class="form-control">
+                    </div>
+                    <div class="col-2">
+                        <label asp-for="FamilyMembersList[0]!.MonthThree" class="form-label">III</label>
+                        <input type="number" asp-for="FamilyMembersList[0]!.MonthThree" class="form-control">
+                    </div>
+                    <div class="col-2">
+                        <label asp-for="FamilyMembersList[0]!.MonthFour" class="form-label">IV</label>
+                        <input type="number" asp-for="FamilyMembersList[0]!.MonthFour" class="form-control">
+                    </div>
+                    <div class="col-2">
+                        <label asp-for="FamilyMembersList[0]!.MonthFive" class="form-label">V</label>
+                        <input type="number" asp-for="FamilyMembersList[0]!.MonthFive" class="form-control">
+                    </div>
+                    <div class="col-2">
+                        <label asp-for="FamilyMembersList[0]!.MonthSix" class="form-label">VI</label>
+                        <input type="number" asp-for="FamilyMembersList[0]!.MonthSix" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Документ 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-9">
+                <label asp-for="AppliedDocuments[0]!.Name" class="form-label">Наименование</label>
+                <input asp-for="AppliedDocuments[0]!.Name" class="form-control" type="text">
+            </div>
+            <div class="col-2">
+                <label asp-for="AppliedDocuments[0]!.PageAmount" class="form-label">Кол-во экз / страниц</label>
+                <input asp-for="AppliedDocuments[0]!.PageAmount" class="form-control" type="text">
+            </div>
+            <div class="col-1 mt-2">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script asp-append-version="true">
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+
+        });
+
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+        additionalForm.find('#addFamilyMembers').on('click', () => addForm('familyMembersList', 'familyMembers'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.append($cloneBlock);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            let options = { clearIncomplete: true, showMaskOnHover: false };
+            $block.find("input").each(function () {
+                $(this).val("");
+            });
+
+            $block.find(".pickdate").datepicker({
+                language: "ru",
+                autoclose: true
+            }).inputmask("99.99.9999", options);
+
+            $block.find('select.select2-nosearch').each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity,
+                })
+            });
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+</script>

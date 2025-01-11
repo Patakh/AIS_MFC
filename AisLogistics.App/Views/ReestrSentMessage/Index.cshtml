@@ -1,0 +1,184 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    var status = new string[] { "Не отправлено", "МФЦ не имеет авторизации на сервисе", "Ошибка валидации номера или СМС сообщения",
+                                "Сообщение добавлено в очередь", "Сообщение не отправлено, ошибка отправки", "Сообщение отправлено получателю",
+                                "Сообщение доставлено до получателя", "Сообщение не доставлено до получателя (превышен срок жизни СМС)"};
+}
+
+<!-- table -->
+<section id="content-datatable">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="table-responsive mt-3">
+                    <table id="@Model.TableName" data-action-table="@Model.TableMethodAction" class="table directory_names-items"></table>
+                </div>
+            </div>
+        </div>
+    </div> 
+</section>
+<!--/ table -->
+@section Scripts
+    {
+    <script>
+        const $table = $('#@(Model.TableName)'),
+            isCanAdd = $table.is('[data-action-add]'),
+            isCanEdit = $table.is('[data-action-edit]'),
+            isCanRemove = $table.is('[data-action-remove]');
+
+        $(document).ready(function () {
+            $table.DataTable({
+                sDom: "<'row align-items-center'<'col-sm-12 col-md-6 'f><'col-auto ms-auto'l>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                processing: true,
+                serverSide: true,
+                filter: true,
+                searchDelay: 1500,
+                ajax: {
+                    url: $table.data('action-table'),
+                    type: "POST",
+                    datatype: "json",
+                    dataSrc: function (json) { 
+                        return json.data;
+                    }
+                },
+
+                initComplete: function () {
+                    $('[name="reest-sentMessage-datatable_length"]')
+                        .select2({ minimumResultsForSearch: Infinity })
+
+                },
+                columnDefs: [
+                    {
+                        data: "id",
+                        targets: 0,
+                        title: '',
+                        visible: false,
+                        orderable: false
+                    },
+                    //{
+                    //    targets: 1,
+                    //    title: 'Дата создания',
+                    //    orderable: false
+                    //},
+                    {
+                        targets: 1,
+                        title: 'Дата отправки',
+                        orderable: false
+                    },
+                    {
+                        targets: 2,
+                        title: 'Обращение',
+                        orderable: false
+                    },
+                    {
+                        targets: 3,
+                        title: 'Заявитель',
+                        orderable: false
+                    },
+                    {
+                        targets: 4,
+                        title: 'Текст СМС',
+                        orderable: false
+                    },
+                    {
+                        targets: 5,
+                        title: 'Номер телефона',
+                        orderable: false
+                    },
+                    {
+                        targets: 6,
+                        title: 'Статус',
+                        orderable: false
+                    },
+                    //{
+                    //    targets: 7,
+                    //    title: 'Идентификатор на сервисе',
+                    //    orderable: false
+                    //},
+
+                ],
+                columns: [
+                    {},
+                    //{ data: "setDate" },
+                    { data: "enqueueDate" },
+                    { data: "casesId" },
+                    { data: "customerName" },
+                    { data: "smsText" },
+                    {
+                        data: "phoneNumber",
+                        render: function (data, type, row) {
+                            return '<img src="/img/phone.svg" alt="" class="me-1">' + data;
+                        }
+                    },
+                    {
+                        data: "sendStatus",
+                        render: function (data, type, row) {
+                            let content = '';
+                            switch (row.sendStatus) {
+                                case 0:
+                                    content = '@status[0]';
+                                    break;
+                                case 1:
+                                    content = '@status[1]';
+                                    break;
+                                case 2:
+                                    content = '@status[2]';
+                                    break;
+                                case 3:
+                                    content = '@status[3]';
+                                    break;
+                                case 4:
+                                    content = '@status[4]';
+                                    break;
+                                case 5:
+                                    content = '@status[5]';
+                                    break;
+                                case 6:
+                                    content = '@status[6]';
+                                    break;
+                                case 7:
+                                    content = '@status[7]';
+                                    break;
+                            };
+                            return content;
+                        }
+                    },
+                    //{ data: "smsId" },
+                ]
+            });
+            $table.on("reload", () => {
+                $table.DataTable().ajax.reload(null, false);
+            });
+            $table.on('draw.dt', function () {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl, {
+                        boundary: document.body
+                    });
+                });
+            }); 
+        }); 
+          
+        const EmployeesBtn = (data, count) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="view">
+                                                            <div class="position-relative d-inline-block me-2"><i class="bi bi-person"></i>
+                                                            <span class="badge rounded-pill bg-danger text-white badge-notifications">${count}</span></div></a>`;
+        }
+        const EditBtn = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="edit" data-bs-toggle="tooltip" title="Изменить" class="btn btn-sm btn-icon text-body">
+                                                            <i class="bi bi-pencil-square"></i></a>`;
+        }
+        const DeleteBtn = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="remove" data-bs-toggle="tooltip" title="Удалить" class="btn btn-sm btn-icon text-danger">
+                                                            <i class="bi bi-trash"></i></a>`;
+        }
+    </script>
+}
+
+

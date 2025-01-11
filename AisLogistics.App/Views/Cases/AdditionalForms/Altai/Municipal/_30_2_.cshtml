@@ -1,0 +1,220 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Municipal._30_2_Model
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Recipient">Место направления заявления</label>
+                    <input type="text" asp-for="Recipient" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="NameOrganization">наименование организации</label>
+                    <input type="text" asp-for="NameOrganization" class="form-control">                
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="AdressRecipient">место нахождения</label>
+                    <input type="text" asp-for="AdressRecipient" class="form-control">                
+                </div>
+            </div>
+            <hr/>
+            <br/>
+            <h6 class="my-2">Банковские реквизиты организации</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="NameBank">полное наименование банка </label>
+                    <input type="text" asp-for="NameBank" class="form-control">                
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Account">Счет</label>
+                    <input type="text" asp-for="Account" class="form-control">                
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="BIC">БИК</label>
+                    <input type="text" asp-for="BIC" class="form-control">                
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="CorrespondentAccount">корреспондентский счет</label>
+                    <input type="text" asp-for="CorrespondentAccount" class="form-control">                
+                </div>
+            </div>
+            <hr/>
+            <br/>
+            <div class="row mb-3">
+                <div class="col-8">
+                    <label class="form-label" asp-for="INN">ИНН</label>
+                    <input type="text" asp-for="INN" class="form-control">                
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Phone">телефон для связи</label>
+                    <input type="text" asp-for="Phone" class="form-control">                
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="TypeWork">вид работы</label>
+                    <input type="text" asp-for="TypeWork" class="form-control">                
+                </div>
+            </div>
+            <h6 class="my-2">срок</h6>
+            <div class="row mb-3">
+                 <div class="col-4">
+                    <div class="input-group input-group-merge">
+                       <span style="padding:10px;">от</span>
+                       <span class="input-group-text">
+                          <i class="bi bi-calendar3"></i>
+                       </span>
+                       <input asp-for="With" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group input-group-merge">
+                        <span style="padding:10px;">До</span>
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Before" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="NameСontractorOrganization">наименование подрядной организации</label>
+                    <input type="text" asp-for="NameСontractorOrganization" class="form-control">                
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Adress">по адресу</label>
+                    <input type="text" asp-for="Adress" class="form-control">                
+                </div>
+            </div>
+            <br/>
+            <hr/>
+        </div>
+    </div>
+</div>
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function() {
+        originalBlock.find('[data-original]').each(function(_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+        additionalForm.find('[data-disabled]').each(function() {
+            visibilityBlock($(this), true, true);
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('#Phone').inputmask("9{1,15}", options);
+        additionalForm.find('#PersonalAccount').inputmask("9{20}", options);
+        additionalForm.find('[name$="Email"]').inputmask("email", options);
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function() {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function() {
+                $(this).select2({
+                });
+            });
+        }
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.find("select").each(function() {
+                $(this).select2('destroy');
+            });
+            $cloneList.append($cloneBlock);
+            select2Init($cloneList);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input[type='text']").each(function() {
+                $(this).val("");
+            });
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function() {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function() {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function(index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+                </script>
+

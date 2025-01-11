@@ -1,0 +1,50 @@
+﻿@model _11_1_FNSIndividualInformationModel
+@{
+    IEnumerable<SelectListItem> response = new List<SelectListItem>
+    {
+        new ("лично", "лично"),
+        new ("по почте", "по почте"),
+        new ("по электронной почте", "по электронной почте"),
+    };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="SubjectRequest">тема запроса</label>
+                    <input asp-for="SubjectRequest" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Question">Вопрос</label>
+                    <textarea asp-for="Question" type="text" class="form-control" placeholder="Кратко, по существу, изложить суть вопроса"></textarea>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ResponseType">способ получения ответа</label>
+                    <select asp-items="@response" class="form-select select2-nosearch" asp-for="ResponseType"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () {
+
+        additionalForm.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"), для select модального окна
+                minimumResultsForSearch: Infinity
+            });
+        });
+         
+    });   
+</script>

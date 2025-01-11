@@ -1,0 +1,45 @@
+﻿@model AbstractModalViewModelBuilder
+@{
+    var modalTypeClass = Model.ModalType switch
+    {
+        ModalType.SMALL => "text-sm",
+        ModalType.LARGE => "modal-lg",
+        ModalType.EXTRA => "modal-xl",
+        ModalType.FULL => "modal-fullscreen",
+        _ => ""
+    };
+}
+<div class="modal-dialog modal-dialog-scrollable  @modalTypeClass">
+    <div class="modal-content">
+        @if (Model.ShowModalHeader)
+        {
+            <div class="modal-header">
+                <h5 class="modal-title b-s-18" id="myLargeModalLabel">@Model.ModalTitle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+        }
+
+        <div class="modal-body">
+            @Html.HiddenFor(model => model.ActionType, new { form = "sendingForm" })
+            <partial name="@Model.ModalViewPath" model="@Model.Model" />
+        </div>
+
+
+        @if (Model.ShowModalFooter)
+        {
+            <div class="modal-footer">
+                <button type="button" class="btn btn-label-secondary bg-alt-pricing" data-bs-dismiss="modal">
+                    <i class="bi bi-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">@Model.CloseButtonText</span>
+                </button>
+                @if (Model.ShowSubmitButton)
+                {
+                    <button type="submit" form="sendingForm" class="btn btn-primary">
+                        <i class="bi bi-check2 d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Сохранить</span>
+                    </button>
+                }
+            </div>
+        }
+    </div>
+</div>

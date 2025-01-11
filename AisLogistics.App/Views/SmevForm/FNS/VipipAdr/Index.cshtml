@@ -1,0 +1,333 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new List<FnsVipipAdrRequestData>
+    {
+        new()
+        {
+            Fio = new ()
+        }
+    };
+}
+<style>
+    #smev-data-form-content .accordion-button {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content li.active {
+        background-color: #e5edfc !important;
+        color: black !important;
+    }
+</style>
+
+<div class="container m-0 p-0" id="smev_request">
+    <div class="row justify-content-center">
+        <div class="col-3 border-end p-3">
+            <div class="row mb-2">
+                <div class="col-12">
+                    <button type="button" class="btn btn-primary w-100 px-0" id="addCustomer">
+                        <i class="bi bi-plus"></i>
+                        Добавить нового заявителя
+                    </button>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-6">
+                    <button type="button" class="btn btn-success w-100 px-0" id="chooseAllCustomer">
+                        <i class="bi bi-check2-square"></i>
+                        Выбрать всех
+                    </button>
+                </div>
+                <div class="col-6">
+                    <button type="button" class="btn btn-danger w-100 px-0" id="removeAllCustomer">
+                        <i class="bi bi-square"></i>
+                        Убрать всех
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center fs-5 b-s-16" for="customers">Заявители:</div>
+                    <ul class="list-group" id="customers" name="customers">
+                        @for (int i = 0; i < applicants.Count; i++)
+                        {
+                            <li class="list-group-item" data-value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="cloneList" class="col">
+        </div>
+    </div>
+</div>
+
+<div class="accordion row g-3 d-none" id="original">
+    <div class="accordion-header rounded p-3 mb-0 pb-0 col-12">
+        <button class="fs-6 b-s-16  accordion-button collapsed" onclick="showAccordion(this)" type="button">
+            Заявитель
+        </button>
+    </div>
+    <div class="accordion-body col-12 mt-0 pt-0" data-disabled>
+        <div class="row justify-content-center g-3">
+            <div class="col-11">
+                <div class="divider text-start">
+                    <div class="divider-text b-s-16">Персональные данные</div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center g-3">
+            <div class="col-10">
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request[0].Fio.LastName">Фамилия</label>
+                        <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request[0].Fio.LastName" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request[0].Fio.FirstName">Имя</label>
+                        <input type="text" class="form-control required" placeholder="Имя" asp-for="@request[0].Fio.FirstName" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request[0].Fio.SecondName">Отчество</label>
+                        <input type="text" class="form-control" placeholder="Отчество" asp-for="@request[0].Fio.SecondName" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" for="request0_type">Параметр</label>
+                        <select class="form-select select2-nosearch" id="request0_type" onchange="changeType(this)">
+                            <option value="Inn">ИНН</option>
+                            <option value="Ogrn">ОГРН</option>
+                        </select>
+                    </div>
+                    <div class="col-4" id="innBlock">
+                        <label class="form-label" asp-for="@request[0].Inn">ИНН</label>
+                        <input type="text" class="form-control inn-fl required" placeholder="ИНН" asp-for="@request[0].Inn" />
+                    </div>
+                    <div class="col-4" id="ogrnBlock" data-disabled>
+                        <label class="form-label" asp-for="@request[0].Ogrn">ОГРН</label>
+                        <input type="text" class="form-control ogrnip required" placeholder="ОГРН" asp-for="@request[0].Ogrn" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var applicants = @Json.Serialize(applicants);
+    var formContent = document.getElementById("smev-data-form-content");
+    var smevForm = {
+        init: () => {
+            $(formContent).find('[data-disabled]').each(function() {
+                visibilityBlock($(this), true, true);
+            });
+
+            blockClear(formContent.querySelector('#original'));
+            renameBlock(formContent.querySelector('#original'), 100, true);
+        }
+    };
+
+    function blockClear(block) {
+        block.querySelectorAll('input').forEach(i => i.value = '');
+    }
+
+    function changeType(el) {
+        let block = el.closest('.row');
+        switch (el.value) {
+            case 'Inn':
+                visibilityBlock($(block).find('#innBlock'), false);
+                visibilityBlock($(block).find('#ogrnBlock'), true, true);
+                break;
+            case 'Ogrn':
+                visibilityBlock($(block).find('#ogrnBlock'), false);
+                visibilityBlock($(block).find('#innBlock'), true, true);
+                break;
+        }
+    }
+
+    function ShowErrorInputs() {
+        let blocks = new Set();
+        document.querySelectorAll('#smev_request input').forEach(item => {
+            if (item.getAttribute('disabled') == null && item.classList.contains('required') && item.value == '') {
+                let but = item.closest('[data-clone]').querySelector('button');
+                if (but) blocks.add(but);
+            }
+        });
+        blocks.forEach(item => {
+            if (item.classList.contains('collapsed')) item.click();
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled = false) {
+        if (hide) {
+            $block.hide();
+            $block.find('input, select').each(function() {
+                if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                    SmevDataFormValidation.removeField($(this).attr('name'));
+                }
+                if (isDisabled) $(this).prop('disabled', true);
+            });
+        } else {
+            $block.show();
+            $block.find('input, select').each(function() {
+                $(this).prop('disabled', false);
+                let $this = $(this);
+                if ($this.hasClass('required')) {
+                    SmevDataFormValidation.addField($this.attr('name'),
+                        {
+                            validators: {
+                                notEmpty: {}
+                            }
+                        });
+                    SmevDataFormValidation.elements[$this.attr('name')] = [$this[0]];
+                }
+            });
+
+            $block.find('[data-disabled]').each(function() {
+                visibilityBlock($(this), true);
+            });
+        }
+    }
+
+    document.getElementById('customers').addEventListener('click',
+        (event) => {
+            let li = event.target;
+            if (li.classList.contains('active')) {
+                li.classList.remove('active');
+                let $block = $(formContent.querySelector(`#cloneList [data-customer-id="${li.dataset.value}"]`));
+                $block.find('input, select').each(function() {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        SmevDataFormValidation.removeField($(this).attr('name'));
+                    }
+                });
+                $block.remove();
+                formContent.querySelectorAll('#cloneList [data-clone]').forEach((item, index) => {
+                    renameBlock(item, index);
+                });
+            } else {
+                li.classList.add('active');
+                addForm('cloneList', 'original', li.dataset.value);
+                if (li.textContent.includes('Заявитель')) {
+                    fillForm();
+                } else {
+                    fillForm(li.dataset.value);
+                }
+            }
+        });
+
+    document.getElementById('addCustomer').addEventListener('click', () => {
+        let index = ++document.querySelectorAll('#customers li').length;
+        $('#customers').append(`<li class="list-group-item" data-value="${index}">Заявитель ${index}</li>`);
+    });
+
+    document.getElementById('chooseAllCustomer').addEventListener('click', () => {
+        document.querySelectorAll('#customers li:not(.active)').forEach(item => {
+            item.click();
+        });
+    });
+
+    document.getElementById('removeAllCustomer').addEventListener('click', () => {
+        document.querySelectorAll('#customers li.active').forEach(item => {
+            item.click();
+        });
+    });
+
+    function fillForm(customerId) {
+        if (customerId) {
+            let form = formContent.querySelector(`[data-customer-id="${customerId}"]`);
+            $(form).find('button').text(`${applicants[customerId].lastName} ${applicants[customerId].firstName} ${applicants[customerId].secondName}`);
+            $(form).find('[name$="LastName"]').val(applicants[customerId].lastName);
+            $(form).find('[name$="FirstName"]').val(applicants[customerId].firstName);
+            $(form).find('[name$="SecondName"]').val(applicants[customerId].secondName);
+            $(form).find('[name$="Inn"]').val(applicants[customerId].inn);
+
+            console.log(applicants[customerId]);
+        }
+    }
+
+    function renameBlock(cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            cloneBlock.id = `clone${indexId}`;
+            cloneBlock.dataset.id = indexId;
+            cloneBlock.setAttribute('data-clone', '');
+        }
+
+        cloneBlock.querySelectorAll('input').forEach(item => {
+            item.id = item.id.replace(/\d+/, indexId);
+            item.name = item.name.replace(/\d+/, indexId);
+        });
+
+        cloneBlock.querySelectorAll('label').forEach(item => {
+            item.setAttribute('for', item.getAttribute('for').replace(/\d+/, indexId));
+        });
+
+        cloneBlock.querySelectorAll('select').forEach(item => {
+            item.id ? item.id = item.id.replace(/\d+/, indexId) : void 0;
+            item.name ? item.name = item.name.replace(/\d+/, indexId) : void 0;
+            item.hasAttribute('data-select2-id') ? item.removeAttribute('data-select2-id') : void 0;
+        });
+    }
+
+    function addForm(cloneListId, originalId, customerId) { //Динамическое добавление Принимает (Куда Откуда)
+        let cloneList = formContent.querySelector(`#${cloneListId}`);
+        let original = formContent.querySelector(`#${originalId}`);
+        let cloneBlock = original.cloneNode(true);
+        cloneBlock.classList.remove('d-none');
+        let indexId = cloneList.querySelectorAll('[data-clone]').length;
+        cloneBlock.setAttribute('data-customer-id', customerId);
+        renameBlock(cloneBlock, indexId);
+        blockInit(cloneBlock);
+        cloneList.appendChild(cloneBlock);
+    }
+
+    function showAccordion() {
+        let accordionBody = $(event.target).closest('.accordion').find('.accordion-body');
+        if ($(event.target).hasClass('collapsed')) {
+            visibilityBlock(accordionBody, false);
+        } else {
+            visibilityBlock(accordionBody, true);
+        }
+        $(event.target).toggleClass('collapsed');
+    };
+
+    function blockInit(block) {
+        visibilityBlock($(block), false);
+
+        $(block).find("select.select2-nosearch").each(function() {
+            $(this).select2({
+                dropdownParent: $("#mainModal"),
+                minimumResultsForSearch: Infinity
+            });
+        });
+        $(block).find("select.select2-search").each(function() {
+            $(this).select2({
+                dropdownParent: $("#mainModal")
+            });
+        });
+
+        $(block).find("select").each(function() {
+            if ($(this).data('def')) {
+                $(this).val($(this).data('def')).trigger('change');
+            } else {
+                $(this).prop("selectedIndex", 0);
+            }
+        });
+
+        /* init datepicker */
+        $(block).find(".pickadate").datepicker({
+            language: "ru",
+            autoclose: true
+        });
+
+        var maskOptions = { clearIncomplete: true, showMaskOnHover: false };
+
+        /* init inputmask */
+        $(block).find(".pickadate").inputmask("99.99.9999", maskOptions);
+        $(block).find(".inn-fl").inputmask("9{12}", maskOptions);
+        $(block).find(".ogrnip").inputmask("9{15}", maskOptions);
+    }
+
+    $('[name^="customers"] li').trigger('click');
+</script>

@@ -1,0 +1,444 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new PfrFriMfcVehicleRequestData
+            {
+                InvalidInfo = new(),
+                RepresentativeInfo = new(),
+                RepresentativeCertifyingDoc = new()
+            };
+
+    IEnumerable<SelectListItem> representativeTypeList = new List<SelectListItem>
+    {
+        new("Законный представитель", "1"),
+        new("Уполномоченный представитель", "2"),
+    };
+}
+
+<style>
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+</style>
+
+<div class="row justify-content-center mb-3">
+    <div class="col-8">
+        <label class="form-label" asp-for="@request.RegionCode">Регион</label>
+        <select class="form-select select2-search required" asp-for="@request.RegionCode"
+                data-dictionary='{"dictionary":"RosReestrEgrnRegionsRf", "default_value":"05"}'>
+        </select>
+    </div>
+</div>
+
+<div class="row justify-content-center g-3">
+    <div class="col-10">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Данные заявителя</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3" data-person id="flBlock">
+    <div class="col-8">
+        <label class="form-label">Заявители</label>
+        <select class="form-select select2-nosearch applicants">
+            <option value="">Выберите заявителя</option>
+            @for (int i = 0; i < applicants.Count; i++)
+            {
+                <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+            }
+        </select>
+    </div>
+    <div class="col-8">
+        <div class="row mb-1">
+            <div class="col-12 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Сведения об инвалиде/ребенке-инвалиде</div>
+                </div>
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.InvalidInfo.Fio.LastName">Фамилия</label>
+                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.InvalidInfo.Fio.LastName" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.InvalidInfo.Fio.FirstName">Имя</label>
+                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.InvalidInfo.Fio.FirstName">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.InvalidInfo.Fio.SecondName">Отчество</label>
+                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.InvalidInfo.Fio.SecondName">
+            </div>
+        </div>
+        <div class="row justify-content-center mb-1">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.InvalidInfo.BirthDate">Дата рождения</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.InvalidInfo.BirthDate" type="text" class="form-control pickadate required" placeholder="Дата" value="">
+                </div>
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.InvalidInfo.Snils">СНИЛС</label>
+                <input type="text" class="form-control required snils" placeholder="СНИЛС" asp-for="@request.InvalidInfo.Snils">
+            </div>
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.InvalidInfo.BirthPlace">Место рождения</label>
+                <input type="text" class="form-control required" placeholder="Место рождения" asp-for="@request.InvalidInfo.BirthPlace">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Документ, удостоверяющий личность</div>
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.InvalidInfo.IdentityDoc.Type">Наименование</label>
+                <select class="form-select select2-search required" asp-for="@request.InvalidInfo.IdentityDoc.Type"
+                        data-dictionary='{"dictionary":"PfrFriIdentityDocTypeCodes"}'>
+                </select>
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.InvalidInfo.IdentityDoc.Series">Серия</label>
+                <input type="text" class="form-control" placeholder="Серия" asp-for="@request.InvalidInfo.IdentityDoc.Series">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.InvalidInfo.IdentityDoc.Number">Номер</label>
+                <input type="text" class="form-control required" placeholder="Номер" asp-for="@request.InvalidInfo.IdentityDoc.Number">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.InvalidInfo.IdentityDoc.IssueDate">Дата выдачи</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.InvalidInfo.IdentityDoc.IssueDate" type="text" class="form-control pickadate required" placeholder="Дата выдачи">
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.InvalidInfo.IdentityDoc.Issuer">Орган, выдавший документ</label>
+                <input type="text" class="form-control required" placeholder="Орган, выдавший документ" asp-for="@request.InvalidInfo.IdentityDoc.Issuer">
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="row mb-3 justify-content-center" data-person>
+    <div class="col-10 form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="check1">
+        <label class="form-check-label fs-5 b-s-16" for="check1">Представитель</label>
+    </div>
+    <div class="col-8" data-disabled>
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label">Заявители</label>
+                <select class="form-select select2-nosearch applicants">
+                    <option value="">Выберите заявителя</option>
+                    @for (int i = 0; i < applicants.Count; i++)
+                    {
+                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.RepresentativeType">Тип представителя</label>
+                <select class="form-control select2-nosearch" asp-items="@representativeTypeList" asp-for="@request.RepresentativeType"></select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.RepresentativeInfo.Fio.LastName">Фамилия</label>
+                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.RepresentativeInfo.Fio.LastName" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.RepresentativeInfo.Fio.FirstName">Имя</label>
+                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.RepresentativeInfo.Fio.FirstName">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.RepresentativeInfo.Fio.SecondName">Отчество</label>
+                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.RepresentativeInfo.Fio.SecondName">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Документ, удостоверяющий личность</div>
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.RepresentativeInfo.IdentityDoc.Type">Наименование</label>
+                <select class="form-select select2-search required" asp-for="@request.RepresentativeInfo.IdentityDoc.Type"
+                        data-dictionary='{"dictionary":"PfrFriIdentityDocTypeCodes"}'>
+                </select>
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.RepresentativeInfo.IdentityDoc.Series">Серия</label>
+                <input type="text" class="form-control" placeholder="Серия" asp-for="@request.RepresentativeInfo.IdentityDoc.Series">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.RepresentativeInfo.IdentityDoc.Number">Номер</label>
+                <input type="text" class="form-control required" placeholder="Номер" asp-for="@request.RepresentativeInfo.IdentityDoc.Number">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.RepresentativeInfo.IdentityDoc.IssueDate">Дата выдачи</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.RepresentativeInfo.IdentityDoc.IssueDate" type="text" class="form-control pickadate required" placeholder="Дата выдачи">
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.RepresentativeInfo.IdentityDoc.Issuer">Орган, выдавший документ</label>
+                <input type="text" class="form-control required" placeholder="Орган, выдавший документ" asp-for="@request.RepresentativeInfo.IdentityDoc.Issuer">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Документ, подтверждающий полномочия</div>
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.RepresentativeCertifyingDoc.Type">Наименование</label>
+                <input type="text" class="form-control required" placeholder="Наименование" asp-for="@request.RepresentativeCertifyingDoc.Type">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.RepresentativeCertifyingDoc.Series">Серия</label>
+                <input type="text" class="form-control" placeholder="Серия" asp-for="@request.RepresentativeCertifyingDoc.Series">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.RepresentativeCertifyingDoc.Number">Номер</label>
+                <input type="text" class="form-control required" placeholder="Номер" asp-for="@request.RepresentativeCertifyingDoc.Number">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.RepresentativeCertifyingDoc.IssueDate">Дата выдачи</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input type="text" class="form-control pickadate required" placeholder="Дата выдачи" asp-for="@request.RepresentativeCertifyingDoc.IssueDate" value="">
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.RepresentativeCertifyingDoc.Issuer">Орган, выдавший документ</label>
+                <input type="text" class="form-control required" placeholder="Орган, выдавший документ" asp-for="@request.RepresentativeCertifyingDoc.Issuer">
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="row mb-3 justify-content-center">
+    <div class="col-10 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Данные автомобиля</div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="row justify-content-center mb-3">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.VehicleNumber">Номер автомобиля</label>
+                <input type="text" class="form-control required" placeholder="Номер автомобиля" asp-for="@request.VehicleNumber">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.VehicleModel">Модель</label>
+                <input type="text" class="form-control required" placeholder="Модель" asp-for="@request.VehicleModel">
+            </div>
+            <div class="col-8">
+                <label class="form-label w-100 text-center">Период эксплуатации</label>
+                <div class="row justify-content-center">
+                    <div class="col-6">
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                            <input asp-for="@request.VehicleDateFrom" type="text" class="form-control pickadate required"
+                                   placeholder="Дата начала" value="">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                            <input asp-for="@request.VehicleDateTo" type="text" class="form-control pickadate required"
+                                   placeholder="Дата окончания" value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function ShowErrorInputs() {
+    }
+    getDictionaries(false);
+    var applicants = @Json.Serialize(applicants);
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                $(formContent).find('.required').each(function () {
+                    addValidation($(this));
+                });
+
+                // скрытие блоков
+                $(formContent).find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+
+                /* init datepicker */
+                $(formContent).find(".pickadate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                });
+
+                $(formContent).find("select.select2-nosearch").each(function () {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+                $(formContent).find("select.select2-search").each(function () {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal")
+                    });
+                });
+
+                let options = { clearIncomplete: true, showMaskOnHover: false };
+
+                /* init inputmask */
+                $(formContent).find(".pickadate").inputmask("99.99.9999", options);
+                $(formContent).find(".snils").inputmask("9{3}-9{3}-9{3} 9{2}", options);
+
+                $(formContent).find('.applicants').val('0').trigger('change');
+            }
+        };
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+    $('select.applicants').each(function () {
+        $(this).on('change',
+            function () {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]').each(function () {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$="LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$="FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$="SecondName"]').val(applicants[id].secondName);
+                    $block.find('[name$="Snils"]').val(applicants[id].snils);
+                    $block.find('[name$="BirthPlace"]').val(applicants[id].birthPlace);
+                    $block.find('[name$="BirthDate"]').val(applicants[id].birthDate ? new Date(applicants[id].birthDate).toLocaleDateString() : '');
+
+                    switch (applicants[id].documentTypeCode) {
+                        case '21':
+                            $block.find('[name$="IdentityDoc.Type"]').val('12').trigger('change');
+                            break;
+                        case '3':
+                            $block.find('[name$="IdentityDoc.Type"]').val('11').trigger('change');
+                            break;
+                        case '12':
+                            $block.find('[name$="IdentityDoc.Type"]').val('27').trigger('change');
+                            break;
+                        case '10':
+                            $block.find('[name$="IdentityDoc.Type"]').val('21').trigger('change');
+                            break;
+                        case '22':
+                            $block.find('[name$="IdentityDoc.Type"]').val('13').trigger('change');
+                            break;
+                    }
+
+                    $block.find('[name$="IdentityDoc.Series"]').val(applicants[id].documentSerial.replace(' ', ''));
+                    $block.find('[name$="IdentityDoc.Number"]').val(applicants[id].documentNumber);
+                    $block.find('[name$="IdentityDoc.IssueDate"]').val(applicants[id].documentIssueDate ? new Date(applicants[id].documentIssueDate).toLocaleDateString() : '');
+                    $block.find('[name$="IdentityDoc.Issuer"]').val(applicants[id].documentIssueBody);
+                }
+            });
+    });
+
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function () {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+            });
+    }
+
+    $('.form-check-input').on('change', function () {
+        visibilityBlock($(this).closest('.row').find('[data-disabled]'), !$(this).prop('checked'), !$(this).prop('checked'));
+    });
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').hide();
+                } else {
+                    $block.hide();
+                }
+                break;
+            case false:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').show();
+                } else {
+                    $block.show();
+                }
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        removeValidation($(this));
+                    }
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                    if ($(this).hasClass('required')) {
+                        addValidation($(this));
+                    }
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

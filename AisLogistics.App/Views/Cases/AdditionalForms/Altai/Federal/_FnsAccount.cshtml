@@ -1,0 +1,361 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.FnsAccountModel
+@{
+    IEnumerable<SelectListItem> applicationTypeList = new List<SelectListItem>
+    {
+        new("Заявление на получение доступа к личному кабинету налогоплательщика", "1"),
+        new("Заявление об уточнении сведений при получении доступа к личному кабинету налогоплательщика", "2")
+    };
+
+    IEnumerable<SelectListItem> targetList = new List<SelectListItem>
+    {
+        new("выдать Регистрационную карту для получения доступа к личному кабинету налогоплательщика", "1"),
+        new("выдать новый пароль для получения доступа к личному кабинету налогоплательщика", "2"),
+        new("прекратить доступ к личному кабинету налогоплательщика", "3")
+    };
+
+    IEnumerable<SelectListItem> methodResultList = new List<SelectListItem>
+    {
+        new("непосредственно в налоговом органе", "1"),
+        new("по адресу электронной почты", "2"),
+    };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-10">
+                    <label class="form-label" asp-for="ApplicationType">Тип заявления</label>
+                    <select class="select2-nosearch" asp-items="@applicationTypeList" asp-for="ApplicationType">
+                    </select>
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="FnsDepartmentCode">Код налогового органа</label>
+                    <input type="text" class="form-control" placeholder="Код налогового органа" asp-for="FnsDepartmentCode">
+                </div>
+            </div>
+            <h5 class="my-2">Данные заявителя</h5>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerFio.LastName">Фамилия</label>
+                    <input type="text" asp-for="CustomerFio.LastName" class="form-control" placeholder="Фамилия">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerFio.FirstName">Имя</label>
+                    <input type="text" asp-for="CustomerFio.FirstName" class="form-control" placeholder="Имя">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerFio.SecondName">Отчество</label>
+                    <input type="text" asp-for="CustomerFio.SecondName" class="form-control" placeholder="Отчество">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Inn">ИНН</label>
+                    <input type="text" asp-for="Inn" class="form-control" placeholder="ИНН">
+                </div>
+                <div class="col-4" data-app-2>
+                    <label class="form-label" asp-for="BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="BirthDate" type="text"
+                               class="form-control pickdate" placeholder="Дата рождения">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Phone">Контактный телефон</label>
+                    <input type="text" asp-for="Phone" class="form-control" placeholder="Контактный телефон">
+                </div>
+            </div>
+            <div class="row mb-3" data-app-2>
+                <div class="col-12">
+                    <label class="form-label" asp-for="BirthPlace">Место рождения</label>
+                    <input type="text" class="form-control" placeholder="Место рождения" asp-for="BirthPlace">
+                </div>
+            </div>
+            <h6 class="my-2">Сведения о документе, удостоверяющем личность физического лица </h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="CustomerDoc.Name">Тип документа</label>
+                    <select class="select2-nosearch" asp-for="CustomerDoc.Name"
+                            data-value-value data-dictionary='{"dictionary":"FnsDocTypes", "default_value":"@Model.CustomerDoc.Name"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerDoc.Series">Серия</label>
+                    <input type="text" class="form-control" placeholder="Серия" asp-for="CustomerDoc.Series">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerDoc.Number">Номер</label>
+                    <input type="text" class="form-control" placeholder="Номер" asp-for="CustomerDoc.Number">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerDoc.IssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="CustomerDoc.IssueDate" type="text"
+                               class="form-control pickdate" placeholder="Дата выдачи">
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div data-app-1>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="Target">Цель обращения</label>
+                        <select class="select2-nosearch" asp-items="@targetList" asp-for="Target">
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-8">
+                        <label class="form-label" asp-for="MethodResult">Способ получения Регистрационной карты для получения доступа к личному кабинету налогоплательщика</label>
+                        <select class="select2-nosearch" asp-items="@methodResultList" asp-for="MethodResult">
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="Email">Адрес электронной почты</label>
+                        <input type="text" class="form-control" placeholder="Адрес электронной почты" asp-for="Email">
+                    </div>
+                </div>
+                <hr />
+            </div>
+            <div data-app-2>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FailedRegDate">Дата неудачной регистрации</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="FailedRegDate" type="text"
+                                   class="form-control pickdate" placeholder="Дата">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <label class="form-label" asp-for="FnsDepartmentFailedRegCode">Код налогового органа</label>
+                        <input type="text" class="form-control" placeholder="Код налогового органа" asp-for="FnsDepartmentFailedRegCode">
+                    </div>
+                </div>
+                <hr />
+            </div>
+            <h5 class="my-2">Данные представителя заявителя</h5>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="RepresentativeFio.LastName">Фамилия</label>
+                    <input type="text" asp-for="RepresentativeFio.LastName" class="form-control" placeholder="Фамилия">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="RepresentativeFio.FirstName">Имя</label>
+                    <input type="text" asp-for="RepresentativeFio.FirstName" class="form-control" placeholder="Имя">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="RepresentativeFio.SecondName">Отчество</label>
+                    <input type="text" asp-for="RepresentativeFio.SecondName" class="form-control" placeholder="Отчество">
+                </div>
+            </div>
+            <div data-app-2>
+                <h6 class="my-2">Сведения о документе, подтверждающем полномочия представителя физического лица</h6>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="RepresentativeDoc.Name">Наименование</label>
+                        <input type="text" class="form-control" placeholder="Наименование" asp-for="RepresentativeDoc.Name">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="RepresentativeDoc.Number">Номер</label>
+                        <input type="text" class="form-control" placeholder="Номер" asp-for="RepresentativeDoc.Number">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="RepresentativeDoc.IssueDate">Дата выдачи</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="RepresentativeDoc.IssueDate" type="text"
+                                   class="form-control pickdate" placeholder="Дата выдачи">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    var applicant = {
+        lastName: $('#CustomerFio_LastName'),
+        firstName: $('#CustomerFio_FirstName'),
+        secondName: $('#CustomerFio_SecondName'),
+        inn: $('#Inn'),
+        birthDate: $('#BirthDate'),
+        phone: $('#Phone'),
+        addressBirth: $('#BirthPlace'),
+        docType: $('#CustomerDoc_Name'),
+        docSeries: $('#CustomerDoc_Series'),
+        docNumber: $('#CustomerDoc_Number'),
+        docIssueDate: $('#CustomerDoc_IssueDate'),
+        email: $('#Email')
+    }
+
+    var representative = {
+        lastName: $('#RepresentativeFio_LastName'),
+        firstName: $('#RepresentativeFio_FirstName'),
+        secondName: $('#RepresentativeFio_SecondName')
+    }
+
+    var btnNext = $('.btn-next');
+    btnNext.on('click',
+        function appContent() {
+            applicant.lastName.val($("#customer_LastName").val());
+            applicant.firstName.val($("#customer_FirstName").val());
+            applicant.secondName.val($("#customer_SecondName").val());
+            applicant.birthDate.val($("#customer_DocumentBirthDate").val());
+            applicant.addressBirth.val($("#customer_DocumentBirthPlace").val());
+            applicant.docSeries.val($("#customer_DocumentSerial").val());
+            applicant.docNumber.val($("#customer_DocumentNumber").val());
+            applicant.docIssueDate.val($("#customer_DocumentIssueDate").val());
+            applicant.phone.val($("#customer_CustomerPhone1").val());
+            applicant.email.val($("#customer_CustomerEmail").val());
+            applicant.inn.val($("#customer_CustomerInn").val());
+
+            representative.lastName.val($("#representative_LastName").val());
+            representative.firstName.val($("#representative_FirstName").val());
+            representative.secondName.val($("#representative_SecondName").val());
+        });
+
+    $(function () {
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+        additionalForm.find('[name^="FnsDepartment"]').inputmask("9999", options);
+        additionalForm.find('[name$="Email"]').inputmask("email", options);
+        additionalForm.find('[name$="Phone"]').inputmask("9{1,12}", options);
+        additionalForm.find('[name$="Inn"]').inputmask("9{12}", options);
+
+        additionalForm.find('#ApplicationType').on('change', function () {
+            let $app1 = $('[data-app-1]');
+            let $app2 = $('[data-app-2]');
+            switch ($(this).val()) {
+                case '1':
+                    $app1.each(function () {
+                        visibilityBlock($(this), false, false);
+                    });
+                    $app2.each(function () {
+                        visibilityBlock($(this), true, true);
+                    });
+                    break;
+                case '2':
+                    $app1.each(function () {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function () {
+                        visibilityBlock($(this), false, false);
+                    });
+                    break;
+            }
+        });
+        additionalForm.find('#ApplicationType').trigger('change');
+
+        function visibilityBlock($block, hide, isDisabled) {
+            switch (hide) {
+                case true:
+                    $block.hide();
+                    break;
+                case false:
+                    $block.show();
+                    break;
+            }
+
+            switch (isDisabled) {
+                case true:
+                    $block.find('input, select').each(function () {
+                        $(this).prop('disabled', true);
+                    });
+                    break;
+                case false:
+                    $block.find('input, select').each(function () {
+                        $(this).prop('disabled', false);
+                    });
+                    $block.find('[data-disabled]').each(function () {
+                        visibilityBlock($(this), true, true);
+                    });
+                    break;
+            }
+        }
+
+        (function getDictionaries() {
+            let dicts = new Set();
+            $('[data-dictionary]').each(function () {
+                let $this = $(this);
+                let options = $this.data('dictionary');
+                if (!dicts.has(options.dictionary)) {
+                    dicts.add(options.dictionary);
+                    $.post(`/SmevBase/SmevGetDictionary`,
+                        {
+                            type: options.dictionary
+                        },
+                        function (dictionary) {
+                            if (dictionary.error) return;
+                            fillSelect(options.dictionary, dictionary);
+                        });
+                }
+            });
+        }());
+
+        function fillSelect(dictName, dictionary) {
+            $.each($(`[data-dictionary*='"${dictName}"']`),
+                function () {
+                    let $this = $(this);
+                    let items = dictionary;
+                    $this.empty();
+                    if (!$this.hasClass('required')) {
+                        $this.append(new Option('Не выбрано', ''));
+                    }
+                    if ($this.is('[data-value-value]')) {
+                        items.dictionary.forEach(function (item) {
+                            $this.append(new Option(item.value, item.value));
+                        });
+                    } else {
+                        items.dictionary.forEach(function (item) {
+                            $this.append(new Option(item.value, item.key));
+                        });
+                    }
+
+                    if ($this.data('dictionary').default_value) {
+                        let defVal = $this.data('dictionary').default_value;
+                        if (defVal) {
+                            $this.val(defVal).trigger('update');
+                            $this.attr('data-def', defVal);
+                        }
+                    } else {
+                        $this.val('').trigger('update');
+                    }
+                });
+        }
+    });
+</script>

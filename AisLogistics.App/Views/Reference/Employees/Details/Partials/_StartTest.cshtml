@@ -1,0 +1,54 @@
+﻿@model AisLogistics.App.Models.DTO.References.EmployeeTestStartDto
+@{
+    ViewBag.Title = "Тестирование";
+}
+
+<div class="content" id="testContent">
+    <div class="pt-5">
+        <h3 class="text-center text-primary">@Model.Name</h3>
+        <p class="text-center">
+            Направления:
+            @foreach (var item in Model.Directions)
+            {
+                @item
+            }
+        </p>
+        <p class="text-center">Вопросов: <strong>@Model.CountQuestions </strong></p>
+    </div>
+    <div class="text-center pt-4">
+        @if (Model.IsActive)
+        {
+            <button type="button" data-start-test="@Model.EmployeeTestId" class="btn btn-primary shadow-none waves-effect waves-light">
+                <i class="bi bi-chevron-right m-e-5"></i> Начать тестирование
+            </button>
+        }
+        else
+        {
+            <div class="text-warning r-s-18" role="alert">
+                <i class="bi bi-exclamation-triangle m-e-5" style="font-size:32px"></i> <br />
+                Тест не доступен
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $('[data-start-test]').on('click', function () {
+            var $this = $(this);
+            $.ajax({
+                url: 'EmployeeTestQuestionView',
+                data: { id: $this.data('startTest') },
+                type: 'GET',
+                beforeSend: function () {
+                    $this.prop('disabled', true);
+                },
+                success: function (content) {
+                    $('#testContent').html(content);
+                }
+            });
+        })
+    </script>
+}
+
+

@@ -1,0 +1,53 @@
+﻿<div class="row">
+    <div class="col-12">
+        <div class="mb-4">
+            <label class="form-label" for="exampleFormControlTextarea1">Примечание</label>
+            <textarea class="form-control" id="Сomments" rows="4" placeholder="Введите примечание"></textarea>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="mb-1 text-end">
+           <button type="button" onclick="CaseAddCommentSave()" class="btn btn-success">Добавить</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function CaseAddCommentSave() {
+           let data = {};
+           let mass = [];
+           $('[data-check]').each(function (i, el) {
+                if ($(el).prop("checked")) {
+                    mass.push($(el).parents('[data-case-id]').attr('data-case-id'));
+                }
+           });
+
+           data['CaseId'] = mass;
+           data['Text'] = $('#Сomments').val();
+
+           $.ajax({
+                url: '/ReestrTransferDocuments/CasesCommentsSave',
+                type: 'POST',
+                data: { request: data },
+                beforeSend: () => {
+                    $.pageBlock();
+                },
+                complete: () => {
+                    $.unblockUI();
+                    $('#modalContainerOver').modal('hide');
+                },
+                success: function (content) {
+                   toastr['success']('Примечание добавлено', 'Готово', {
+                        closeButton: true,
+                        tapToDismiss: false
+                    });
+                },
+                error: function (event) {
+                    toastr['error']('При выполнение запроса', 'Ошибка', {
+                        closeButton: true,
+                        tapToDismiss: false
+                    });
+                }
+            });
+       }
+</script>

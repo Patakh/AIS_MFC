@@ -1,0 +1,58 @@
+﻿@using AisLogistics.App.Views.Cases.Details
+ 
+<style>
+    .app-action .nav-link.active
+    {
+        color: #172359!important; 
+    }
+
+    .app-action .nav-link  {
+        color: #B5B5B5 !important;
+    }
+
+    .app-action .nav-link.active .link-text {
+        color: #172359 !important;
+    }
+
+    .link-text {
+        color: #B5B5B5 !important;
+    }
+  </style>
+
+<div class="app-action">
+    <div class="action-left nav-justified d-flex justify-content-between align-items-center">
+        <ul class="nav nav-custom" role="tablist">
+            <li class="nav-item" role="presentation">
+                <div class="d-flex nav-link active">
+                    <a class="link-text" id="Docs-tab" data-bs-toggle="tab" data-bs-target="#Docs" href="javascript:void(0);" role="tab" data-service-documents aria-controls="Expired" aria-selected="true">
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        Документы
+                    </a>
+                    <a id="documentsServiceAdd" href="javascript:void(0);" class="ms-2"><i class="bi bi-plus-lg"></i></a>
+                    <a id="documentsServiceRefresh" href="javascript:void(0);" class="ms-2"><i class="bi bi-arrow-clockwise"></i></a>
+                </div>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="Results-tab" data-bs-toggle="tab" data-bs-target="#Results" href="javascript:void(0);" role="tab" data-service-results aria-controls="Lastday" aria-selected="true">
+                    <i class="bi bi-check-lg me-2"></i>
+                    Результаты
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link d-inline-flex align-items-center" data-bs-toggle="tab" href="javascript:void(0);" role="tab" data-service-smevs>
+                    <i class="bi bi-globe-americas me-2"></i>
+                    СМЭВ
+                </a>
+            </li>
+            <li>
+               
+            </li>
+        </ul>
+        <div>
+            <a href="javascript:void(0);" data-service-additional>
+                <i class="bi bi-info-circle"></i>
+                <span class="r-s-12">Доп. информация</span>
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+﻿.scoreboard {
+    display: flex;
+    /*padding: 20px 10px;*/
+   /* background-color: #1e3042;*/
+    border-radius: 2px;
+    align-items: center;
+    justify-content: center;
+}
+
+.queue-height-25 {
+    height: 25px;
+}
+
+.btn-beige {
+    color: #fff !important;
+    background-color: #c39367;
+    border-color: #c39367;
+}
+
+.btn-width-badge {
+    position: relative;
+    overflow: visible;
+}
+
+.btn-width-badge .badge-left {
+    position: absolute;
+    top: -8px;
+    left: -6px;
+}
+
+.navbar-dropdown.dropdown-queue .dropdown-menu {
+    min-width: 12rem !important;
+}
+
+.navbar-dropdown.dropdown-queue-max .dropdown-menu {
+    min-width: 350px !important;
+}
+
+.queue-width {
+    width: 13rem !important;
+}
+
+.btn-submenu {
+    max-width: 40px;
+}
+
+.btn-submenu-max {
+    max-width: 100% !important;
+}
+
+
+.scoreboard-submenu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: -1;
+    width: 11rem !important;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 4px;
+    opacity: 0;
+    -webkit-transition: right .3s;
+    -o-transition: right .3s;
+    transition: right .3s;
+}
+
+.scoreboard-submenu--open {
+    opacity: 1;
+    z-index: 1 !important;
+}
+

@@ -1,0 +1,173 @@
+﻿@using AisLogistics.App.Models.Enums
+@model AisLogistics.App.Models.DTO.Notifications.EmployeeNotificationDto
+@{
+    var notificationsDetails = new Dictionary<NotificationType, (string Title, string Description)>()
+    {
+        { NotificationType.NewCase, new ("Обращение","У Вас новое обращение") },
+        { NotificationType.NewComment, new ("Комментарий","У Вас новый комментарий") },
+        { NotificationType.SmevRequest, new ("СМЭВ", "Поступил ответ СМЭВ") }
+    };
+
+    var count = Model.NewServicesAlert.Count + Model.NewServicesAlert.Count + Model.SmevResponseAlert.Count;
+}
+
+<style>
+    .fs-14 {
+        font-size: 14px;
+    }
+
+    .fs-12 {
+       font-size: 12px;
+    }
+
+    .list-group-item-notification {
+        border: none !important; 
+    }
+
+    .count{
+        color: #fff !important;
+    }
+
+    .header_notification .header-icon {
+        --bs-text-opacity: 1;
+        color: rgba(var(--bs-primary-rgb),var(--bs-text-opacity)) !important;
+        font-size:29px !important;
+    }
+</style>
+
+<div class="col-sm-auto header_notification me-4">
+    <a class="dropdown-toggle hidden-arrow"
+       href="javascript:void(0);"
+       data-bs-toggle="dropdown"
+       data-bs-auto-close="outside"
+       aria-expanded="false">
+        <i class="bi bi-bell header-icon"></i>
+        @if (count > 0)
+        {
+            <span class="badge rounded-pill badge-notification bg-danger">@count</span>
+        }
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end pt-0" aria-labelledby="dropdownMenuNotification">
+
+        <li class="dropdown-header d-flex align-items-center justify-content-between p-3">
+            <div class="b-s-16">Уведомления</div>
+            <a href="" class="dropdown-notifications-all r-l-12" data-bs-toggle="tooltip" data-bs-placement="top" title="Удалить все">
+                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="20" viewBox="0 0 19 20" fill="none">
+                    <path d="M5.54102 17.125C5.1056 17.125 4.73299 16.9701 4.42318 16.6603C4.11285 16.35 3.95768 15.9771 3.95768 15.5417V5.25C3.73338 5.25 3.54522 5.17426 3.39322 5.02279C3.24175 4.87079 3.16602 4.68264 3.16602 4.45833C3.16602 4.23403 3.24175 4.04588 3.39322 3.89388C3.54522 3.7424 3.73338 3.66667 3.95768 3.66667H7.12435C7.12435 3.44236 7.20035 3.25421 7.35235 3.10221C7.50382 2.95074 7.69171 2.875 7.91602 2.875H11.0827C11.307 2.875 11.4951 2.95074 11.6471 3.10221C11.7986 3.25421 11.8743 3.44236 11.8743 3.66667H15.041C15.2653 3.66667 15.4532 3.7424 15.6047 3.89388C15.7567 4.04588 15.8327 4.23403 15.8327 4.45833C15.8327 4.68264 15.7567 4.87079 15.6047 5.02279C15.4532 5.17426 15.2653 5.25 15.041 5.25V15.5417C15.041 15.9771 14.8861 16.35 14.5763 16.6603C14.266 16.9701 13.8931 17.125 13.4577 17.125H5.54102ZM5.54102 5.25V15.5417H13.4577V5.25H5.54102ZM7.12435 13.1667C7.12435 13.391 7.20035 13.5789 7.35235 13.7303C7.50382 13.8823 7.69171 13.9583 7.91602 13.9583C8.14032 13.9583 8.32847 13.8823 8.48047 13.7303C8.63195 13.5789 8.70768 13.391 8.70768 13.1667V7.625C8.70768 7.40069 8.63195 7.21254 8.48047 7.06054C8.32847 6.90907 8.14032 6.83333 7.91602 6.83333C7.69171 6.83333 7.50382 6.90907 7.35235 7.06054C7.20035 7.21254 7.12435 7.40069 7.12435 7.625V13.1667ZM10.291 13.1667C10.291 13.391 10.367 13.5789 10.519 13.7303C10.6705 13.8823 10.8584 13.9583 11.0827 13.9583C11.307 13.9583 11.4951 13.8823 11.6471 13.7303C11.7986 13.5789 11.8743 13.391 11.8743 13.1667V7.625C11.8743 7.40069 11.7986 7.21254 11.6471 7.06054C11.4951 6.90907 11.307 6.83333 11.0827 6.83333C10.8584 6.83333 10.6705 6.90907 10.519 7.06054C10.367 7.21254 10.291 7.40069 10.291 7.625V13.1667ZM5.54102 5.25V15.5417V5.25Z" fill="#BEBEBE" />
+                </svg>
+                Очистить
+            </a>
+        </li>
+
+        <li class="dropdown-notifications-list">
+            <ul class="list-group list-group-flush px-3 pb-3 ">
+                @if (count > 0)
+                {
+                    foreach (var item in Model.SmevResponseAlert)
+                    {
+                        <li class="list-group-item list-group-item-notification marked-as-read bg-light mt-3" data-notification="@item.Id">
+                            <div class="row m-0">
+                                <div class="col-11 p-0 my-auto">
+                                    <div class="d-flex justify-content-start align-items-center">
+                                        <i class="bi bi-globe-americas me-2"></i>
+                                        <p class="mb-0 ms-2 r-l-14">@notificationsDetails[NotificationType.SmevRequest].Title</p>
+                                    </div>
+                                </div>
+                                <div class="dropdown-notifications-actions col-1 p-0 my-auto">
+                                    <a href="javascript:void(0)" class="dropdown-notifications-archive fs-12 text-muted" data-bs-toggle="tooltip" title="Удалить">
+                                        <i class="bi bi-x fs-5"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row m-0">
+                                <div class="col-12 p-0">
+                                    <p class="mb-0 b-s-14"><strong>@notificationsDetails[NotificationType.SmevRequest].Description</strong></p>
+                                    <span class="d-block r-s-12">@item.ApplicantName</span>
+                                    <span class="d-block r-s-12">Запрос: @item.SmevName</span>
+                                    <div class="d-flex justify-content-between align-items-center fs-14">
+                                        <div>
+                                            <a href="javascript:void(0);" class="dropdown-notifications-cases">@item.CaseId</a>
+                                        </div>
+                                        <small class="text-muted r-l-12" data-bs-toggle="tooltip" title="@item.DateSmevResponse" data-timeago="@item.DateSmevResponse"></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+
+
+                    foreach (var item in Model.NewServicesAlert)
+                    {
+                        <li class="list-group-item list-group-item-notification marked-as-read bg-light mt-3" data-notification="@item.Id">
+                            <div class="row m-0">
+                                <div class="col-11 p-0 my-auto">
+                                    <div class="d-flex justify-content-start align-items-center">
+                                        <i class="bi bi-globe-americas me-2"></i>
+                                        <p class="mb-0  ms-2 r-l-14">@notificationsDetails[NotificationType.NewCase].Title</p>
+                                    </div>
+                                </div>
+                                <div class="dropdown-notifications-actions col-1 p-0 my-auto">
+                                    <a href="javascript:void(0)" class="dropdown-notifications-archive fs-12 text-muted" data-bs-toggle="tooltip" title="Удалить">
+                                        <i class="bi bi-x fs-5"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row m-0">
+                                <div class="col-12 p-0">
+                                    <p class="mb-0 fs-14"><strong>@notificationsDetails[NotificationType.NewCase].Description</strong></p>
+                                    <span class="d-block b-s-14">@item.ApplicantName</span>
+                                    <span class="d-block r-s-12">Услуга: @item.ServicesName</span>
+                                    <div class="d-flex justify-content-between align-items-center fs-14">
+                                        <div>
+                                            <a href="javascript:void(0);" class="dropdown-notifications-cases">@item.CaseId</a>
+                                        </div>
+                                        <small class="text-muted r-l-12" data-bs-toggle="tooltip" title="@item.DateAddStage" data-timeago="@item.DateAddStage"></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                    foreach (var item in Model.CommentsAlert)
+                    {
+                        <li class="list-group-item list-group-item-notification marked-as-read bg-light mt-3" data-notification="@item.Id">
+                            <div class="row m-0">
+                                <div class="col-11 p-0 my-auto">
+                                    <div class="d-flex justify-content-start align-items-center">
+                                       <i class="bi bi-globe-americas me-2"></i>
+                                        <p class="mb-0  ms-2 r-l-14">@notificationsDetails[NotificationType.NewComment].Title</p>
+                                    </div>
+                                </div>
+                                <div class="dropdown-notifications-actions col-1 p-0 my-auto">
+                                    <a href="javascript:void(0)" class="dropdown-notifications-archive fs-12 text-muted" data-bs-toggle="tooltip" title="Удалить">
+                                        <i class="bi bi-x fs-5"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row m-0">
+                                <div class="col-12 p-0">
+                                    <p class="mb-0 b-s-14"><strong>@notificationsDetails[NotificationType.NewComment].Description</strong></p>
+                                    <span class="d-block r-s-12">@item.ApplicantName</span>
+                                    <span class="d-block r-s-12">Примечание: @item.TextComment</span>
+                                    <div class="d-flex justify-content-between align-items-center fs-14">
+                                        <div>
+                                            <a href="javascript:void(0);" class="dropdown-notifications-cases">@item.CaseId</a>
+                                        </div>
+                                        <small class="text-muted r-l-12" data-bs-toggle="tooltip" title="@item.DateAddComment" data-timeago="@item.DateAddComment"></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                }
+                else
+                {
+                    <li>
+                        <p class="r-l-12 py-5 mb-0 text-center">Нет новых уведомлений.</p>
+                    </li>
+                }
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<script src="~/assets/js/pages/notifications-details.js"></script>

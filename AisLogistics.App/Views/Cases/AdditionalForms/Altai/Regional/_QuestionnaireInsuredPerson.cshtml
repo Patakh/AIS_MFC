@@ -1,0 +1,286 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Regional.QuestionnaireInsuredPerson
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="col-3">
+               <label class="form-label" asp-for="Code">Код по ОКУД </label>
+               <input type="text" asp-for="Code" class="form-control">
+            </div>
+            <hr />
+            
+            <h5 class="my-2">Заявитель</h5>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="F">Фамилия</label>
+                    <input type="text" asp-for="F" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="I">Имя</label>
+                    <input type="text" asp-for="I" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="O">Отчество</label>
+                    <input type="text" asp-for="O" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="BirthDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="d-block form-label">Пол</label>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="Gender" id="gender1" value="М">
+                        <label class="form-check-label" asp-for="Gender"><i class="bi bi-gender-male fs-6"></i> Мужской</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="Gender" id="gender2" value="Ж">
+                        <label class="form-check-label" asp-for="Gender"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                    </div>
+                </div>
+                <div class="col-9">
+                    <label class="form-label" asp-for="Phone">Телефоны (домашний и/или рабочий)</label>
+                    <input type="text" class="form-control" asp-for="Phone">
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Место рождения</h6>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthAddressCity">город (село, дер., …)</label>
+                    <input type="text" asp-for="BirthAddressCity" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthAddressDistrict">район</label>
+                    <input type="text" asp-for="BirthAddressDistrict" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthAddressArea">область (край, респ., …)</label>
+                    <input type="text" asp-for="BirthAddressArea" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthAddressCountry">страна</label>
+                    <input type="text" asp-for="BirthAddressCountry" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="Citizenship">Гражданство</label>
+                    <input type="text" asp-for="Citizenship" class="form-control">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="RegistrationAddress">Адрес регистрации</label>
+                    <input type="text" asp-for="RegistrationAddress" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="RegistrationAddressIndex">индекс</label>
+                    <input type="text" asp-for="RegistrationAddressIndex" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="ResidenceAddress">Адрес места жительства</label>
+                    <input type="text" asp-for="ResidenceAddress" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ResidenceAddressIndex">индекс</label>
+                    <input type="text" asp-for="ResidenceAddressIndex" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-5">
+                    <label class="form-label" asp-for="DocType">Документ, удостоверяющий личность</label>
+                    <select class="select2-nosearch" asp-for="DocType">
+                        <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                        <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                        <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                        <option value="Вид на жительство">Вид на жительство </option>
+                        <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                        <option value="Паспорт моряка">Паспорт моряка</option>
+                    </select>
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="DocSeries">Серия</label>
+                    <input type="text" class="form-control" asp-for="DocSeries">
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="DocNumber">Номер</label>
+                    <input type="text" class="form-control" asp-for="DocNumber">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="DocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DocIssueDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="DocIssuer">выдавший орган</label>
+                    <input type="text" class="form-control" asp-for="DocIssuer">
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+    var btnNext = $('.btn-next');
+
+    var applicant = {
+        lastName: $("#F"),
+        firstName: $("#I"),
+        secondName: $("#O"),
+        birthDate: $("#BirthDate"),
+        phone: $("#Phone"),
+        docSeries: $("#DocSeries"),
+        docNumber: $("#DocNumber"),
+        docIssueDate: $("#DocIssueDate"),
+        docIssuer: $("#DocIssuer"),
+        residenceAddress: $("#ResidenceAddress"),
+        regAddress: $("#RegistrationAddress"),
+        regAddressIndex: $("#RegistrationAddressIndex"),
+    };
+    $(function() {
+        btnNext.on('click', function appContent() {
+            applicant.lastName.val($("#customer_LastName").val());
+            applicant.firstName.val($("#customer_FirstName").val());
+            applicant.secondName.val($("#customer_SecondName").val());
+            applicant.birthDate.val($("#customer_DocumentBirthDate").val());
+            applicant.docSeries.val($("#customer_DocumentSerial").val());
+            applicant.docNumber.val($("#customer_DocumentNumber").val());
+            applicant.docIssueDate.val($("#customer_DocumentIssueDate").val());
+            applicant.docIssuer.val($("#customer_DocumentIssueBody").val());
+            applicant.residenceAddress.val($("#customer_CustomerAddressResidence").val());
+            applicant.regAddress.val($("#customer_CustomerAddress").val());
+            applicant.regAddressIndex.val($("#addressDetailsApplicant_House_PostalCode").val());
+            applicant.phone.val($("#customer_CustomerPhone1").val());
+
+            if ($('#customer_CustomerGender1').is(':checked')) {
+                $('#gender1').attr('checked', true)
+            };
+
+            if ($('#customer_CustomerGender2').is(':checked')) {
+                $('#gender2').attr('checked', true);
+            };
+
+            switch ($('#customer_SDocumentsIdentityId').val()) {
+
+                case '21':
+                    additionalForm.find('select').html(`
+                            <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                            <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                            <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                            <option value="Вид на жительство">Вид на жительство </option>
+                            <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                            <option value="Паспорт моряка">Паспорт моряка</option>
+                    `);
+                    break;
+                case '3':
+                    additionalForm.find('select').html(`
+                            <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                            <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                            <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                            <option value="Вид на жительство">Вид на жительство </option>
+                            <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                            <option value="Паспорт моряка">Паспорт моряка</option>
+                    `);
+                    additionalForm.find('#DocSeries').inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                    break;
+                case '10':
+                    additionalForm.find('select').html(`
+                            <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                            <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                            <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                            <option value="Вид на жительство">Вид на жительство </option>
+                            <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                            <option value="Паспорт моряка">Паспорт моряка</option>
+                    `);
+                    break;
+                case '12':
+                    additionalForm.find('select').html(`
+                           <option value="Вид на жительство">Вид на жительство </option>
+                            <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                            <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                            <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                            <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                            <option value="Паспорт моряка">Паспорт моряка</option>
+                    `);
+                    break;
+                case '22':
+                    additionalForm.find('select').html(`
+                            <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                            <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                            <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                            <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                            <option value="Вид на жительство">Вид на жительство </option>
+                            <option value="Паспорт моряка">Паспорт моряка</option>
+                    `);
+                    break;
+                case '26':
+                    additionalForm.find('select').html(`
+                            <option value="Паспорт моряка">Паспорт моряка</option>
+                            <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                            <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                            <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                            <option value="Вид на жительство">Вид на жительство </option>
+                            <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                    `);
+                    break;
+            }
+        });
+
+
+        additionalForm.find("select.select2-search").each(function() {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function() {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('#DocNumber').inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+    });
+
+    $('#DocType').on('change', function changeDoc() {
+        switch ($(this).val()) {
+            case 'Паспорт гражданина РФ':
+                additionalForm.find('#DocSeries').inputmask("9999", { clearIncomplete: true, showMaskOnHover: false });
+                break;
+            case 'Свидетельство о рождении':
+                additionalForm.find('#DocSeries').inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                break;
+            default:
+                additionalForm.find('#DocSeries').inputmask("9999", { clearIncomplete: true, showMaskOnHover: false });
+                break;
+        };
+    });
+
+</script>

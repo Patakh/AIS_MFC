@@ -1,0 +1,153 @@
+﻿@model ViewModelBuilder
+@{
+    string Id = ViewData["Id"]?.ToString() ?? string.Empty;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                @if (Model.IsVisibleDescription)
+                {
+                    <div class="b-s-14">@Model.ViewDescription</div>
+                }
+            </div>
+
+            <div class="col-6 pull-right">
+                @if (User.HasClaim(AccessKeyNames.ReferenceService, AccessKeyValues.Add))
+                {
+                    <div class="col-auto text-md-end">
+                        <a href="javascript:void(0);" data-btn-params='{"actionType":"@ActionType.Add", "serviceId" : "@Id" }' data-btn-type="add" data-for-table="@Model.TableName" class="r-a-14">
+                            <i class="bi bi-plus"></i> Добавить
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive mt-3">
+                    <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceService" class="directory_names-items table table-striped"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $tableSmev = $('#@(Model.TableName)');
+    $(document).ready(function () {
+        let isCanAddSmev = $tableSmev.is('[data-action-add]'),
+            isCanEditSmev = $tableSmev.is('[data-action-edit]'),
+            isCanRemoveSmev = $tableSmev.is('[data-action-remove]');
+
+        $tableSmev.DataTable({
+            sDom: "<'row me-5 pe-1'<'col-sm-12 col-md-8 'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            processing: true,
+            serverSide: true,
+            filter: true,
+            searchDelay: 1500,
+            ajax: {
+                url: $tableSmev.data('action-table'),
+                type: "POST",
+                datatype: "json",
+                dataSrc: function (json) {
+                    return json.data;
+                }
+            },
+            initComplete: function () {
+
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    title: 'Сервис',
+                    orderable: false
+                },
+                {
+                    targets: 2,
+                    title: 'Запрос',
+                    orderable: false
+                },
+                {
+                    targets: 3,
+                    title: 'Кол-во дней',
+                    width: "80px",
+                    className: 'text-center',
+                    orderable: false
+                },
+                {
+                    targets: -1,
+                    title: 'Действия',
+                    data: "id",
+                    width: "80px",
+                    className: 'text-center editor-edit',
+                    sorting: false,
+                    orderable: false
+                }
+            ],
+            columns: [
+                {},
+                {
+                    render: function (data, type, row) {
+                        return `<span>${row.smevName}</span>
+                                ${row.smevProvider === null ? '' : '<br /><small>' + row.smevProvider + '</small>'}
+                                `;
+                    }
+                },
+                {
+                    data: "requestName"
+                },
+                {
+                    data: "countDayExecution"
+                },
+                {
+                    render: function (data, type, row) {
+                        let content = "";
+                        if (isCanEditSmev === true)
+                            content += EditBtnSmev({ "id": data, "actionType": 1, "serviceId": "@Id" });
+                        if (isCanRemoveSmev === true)
+                            content += DeleteBtnSmev({ "id": data });
+                        return content;
+                    }
+                }
+            ]
+        });
+
+        $tableSmev.on("reload", () => {
+            $tableSmev.DataTable().ajax.reload(null, false);
+        });
+
+        $tableSmev.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        let EditBtnSmev = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="edit" data-bs-toggle="tooltip" title="Изменить" class="btn btn-sm btn-icon text-body">
+                    <i class="bi bi-pencil-square"></i></a>`;
+        }
+
+        let DeleteBtnSmev = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-service-remove-btn-type data-bs-toggle="tooltip" title="Удалить" class="btn btn-sm btn-icon text-danger">
+                    <i class="bi bi-trash"></i></a>`;
+        }
+    });
+
+    
+</script>

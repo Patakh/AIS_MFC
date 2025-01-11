@@ -1,0 +1,120 @@
+﻿@using AisLogistics.App.Models.DTO.Cases
+@model List<CasesIncomingDocumentDto>
+
+ <style>
+     .table td {
+         vertical-align: top !important;
+     }
+ </style>
+
+<table class="table table-responsive w-100 h-75">
+    <thead>
+        <tr>
+            <th><input type="checkbox" data-check-main id="checkSelectedIncomingRowMain"></th>
+            <th>Заявитель</th>
+            <th>Адрес</th>
+            <th>Контакты</th>
+            <th>Номер обращения</th>
+            <th>Этап</th>
+        </tr>
+    </thead>
+    <tbody class="table-border-bottom-0">
+        @if (@Model.Any())
+        {
+            @foreach (var request in Model)
+            {
+                <tr data-service-id="@request.ServiceId" data-case-id="@request.CasesNumber">
+                    <td><input  type="checkbox" data-check-incoming value="@request.ServiceId"></td>
+                    <td>@request.Applicant?.Name</td>
+                    <td>@request.Applicant?.Address</td>
+                    <td>
+                        <p>@request.Applicant?.Phone</p>
+                        <p>@request.Applicant?.Phone2</p>
+                    </td>
+                    <td>@request.CasesNumber</td> 
+                    <td>
+                        <select data-stage-id class="form-select" asp-items="@(new SelectList(request.StagesNext, "Id", "Name" ))"></select>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr class="border-0">
+                <td colspan="7" class="text-center fs-3 border-0">
+                    Нет данных
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+
+
+    $(function () {
+
+
+        $('#checkSelectedIncomingRowMain').change(function () {
+            let value = $('#checkSelectedIncomingRowMain').prop("checked");
+            $('[data-check-incoming]').each(function (i, el) {
+                $(el).prop("checked", value)
+            });
+            if (value) {
+                $('button[type="submit"]').show();
+            }
+            else {
+                $('button[type="submit"]').hide();
+            }
+        });
+
+        $('[data-check-incoming]').change(function () {
+            if ($('#checkSelectedIncomingRowMain').prop("checked"))
+                $('#checkSelectedIncomingRowMain').prop("checked", false);
+
+            $('button[type="submit"]').hide();
+
+            $('[data-check-incoming]').each(function (i, el) {
+                if ($(el).prop("checked")) {
+                    $('button[type="submit"]').show();
+                    return;
+                }
+            });
+        });
+
+
+        $('button[type="submit"]').on('click', function () {
+            let mass = [];
+            $('[data-check-incoming]').each(function (i, el) {
+                if ($(el).prop("checked")) {
+                    var item = {}
+                    item["serviceId"] = $(el).parents('[data-service-id]').attr('data-service-id');
+                    item["stageId"] = $(el).parents('[data-service-id]').find("[data-stage-id]").val();
+                    mass.push(item);
+                }
+            });
+
+            $.ajax({
+                url: '/Cases/ServiceStageIncomingSaveResult',
+                type: 'Post',
+                data: { data: mass },
+                beforeSend: () => {
+                    $.pageBlock();
+                },
+                complete: () => {
+                    $.unblockUI();
+                },
+                success: (content) => {
+                    $('#btnSearchCasesIncomingDocument').click();
+                }
+            });
+        });
+
+    });
+
+
+
+
+
+    
+</script>

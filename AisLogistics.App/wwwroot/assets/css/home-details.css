@@ -1,0 +1,101 @@
+﻿.table:not(.table-dark) thead:not(.table-dark) th {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 20px;
+    letter-spacing: 0.035em;
+    padding-left: 20px;
+    color: #B5B5B5;
+   /* background: #E6EEFF;*/
+    font-family: 'regular', sans-serif, serif;
+}
+
+.nav-link.active:not(.nav-link.active.active-color) {
+    border-bottom: 2px solid #5a8dee;
+    color: #5a8dee !important;
+}
+
+table.dataTable {
+    margin-top: 0 !important;
+}
+
+.table-not-th.dataTable th.sorting_disabled {
+    display: none;
+}
+
+
+.table-td td {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.table-rating td {
+    padding-left: 20px !important;
+}
+
+.table-rating tbody {
+    font-size: 13px;
+}
+
+    .table-rating tbody tr:nth-child(1) td {
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 0.035em;
+    }
+
+    .table-rating tbody tr:nth-child(2) td {
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 0.035em;
+    }
+
+    .table-rating tbody tr:nth-child(3) td {
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 0.035em;
+    }
+
+    .table-rating tbody tr td:has(.bg-skip) {
+        /*  background-color: #d8d8d8 !important; */
+        /*padding-left: 0px !important;
+        padding-right: 2px !important;*/
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+        vertical-align: middle;
+    }
+
+.bg-skip {
+   /* border-bottom-style: dotted;
+    border-bottom-color: #474646;
+    border-bottom-width: 2px;*/
+}
+
+.height-card {
+    height: 80vh;
+    max-height: 80vh
+}
+
+
+@media (width<=1660px) {
+    .table-rating tbody {
+        font-size: 12px;
+    }
+
+        .table-rating tbody tr:nth-child(1) td {
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.035em;
+        }
+
+        .table-rating tbody tr:nth-child(2) td {
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.035em;
+        }
+
+        .table-rating tbody tr:nth-child(3) td {
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.035em;
+        }
+}

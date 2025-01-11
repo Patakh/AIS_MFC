@@ -1,0 +1,354 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.FssSpaTreatmentModel
+@{
+    IEnumerable<SelectListItem> methodResultList = new List<SelectListItem>
+    {
+        new("Не выбрано", ""),
+        new("Вручить в территориальном органе Фонда", "1"),
+        new("Вручить в МФЦ", "2"),
+        new("Направить по почте", "3"),
+        new("Направить в форме электронного документа", "4")
+    };
+
+    IEnumerable<SelectListItem> targetList = new List<SelectListItem>
+    {
+        new("Не выбрано", ""),
+        new("предоставить путевку на санаторно-курортное лечение", "1"),
+        new("предоставить бесплатный проезд к месту лечения и обратно", "2")
+    };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            @*<div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FssDepartmentName">Наименование территориального органа ФСС РФ</label>
+                    <input type="text" asp-for="FssDepartmentName" class="form-control">
+                </div>
+            </div>
+            <hr />*@
+            <h5 class="my-2">Заявитель</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Customer.Fio">ФИО</label>
+                    <input type="text" asp-for="Customer.Fio" class="form-control">
+                </div>
+                <div class="col-12">
+                    <label class="form-label" asp-for="Customer.Address">Адрес проживания</label>
+                    <input type="text" asp-for="Customer.Address" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Customer.Snils">СНИЛС</label>
+                    <input type="text" asp-for="Customer.Snils" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Customer.BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Customer.BirthDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label class="form-label" asp-for="Customer.BirthPlace">Место рождения</label>
+                    <input type="text" asp-for="Customer.BirthPlace" class="form-control">
+                </div>
+            </div>
+            <h6 class="my-2">Документ, удостоверяющий личность</h6>
+            <div class="row mb-1">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Customer.DocName">Наименование документа</label>
+                    <select class="select2-nosearch" asp-for="Customer.DocName" data-value-value
+                            data-dictionary='{"dictionary":"FnsDocTypes", "default_value":"@Model.Customer.DocName"}'>
+                    </select>
+                </div>
+
+                <div class="col-4">
+                    <label class="form-label" asp-for="Customer.DocSeries">Серия</label>
+                    <input type="text" asp-for="Customer.DocSeries" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Customer.DocNumber">Номер</label>
+                    <input type="text" asp-for="Customer.DocNumber" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Customer.DocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Customer.DocIssueDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label class="form-label" asp-for="Customer.DocIssuer">Кем выдан</label>
+                    <input type="text" asp-for="Customer.DocIssuer" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Customer.Phone">Телефон</label>
+                    <input type="text" asp-for="Customer.Phone" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">Представитель</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative.Fio">ФИО</label>
+                    <input type="text" asp-for="Representative.Fio" class="form-control">
+                </div>
+            </div>
+            <h6 class="my-2">Документ, удостоверяющий личность</h6>
+            <div class="row mb-1">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative.DocName">Наименование документа</label>
+                    <select class="select2-nosearch" asp-for="Representative.DocName" data-value-value
+                            data-dictionary='{"dictionary":"FnsDocTypes", "default_value":"@Model.Representative.DocName"}'>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Representative.DocSeries">Серия</label>
+                    <input type="text" asp-for="Representative.DocSeries" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Representative.DocNumber">Номер</label>
+                    <input type="text" asp-for="Representative.DocNumber" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Representative.DocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Representative.DocIssueDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative.DocIssuer">Кем выдан</label>
+                    <input type="text" asp-for="Representative.DocIssuer" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Документ, подтверждающий полномочия представителя заявителя</h6>
+            <div class="row mb-1">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative.AuthorityDocName">Наименование</label>
+                    <input type="text" asp-for="Representative.AuthorityDocName" class="form-control">
+                </div>
+
+                <div class="col-4">
+                    <label class="form-label" asp-for="Representative.AuthorityDocSeries">Серия</label>
+                    <input type="text" asp-for="Representative.AuthorityDocSeries" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Representative.AuthorityDocNumber">Номер</label>
+                    <input type="text" asp-for="Representative.AuthorityDocNumber" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Representative.AuthorityDocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Representative.AuthorityDocIssueDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative.AuthorityDocIssuer">Кем выдан</label>
+                    <input type="text" asp-for="Representative.AuthorityDocIssuer" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Representative.Phone">Телефон</label>
+                    <input type="text" asp-for="Representative.Phone" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="Target">Цель обращения</label>
+                    <select class="select2-nosearch" asp-items="@targetList" asp-for="Target"></select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="MethodResult">Способ получения результата</label>
+                    <select class="select2-nosearch" asp-items="@methodResultList" asp-for="MethodResult"></select>
+                </div>
+            </div>           
+            <h5 class="my-2">Справка для получения путевки по форме № 070/у</h5>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="CertDate">Дата</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="CertDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="CertNumber">Номер</label>
+                    <input type="text" asp-for="CertNumber" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">Направление к месту лечения (копия)</h5>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="DirectionPlaceTreatmentDate">Дата</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DirectionPlaceTreatmentDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="DirectionPlaceTreatmentNumber">Номер</label>
+                    <input type="text" asp-for="DirectionPlaceTreatmentNumber" class="form-control">
+                </div>
+                <div class="col-12">
+                    <label class="form-label" asp-for="TreatmentPlaceName">Наименование учреждения, в которое направляется на лечение</label>
+                    <input type="text" asp-for="TreatmentPlaceName" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">Талон № 2</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Itinerary">Маршрут следования</label>
+                    <input type="text" asp-for="Itinerary" class="form-control">
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function() {
+        select2Init(additionalForm);
+
+        additionalForm.find('#MethodInforming').on('change', function() {
+            let $el = additionalForm.find('#otherMethoInformingBlock');
+            switch ($(this).val()) {
+                case '7':
+                    visibilityBlock($el, false, false);
+                    break;
+                default: visibilityBlock($el, true, true);
+            }
+        });
+
+        additionalForm.find('#MethodInforming').trigger('change');
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('[name$="Inn"]').inputmask("9{10,12}", options);
+        additionalForm.find('[name$="Email"]').inputmask("email", options);
+        additionalForm.find('[name$="Snils"]').inputmask("9{3}-9{3}-9{3} 9{2}", options);
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        (function getDictionaries() {
+            let dicts = new Set();
+            $('[data-dictionary]').each(function() {
+                let $this = $(this);
+                let options = $this.data('dictionary');
+                if (!dicts.has(options.dictionary)) {
+                    dicts.add(options.dictionary);
+                    $.post(`/SmevBase/SmevGetDictionary`,
+                        {
+                            type: options.dictionary
+                        },
+                        function(dictionary) {
+                            if (dictionary.error) return;
+                            fillSelect(options.dictionary, dictionary);
+                        });
+                }
+            });
+        }());
+
+        function fillSelect(dictName, dictionary) {
+            $.each($(`[data-dictionary*='"${dictName}"']`),
+                function() {
+                    let $this = $(this);
+                    let items = dictionary;
+                    $this.empty();
+                    if (!$this.hasClass('required')) {
+                        $this.append(new Option('Не выбрано', ''));
+                    }
+                    if ($this.is('[data-value-value]')) {
+                        items.dictionary.forEach(function(item) {
+                            $this.append(new Option(item.value, item.value));
+                        });
+                    } else {
+                        items.dictionary.forEach(function(item) {
+                            $this.append(new Option(item.value, item.key));
+                        });
+                    }
+
+                    if ($this.data('dictionary').default_value) {
+                        let defVal = $this.data('dictionary').default_value;
+                        if (defVal) {
+                            $this.val(defVal).trigger('update');
+                            $this.attr('data-def', defVal);
+                        }
+                    } else {
+                        $this.val('').trigger('update');
+                    }
+                });
+        }
+
+        function visibilityBlock($block, hide, isDisabled) {
+            switch (hide) {
+                case true:
+                    $block.hide();
+                    break;
+                case false:
+                    $block.show();
+                    break;
+            }
+
+            switch (isDisabled) {
+                case true:
+                    $block.find('input, select').each(function() {
+                        $(this).prop('disabled', true);
+                    });
+                    break;
+                case false:
+                    $block.find('input, select').each(function() {
+                        $(this).prop('disabled', false);
+                    });
+                    $block.find('[data-disabled]').each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    break;
+            }
+        }
+
+        function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function() {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function() {
+                $(this).select2({
+                });
+            });
+        }
+    });
+</script>

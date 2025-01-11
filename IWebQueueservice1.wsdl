@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="IWebQueueservice" targetNamespace="http://tempuri.org/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types />
+  <message name="AvgTimeWait0Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+    <part name="start_date" type="xs:string" />
+    <part name="stop_date" type="xs:string" />
+  </message>
+  <message name="AvgTimeWait0Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="AvgTimeService1Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+    <part name="start_date" type="xs:string" />
+    <part name="stop_date" type="xs:string" />
+  </message>
+  <message name="AvgTimeService1Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="CountWeekDay2Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+    <part name="step" type="xs:int" />
+    <part name="start_date" type="xs:string" />
+    <part name="stop_date" type="xs:string" />
+  </message>
+  <message name="CountWeekDay2Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="PreRegistrInQueue3Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+    <part name="usluga_id" type="xs:int" />
+    <part name="type_data" type="xs:string" />
+    <part name="FIO" type="xs:string" />
+    <part name="tData" type="xs:string" />
+    <part name="tTime" type="xs:string" />
+    <part name="phone" type="xs:string" />
+    <part name="email" type="xs:string" />
+  </message>
+  <message name="PreRegistrInQueue3Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="DelRegistrInQueue4Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+    <part name="type_data" type="xs:string" />
+    <part name="tData" type="xs:string" />
+    <part name="code" type="xs:string" />
+  </message>
+  <message name="DelRegistrInQueue4Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="AvgTimeWaitToDay5Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+    <part name="start_date" type="xs:string" />
+    <part name="stop_date" type="xs:string" />
+  </message>
+  <message name="AvgTimeWaitToDay5Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="AvgTimeServiceToDay6Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+    <part name="start_date" type="xs:string" />
+    <part name="stop_date" type="xs:string" />
+  </message>
+  <message name="AvgTimeServiceToDay6Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="GetWorkTime7Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+    <part name="usluga_id" type="xs:int" />
+  </message>
+  <message name="GetWorkTime7Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="GetAvgTimeHour8Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+  </message>
+  <message name="GetAvgTimeHour8Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="ListAbonInQueue9Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+  </message>
+  <message name="ListAbonInQueue9Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="CountAbonInQueue10Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+  </message>
+  <message name="CountAbonInQueue10Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="ListAbonRedirect11Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="ip_operator" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+  </message>
+  <message name="ListAbonRedirect11Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="ListAbonDelay12Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="ip_operator" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+  </message>
+  <message name="ListAbonDelay12Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="ListWindow13Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+  </message>
+  <message name="ListWindow13Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="RedirectAbon14Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="num" type="xs:string" />
+    <part name="operator_guid" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+    <part name="window_id" type="xs:int" />
+  </message>
+  <message name="RedirectAbon14Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="DelayAbon15Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="num" type="xs:string" />
+    <part name="time" type="xs:string" />
+    <part name="operator_guid" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+  </message>
+  <message name="DelayAbon15Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="NextAbonRedirect16Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="ip_operator" type="xs:string" />
+    <part name="operator_guid" type="xs:string" />
+    <part name="num" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+  </message>
+  <message name="NextAbonRedirect16Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="NextAbonDelay17Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="ip_operator" type="xs:string" />
+    <part name="operator_guid" type="xs:string" />
+    <part name="num" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+  </message>
+  <message name="NextAbonDelay17Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="NumAbonOnWindow18Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="ip_operator" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+  </message>
+  <message name="NumAbonOnWindow18Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="CountAbon19Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="ip_operator" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+  </message>
+  <message name="CountAbon19Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="CountAbonVIP20Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="ip_operator" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+  </message>
+  <message name="CountAbonVIP20Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="NextAbon21Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="ip_operator" type="xs:string" />
+    <part name="operator_guid" type="xs:string" />
+    <part name="num" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+    <part name="end_call" type="xs:int" />
+  </message>
+  <message name="NextAbon21Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="NextAbonVIP22Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="ip_operator" type="xs:string" />
+    <part name="operator_guid" type="xs:string" />
+    <part name="num" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+    <part name="end_call" type="xs:int" />
+  </message>
+  <message name="NextAbonVIP22Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="FGIS_MDM23Request">
+    <part name="username" type="xs:string" />
+    <part name="password" type="xs:string" />
+    <part name="type_data" type="xs:string" />
+    <part name="start_date" type="xs:string" />
+    <part name="stop_date" type="xs:string" />
+    <part name="mfc" type="xs:int" />
+  </message>
+  <message name="FGIS_MDM23Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <portType name="IWebQueue">
+    <operation name="AvgTimeWait">
+      <input message="tns:AvgTimeWait0Request" />
+      <output message="tns:AvgTimeWait0Response" />
+    </operation>
+    <operation name="AvgTimeService">
+      <input message="tns:AvgTimeService1Request" />
+      <output message="tns:AvgTimeService1Response" />
+    </operation>
+    <operation name="CountWeekDay">
+      <input message="tns:CountWeekDay2Request" />
+      <output message="tns:CountWeekDay2Response" />
+    </operation>
+    <operation name="PreRegistrInQueue">
+      <input message="tns:PreRegistrInQueue3Request" />
+      <output message="tns:PreRegistrInQueue3Response" />
+    </operation>
+    <operation name="DelRegistrInQueue">
+      <input message="tns:DelRegistrInQueue4Request" />
+      <output message="tns:DelRegistrInQueue4Response" />
+    </operation>
+    <operation name="AvgTimeWaitToDay">
+      <input message="tns:AvgTimeWaitToDay5Request" />
+      <output message="tns:AvgTimeWaitToDay5Response" />
+    </operation>
+    <operation name="AvgTimeServiceToDay">
+      <input message="tns:AvgTimeServiceToDay6Request" />
+      <output message="tns:AvgTimeServiceToDay6Response" />
+    </operation>
+    <operation name="GetWorkTime">
+      <input message="tns:GetWorkTime7Request" />
+      <output message="tns:GetWorkTime7Response" />
+    </operation>
+    <operation name="GetAvgTimeHour">
+      <input message="tns:GetAvgTimeHour8Request" />
+      <output message="tns:GetAvgTimeHour8Response" />
+    </operation>
+    <operation name="ListAbonInQueue">
+      <input message="tns:ListAbonInQueue9Request" />
+      <output message="tns:ListAbonInQueue9Response" />
+    </operation>
+    <operation name="CountAbonInQueue">
+      <input message="tns:CountAbonInQueue10Request" />
+      <output message="tns:CountAbonInQueue10Response" />
+    </operation>
+    <operation name="ListAbonRedirect">
+      <input message="tns:ListAbonRedirect11Request" />
+      <output message="tns:ListAbonRedirect11Response" />
+    </operation>
+    <operation name="ListAbonDelay">
+      <input message="tns:ListAbonDelay12Request" />
+      <output message="tns:ListAbonDelay12Response" />
+    </operation>
+    <operation name="ListWindow">
+      <input message="tns:ListWindow13Request" />
+      <output message="tns:ListWindow13Response" />
+    </operation>
+    <operation name="RedirectAbon">
+      <input message="tns:RedirectAbon14Request" />
+      <output message="tns:RedirectAbon14Response" />
+    </operation>
+    <operation name="DelayAbon">
+      <input message="tns:DelayAbon15Request" />
+      <output message="tns:DelayAbon15Response" />
+    </operation>
+    <operation name="NextAbonRedirect">
+      <input message="tns:NextAbonRedirect16Request" />
+      <output message="tns:NextAbonRedirect16Response" />
+    </operation>
+    <operation name="NextAbonDelay">
+      <input message="tns:NextAbonDelay17Request" />
+      <output message="tns:NextAbonDelay17Response" />
+    </operation>
+    <operation name="NumAbonOnWindow">
+      <input message="tns:NumAbonOnWindow18Request" />
+      <output message="tns:NumAbonOnWindow18Response" />
+    </operation>
+    <operation name="CountAbon">
+      <input message="tns:CountAbon19Request" />
+      <output message="tns:CountAbon19Response" />
+    </operation>
+    <operation name="CountAbonVIP">
+      <input message="tns:CountAbonVIP20Request" />
+      <output message="tns:CountAbonVIP20Response" />
+    </operation>
+    <operation name="NextAbon">
+      <input message="tns:NextAbon21Request" />
+      <output message="tns:NextAbon21Response" />
+    </operation>
+    <operation name="NextAbonVIP">
+      <input message="tns:NextAbonVIP22Request" />
+      <output message="tns:NextAbonVIP22Response" />
+    </operation>
+    <operation name="FGIS_MDM">
+      <input message="tns:FGIS_MDM23Request" />
+      <output message="tns:FGIS_MDM23Response" />
+    </operation>
+  </portType>
+  <binding name="IWebQueuebinding" type="tns:IWebQueue">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <operation name="AvgTimeWait">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#AvgTimeWait" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="AvgTimeService">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#AvgTimeService" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="CountWeekDay">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#CountWeekDay" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="PreRegistrInQueue">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#PreRegistrInQueue" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="DelRegistrInQueue">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#DelRegistrInQueue" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="AvgTimeWaitToDay">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#AvgTimeWaitToDay" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="AvgTimeServiceToDay">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#AvgTimeServiceToDay" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="GetWorkTime">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#GetWorkTime" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="GetAvgTimeHour">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#GetAvgTimeHour" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="ListAbonInQueue">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#ListAbonInQueue" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="CountAbonInQueue">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#CountAbonInQueue" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="ListAbonRedirect">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#ListAbonRedirect" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="ListAbonDelay">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#ListAbonDelay" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="ListWindow">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#ListWindow" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="RedirectAbon">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#RedirectAbon" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="DelayAbon">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#DelayAbon" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="NextAbonRedirect">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#NextAbonRedirect" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="NextAbonDelay">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#NextAbonDelay" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="NumAbonOnWindow">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#NumAbonOnWindow" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="CountAbon">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#CountAbon" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="CountAbonVIP">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#CountAbonVIP" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="NextAbon">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#NextAbon" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="NextAbonVIP">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#NextAbonVIP" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="FGIS_MDM">
+      <soap:operation soapAction="urn:WebQueueIntf-IWebQueue#FGIS_MDM" style="rpc" />
+      <input>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output>
+        <soap:body use="encoded" namespace="urn:WebQueueIntf-IWebQueue" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+  </binding>
+  <service name="IWebQueueservice">
+    <port name="IWebQueuePort" binding="tns:IWebQueuebinding">
+      <soap:address location="http://192.168.34.195/cgi-bin/webqueueserverN.exe/soap/IWebQueue" />
+    </port>
+  </service>
+</definitions>

@@ -1,0 +1,244 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+}
+
+<style>
+    .search-applicant {
+        background: #FFFFFF !important;
+        border-radius: .25rem !important;
+        border: 1px solid #D0D5DD !important;
+    }
+
+    .table-applicant_wrapper {
+        height: 75vh;
+    }
+
+    .details-content-applicant {
+        height: 100%;
+    }
+
+    .details-content_wrapper {
+        height: 70vh;
+    }
+
+    .table-applicant.dataTable {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    .table-applicant.dataTable thead tr {
+        display: none !important
+    }
+
+    .table-applicant.dataTable tbody td {
+        padding: 0 !important;
+    }
+
+    .pagination .page-item.previous .page-link {
+        display: none !important;
+    }
+
+    .pagination .page-item.next .page-link {
+        display: none !important;
+    }
+
+    .light-style table.dataTable tbody > tr.selected {
+        background-color: #F9F9F9 !important
+    }
+
+        .light-style table.dataTable tbody > tr.selected > td > .card {
+            border-left: 3px solid #5a8dee !important;
+        }
+
+    .success, .danger, .warning {
+        padding: 4px 7px;
+        display: inline;
+        border-radius: 3px;
+        font-size: 12px;
+        white-space: nowrap
+    }
+
+    .details-content_wrapper table tr {
+        cursor: pointer
+    }
+
+</style>
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-3">
+                    <div class="mb-3">
+                        <div class="">
+                            <div class="row">
+                                <div class="col-12">
+                                    <input id="searchApplicant" type="search" class="form-control rounded-right search-applicant ps-2" placeholder="Поиск">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-applicant_wrapper" id="table-applicant_wrapper">
+                        <div class="table-responsive">
+                            <table id="@Model.TableName" data-action-table="@Model.TableMethodAction" class="table table-applicant table-no-border mt-0"></table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-9">
+                    <div class="card active-border" id="details-content-empty">
+                        <div class="card-body">
+                            <div class="alert-custom" role="alert">
+                                <div class="b-s-16">Внимание</div>
+                                <div class="r-s-14">Выберите заявителя</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card details-content-applicant d-none" id="details-content-applicant">
+                        <div class="card-header">
+                            <div class="b-s-18" id="card_title"></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-3">
+                                    <partial name="_NavLeft" />
+                                </div>
+                                <div class="col-9 details-content_wrapper" id="details-content_wrapper"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        const $table = $('#@(Model.TableName)');
+
+        let $tableCases = null;
+        let $tableCasesArchive = null;
+        let $tableCasesHistory = null;
+        
+        let applicantDetailsWrapperVisibility = {
+            show: () => {
+                $('#details-content-empty').hide();
+                $('#details-content-applicant').removeClass("d-none");
+                $('[data-url-action]').first().click();
+            },
+            hide: () => {
+                $('#details-content-empty').show();
+                $('#details-content-applicant').addClass("d-none");
+                $('#details-content_wrapper').empty();
+                $('#card_title').empty();
+            }
+        };
+
+
+        $(document).ready(function () {
+
+            $table.DataTable({
+                sDom: "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-12'p>>",
+                processing: true,
+                serverSide: true,
+                ordering: false,
+                filter: true,
+                searchDelay: 1500,
+                select: {
+                    info: false
+                },
+                rowId: 'id',
+                ajax: {
+                    url: $table.data('action-table'),
+                    type: "POST",
+                    datatype: "json",
+                    data: function (data) {
+                        data['search'] = $('#searchApplicant').val();
+                    }
+                },
+                columns: [
+                    {
+                        title: '',
+                        name: 'applicant',
+                        render: function (data, type, row) {
+                            let content = `<div class="card cursor-pointer mb-3">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col" data-employee-name="${row.customerName}">
+                                                                <span class="b-s-16">${row.customerName}</span>
+                                                            </div>
+                                                            <div class="col-auto text-end">
+                                                                <span class="r-a-12">${row.customerSnils}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <span class="r-l-14">${row.documentBirthDateToString}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <span class="r-l-14">${row.customerAddress}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                            </div>`;
+                            return content;
+                        }
+                    },
+                ]
+            }).on('select', () => { applicantDetailsWrapperVisibility.show(); })
+              .on('deselect', () => { applicantDetailsWrapperVisibility.hide(); });;
+
+            $('#searchApplicant').on('input', function () {
+                if ($(this).val().length >= 4 || $(this).val().length == 0)
+                    $table.DataTable().ajax.reload();
+            });
+
+            $('#searchApplicant').on('search', function () {
+                if ($(this).val().length >= 4 || $(this).val().length == 0)
+                    $table.DataTable().ajax.reload();
+            });
+
+            new PerfectScrollbar("#table-applicant_wrapper");
+            new PerfectScrollbar("#details-content_wrapper");
+
+            $('[data-url-action]').click(function () {
+                $('[data-url-action]').removeClass('bg-light');
+                $('[data-url-action]').removeClass('r-a-16');
+                $(this).addClass('bg-light');
+                $(this).addClass('r-a-16');
+                var url = $(this).data('url-action');
+                let selectedRow = $table.DataTable().rows({ selected: true }).data()[0];
+                if (selectedRow != null) {
+                    let selectedId = selectedRow['id'];
+                    let selectedName = selectedRow['customerName'];
+                    $('#card_title').html(selectedName);
+                    $.ajax({
+                        url: '/ApplicantPersonalAccount/' + url,
+                        type: 'POST',
+                        data: { id: selectedId },
+                        beforeSend: () => {
+                            $.pageBlock();
+                        },
+                        complete: () => {
+                            $.unblockUI();
+                        },
+                        success: function (content) {
+                            $('#details-content_wrapper').empty();
+                            $('#details-content_wrapper').html(content);
+                        }
+                    });
+                }
+                else {
+                    applicantDetailsWrapperVisibility.hide();
+                }
+            });
+
+
+        });
+    </script>
+}
+

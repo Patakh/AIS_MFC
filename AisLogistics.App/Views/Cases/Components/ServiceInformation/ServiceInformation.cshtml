@@ -1,0 +1,47 @@
+﻿@model List<CaseServiceDto>
+
+@foreach (var item in Model)
+{
+    <div class="case-user-list_card" data-service-id="@item.Id">
+        <div class="d-flex align-items-center mb-3">
+            <div class="col">
+                <i class="bi bi-globe-americas me-2"></i>
+                <span class="b-s-14">
+                    @item.InteractionName
+                </span>
+            </div>
+            <div class="col text-end">
+                <service-status name="@item.Status.Name" status="@item.Status.Id"></service-status>
+            </div>
+        </div>
+        <p class="m-s-14">@(item.Name.Length > 350 ? item.Name.Substring(0, 350) + "..." : item.Name)</p>
+        <p class="m-l-12">@item.ProcedureName</p>
+        <p class="r-l-12">@(item.Office.Length > 350 ? item.Office.Substring(0, 350) + "..." : item.Office)</p>
+        <a class="d-flex mb-3 text-decoration-underline fs-12" asp-action="ServiceDepartamentAddModal" asp-route-id="@item.Id" asp-route-officeid="@item.OfficeId"
+           asp-route-departamentId="@item.DepartamentId" data-bs-toggle="tooltip" title="Добавить" data-btn-type="modal">
+            @(item.DepartamentName ?? "Отдел не выбран")
+        </a>
+        <div class="d-flex">
+            <div class="col">
+                <div class="b-s-12">Принял:</div>
+                <div class="mb-0 r-s-12 ">@item.EmployeeAdd.Name</div>
+                <p class="r-l-12">@item.EmployeeAdd.Job</p>
+            </div>
+            <div class="col">
+                <div class="b-s-12">Текущий:</div>
+                <div class="mb-0 r-s-12">@item.SerivesStage.EmployeeCurrent.Name</div>
+                <p class="r-l-12">@item.SerivesStage.EmployeeCurrent.Job</p>
+            </div>
+        </div>
+        <div class="d-flex">
+            <div class="col">
+                <div class="b-s-12">Этап:</div>
+                <p class="my-0 fs-12">@item.SerivesStage.Stage.Name</p>
+            </div>
+            <div class="col">
+                <div class="b-s-12">Дни:</div>
+                <p class="my-0 fs-12"><days count="@(item.Days.HasValue ? item.Days.Value : 0)"></days></p>
+            </div>
+        </div>
+    </div>
+}

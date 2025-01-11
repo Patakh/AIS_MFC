@@ -1,0 +1,416 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.FnsRealEstateNotificationModel
+@{
+    IEnumerable<SelectListItem> numberTypeList = new List<SelectListItem>
+    {
+        new("кадастровый", "1"),
+        new("условный", "2"),
+        new("инвентарный", "3")
+    };
+
+    IEnumerable<SelectListItem> customerTypeList = new List<SelectListItem> {
+        new ("налогоплательщик", "1"),
+        new ("представитель налогоплательщика", "2")
+    };
+
+    IEnumerable<SelectListItem> realEstateTypeList = new List<SelectListItem> {
+        new ("жилой дом (жилое строение)", "1"),
+        new ("квартира (комната)", "2"),
+        new ("гараж (машино-место)", "3"),
+        new ("помещение (сооружение)", "4"),
+        new ("хозяйственное строение (сооружение)", "5"),
+    };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="CustomerType">Тип заявителя</label>
+                    <select class="select2-nosearch" asp-items="@customerTypeList" asp-for="CustomerType"></select>
+                </div>
+            </div>
+            <h6 class="my-2">Заявитель</h6>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerFio.LastName">Фамилия</label>
+                    <input type="text" asp-for="CustomerFio.LastName" class="form-control" placeholder="Фамилия">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerFio.FirstName">Имя</label>
+                    <input type="text" asp-for="CustomerFio.FirstName" class="form-control" placeholder="Имя">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerFio.SecondName">Отчество</label>
+                    <input type="text" asp-for="CustomerFio.SecondName" class="form-control" placeholder="Отчество">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="BirthDate" type="text"
+                               class="form-control pickdate" placeholder="Дата рождения">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Inn">ИНН</label>
+                    <input type="text" asp-for="Inn" class="form-control" placeholder="ИНН">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="BirthPlace">Место рождения</label>
+                    <input type="text" asp-for="BirthPlace" class="form-control" placeholder="Место рождения">
+                </div>
+            </div>
+            <div id="docBlock">
+                <h6 class="my-2">Документ, удостоверяющий личность</h6>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="DocCode">Тип заявителя</label>
+                        <select class="select2-nosearch" asp-for="DocCode"
+                                data-dictionary='{"dictionary":"FnsDocTypes", "default_value":"@Model.DocCode"}'>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-8">
+                        <label class="form-label" asp-for="DocSeriesNumber">Серия и номер</label>
+                        <input type="text" class="form-control" placeholder="Серия и номер" asp-for="DocSeriesNumber">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="DocIssueDate">Дата выдачи</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="DocIssueDate" type="text"
+                                   class="form-control pickdate" placeholder="Дата выдачи">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" asp-for="DocIssuer">Кем выдан</label>
+                        <input type="text" class="form-control" placeholder="Кем выдан" asp-for="DocIssuer">
+                    </div>
+                </div>
+            </div>
+
+            <div id="representativeBlock" data-disabled>
+                <h6 class="my-2">Представитель</h6>
+                <div class="row mb-1">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="RepresentativeFio.LastName">Фамилия</label>
+                        <input type="text" asp-for="RepresentativeFio.LastName" class="form-control" placeholder="Фамилия">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="RepresentativeFio.FirstName">Имя</label>
+                        <input type="text" asp-for="RepresentativeFio.FirstName" class="form-control" placeholder="Имя">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="RepresentativeFio.SecondName">Отчество</label>
+                        <input type="text" asp-for="RepresentativeFio.SecondName" class="form-control" placeholder="Отчество">
+                    </div>
+                </div>
+            </div>
+
+            <h6 class="my-2">Сведения об объектах недвижимости</h6>
+            <div id="cloneList">
+                @for (var i = 0; i < Model.RealEstateList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2">Объект недвижимости @(i+1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-1">
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="RealEstateList[i].Type">Тип объекта недвижимости</label>
+                                        <select class="select2-nosearch" asp-items="@realEstateTypeList" asp-for="RealEstateList[i].Type"></select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="RealEstateList[i].Region">Субъект РФ</label>
+                                        <select class="select2-search" asp-for="RealEstateList[i].Region"
+                                            data-dictionary='{"dictionary":"FnsRegionCodes", "default_value":"@Model.RealEstateList[i].Region"}'>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="RealEstateList[i].NumberType">Тип номера</label>
+                                        <select class="select2-nosearch" asp-items="@numberTypeList" asp-for="RealEstateList[i].NumberType"></select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="RealEstateList[i].Number">Номер</label>
+                                        <input type="text" class="form-control" placeholder="Номер" asp-for="RealEstateList[i].Number">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash bx-md"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addRealEstate"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="original">
+        <hr />
+        <h6 class="my-2">Объект недвижимости 100</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-11">
+                <div class="row mb-1">
+                    <div class="col-6">
+                        <label class="form-label" asp-for="RealEstateList[0].Type">Тип объекта недвижимости</label>
+                        <select class="select2-nosearch" asp-items="@realEstateTypeList" asp-for="RealEstateList[0].Type"></select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="RealEstateList[0].Region">Субъект РФ</label>
+                        <select class="select2-search" asp-for="RealEstateList[0].Region"
+                                data-dictionary='{"dictionary":"FnsRegionCodes", "default_value":"@Model.RealEstateList[0].Region"}'>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label" asp-for="RealEstateList[0].NumberType">Тип номера</label>
+                        <select class="select2-nosearch" asp-items="@numberTypeList" asp-for="RealEstateList[0].NumberType"></select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="RealEstateList[0].Number">Номер</label>
+                        <input type="text" class="form-control" placeholder="Номер" asp-for="RealEstateList[0].Number">
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash bx-md"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function() {
+        renameBlock(originalBlock.find('#original'), 100, true);
+        visibilityBlock(originalBlock.find('#original'), true, true);
+
+        $('#addRealEstate').on('click', () => addForm('cloneList', 'original'));
+
+        additionalForm.find('[data-disabled]').each(function() {
+            visibilityBlock($(this), true, true);
+        });
+
+        additionalForm.find("select.select2-search").each(function() {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function() {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        let $doc = additionalForm.find('#docBlock');
+        let $inn = additionalForm.find('[name$="Inn"]');
+        additionalForm.find('[name$="Phone"]').inputmask("9{1,15}", options);
+        additionalForm.find('[name$="Inn"]').inputmask("9{12}", options);
+
+        $inn.on('input', function() {
+
+            if ($(this).val()) {
+                visibilityBlock($doc, true, true);
+            }
+            else {
+                visibilityBlock($doc, false, false);
+            }
+        });
+        
+        $inn.on('blur', function() {
+            if ($inn.val().indexOf('_') > -1) {
+                $inn.val('');
+                visibilityBlock($doc, false, false);
+            }
+            $inn.trigger('input');
+        });
+        
+        if ($inn.val()) {
+            visibilityBlock($doc, true, true);
+        }
+        else {
+            visibilityBlock($doc, false, false);
+        }
+        
+        additionalForm.find('#CustomerType').on('change', function() {
+            let $representative = additionalForm.find('#representativeBlock');
+            switch ($(this).val()) {
+                case '1':
+                    visibilityBlock($representative, true, true);
+                    break;
+                case '2':
+                    visibilityBlock($representative, false, false);
+                    break;
+            }
+        });
+
+        additionalForm.find('#CustomerType').trigger('change');
+
+        (function getDictionaries() {
+            let dicts = new Set();
+            $('[data-dictionary]').each(function() {
+                let $this = $(this);
+                let options = $this.data('dictionary');
+                if (!dicts.has(options.dictionary)) {
+                    dicts.add(options.dictionary);
+                    $.post(`/SmevBase/SmevGetDictionary`,
+                        {
+                            type: options.dictionary
+                        },
+                        function(dictionary) {
+                            if (dictionary.error) return;
+                            fillSelect(options.dictionary, dictionary);
+                        });
+                }
+            });
+        }());
+
+        function fillSelect(dictName, dictionary) {
+            $.each($(`[data-dictionary*='"${dictName}"']`),
+                function() {
+                    let $this = $(this);
+                    let items = dictionary;
+                    $this.empty();
+                    if (!$this.hasClass('required')) {
+                        $this.append(new Option('Не выбрано', ''));
+                    }
+                    if ($this.is('[data-value-value]')) {
+                        items.dictionary.forEach(function(item) {
+                            $this.append(new Option(item.value, item.value));
+                        });
+                    } else {
+                        items.dictionary.forEach(function(item) {
+                            $this.append(new Option(item.value, item.key));
+                        });
+                    }
+
+                    if ($this.data('dictionary').default_value) {
+                        let defVal = $this.data('dictionary').default_value;
+                        if (defVal) {
+                            $this.val(defVal).trigger('update');
+                            $this.attr('data-def', defVal);
+                        }
+                    } else {
+                        $this.val('').trigger('update');
+                    }
+                });
+        }
+
+        function visibilityBlock($block, hide, isDisabled) {
+            switch (hide) {
+                case true:
+                    $block.hide();
+                    break;
+                case false:
+                    $block.show();
+                    break;
+            }
+
+            switch (isDisabled) {
+                case true:
+                    $block.find('input, select').each(function() {
+                        $(this).prop('disabled', true);
+                    });
+                    break;
+                case false:
+                    $block.find('input, select').each(function() {
+                        $(this).prop('disabled', false);
+                    });
+                    $block.find('[data-disabled]').each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    break;
+            }
+        }
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            $cloneBlock.removeClass('d-none');
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.append($cloneBlock);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+            $block.find("select.select2-nosearch").each(function() {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function() {
+                $(this).select2({
+                });
+            });
+
+            $block.find("select").each(function() {
+                $(this).prop("selectedIndex", 0).trigger('change');
+            });
+            $block.find("input").each(function() {
+                $(this).val("");
+            });
+        }
+
+        function renameBlock($cloneBlock, indexId, initOriginal = false) {
+            if (!initOriginal) {
+                $cloneBlock.find('h6').text($cloneBlock.find('h6').text().replace(/\d+/, indexId + 1));
+                $cloneBlock.attr("id", `clone${indexId}`);
+                $cloneBlock.attr('data-id', indexId);
+                $cloneBlock.attr('data-clone', '');
+            }
+
+            $cloneBlock.find('input, select').each(function() {
+                $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            });
+
+            $cloneBlock.find('label').each(function() {
+                $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+            });
+        }
+    });
+
+    function blockRemove(el) {
+        el.closest('[data-clone]').remove();
+        $(el).closest('[data-clone-list]').find('[data-clone]').each(function(index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+</script>

@@ -1,0 +1,248 @@
+﻿@using AisLogistics.App.ViewModels.Cases
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<AisLogistics.App.Models.DTO.Services.CaseCommentsDto>
+
+
+@{
+    //ViewBag.Title = Model.ViewTitle;
+    //var requestModel = Model.Model as CaseDetailsResponseModel<CaseCommentsDto>;
+    var orderByDate =Model?.GroupBy(g => g.DateAdd.Date).OrderBy(o => o.Key);
+}
+@*<link rel="stylesheet" href="~/assets/css/case-details.css" asp-append-version="true" />*@
+
+
+
+ <div class="">
+     <div class="chat-application">
+        <section class="chat-window-wrapper">        
+            <div class="chat-area">
+                <div class="chat-header"></div>
+                <!-- chat card start -->
+                <div class="card chat-wrapper shadow-none">
+                    <div class="card-body chat-container">
+                        <div class="chat-content">
+                            @if (Model.Any())
+                            {
+                                foreach (var date in orderByDate)
+                                {
+                                    <div class="badge bg-secondary my-1">@date.Key.ToShortDateString()</div>
+                                    foreach (var item in date.OrderBy(o=>o.DateAdd))
+                                    {
+                                        <div class="chat @(item.IsLeft ? "chat-left" : "")">
+                                            <div class="chat-avatar">
+                                                <div class="avatar m-0">
+                                                    <span class="avatar-initial rounded-circle" data-bs-toggle="tooltip" data-bs-html="true" title="<div>@item.EmployeeAdd.Name</div><div>@item.EmployeeAdd.Job</div><div>@item.DateAdd</div>">@item.EmployeeAdd.NameBadge</span>
+                                                </div>
+                                            </div>
+                                            <div class="chat-body">
+                                                <div class="chat-message">
+                                                    <p>@item.Comment</p>
+                                                    <span class="@(item.IsLeft ? "chat-time-left" : "chat-time")">
+                                                        @(item.IsLeft ? $"{item.EmployeeAdd.Name} {(item.EmployeeAdd.Job)}" : string.Empty)
+                                                        @item.DateAdd.ToShortTimeString()</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <div class="pt-5">
+                                    <span class="bi bi-chat-left chat-start-icon fs-1 p-3 mb-1"></span>
+                                    <h4 class="d-none d-lg-block">Нет комментариев</h4>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-footer chat-footer border-top pt-2 px-3">
+                        @if (User.HasClaim(AccessKeyNames.DataCaseComments, AccessKeyValues.Add))
+                        {
+                            <form asp-action="CommentAdd" asp-controller="Cases" asp-route-id="@ViewBag.Id" id="chatSendingForm" class="d-flex align-items-center gap-2">
+                                <a href="javascript:void(0);" id="chatPickEmployees" class="btn p-0 h-px-30" title="Выбор сотрудника">
+                                    <i class="bi bi-person-fill cursor-pointer"></i>
+                                    <span class="badge badge-dot badge-notifications bg-danger rounded-pill d-none"></span>
+                                </a>
+                                <i class="bi bi-menu-button-wide ms-1 cursor-pointer"></i>
+                                <input type="text" class="form-control chat-message-send mx-1" name="comment" required="" placeholder="Введите здесь Ваше сообщение...">
+                                <button type="submit" class="align-items-center btn btn-primary d-lg-flex gap-2" id="submitChatSendingForm">
+                                    <i class="bi bi-send"></i>
+                                    <span class="d-none d-lg-block ms-1">Отправить</span>
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="pt-2 small text-center r-l-12">Вы не можете оставлять комментарии</div>
+                        }
+                    </div>
+                </div>
+                <!-- chat card ends -->
+            </div>
+        </section>
+    </div>
+</div>
+
+
+
+@*@section Scripts
+    {*@
+   @* <script src="~/assets/js/pages/case-details.js" asp-append-version="true"></script>*@
+    <script>
+        var chatSidebarListWrapper = $(".chat-sidebar-list-wrapper"),
+            chatOverlay = $(".chat-overlay"),
+            chatContainer = $(".chat-container"),
+            chatSidebarProfileToggle = $(".chat-sidebar-profile-toggle"),
+            chatProfileToggle = $(".chat-profile-toggle"),
+            chatSidebarClose = $(".chat-sidebar-close"),
+            chatProfile = $(".chat-profile"),
+            chatUserProfile = $(".chat-user-profile"),
+            chatProfileClose = $(".chat-profile-close"),
+            chatSidebar = $(".chat-sidebar"),
+            chatArea = $(".chat-area"),
+            chatStart = $(".chat-start"),
+            chatSidebarToggle = $(".chat-sidebar-toggle"),
+            chatMessageSend = $(".chat-message-send"),
+            speechToText = $(".chat-message-1"),
+            sendingForm = $("#chatSendingForm"),
+            btnsubmit = $('#submitChatSendingForm'),
+            chatPickEmployees = {
+                el: $("#chatPickEmployees"),
+                selected: []
+            };
+
+        const employeesPicker = {
+            set: (data) => {
+                chatPickEmployees.selected = data;
+                employeesPicker.toggleBadge();
+            },
+            get: () => {
+                return chatPickEmployees.selected;
+            },
+            toggleBadge: () => {
+                if (chatPickEmployees.selected.length > 0) {
+                    chatPickEmployees.el.find(".badge").removeClass("d-none");
+                } else {
+                    chatPickEmployees.el.find(".badge").addClass("d-none");
+                }
+            }
+        }
+
+        $(document).ready(function () {
+            "use strict";
+            // chat area perfect scrollbar initialization
+            if (chatContainer.length > 0) {
+                var chat_user_user = new PerfectScrollbar(".chat-container");
+                chatContainer.scrollTop($(".chat-container > .chat-content").height());
+            }
+
+            // menu toggle till medium screen
+            if ($(window).width() < 992) {
+                chatSidebarToggle.on("click",
+                    function () {
+                        chatSidebar.addClass("show");
+                        chatOverlay.addClass("show");
+                    });
+            }
+
+            // window resize
+            $(window).on("resize", function () {
+                // remove show classes from overlay when resize, if size is > 992
+                if ($(window).width() > 992) {
+                    if (chatOverlay.hasClass("show")) {
+                        chatOverlay.removeClass("show");
+                    }
+                }
+                // menu toggle on resize till medium screen
+                if ($(window).width() < 992) {
+                    chatSidebarToggle.on("click",
+                        function () {
+                            chatSidebar.addClass("show");
+                            chatOverlay.addClass("show");
+                        });
+                }
+                // disable on click overlay when resize from medium to large
+                if ($(window).width() > 992) {
+                    chatSidebarToggle.on("click",
+                        function () {
+                            chatOverlay.removeClass("show");
+                        });
+                }
+            });
+
+
+            chatPickEmployees.el.on('click', function() {
+                $.ajax({
+                url: '/Cases/CommentEmployeesPick',
+                    type: 'POST',
+                    beforeSend: () => {
+                        $.pageBlock();
+                    },
+                    complete: () => {
+                        $.unblockUI();
+                    },
+                    success: function (content) {
+                        $('#modalContainerOver').html(content).modal('show');
+                    }
+                });
+            });
+
+            $("#mainModal").on('hide.bs.modal', function () {
+                location.reload();
+            });
+
+        });
+
+        sendingForm.submit(function (ev) {
+            ev.preventDefault();
+            $.ajax({
+                type: sendingForm.attr('method'),
+                url: sendingForm.attr('action'),
+                data: sendingForm.serialize(),
+                beforeSend: () => {
+                    btnsubmit.prop('disabled', true);
+                    if (chatPickEmployees.selected.length) {
+                        chatPickEmployees.selected.forEach((item) => {
+                            $("<input>").attr({ name: "employeesId", type: "hidden", value: item }).appendTo(sendingForm);
+                        });
+                    }
+                },
+                success: function (responce) {
+                    $('#mainModal').html(responce);
+                },
+                complete: () => {
+                    btnsubmit.prop('disabled', false);
+                }
+            });
+        });
+
+        //
+        if (speechToText.length) {
+            // Speech To Text
+            var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+            if (SpeechRecognition !== undefined && SpeechRecognition !== null) {
+                var recognition = new SpeechRecognition(),
+                    listening = false;
+                speechToText.on('click', function () {
+                        var $this = $(this);
+                        recognition.onspeechstart = function () {
+                            listening = true;
+                        };
+                        if (listening === false) {
+                            recognition.start();
+                        }
+                        recognition.onerror = function (event) {
+                            listening = false;
+                        };
+                        recognition.onresult = function (event) {
+                            $this.closest('.form-send-message').find('.message').val(event.results[0][0].transcript);
+                        };
+                        recognition.onspeechend = function (event) {
+                            listening = false;
+                            recognition.stop();
+                        };
+                });
+            }
+        }
+    </script>
+@*}*@

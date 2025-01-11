@@ -1,0 +1,283 @@
+﻿@model _103_ConfirmationEducationModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="EducationDocument" class="form-label">наименование и реквизиты документа об образовании и(или) о квалификации</label>
+                    <textarea type="text" asp-for="EducationDocument" class="form-control">
+
+                    </textarea>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label asp-for="EducationDocumentSeries" class="form-label">Серия</label>
+                    <input type="text" asp-for="EducationDocumentSeries" class="form-control">
+                </div>
+                <div class="col-6">
+                    <label asp-for="EducationDocumentNumber" class="form-label">Номер</label>
+                    <input type="text" asp-for="EducationDocumentNumber" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="EducationDocumentRegNumber" class="form-label">Регистр. Номер</label>
+                    <input type="text" asp-for="EducationDocumentRegNumber" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="NameOrganIssue" class="form-label">Наименование организации, выдавшей предоставленный к подтверждению документ, дата выдачи</label>
+                    <input type="text" asp-for="NameOrganIssue" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="Reason" class="form-label">Обращаюсь в связи с</label>
+                    <input type="text" asp-for="Reason" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="WhichConfirmed" class="form-label">что подтверждается</label>
+                    <input type="text" asp-for="WhichConfirmed" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Original">Оригинал документа об образовании и (или) о квалификации</label>
+                    <input asp-for="Original" type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Adress">Адрес отправки документа прошедший процедуру подтверждения</label>
+                    <input asp-for="Adress" type="text" class="form-control">
+                </div>
+            </div>
+            <h5 class="my-2">Приложенные документы</h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedDocumentList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Документ @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <input type="text" list="Docs" asp-for="AppliedDocumentList[i].Name" class="form-control">
+                                        <datalist id="Docs">
+                                            <option value="Документ удостоверяющий личность">Документ удостоверяющий личность</option>
+                                            <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                            <option value="Свидетельство о заключении брака">Свидетельство о заключении брака</option>
+                                            <option value="Свидетельство о расторжении брака">Свидетельство о расторжении брака</option>
+                                            <option value="Свидетельство об установлении отцовства">Свидетельство об установлении отцовства</option>
+                                            <option value="Расчётный счёт">Расчётный счёт</option>
+                                            <option value="Сберкнижка">Сберкнижка</option>
+                                            <option value="Трудовая книжка">Трудовая книжка</option>
+                                            <option value="Свидетельство о регистрации по месту жительства/пребывания">Свидетельство о регистрации по месту жительства/пребывания</option>
+                                            <option value="Удостоверение">Удостоверение</option>
+                                            <option value="Справка МСЭ">Справка МСЭ</option>
+                                            <option value="Ветеран труда РА">Ветеран труда РА</option>
+                                        </datalist>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="col-12">
+                                            <label asp-for="AppliedDocumentList[i].NumdberCopies" class="form-label">кол экз.</label>
+                                            <input type="number" asp-for="AppliedDocumentList[i].NumdberCopies" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="col-12">
+                                            <label asp-for="AppliedDocumentList[i].NumdberPages" class="form-label">кол стр.</label>
+                                            <input type="number" asp-for="AppliedDocumentList[i].NumdberPages" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+</div>
+<div id="originalBlock">
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Документ 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <input type="text" list="Docs" asp-for="AppliedDocumentList[0].Name" class="form-control">
+                        <datalist id="Docs">
+                            <option value="Документ удостоверяющий личность">Документ удостоверяющий личность</option>
+                            <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                            <option value="Свидетельство о заключении брака">Свидетельство о заключении брака</option>
+                            <option value="Свидетельство о расторжении брака">Свидетельство о расторжении брака</option>
+                            <option value="Свидетельство об установлении отцовства">Свидетельство об установлении отцовства</option>
+                            <option value="Расчётный счёт">Расчётный счёт</option>
+                            <option value="Сберкнижка">Сберкнижка</option>
+                            <option value="Трудовая книжка">Трудовая книжка</option>
+                            <option value="Свидетельство о регистрации по месту жительства/пребывания">Свидетельство о регистрации по месту жительства/пребывания</option>
+                            <option value="Удостоверение">Удостоверение</option>
+                            <option value="Справка МСЭ">Справка МСЭ</option>
+                            <option value="Ветеран труда РА">Ветеран труда РА</option>
+                        </datalist>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <div class="col-12">
+                            <label asp-for="AppliedDocumentList[0].NumdberCopies" class="form-label">кол экз.</label>
+                            <input type="number" asp-for="AppliedDocumentList[0].NumdberCopies" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="col-12">
+                            <label asp-for="AppliedDocumentList[0].NumdberPages" class="form-label">кол стр.</label>
+                            <input type="number" asp-for="AppliedDocumentList[0].NumdberPages" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.append($cloneBlock);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input").each(function () {
+                $(this).val("");
+            });
+            $block.find('select.select2-nosearch').each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity,
+                })
+            });
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

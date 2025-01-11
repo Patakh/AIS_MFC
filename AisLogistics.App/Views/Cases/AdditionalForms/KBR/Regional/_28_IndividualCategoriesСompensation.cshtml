@@ -1,0 +1,1055 @@
+﻿@model _28_IndividualCategoriesCompensationModel
+@{
+    IEnumerable<SelectListItem> PaymentHousing = new List<SelectListItem>
+    {
+        new ("содержание жилья", "содержание жилья"),
+        new ("наем жилья", "наем жилья"),
+        new ("содержание лифта", "содержание лифта"),
+        new ("содержание мусоропровода", "содержание мусоропровода"),
+        new ("Капитальный ремонт", "Капитальный ремонт")
+    };
+
+    IEnumerable<SelectListItem> Electric = new List<SelectListItem>
+    {
+        new ("электрическая плита (городское население)", "электрическая плита (городское население)"),
+        new ("электрическая плита (сельское население)", "наем жилья"),
+        new ("электроплиты", "содержание лифта"),
+        new ("содержание мусоропровода", "содержание мусоропровода"),
+        new ("электроэнергия ОДН", "Капитальный ремонт")
+    };
+
+    IEnumerable<SelectListItem> MainsGas = new List<SelectListItem>
+    {
+        new ("газовая плита", "газовая плита"),
+        new ("газовая колонка", "газовая колонка"),
+        new ("сжиженный газ", "сжиженный газ")
+    };
+
+    IEnumerable<SelectListItem> ColdWater = new List<SelectListItem>
+    {
+        new ("ванна/душ", "ванна/душ"),
+        new ("унитаз", "унитаз"),
+        new ("мойка/раковина", "мойка/раковина"),
+        new ("полив", "полив"),
+        new ("холодная вода ОДН", "холодная вода ОДН"),
+    };
+
+    IEnumerable<SelectListItem> WaterDisposal = new List<SelectListItem>
+    {
+        new ("централизованное", "содержание жилья"),
+        new ("дворовая канализация", "наем жилья"),
+        new ("Горячее водоснабжение", "Горячее водоснабжение")
+    };
+
+    IEnumerable<SelectListItem> CentralHeating = new List<SelectListItem>
+    {
+        new ("оплата сезонная", "оплата сезонная"),
+        new ("оплата круглогодичная", "оплата круглогодичная"),
+        new ("Отопление с использованием природного газа", "Отопление с использованием природного газа"),
+        new ("Отопление с использованием природного газа", "Отопление с использованием природного газа")
+    };
+
+
+    IEnumerable<SelectListItem> TKO = new List<SelectListItem>
+    {
+        new ("Вывоз ТКО", "Вывоз ТКО"),
+    };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="PaymentMethod">Способ выплаты</label>
+                    <select class="select2-nosearch" asp-for="PaymentMethod">
+                        <option value="Почтовое отделение">Почтовое отделение</option>
+                        <optgroup label="Кредитная организация">
+                            <option value="ПАО «Сбербанк России»">ПАО «Сбербанк России»</option>
+                            <option value="АО «Россельхозбанк»">АО «Россельхозбанк»</option>
+                            <option value="ВТБ (ПАО)">ВТБ (ПАО)</option>
+                            <option value="ФО «Альфа-банк»">ФО «Альфа-банк»</option>
+                            <option value="ФО «Тинькофф Банк»">ФО «Тинькофф Банк»</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="col-8" personalAccount>
+                    <label class="form-label" asp-for="PersonalAccount">Лицевой счет</label>
+                    <input type="text" asp-for="PersonalAccount" pattern="[0-9]{20,}" class="form-control">
+                </div>
+                <div class="col-8" postOffice>
+                    <label class="form-label" asp-for="PostOffice">почтовое отделение</label>
+                    <input type="text" asp-for="PostOffice" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Categories">Указать льготное основание</label>
+                    <input type="text" asp-for="Categories" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="AffiliationHousingStock">Принадлежность жилого фонда</label>
+                    <select class="select2-nosearch" asp-for="AffiliationHousingStock">
+                        <option value="частное">частное</option>
+                        <option value="государственное(муниципальное)">государственное(муниципальное)</option>
+                    </select> 
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="TypeHousingStock">Вид жилищного помещения</label>
+                    <select class="select2-nosearch" asp-for="TypeHousingStock">
+                        <option value="квартира">квартира</option>
+                        <option value="коммунальная квартира">коммунальная квартира</option>
+                        <option value="общежитие">общежитие</option>
+                        <option value="дом">дом</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="TotalArea">Общая площадь (кв, м)</label>
+                    <input type="number" asp-for="TotalArea" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="NumberRooms">количество комнат</label>
+                    <input type="number" asp-for="NumberRooms" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="NumberFloors">количество этажей в доме</label>
+                    <input type="number" asp-for="NumberFloors" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="NumberRegisteredPersons">количество зарегистрированных лиц</label>
+                    <input type="number" asp-for="NumberRegisteredPersons" class="form-control">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="YearConstruction">Год постройки</label>
+                    <select class="select2-nosearch" asp-for="YearConstruction">
+                        <option value="до 1999 г.">до 1999 г.</option>
+                        <option value="после 1999 г.">после 1999 г.</option>
+                    </select>
+                </div>
+            </div>
+            <h5 class="my-2"> Сведения о гражданах, зарегистрированных по месту жительства (пребывания) со мной</h5>
+            <div id="PersonRegisteredList" data-clone-list>
+                @for (var i = 0; i < Model.PersonRegisteredList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Гражданин @(i + 1)</h6>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="PersonRegisteredList[i].FIO">ФИО</label>
+                                        <input type="text" asp-for="PersonRegisteredList[i].FIO" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="PersonRegisteredList[i].RegistrationAddress">Адрес регистрации</label>
+                                        <input type="text" asp-for="PersonRegisteredList[i].RegistrationAddress" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="PersonRegisteredList[i].RegistrationMark">Отметка о постоянной (временной) регистрации</label>
+                                        <select class="select2-nosearch" asp-for="PersonRegisteredList[i].RegistrationMark">
+                                            <option value="постоянная">постоянная</option>
+                                            <option value="временная">временная</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="PersonRegisteredList[i].DegreeKinship">Степень родства</label>
+                                        <input type="text" asp-for="PersonRegisteredList[i].DegreeKinship" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="PersonRegisteredList[i].Note">Примечание</label>
+                                        <input type="text" asp-for="PersonRegisteredList[i].Note" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addPersonRegistered"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">Сведения о жилищных условиях</h5>
+            <br>
+            <h6 class="my-2">Оплата жилья</h6>
+            <div id="PaymentHousingList" data-clone-list>
+                <input type="hidden" asp-for="PaymentHousing.Type" value="Оплата жилья">
+                @for (var i = 0; i < Model.PaymentHousing.LandscapingList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Услуга @(i + 1)</h6>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3">
+                                    <div class="col-5">
+                                        <label asp-for="PaymentHousing.LandscapingList[i].Name" class="form-label">Наименование коммунальной услуги</label>
+                                        <select asp-for="PaymentHousing.LandscapingList[i].Name" asp-items="@PaymentHousing" class="form-select select2-nosearch"></select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label asp-for="PaymentHousing.LandscapingList[i].Provider" class="form-label">Поставщик услуг</label>
+                                        <input type="text" asp-for="PaymentHousing.LandscapingList[i].Provider" class="form-control">
+                                    </div>
+                                    <div class="col-3">
+                                        <label asp-for="PaymentHousing.LandscapingList[i].PersonalAccount" class="form-label">№ лицевого счета</label>
+                                        <input type="text" asp-for="PaymentHousing.LandscapingList[i].PersonalAccount" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="PaymentHousing.LandscapingList[i].AvailabilityMeteringDevice">Наличие прибора учета </label>
+                                        <select class="select2-nosearch" asp-for="PaymentHousing.LandscapingList[i].AvailabilityMeteringDevice">
+                                            <option value="да">да</option>
+                                            <option value="нет">нет</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="PaymentHousing.LandscapingList[i].HasArrears">Наличие (отсутствие) задолженности</label>
+                                        <select class="select2-nosearch" asp-for="PaymentHousing.LandscapingList[i].HasArrears">
+                                            <option value="да">да</option>
+                                            <option value="нет">нет</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addPaymentHousing"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Электроэнергия</h6>
+            <div id="ElectricList" data-clone-list>
+                <input type="hidden" asp-for="Electric.Type" value="Электроэнергия">
+                @for (var i = 0; i < Model.Electric.LandscapingList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Услуга @(i + 1)</h6>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3">
+                                    <div class="col-5">
+                                        <label asp-for="Electric.LandscapingList[i].Name" class="form-label">Наименование коммунальной услуги</label>
+                                        <select asp-for="Electric.LandscapingList[i].Name" asp-items="@Electric" class="form-select select2-nosearch"></select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label asp-for="Electric.LandscapingList[i].Provider" class="form-label">Поставщик услуг</label>
+                                        <input type="text" asp-for="Electric.LandscapingList[i].Provider" class="form-control">
+                                    </div>
+                                    <div class="col-3">
+                                        <label asp-for="Electric.LandscapingList[i].PersonalAccount" class="form-label">№ лицевого счета</label>
+                                        <input type="text" asp-for="Electric.LandscapingList[i].PersonalAccount" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="Electric.LandscapingList[i].AvailabilityMeteringDevice">Наличие прибора учета </label>
+                                        <select class="select2-nosearch" asp-for="Electric.LandscapingList[i].AvailabilityMeteringDevice">
+                                            <option value="да">да</option>
+                                            <option value="нет">нет</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="Electric.LandscapingList[i].HasArrears">Наличие (отсутствие) задолженности</label>
+                                        <select class="select2-nosearch" asp-for="Electric.LandscapingList[i].HasArrears">
+                                            <option value="да">да</option>
+                                            <option value="нет">нет</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addElectric"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Сетевой газ</h6>
+            <div id="MainsGasList" data-clone-list>
+                <input type="hidden" asp-for="MainsGas.Type" value="Сетевой газ">
+                @for (var i = 0; i < Model.MainsGas.LandscapingList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Услуга @(i + 1)</h6>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3">
+                                    <div class="col-5">
+                                        <label asp-for="MainsGas.LandscapingList[i].Name" class="form-label">Наименование коммунальной услуги</label>
+                                        <select asp-for="MainsGas.LandscapingList[i].Name" asp-items="@MainsGas" class="form-select select2-nosearch"></select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label asp-for="MainsGas.LandscapingList[i].Provider" class="form-label">Поставщик услуг</label>
+                                        <input type="text" asp-for="MainsGas.LandscapingList[i].Provider" class="form-control">
+                                    </div>
+                                    <div class="col-3">
+                                        <label asp-for="MainsGas.LandscapingList[i].PersonalAccount" class="form-label">№ лицевого счета</label>
+                                        <input type="text" asp-for="MainsGas.LandscapingList[i].PersonalAccount" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="MainsGas.LandscapingList[i].AvailabilityMeteringDevice">Наличие прибора учета </label>
+                                        <select class="select2-nosearch" asp-for="MainsGas.LandscapingList[i].AvailabilityMeteringDevice">
+                                            <option value="да">да</option>
+                                            <option value="нет">нет</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="MainsGas.LandscapingList[i].HasArrears">Наличие (отсутствие) задолженности</label>
+                                        <select class="select2-nosearch" asp-for="MainsGas.LandscapingList[i].HasArrears">
+                                            <option value="да">да</option>
+                                            <option value="нет">нет</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addMainsGas"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Холодное водоснабжение</h6>
+            <div id="ColdWaterList" data-clone-list>
+                <input type="hidden" asp-for="ColdWater.Type" value="Холодное водоснабжение">
+                @for (var i = 0; i < Model.ColdWater.LandscapingList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Услуга @(i + 1)</h6>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3">
+                                    <div class="col-5">
+                                        <label asp-for="ColdWater.LandscapingList[i].Name" class="form-label">Наименование коммунальной услуги</label>
+                                        <select asp-for="ColdWater.LandscapingList[i].Name" asp-items="@ColdWater" class="form-select select2-nosearch"></select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label asp-for="ColdWater.LandscapingList[i].Provider" class="form-label">Поставщик услуг</label>
+                                        <input type="text" asp-for="ColdWater.LandscapingList[i].Provider" class="form-control">
+                                    </div>
+                                    <div class="col-3">
+                                        <label asp-for="ColdWater.LandscapingList[i].PersonalAccount" class="form-label">№ лицевого счета</label>
+                                        <input type="text" asp-for="ColdWater.LandscapingList[i].PersonalAccount" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="ColdWater.LandscapingList[i].AvailabilityMeteringDevice">Наличие прибора учета </label>
+                                        <select class="select2-nosearch" asp-for="ColdWater.LandscapingList[i].AvailabilityMeteringDevice">
+                                            <option value="да">да</option>
+                                            <option value="нет">нет</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="ColdWater.LandscapingList[i].HasArrears">Наличие (отсутствие) задолженности</label>
+                                        <select class="select2-nosearch" asp-for="ColdWater.LandscapingList[i].HasArrears">
+                                            <option value="да">да</option>
+                                            <option value="нет">нет</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addColdWater"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Водоотведение</h6>
+            <div id="WaterDisposalList" data-clone-list>
+                <input type="hidden" asp-for="WaterDisposal.Type" value="Водоотведение">
+                @for (var i = 0; i < Model.WaterDisposal.LandscapingList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Услуга @(i + 1)</h6>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3">
+                                    <div class="col-5">
+                                        <label asp-for="WaterDisposal.LandscapingList[i].Name" class="form-label">Наименование коммунальной услуги</label>
+                                        <select asp-for="WaterDisposal.LandscapingList[i].Name" asp-items="@WaterDisposal" class="form-select select2-nosearch"></select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label asp-for="WaterDisposal.LandscapingList[i].Provider" class="form-label">Поставщик услуг</label>
+                                        <input type="text" asp-for="WaterDisposal.LandscapingList[i].Provider" class="form-control">
+                                    </div>
+                                    <div class="col-3">
+                                        <label asp-for="WaterDisposal.LandscapingList[i].PersonalAccount" class="form-label">№ лицевого счета</label>
+                                        <input type="text" asp-for="WaterDisposal.LandscapingList[i].PersonalAccount" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="WaterDisposal.LandscapingList[i].AvailabilityMeteringDevice">Наличие прибора учета </label>
+                                        <select class="select2-nosearch" asp-for="WaterDisposal.LandscapingList[i].AvailabilityMeteringDevice">
+                                            <option value="да">да</option>
+                                            <option value="нет">нет</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="WaterDisposal.LandscapingList[i].HasArrears">Наличие (отсутствие) задолженности</label>
+                                        <select class="select2-nosearch" asp-for="WaterDisposal.LandscapingList[i].HasArrears">
+                                            <option value="да">да</option>
+                                            <option value="нет">нет</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addWaterDisposal"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Централизованное отопление</h6>
+            <div id="CentralHeatingList" data-clone-list>
+                <input type="hidden" asp-for="CentralHeating.Type" value="Централизованное отопление:">
+                @for (var i = 0; i < Model.CentralHeating.LandscapingList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Услуга @(i + 1)</h6>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3">
+                                    <div class="col-5">
+                                        <label asp-for="CentralHeating.LandscapingList[i].Name" class="form-label">Наименование коммунальной услуги</label>
+                                        <select asp-for="CentralHeating.LandscapingList[i].Name" asp-items="@CentralHeating" class="form-select select2-nosearch"></select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label asp-for="CentralHeating.LandscapingList[i].Provider" class="form-label">Поставщик услуг</label>
+                                        <input type="text" asp-for="CentralHeating.LandscapingList[i].Provider" class="form-control">
+                                    </div>
+                                    <div class="col-3">
+                                        <label asp-for="CentralHeating.LandscapingList[i].PersonalAccount" class="form-label">№ лицевого счета</label>
+                                        <input type="text" asp-for="CentralHeating.LandscapingList[i].PersonalAccount" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="CentralHeating.LandscapingList[i].AvailabilityMeteringDevice">Наличие прибора учета </label>
+                                        <select class="select2-nosearch" asp-for="CentralHeating.LandscapingList[i].AvailabilityMeteringDevice">
+                                            <option value="да">да</option>
+                                            <option value="нет">нет</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="CentralHeating.LandscapingList[i].HasArrears">Наличие (отсутствие) задолженности</label>
+                                        <select class="select2-nosearch" asp-for="CentralHeating.LandscapingList[i].HasArrears">
+                                            <option value="да">да</option>
+                                            <option value="нет">нет</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addCentralHeating"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Обращение с ТКО</h6>
+            <div id="TKOList" data-clone-list>
+                <input type="hidden" asp-for="TKO.Type" value="Централизованное отопление:">
+                @for (var i = 0; i < Model.TKO.LandscapingList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Услуга @(i + 1)</h6>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3">
+                                    <div class="col-5">
+                                        <label asp-for="TKO.LandscapingList[i].Name" class="form-label">Наименование коммунальной услуги</label>
+                                        <select asp-for="TKO.LandscapingList[i].Name" asp-items="@TKO" class="form-select select2-nosearch"></select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label asp-for="TKO.LandscapingList[i].Provider" class="form-label">Поставщик услуг</label>
+                                        <input type="text" asp-for="TKO.LandscapingList[i].Provider" class="form-control">
+                                    </div>
+                                    <div class="col-3">
+                                        <label asp-for="TKO.LandscapingList[i].PersonalAccount" class="form-label">№ лицевого счета</label>
+                                        <input type="text" asp-for="TKO.LandscapingList[i].PersonalAccount" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="TKO.LandscapingList[i].AvailabilityMeteringDevice">Наличие прибора учета </label>
+                                        <select class="select2-nosearch" asp-for="TKO.LandscapingList[i].AvailabilityMeteringDevice">
+                                            <option value="да">да</option>
+                                            <option value="нет">нет</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="TKO.LandscapingList[i].HasArrears">Наличие (отсутствие) задолженности</label>
+                                        <select class="select2-nosearch" asp-for="TKO.LandscapingList[i].HasArrears">
+                                            <option value="да">да</option>
+                                            <option value="нет">нет</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addTKO"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+
+        </div>
+    </div>
+</div>
+<div id="originalBlock">
+    <div class="g-3" id="PersonRegistered" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Гражданин 0</h6>
+        <div class="row mb-3 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="PersonRegisteredList[0].FIO">ФИО</label>
+                        <input type="text" asp-for="PersonRegisteredList[0].FIO" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="PersonRegisteredList[0].RegistrationAddress">Адрес регистрации</label>
+                        <input type="text" asp-for="PersonRegisteredList[0].RegistrationAddress" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="PersonRegisteredList[0].RegistrationMark">Отметка о постоянной (временной) регистрации</label>
+                        <select class="select2-nosearch" asp-for="PersonRegisteredList[0].RegistrationMark">
+                            <option value="постоянная">постоянная</option>
+                            <option value="временная">временная</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="PersonRegisteredList[0].DegreeKinship">Степень родства</label>
+                        <input type="text" asp-for="PersonRegisteredList[0].DegreeKinship" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="PersonRegisteredList[0].Note">Примечание</label>
+                        <input type="text" asp-for="PersonRegisteredList[0].Note" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="g-3" id="PaymentHousing" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Услуга 0</h6>
+        <div class="row mb-3 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3">
+                    <div class="col-5">
+                        <label asp-for="PaymentHousing.LandscapingList[0].Name" class="form-label">Наименование коммунальной услуги</label>
+                        <select asp-for="PaymentHousing.LandscapingList[0].Name" asp-items="@PaymentHousing" class="form-select select2-nosearch"></select>
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="PaymentHousing.LandscapingList[0].Provider" class="form-label">Поставщик услуг</label>
+                        <input type="text" asp-for="PaymentHousing.LandscapingList[0].Provider" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="PaymentHousing.LandscapingList[0].PersonalAccount" class="form-label">№ лицевого счета</label>
+                        <input type="text" asp-for="PaymentHousing.LandscapingList[0].PersonalAccount" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label" asp-for="PaymentHousing.LandscapingList[0].AvailabilityMeteringDevice">Наличие прибора учета </label>
+                        <select class="select2-nosearch" asp-for="PaymentHousing.LandscapingList[0].AvailabilityMeteringDevice">
+                            <option value="да">да</option>
+                            <option value="нет">нет</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="PaymentHousing.LandscapingList[0].HasArrears">Наличие (отсутствие) задолженности</label>
+                        <select class="select2-nosearch" asp-for="PaymentHousing.LandscapingList[0].HasArrears">
+                            <option value="да">да</option>
+                            <option value="нет">нет</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="g-3" id="Electric" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Услуга 0</h6>
+        <div class="row mb-3 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3">
+                    <div class="col-5">
+                        <label asp-for="Electric.LandscapingList[0].Name" class="form-label">Наименование коммунальной услуги</label>
+                        <select asp-for="Electric.LandscapingList[0].Name" asp-items="@Electric" class="form-select select2-nosearch"></select>
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="Electric.LandscapingList[0].Provider" class="form-label">Поставщик услуг</label>
+                        <input type="text" asp-for="Electric.LandscapingList[0].Provider" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="Electric.LandscapingList[0].PersonalAccount" class="form-label">№ лицевого счета</label>
+                        <input type="text" asp-for="Electric.LandscapingList[0].PersonalAccount" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label" asp-for="Electric.LandscapingList[0].AvailabilityMeteringDevice">Наличие прибора учета </label>
+                        <select class="select2-nosearch" asp-for="Electric.LandscapingList[0].AvailabilityMeteringDevice">
+                            <option value="да">да</option>
+                            <option value="нет">нет</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="Electric.LandscapingList[0].HasArrears">Наличие (отсутствие) задолженности</label>
+                        <select class="select2-nosearch" asp-for="Electric.LandscapingList[0].HasArrears">
+                            <option value="да">да</option>
+                            <option value="нет">нет</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="g-3" id="MainsGas" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Услуга 0</h6>
+        <div class="row mb-3 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3">
+                    <div class="col-5">
+                        <label asp-for="MainsGas.LandscapingList[0].Name" class="form-label">Наименование коммунальной услуги</label>
+                        <select asp-for="MainsGas.LandscapingList[0].Name" asp-items="@MainsGas" class="form-select select2-nosearch"></select>
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="MainsGas.LandscapingList[0].Provider" class="form-label">Поставщик услуг</label>
+                        <input type="text" asp-for="MainsGas.LandscapingList[0].Provider" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="MainsGas.LandscapingList[0].PersonalAccount" class="form-label">№ лицевого счета</label>
+                        <input type="text" asp-for="MainsGas.LandscapingList[0].PersonalAccount" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label" asp-for="MainsGas.LandscapingList[0].AvailabilityMeteringDevice">Наличие прибора учета </label>
+                        <select class="select2-nosearch" asp-for="MainsGas.LandscapingList[0].AvailabilityMeteringDevice">
+                            <option value="да">да</option>
+                            <option value="нет">нет</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="MainsGas.LandscapingList[0].HasArrears">Наличие (отсутствие) задолженности</label>
+                        <select class="select2-nosearch" asp-for="MainsGas.LandscapingList[0].HasArrears">
+                            <option value="да">да</option>
+                            <option value="нет">нет</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="g-3" id="ColdWater" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Услуга 0</h6>
+        <div class="row mb-3 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3">
+                    <div class="col-5">
+                        <label asp-for="ColdWater.LandscapingList[0].Name" class="form-label">Наименование коммунальной услуги</label>
+                        <select asp-for="ColdWater.LandscapingList[0].Name" asp-items="@ColdWater" class="form-select select2-nosearch"></select>
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="ColdWater.LandscapingList[0].Provider" class="form-label">Поставщик услуг</label>
+                        <input type="text" asp-for="ColdWater.LandscapingList[0].Provider" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="ColdWater.LandscapingList[0].PersonalAccount" class="form-label">№ лицевого счета</label>
+                        <input type="text" asp-for="ColdWater.LandscapingList[0].PersonalAccount" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label" asp-for="ColdWater.LandscapingList[0].AvailabilityMeteringDevice">Наличие прибора учета </label>
+                        <select class="select2-nosearch" asp-for="ColdWater.LandscapingList[0].AvailabilityMeteringDevice">
+                            <option value="да">да</option>
+                            <option value="нет">нет</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="ColdWater.LandscapingList[0].HasArrears">Наличие (отсутствие) задолженности</label>
+                        <select class="select2-nosearch" asp-for="ColdWater.LandscapingList[0].HasArrears">
+                            <option value="да">да</option>
+                            <option value="нет">нет</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="g-3" id="WaterDisposal" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Услуга 0</h6>
+        <div class="row mb-3 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3">
+                    <div class="col-5">
+                        <label asp-for="WaterDisposal.LandscapingList[0].Name" class="form-label">Наименование коммунальной услуги</label>
+                        <select asp-for="WaterDisposal.LandscapingList[0].Name" asp-items="@WaterDisposal" class="form-select select2-nosearch"></select>
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="WaterDisposal.LandscapingList[0].Provider" class="form-label">Поставщик услуг</label>
+                        <input type="text" asp-for="WaterDisposal.LandscapingList[0].Provider" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="WaterDisposal.LandscapingList[0].PersonalAccount" class="form-label">№ лицевого счета</label>
+                        <input type="text" asp-for="WaterDisposal.LandscapingList[0].PersonalAccount" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label" asp-for="WaterDisposal.LandscapingList[0].AvailabilityMeteringDevice">Наличие прибора учета </label>
+                        <select class="select2-nosearch" asp-for="WaterDisposal.LandscapingList[0].AvailabilityMeteringDevice">
+                            <option value="да">да</option>
+                            <option value="нет">нет</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="WaterDisposal.LandscapingList[0].HasArrears">Наличие (отсутствие) задолженности</label>
+                        <select class="select2-nosearch" asp-for="WaterDisposal.LandscapingList[0].HasArrears">
+                            <option value="да">да</option>
+                            <option value="нет">нет</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="g-3" id="CentralHeating" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Услуга 0</h6>
+        <div class="row mb-3 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3">
+                    <div class="col-5">
+                        <label asp-for="CentralHeating.LandscapingList[0].Name" class="form-label">Наименование коммунальной услуги</label>
+                        <select asp-for="CentralHeating.LandscapingList[0].Name" asp-items="@CentralHeating" class="form-select select2-nosearch"></select>
+
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="CentralHeating.LandscapingList[0].Provider" class="form-label">Поставщик услуг</label>
+                        <input type="text" asp-for="CentralHeating.LandscapingList[0].Provider" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="CentralHeating.LandscapingList[0].PersonalAccount" class="form-label">№ лицевого счета</label>
+                        <input type="text" asp-for="CentralHeating.LandscapingList[0].PersonalAccount" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label" asp-for="CentralHeating.LandscapingList[0].AvailabilityMeteringDevice">Наличие прибора учета </label>
+                        <select class="select2-nosearch" asp-for="CentralHeating.LandscapingList[0].AvailabilityMeteringDevice">
+                            <option value="да">да</option>
+                            <option value="нет">нет</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="CentralHeating.LandscapingList[0].HasArrears">Наличие (отсутствие) задолженности</label>
+                        <select class="select2-nosearch" asp-for="CentralHeating.LandscapingList[0].HasArrears">
+                            <option value="да">да</option>
+                            <option value="нет">нет</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="g-3" id="TKO" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Услуга 0</h6>
+        <div class="row mb-3 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3">
+                    <div class="col-5">
+                        <label asp-for="TKO.LandscapingList[0].Name" class="form-label">Наименование коммунальной услуги</label>
+                        <select asp-for="TKO.LandscapingList[0].Name" asp-items="@TKO" class="form-select select2-nosearch"></select>
+
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="TKO.LandscapingList[0].Provider" class="form-label">Поставщик услуг</label>
+                        <input type="text" asp-for="TKO.LandscapingList[0].Provider" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="TKO.LandscapingList[0].PersonalAccount" class="form-label">№ лицевого счета</label>
+                        <input type="text" asp-for="TKO.LandscapingList[0].PersonalAccount" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label" asp-for="TKO.LandscapingList[0].AvailabilityMeteringDevice">Наличие прибора учета </label>
+                        <select class="select2-nosearch" asp-for="TKO.LandscapingList[0].AvailabilityMeteringDevice">
+                            <option value="да">да</option>
+                            <option value="нет">нет</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="TKO.LandscapingList[0].HasArrears">Наличие (отсутствие) задолженности</label>
+                        <select class="select2-nosearch" asp-for="TKO.LandscapingList[0].HasArrears">
+                            <option value="да">да</option>
+                            <option value="нет">нет</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+
+        });
+
+        additionalForm.find('#PaymentMethod').on('change', function () {
+            switch ($(this).val()) {
+                case 'Почтовое отделение':
+                    visibilityBlock(additionalForm.find('[personalAccount]'), true, true);
+                    visibilityBlock(additionalForm.find('[postOffice]'), false, false);
+                    break;
+                default:
+                    visibilityBlock(additionalForm.find('[personalAccount]'), false, false);
+                    visibilityBlock(additionalForm.find('[postOffice]'), true, true);
+                    break;
+            }
+        });
+
+        if (document.getElementById('PaymentMethod').value)
+            additionalForm.find('#PaymentMethod').val(document.getElementById('PaymentMethod').value).trigger('change');
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+        additionalForm.find('#PersonalAccount').inputmask("9{20}", options);
+
+        additionalForm.find('#addPersonRegistered').on('click', () => addForm('PersonRegisteredList', 'PersonRegistered'));
+
+        additionalForm.find('#addPaymentHousing').on('click', () => addForm('PaymentHousingList', 'PaymentHousing'));
+        additionalForm.find('#addElectric').on('click', () => addForm('ElectricList', 'Electric'));
+        additionalForm.find('#addColdWater').on('click', () => addForm('ColdWaterList', 'ColdWater'));
+        additionalForm.find('#addMainsGas').on('click', () => addForm('MainsGasList', 'MainsGas'));
+        additionalForm.find('#addWaterDisposal').on('click', () => addForm('WaterDisposalList', 'WaterDisposal'));
+        additionalForm.find('#addCentralHeating').on('click', () => addForm('CentralHeatingList', 'CentralHeating'));
+        additionalForm.find('#addTKO').on('click', () => addForm('TKOList', 'TKO'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.append($cloneBlock);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input").each(function () {
+                $(this).val("");
+            });
+            $block.find('select.select2-nosearch').each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity,
+                })
+            });
+        }
+    });
+
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

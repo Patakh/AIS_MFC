@@ -1,0 +1,123 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.EmployeeJobModelDto
+@{
+    DateTime maxDate = (DateTime)ViewBag.MaxDate;
+}
+
+<form asp-controller="Reference" asp-action="EmployeeJobSave" id="sendingForm" method="post" role="form">
+    <div class="form-body pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.SEmployeesId)
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SOfficesId">Офис</label>
+                    <select asp-for="SOfficesId" asp-items="@ViewBag.Offices" class="form-control">
+                        <option disabled selected value="">Не задано</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SEmployeesJobPositionId">Должность</label>
+                    <select asp-for="SEmployeesJobPositionId" asp-items="@ViewBag.Jobs" class="form-control">
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeeIntensity">Интенсивность</label>
+                    <input type="text" min="0" asp-for="EmployeeIntensity" class="form-control" placeholder="Интенсивность">
+                </div>
+
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeeRate">Ставка</label>
+                    <input type="text" min="0" asp-for="EmployeeRate" class="form-control" placeholder="Ставка">
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="сol-12 mb-3">
+                    <label class="form-label" asp-for="DateStart">Дата начала</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input type="text" asp-for="DateStart" value="@maxDate.ToString("dd.MM.yyyy")" class="form-control" placeholder="ДД.ММ.ГГГГ">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    $(function(){
+        $('#sendingForm select').select2({dropdownParent: $('#mainModal')});
+
+        var $dateinput = $('#DateStart');
+        $dateinput.datepicker({
+            language: "ru",
+            autoclose: true,
+            format: 'dd.mm.yyyy',
+            startDate: '-0d',
+        });
+        $dateinput.inputmask("datetime", { inputFormat: "dd.mm.yyyy", "clearIncomplete": true, showMaskOnHover: false, insertmode: true });
+
+        var numericValidator = {
+            validators: {
+                numeric: {
+                    message: 'Укажите число',
+                    thousandsSeparator: '',
+                    decimalSeparator: '@Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator',
+                },
+            },
+        };
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    SOfficesId: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            },
+                        }
+                    },
+                    SEmployeesJobPositionId: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            },
+                        }
+                    },
+                    EmployeeIntensity: numericValidator,
+                    EmployeeRate: numericValidator,
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }) .on('core.form.valid', function() {
+            var $form = $("#sendingForm");
+            $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $table.DataTable().ajax.reload(null, false);
+                        $tableJobs.DataTable().ajax.reload(null, false);
+                        $form.spinnerBtn("stop");
+                        $("#mainModal").modal('hide');
+                    }
+                });
+            return false;
+        });
+    });
+</script>

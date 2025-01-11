@@ -1,0 +1,150 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Municipal._1_3_Model
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">Заявитель</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Fio">Ф.И.О.</label>
+                    <input type="text" asp-for="Fio" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ResidenceAddress">Адрес места жительства</label>
+                    <input type="text" asp-for="ResidenceAddress" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FactAddress">Фактический адрес проживания</label>
+                    <input type="text" asp-for="FactAddress" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="Phone">Контактные телефоны</label>
+                    <input type="text" asp-for="Phone" class="form-control">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="Email">E-mail</label>
+                    <input type="text" asp-for="Email" class="form-control">
+                </div>
+            </div>
+            <br/>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FioChild">Ф.И.О. ребенка </label>
+                    <input type="text" asp-for="FioChild" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="DateChild">Дата рождения </label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DateChild" type="text"
+                         class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Date_Age">
+                        год распределения
+                    </label>
+                    <input type="number" asp-for="Date_Age" value="@DateTime.Now.Year" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="NumberKindergarten">
+                        Номер детского сада
+                    </label>
+                    <input type="text" asp-for="NumberKindergarten" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="SpecifyReason"> причина отказа </label>
+                    <input type="text" asp-for="SpecifyReason" class="form-control">
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+<script>
+    var additionalForm = $('#additional-data-content');
+      var btnNext = $('.btn-next');
+         btnNext.on('click', function appContent() {
+                    additionalForm.find('#Fio').val($("#customer_LastName").val()+' '+$("#customer_FirstName").val()+' '+$("#customer_SecondName").val());
+                    additionalForm.find('#FactAddress').val($("#customer_CustomerAddressResidence").val());
+                    additionalForm.find('#ResidenceAddress').val($("#customer_CustomerAddress").val());
+                    additionalForm.find('#Email').val($("#customer_CustomerEmail").val());
+                    additionalForm.find('#Phone').val($("#customer_CustomerPhone1").val());
+                    /*applicant.birthDate.val($("#customer_DocumentBirthDate").val());
+                    applicant.phone.val($("#customer_CustomerPhone1").val());
+                    applicant.SNILS.val($("#customer_CustomerSnils").val());
+                    applicant.docSeries.val($("#customer_DocumentSerial").val());
+                    applicant.docNumber.val($("#customer_DocumentNumber").val());
+                    
+                    applicant.docIssueDate.val($("#customer_DocumentIssueDate").val());
+                    applicant.docIssuer.val($("#customer_DocumentIssueBody").val());
+                    applicant.residenceAddress.val($("#customer_CustomerAddressResidence").val());
+                    applicant.birthAddress.val($("#customer_DocumentBirthPlace").val());*/
+                });
+    $(function() {
+
+        additionalForm.find('[data-disabled]').each(function() {
+            visibilityBlock($(this), true, true);
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('[name$="Email"]').inputmask("email", options);
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function() {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function() {
+                $(this).select2({
+                });
+            });
+        }
+
+    });
+
+    
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+                </script>
+

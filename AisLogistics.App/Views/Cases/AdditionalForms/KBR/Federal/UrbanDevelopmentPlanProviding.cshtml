@@ -1,0 +1,76 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.KBR.Federal.UrbanDevelopmentPlanProvidingModel
+@{
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="LandPlotAddress" class="form-label">
+                        Прошу  выдать градостроительный план земельного участка, расположенного по адресу
+                    </label>
+                    <input asp-for="LandPlotAddress" class="form-control" type="text" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="LandPlotLawType" class="form-label">
+                        Вид права, на котором используется земельный участок
+                    </label>
+                    <input asp-for="LandPlotLawType" class="form-control" type="text" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="DocumentRequisites" class="form-label">
+                        реквизиты документа, удостоверяющего право, на котором заявитель
+                        использует земельный участок
+                    </label>
+                    <input asp-for="DocumentRequisites" class="form-control" type="text" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="LandPlotSquare" class="form-label">Площадь земельного участка</label>
+                    <input asp-for="LandPlotSquare" class="form-control" type="number" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="LandPlotCadastralNumber" class="form-label">Кадастровый номер земельного участка</label>
+                    <input asp-for="LandPlotCadastralNumber" class="form-control" type="text" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <h5 class="my-2">
+                        Результат предоставления муниципальной услуги прошу:
+                    </h5>
+                    <div class="form-check">
+                        <input asp-for="ResultProvidingTypeId" id="ResultProvidingTypeId1" class="form-check-input" type="radio" value="1">
+                        <label for="ResultProvidingTypeId1" class="form-check-label">вручить лично</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="ResultProvidingTypeId" id="ResultProvidingTypeId2" class="form-check-input" type="radio" value="2">
+                        <label for="ResultProvidingTypeId2" class="form-check-label">
+                            направить по месту фактического проживания (месту нахождения) в форме документа на бумажном носителе
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () {
+
+    })
+</script>

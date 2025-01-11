@@ -1,0 +1,711 @@
+﻿@using SmevRouter
+@using Sentry
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new FnsMfcUflRequestData()
+            {
+                Fio = new(),
+                AddressRf = new FnsMfcUflAddress
+                {
+                    Area = new FnsMfcUflAddressElement(),
+                    Building = new FnsMfcUflAddressElement(),
+                    City = new FnsMfcUflAddressElement(),
+                    Flat = new FnsMfcUflAddressElement(),
+                    House = new FnsMfcUflAddressElement(),
+                    Settlement = new FnsMfcUflAddressElement(),
+                    Street = new FnsMfcUflAddressElement(),
+                    PlanningStructureElement = new FnsMfcUflAddressElement()
+                },
+                IdentityDocument = new FnsMfcUflIdentityDocument(),
+                DocRegRf = new FnsMfcUflDocument()
+            };
+}
+<style>
+    #smev-data-form-content .accordion-button {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content li.active {
+        background-color: #e5edfc !important;
+        color: black !important;
+    }
+
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content ul.address-list {
+        display: none;
+        width: 100%;
+        z-index: 1000;
+        position: absolute;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        background-clip: padding-box;
+    }
+
+        #smev-data-form-content ul.address-list li {
+            padding: 6px;
+        }
+
+            #smev-data-form-content ul.address-list li:hover {
+                color: white;
+                background-color: #5a8dee;
+                cursor: pointer
+            }
+
+    #smev-data-form-content .form-control {
+        background-color: #fff !important;
+    }
+</style>
+
+<div class="container m-0 p-0" id="smev_request">
+    <div class="row justify-content-center">
+        <div class="col-8" data-person>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="@request.FnsDepartmentId">Отделение ФНС</label>
+                    <select class="select2-search required" asp-for="@request.FnsDepartmentId" data-dictionary-table>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Заявители</label>
+                    <select class="form-select select2-nosearch applicants">
+                        <option value="">Выберите заявителя</option>
+                        @for (int i = 0; i < applicants.Count; i++)
+                        {
+                            <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Fio.LastName">Фамилия</label>
+                    <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Fio.LastName" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Fio.FirstName">Имя</label>
+                    <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Fio.FirstName">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Fio.SecondName">Отчество</label>
+                    <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Fio.SecondName">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.InnFl">ИНН</label>
+                    <input type="text" class="form-control" placeholder="ИНН" asp-for="@request.InnFl">
+                </div>
+                <div class="alert alert-warning col-4" role="alert">
+                    ИНН не заполняется при первичной выдаче
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input type="text" class="form-control pickdate required" placeholder="Дата рождения"
+                               asp-for="@request.BirthDate" value="">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="d-block form-label mb-3">Пол</label>
+                    <div class="form-check form-check-inline mx-0 w-50">
+                        <input class="form-check-input" type="radio" asp-for="@request.Gender" id="smevModel_Gender1" value="Male" checked="checked">
+                        <label class="form-check-label" for="smevModel_Gender1"><i class="bi bi-gender-male fs-6"></i>Мужской</label>
+                    </div>
+                    <div class="form-check form-check-inline mx-0">
+                        <input class="form-check-input" type="radio" asp-for="@request.Gender" id="smevModel_Gender2" value="Female">
+                        <label class="form-check-label" for="smevModel_Gender2"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                    </div>
+                </div>
+                <div class="col-6 form-check form-switch mx-auto align-self-end">
+                    <input class="form-check-input" type="checkbox" asp-for="@request.CitizenshipSign" value="true" checked="checked">
+                    <label class="form-check-label fs-6 b-s-16" asp-for="@request.CitizenshipSign">Наличие гражданства</label>
+                </div>
+                <div class="col-4" id="Citizenship">
+                    <label class="form-label" asp-for="@request.OksmCode">Гражданство</label>
+                    <select class="select2-search" asp-for="@request.OksmCode"
+                            data-dictionary='{"dictionary":"OksmCodes"}'>
+                    </select>
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="@request.BirthPlace">Место рождения</label>
+                    <input type="text" class="form-control required" placeholder="Место рождения" asp-for="@request.BirthPlace">
+                </div>
+            </div>
+            <hr />
+            <div class="row justify-content-center">
+                <div class="col-12 mx-auto">
+                    <div class="fs-6 b-s-16">Документ, удостоверяющий личность</div>
+                </div>
+                <div class="col-10">
+                    <div class="row mb-1 align-items-end">
+                        <div class="col-12">
+                            <label class="form-label" asp-for="@request.IdentityDocument.TypeCode">Наименование</label>
+                            <select class="select2-search required" asp-for="@request.IdentityDocument.TypeCode"
+                                    onchange="docChange(this)" data-dictionary='{"dictionary":"FnsDocTypes"}'>
+                            </select>
+                        </div>
+                        <div class="col-8">
+                            <label class="form-label" asp-for="@request.IdentityDocument.SeriesNumber">Серия и номер</label>
+                            <input type="text" class="form-control required" placeholder="Серия и номер"
+                                   asp-for="@request.IdentityDocument.SeriesNumber">
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label" asp-for="@request.IdentityDocument.IssueDate">Дата выдачи</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text">
+                                    <i class="bi bi-calendar3"></i>
+                                </span>
+                                <input type="text" class="form-control pickdate required" placeholder="Дата выдачи"
+                                       asp-for="@request.IdentityDocument.IssueDate" value="">
+                            </div>
+                        </div>
+                        <div class="col-9">
+                            <label class="form-label" asp-for="@request.IdentityDocument.Issuer">Кем выдан</label>
+                            <input type="text" class="form-control required" placeholder="Кем выдан"
+                                   asp-for="@request.IdentityDocument.Issuer">
+                        </div>
+                        <div class="col-3" id="IssuerDivision">
+                            <label class="form-label" asp-for="@request.IdentityDocument.IssuerDivision">Код подразделения</label>
+                            <input type="text" class="form-control" placeholder="Код подразделения"
+                                   asp-for="@request.IdentityDocument.IssuerDivision">
+                        </div>
+                        <div class="col-6" id="ChildBirthActNumber" data-disabled>
+                            <label class="form-label" asp-for="@request.IdentityDocument.ChildBirthActNumber">Номер записи акта гражданского состояния о рождении ребенка</label>
+                            <input type="text" class="form-control required" placeholder="Номер записи акта гражданского состояния о рождении ребенка"
+                                   asp-for="@request.IdentityDocument.ChildBirthActNumber">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row justify-content-center">
+                <div class="col-12 mx-auto">
+                    <div class="fs-6 b-s-16">Адрес в Российской Федерации</div>
+                </div>
+                <div class="col-10">
+                    <div class="row mb-1 align-items-end">
+                        <div class="col-12">
+                            <label class="form-label" asp-for="@request.LivingSign">Признак адреса РФ</label>
+                            <select class="select2-nosearch" asp-for="@request.LivingSign">
+                                <option value="">отсутствует</option>
+                                <option selected value="true">место жительства</option>
+                                <option value="false">место пребывания (при отсутствии места жительства)</option>
+                            </select>
+                        </div>
+                        <div class="col-12" data-address>
+                            <div class="row align-items-end">
+                                <div class="col-12 mt-3">
+                                    <i class='bi bi-search'></i>
+                                    <label class="form-label" for="searchAddress">Поиск по ГАР</label>
+                                    <input type="text" class="form-control required" data-address-search data-not-clean>
+                                    <div class="input-group">
+                                        <ul class="list-group address-list">
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-12 d-none">
+                                    <label class="form-label" asp-for="@request.AddressRf.FiasId">ГАР код</label>
+                                    <input type="text" class="form-control" asp-for="@request.AddressRf.FiasId">
+                                </div>
+
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.AddressRf.PostIndex">Индекс</label>
+                                    <input type="text" class="form-control" asp-for="@request.AddressRf.PostIndex">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.AddressRf.RegionCode">Регион</label>
+                                    <select class="select2-search" asp-for="@request.AddressRf.RegionCode"
+                                            data-dictionary='{"dictionary":"FnsRegionCodes"}'>
+                                    </select>
+                                </div>
+
+                                <div class="col-1 pe-0">
+                                    <input type="text" class="form-control" readonly asp-for="@request.AddressRf.Area.ElementType" data-not-clean value="р-н">
+                                </div>
+
+                                <div class="col-5 ps-0">
+                                    <label class="form-label" asp-for="@request.AddressRf.Area.ElementName">Район</label>
+                                    <input type="text" class="form-control required" readonly asp-for="@request.AddressRf.Area.ElementName">
+                                </div>
+
+                                <div class="col-1 pe-0">
+                                    <input type="text" class="form-control" readonly asp-for="@request.AddressRf.City.ElementType" data-not-clean value="г.">
+                                </div>
+                                <div class="col-5 ps-0">
+                                    <label class="form-label" asp-for="@request.AddressRf.City.ElementName">Город</label>
+                                    <input type="text" class="form-control" readonly asp-for="@request.AddressRf.City.ElementName">
+                                </div>
+
+                                <div class="col-1 pe-0">
+                                    <input type="text" class="form-control" readonly asp-for="@request.AddressRf.Settlement.ElementType" data-not-clean value="нп">
+                                </div>
+                                <div class="col-5 ps-0">
+                                    <label class="form-label" asp-for="@request.AddressRf.Settlement.ElementName">Населенный пункт</label>
+                                    <input type="text" class="form-control" readonly asp-for="@request.AddressRf.Settlement.ElementName">
+                                </div>
+
+                                <div class="col-1 pe-0">
+                                    <input type="text" class="form-control" readonly asp-for="@request.AddressRf.PlanningStructureElement.ElementType" data-not-clean value="снт">
+                                </div>
+                                <div class="col-5 ps-0">
+                                    <label class="form-label" asp-for="@request.AddressRf.PlanningStructureElement.ElementName">Элемент планировочной структуры</label>
+                                    <input type="text" class="form-control" readonly asp-for="@request.AddressRf.PlanningStructureElement.ElementName">
+                                </div>
+
+                                <div class="col-1 pe-0">
+                                    <input type="text" class="form-control" readonly asp-for="@request.AddressRf.Street.ElementType" data-not-clean value="ул.">
+                                </div>
+                                <div class="col-5 ps-0">
+                                    <label class="form-label" asp-for="@request.AddressRf.Street.ElementName">Улица</label>
+                                    <input type="text" class="form-control" readonly asp-for="@request.AddressRf.Street.ElementName">
+                                </div>
+
+                                <div class="col-1 pe-0">
+                                    <input type="text" class="form-control" asp-for="@request.AddressRf.House.ElementType" readonly data-not-clean value="д.">
+                                </div>
+                                <div class="col-2 ps-0">
+                                    <label class="form-label" asp-for="@request.AddressRf.House.ElementName">Дом</label>
+                                    <input type="text" class="form-control" readonly asp-for="@request.AddressRf.House.ElementName">
+                                </div>
+
+                                <div class="col-1 pe-0">
+                                    <input type="text" class="form-control" asp-for="@request.AddressRf.Building.ElementType" readonly data-not-clean value="к.">
+                                </div>
+                                <div class="col-2 ps-0">
+                                    <label class="form-label" asp-for="@request.AddressRf.Building.ElementName">Корпус</label>
+                                    <input type="text" class="form-control" readonly asp-for="@request.AddressRf.Building.ElementName">
+                                </div>
+
+                                <div class="col-1 pe-0">
+                                    <input type="text" class="form-control" asp-for="@request.AddressRf.Flat.ElementType" readonly data-not-clean value="кв.">
+                                </div>
+                                <div class="col-2 ps-0">
+                                    <label class="form-label" asp-for="@request.AddressRf.Flat.ElementName">Квартира</label>
+                                    <input type="text" class="form-control" readonly asp-for="@request.AddressRf.Flat.ElementName">
+                                </div>
+                            </div>
+                            <div class="row mt-2 justify-content-center">
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="@request.DateReg">Дата регистрации по адресу</label>
+                                    <div class="input-group input-group-merge">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-calendar3"></i>
+                                        </span>
+                                        <input asp-for="@request.DateReg" type="text" class="form-control pickdate required">
+                                    </div>
+                                </div>
+
+                                <div class="col-4" data-disabled id="DateFinishRegBlock">
+                                    <label class="form-label" asp-for="@request.DateFinishReg">Дата окончания регистрации</label>
+                                    <div class="input-group input-group-merge">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-calendar3"></i>
+                                        </span>
+                                        <input asp-for="@request.DateFinishReg" type="text" class="form-control pickdate required">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row justify-content-center" id="DocRegRf" data-block>
+
+                <div class="col-12 form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="check_DocRegRf" onchange="checkboxChange(this)">
+                    <label class="form-check-label fs-5 b-s-16" for="check_DocRegRf">Сведения о документе, подтверждающем регистрацию по месту жительства в Российской Федерации (для иностранного гражданина или лица без гражданства; для гражданина России, представившего документ, удостоверяющий личность, отличный от паспорта гражданина Российской Федерации) или регистрацию по месту пребывания (при отсутствии места жительства)</label>
+                </div>
+
+                <div class="col-10" data-disabled>
+                    <div class="row mb-1 align-items-end">
+                        <div class="col-12">
+                            <label class="form-label" asp-for="@request.DocRegRf.TypeCode">Наименование</label>
+                            <select class="select2-search required" asp-for="@request.DocRegRf.TypeCode"
+                                    data-dictionary='{"dictionary":"FnsDocTypes"}'>
+                            </select>
+                        </div>
+                        <div class="col-8">
+                            <label class="form-label" asp-for="@request.DocRegRf.SeriesNumber">Серия и номер</label>
+                            <input type="text" class="form-control required" placeholder="Серия и номер"
+                                   asp-for="@request.DocRegRf.SeriesNumber">
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label" asp-for="@request.DocRegRf.IssueDate">Дата выдачи</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text">
+                                    <i class="bi bi-calendar3"></i>
+                                </span>
+                                <input type="text" class="form-control pickdate required" placeholder="Дата выдачи"
+                                       asp-for="@request.DocRegRf.IssueDate" value="">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" asp-for="@request.DocRegRf.Issuer">Кем выдан</label>
+                            <input type="text" class="form-control required" placeholder="Кем выдан"
+                                   asp-for="@request.DocRegRf.Issuer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var applicants = @Json.Serialize(applicants);
+    var regionCode = @Json.Serialize(Options.Value.Region);
+    var $formContent = $("#smev-data-form-content");
+    var smevForm = {
+        init: () => {
+            dateInit($formContent);
+
+            let options = { clearIncomplete: true, showMaskOnHover: false }
+
+            $formContent.find('[name$="InnFl"]').inputmask("9{12}", options);
+            // $formContent.find('[name$="ChildBirthActNumber"]').inputmask("9{21}", options);
+
+            select2Init($formContent);
+        }
+    };
+
+    $formContent.find('.required').each(function () {
+        addValidation($(this));
+    });
+
+    $formContent.find('[data-disabled]').each(function () {
+        visibilityBlock($(this), true, true);
+    });
+
+    $formContent.find('[name$="OksmCode"]').on('change', function () {
+        if ($(this).val() != '643') {
+            $formContent.find('#check_DocRegRf').attr('checked', true);
+            let tempEl = $formContent.find('#DocRegRf').children().eq(0).html();
+            $formContent.find('#DocRegRf').children().eq(0).empty();
+            $formContent.find('#DocRegRf').children().eq(0).prepend(tempEl);
+            visibilityBlock($formContent.find('#check_DocRegRf').parent().next(), false, false);
+        } else {
+            $formContent.find('#check_DocRegRf').attr('checked', false);
+            let tempEl = $formContent.find('#DocRegRf').children().eq(0).html();
+            $formContent.find('#DocRegRf').children().eq(0).empty();
+            $formContent.find('#DocRegRf').children().eq(0).prepend(tempEl);
+            visibilityBlock($formContent.find('#check_DocRegRf').parent().next(), true, true);
+        }
+    });
+
+    $formContent.find('[name$="CitizenshipSign"]').on('click', function () {
+        if ($(this).is(':checked')) {
+            $formContent.find('#check_DocRegRf').attr('checked', false);
+            let tempEl = $formContent.find('#DocRegRf').children().eq(0).html();
+            $formContent.find('#DocRegRf').children().eq(0).empty();
+            $formContent.find('#DocRegRf').children().eq(0).prepend(tempEl);
+            visibilityBlock($formContent.find('#check_DocRegRf').parent().next(), true, true);
+        }
+        if ($(this).is(':not(:checked)')) {
+            $formContent.find('#check_DocRegRf').attr('checked', true);
+            let tempEl = $formContent.find('#DocRegRf').children().eq(0).html();
+            $formContent.find('#DocRegRf').children().eq(0).empty();
+            $formContent.find('#DocRegRf').children().eq(0).prepend(tempEl);
+            visibilityBlock($formContent.find('#check_DocRegRf').parent().next(), false, false);
+        }
+    })
+
+    $.post(`/SmevFns/GetFnsDepartments`,
+        function (items) {
+            items.sort((prev, next) => {
+                if (next.code.startsWith(regionCode)) {
+                    return 1;
+                } else return -1;
+            });
+
+            items.forEach((item) => {
+                $('#request_FnsDepartmentId').append(new Option(`${item.name} (${item.address})`, item.code));
+            });
+        });
+
+    $('select.applicants').each(function () {
+        $(this).on('change',
+            function () {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]:not([data-not-clean])').each(function () {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$=".LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$=".FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$=".SecondName"]').val(applicants[id].secondName);
+                    $block.find('[name$="InnFl"]').val(applicants[id].inn);
+                    $block.find('[name$="BirthDate"]').val(applicants[id].birthDate ? new Date(applicants[id].birthDate).toLocaleDateString() : '');
+
+                    switch (applicants[id].gender) {
+                        case 1:
+                            $block.find('[id$="Gender1"]').prop('checked', true);
+                            break;
+                        case 2:
+                            $block.find('[id$="Gender2"]').prop('checked', true);
+                            break;
+                    }
+
+                    $block.find('[name$="BirthPlace"]').val(applicants[id].birthPlace);
+                    $block.find('[name$="IdentityDocument.TypeCode"]').val(applicants[id].documentTypeCode.padStart(2, '0')).trigger('change');
+
+                    // switch (applicants[id].documentTypeCode) {
+                    //     case '21':
+                    //         visibilityBlock($('#ChildBirthActNumber'), true, true);
+                    //         visibilityBlock($('#IssuerDivision'), false, false);
+                    //         break;
+                    //     case '3':
+                    //         visibilityBlock($('#ChildBirthActNumber'), false, false);
+                    //         visibilityBlock($('#IssuerDivision'), true, true);
+                    //         break;
+                    //     default:
+                    //         visibilityBlock($('#ChildBirthActNumber'), true, true);
+                    //         visibilityBlock($('#IssuerDivision'), true, true);
+                    //         break;
+                    // }
+
+                    $block.find('[name$="IdentityDocument.SeriesNumber"]').val(`${applicants[id].documentSerial.replace(' ', '')} ${applicants[id].documentNumber}`);
+                    $block.find('[name$="IdentityDocument.IssueDate"]').val(applicants[id].documentIssueDate ? new Date(applicants[id].documentIssueDate).toLocaleDateString() : '');
+                    $block.find('[name$="IdentityDocument.Issuer"]').val(applicants[id].documentIssueBody);
+                    $block.find('[name$="IdentityDocument.IssuerDivision"]').val(applicants[id].documentCode);
+                    $block.find('[data-address-search]').val(applicants[id].address);
+                    // $block.find('[data-address-search]').trigger('keyup');
+
+                    let adrObj = applicants[id].addressDetails;
+                    if (adrObj.region) {
+                        $block.find('[id$="AddressRf_RegionCode"]').val(adrObj.region.regionCode.padStart(2, '0')).trigger('change');
+                    }
+
+                    $block.find('[id$="AddressRf_FiasId"]').val(adrObj.room?.objectGuid ?? adrObj.house?.objectGuid ?? adrObj.street?.objectGuid);
+
+                    $block.find('[id$="PostIndex"]').val(adrObj.house.postalCode);
+
+                    $block.find('[id$="Area_ElementType"]').val(adrObj.area.shortName);
+                    $block.find('[id$="Area_ElementName"]').val(adrObj.area.value);
+
+                    $block.find('[id$="City_ElementType"]').val(adrObj.city.shortName);
+                    $block.find('[id$="City_ElementName"]').val(adrObj.city.value);
+
+                    $block.find('[id$="Settlement_ElementType"]').val(adrObj.settlement.shortName);
+                    $block.find('[id$="Settlement_ElementName"]').val(adrObj.settlement.value);
+
+                    $block.find('[id$="PlanningStructureElement_ElementType"]').val(adrObj.intracityDistrict.shortName);
+                    $block.find('[id$="PlanningStructureElement_ElementName"]').val(adrObj.intracityDistrict.value);
+
+                    $block.find('[id$="Street_ElementType"]').val(adrObj.street.shortName);
+                    $block.find('[id$="Street_ElementName"]').val(adrObj.street.value);
+
+                    $block.find('[id$="House_ElementName"]').val(adrObj.house.houseNum);
+                    $block.find('[id$="Building_ElementName"]').val(adrObj.house.buildNum);
+
+                    $block.find('[id$="Flat_ElementName"]').val(adrObj.room.flatNumber);
+                }
+            });
+    });
+
+    function ShowErrorInputs() {
+    }
+
+    $('#request_CitizenshipSign').on('change', function () {
+        let $citizenship = $formContent.find('#Citizenship');
+        switch ($('#request_CitizenshipSign').is(':checked')) {
+            case true:
+                visibilityBlock($citizenship, false, false);
+                break;
+            case false:
+                visibilityBlock($citizenship, true, true);
+                break;
+        }
+    });
+
+    $('#request_LivingSign').on('change', function () {
+        let $address = $('[data-address]');
+        let $dateFinishReg = $('#DateFinishRegBlock');
+        visibilityBlock($address, true, true);
+        switch ($('#request_LivingSign').val()) {
+            case 'true':
+                visibilityBlock($address, false, false);
+                visibilityBlock($dateFinishReg, true, true);
+                break;
+            case 'false':
+                visibilityBlock($address, false, false);
+                visibilityBlock($dateFinishReg, false, false);
+                break;
+        }
+    });
+
+    var addresses = new Map();
+    $.each($('[data-address-search]'), function () {
+        var $input = $(this);
+        let $adrList = $input.closest('[data-address]').find('.address-list');
+        var url = '/SmevBase/GarSearchAddressExtended';
+        $input.keyup(garRequest).focusin(() => {
+            $adrList.show();
+        }).focusout(() => {
+            $adrList.delay(500).hide(0);
+        });
+    });
+
+    function garRequest(event) {
+        let $adrInput = $(event.target);
+        let $adrBlock = $adrInput.closest('[data-address]');
+        let $adrList = $adrBlock.find('.address-list');
+        let query = $adrInput.val();
+
+        addresses.clear();
+        if (query.length > 2) {
+            $.ajax({
+                url: '/SmevBase/GarSearchAddressExtended',
+                type: 'POST',
+                data: { SearchText: query },
+                success: function (data) {
+                    if (data.result.length > 0) {
+                        $adrList.empty();
+                        data.result.forEach((item, index) => {
+                            $('.address-list').append(`<li data-index='${index}'>${createAddressText(item)}</li>`);
+                            addresses.set(`${index}`, item);
+                        });
+                        $adrList.show();
+                    }
+                }
+            });
+        } else {
+            $adrInput.parent('.location-control').removeClass('open');
+        }
+    }
+
+    function createAddressText(adr) {
+        let elements = [];
+
+        if (adr.region) {
+            elements.push(`${adr.region.shortName} ${adr.region.value}`);
+        }
+        if (adr.area) {
+            elements.push(`${adr.area.shortName} ${adr.area.value}`);
+        }
+        if (adr.cityAndRuralSettlements) {
+            elements.push(`${adr.cityAndRuralSettlements.shortName} ${adr.cityAndRuralSettlements.value}`);
+        }
+        if (adr.city) {
+            elements.push(`${adr.city.shortName} ${adr.city.value}`);
+        }
+        if (adr.settlement) {
+            elements.push(`${adr.settlement.shortName} ${adr.settlement.value}`);
+        }
+        if (adr.intracityDistrict) {
+            elements.push(`${adr.intracityDistrict.shortName} ${adr.intracityDistrict.value}`);
+        }
+        if (adr.street) {
+            elements.push(`${adr.street.shortName} ${adr.street.value}`);
+        }
+        if (adr.house) {
+            if (adr.house.houseNum) elements.push(`${adr.house.shortName} ${adr.house.houseNum}`);
+            if (adr.house.buildNum) elements.push(`корп ${adr.house.buildNum}`);
+            if (adr.house.structNum) elements.push(`стр ${adr.house.structNum}`);
+        }
+        if (adr.room) {
+            elements.push(`${adr.room.flatType} ${adr.room.flatNumber}`);
+        }
+
+        return elements.join(', ');
+    }
+
+    $('.address-list').on('click',
+        function (event) {
+            let $selectedAdr = $(event.target);
+            let $adrBlock = $selectedAdr.closest('[data-address]');
+            let adrText = $selectedAdr.text();
+            $adrBlock.find('[data-address-search]').val(adrText);
+            clearForm($adrBlock);
+            fillAddress(addresses.get($selectedAdr.attr('data-index')), $selectedAdr);
+            $selectedAdr.closest('.address-list').empty();
+        });
+
+    function fillAddress(adrData, $el) {
+        let $addressBlock = $el.closest('[data-address]');
+        if (adrData.region) {
+            $addressBlock.find('[id$="AddressRf_RegionCode"]').val(adrData.region.regionCode.padStart(2, '0')).trigger('change');
+        }
+
+        if (adrData.area) {
+            $addressBlock.find('[id$="AddressRf_FiasId"]').val(adrData.area.objectGuid);
+            $addressBlock.find('[id$="Area_ElementType"]').val(adrData.area.shortName);
+            $addressBlock.find('[id$="Area_ElementName"]').val(adrData.area.value);
+        }
+
+        if (adrData.city) {
+            $addressBlock.find('[id$="AddressRf_FiasId"]').val(adrData.city.objectGuid);
+            $addressBlock.find('[id$="City_ElementType"]').val(adrData.city.shortName);
+            $addressBlock.find('[id$="City_ElementName"]').val(adrData.city.value);
+        }
+
+        if (adrData.settlement) {
+            $addressBlock.find('[id$="AddressRf_FiasId"]').val(adrData.settlement.objectGuid);
+            $addressBlock.find('[id$="Settlement_ElementType"]').val(adrData.settlement.shortName);
+            $addressBlock.find('[id$="Settlement_ElementName"]').val(adrData.settlement.value);
+        }
+
+        if (adrData.intracityDistrict) {
+            $addressBlock.find('[id$="AddressRf_FiasId"]').val(adrData.intracityDistrict.objectGuid);
+            $addressBlock.find('[id$="PlanningStructureElement_ElementType"]').val(adrData.intracityDistrict.shortName);
+            $addressBlock.find('[id$="PlanningStructureElement_ElementName"]').val(adrData.intracityDistrict.value);
+        }
+
+        if (adrData.street) {
+            $addressBlock.find('[id$="AddressRf_FiasId"]').val(adrData.street.objectGuid);
+            $addressBlock.find('[id$="Street_ElementType"]').val(adrData.street.shortName);
+            $addressBlock.find('[id$="Street_ElementName"]').val(adrData.street.value);
+        }
+
+        if (adrData.house) {
+            $addressBlock.find('[id$="AddressRf_FiasId"]').val(adrData.house.objectGuid);
+            $addressBlock.find('[id$="House_ElementType"]').val(adrData.house.shortName);
+            $addressBlock.find('[id$="House_ElementName"]').val(adrData.house.houseNum);
+            $addressBlock.find('[id$="Building_ElementName"]').val(adrData.house.buildNum);
+            $addressBlock.find('[id$="PostIndex"]').val(adrData.house.postalCode);
+        }
+
+        if (adrData.room) {
+            $addressBlock.find('[id$="AddressRf_FiasId"]').val(adrData.room.objectGuid);
+            $addressBlock.find('[id$="Flat_ElementType"]').val(adrData.room.flatType);
+            $addressBlock.find('[id$="Flat_ElementName"]').val(adrData.room.flatNumber);
+        }
+    }
+
+    function clearForm($address) {
+        $address.find('input:not([data-not-clean])').val('');
+    }
+
+    function checkboxChange(el) {
+        visibilityBlock($(el).closest('[data-block]').find('[data-disabled]'), !$(el).prop('checked'), !$(el).prop('checked'));
+    }
+
+    function docChange(el) {
+        switch (el.value) {
+            case '21':
+                visibilityBlock($('#ChildBirthActNumber'), true, true);
+                visibilityBlock($('#IssuerDivision'), false, false);
+                break;
+            case '03':
+                visibilityBlock($('#ChildBirthActNumber'), false, false);
+                visibilityBlock($('#IssuerDivision'), true, true);
+                break;
+            default:
+                visibilityBlock($('#ChildBirthActNumber'), true, true);
+                visibilityBlock($('#IssuerDivision'), true, true);
+                break;
+        }
+    }
+
+    getDictionaries(false);
+    $formContent.find('.applicants').val('0').trigger('change');
+</script>

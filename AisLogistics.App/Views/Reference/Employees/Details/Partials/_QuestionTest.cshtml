@@ -1,0 +1,128 @@
+﻿@model AisLogistics.App.Models.DTO.References.EmployeeTestQuestionDto
+@{
+    var r = new Random((int)DateTime.Now.Ticks);
+    int i = 0;
+}
+
+<style>
+    .btn-label {
+        background: rgba(0, 0, 0, 0.20);
+        display: inline-block;
+        padding: 7px 15px;
+        border-radius: 3px 0 0 3px;
+        margin: -7px -13px;
+        margin-right: 12px;
+    }
+
+    .fs-13 {
+        font-size: 13px;
+    }
+
+    .fs-16 {
+        font-size: 16px;
+    }
+</style>
+
+<div class="row justify-content-center pt-5">
+    <div class="card col-lg-8 col-md-9 col-sm-10 col-xl-1 col-xl-7 m-b-3 p-4">
+        @if (Model.Question!=null)
+        {
+            <form asp-controller="Reference" asp-action="EmployeeTestAnswersSave" id="sendingForm" method="post" role="form">
+                <input type="hidden" id="employeeTestId" name="employeeTestId" value="@Model.EmployeeTestId" />
+                <input type="hidden" id="employeeTestQuestionId" name="employeeTestQuestionId" value="@Model.Question.EmployeeQuestionId" />
+                <input type="hidden" id="questionType" name="questionType" value="@Model.Question.QuestionType" />
+                <input type="hidden" id="questionCount" name="questionCount" value="@Model.Question.QuestionCount" />
+                <p class="mb-1">@string.Format("Вопрос {0}/{1}", Model.Question.QuestionNumber+1, Model.Question.QuestionCount)</p>
+                <h3 class="text-mfc_red mb-1 mt-0">@Model.Question.QuestionName</h3>
+                <div class="text-muted mb-3 r-s-12">Выберите один или несколько вариантов ответа</div>
+                <div>
+                    @foreach (var item in Model.Question.Answers.OrderBy(i => r.Next()))
+                    {
+                        <div class="form-check mb-2">
+                            <input type="hidden" id="answers_[@i]__id" name="answers[@i].id" value="@item.AnswerId" />
+                            <input type="hidden" id="answers_[@i]__name" name="answers[@i].name" value="@item.AnswerName" />
+                            <input type="hidden" id="answers__[@i]_isTruth" name="answers[@i].isTruth" value="@(item.IsTruth ? "true" : "false")">
+                            <input id="radio_@item.AnswerId" type="@(Model.Question.QuestionType==1 ? "radio" : "checkbox")" class="form-check-input" name="answers[@i].IsResponse" value="false">
+                            <label for="radio_@item.AnswerId" class="form-check-label r-s-14">
+                                @item.AnswerName
+                            </label>
+                        </div>
+                        { i++; }
+                    }
+                    <button  type="submit" class="btn btn-primary shadow-none waves-effect waves-light mt-3 fs-16" disabled>
+                        <span class="btn-label">
+                            <i class="bi bi-clock me-1 fs-13"></i>
+                            <span class="timer me-2 fs-13"></span>
+                        </span> 
+                        Ответить
+                    </button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <p class="text-primary">Тест Завершен</p>
+            <h4>Ваш результат:  <span class="">@string.Format("{0:0}%", Model.Percent)</span></h4>
+            <a asp-controller="Reference" asp-action="EmployeeTest" asp-route-id="@Model.EmployeeId" class="pt-2">Назад</a>
+        }
+    </div>
+</div>
+
+<script>
+
+    $('#sendingForm').submit(function (ev) {
+        ev.preventDefault();
+        let data = $("#sendingForm").serializeArray();
+        let time = { name: 'testTime', value: $('.countdown-amount').text() };
+        data.push(time);
+
+        $.ajax({
+            type: $(this).attr('method'),
+            url: $(this).attr('action'),
+            data: data,
+            beforeSend: () => {
+                $(this).spinnerBtn("start");
+                $.pageBlock();
+            },
+            success: (content) => {
+                console.log(12);
+                $('.timer').countdown('destroy');
+                $('#testContent').html(content);
+            },
+            complete: () => {
+                $.unblockUI();
+                $(this).spinnerBtn("stop");
+            },
+           
+        });
+    });
+
+    $('.timer').countdown({
+        until: +'@Model?.Question?.TestTime',
+        format: 'M:S',
+        compact: true,
+        onExpiry: submitForm
+    });
+
+    $('#sendingForm [type="radio"]').on('change', function () {
+        $('#sendingForm [type="radio"]').prop('checked', false);
+        $('#sendingForm [type="radio"]').val(false);
+        $(this).prop('checked', true);
+        $(this).val(true);
+        $('#sendingForm [type="submit"]').prop('disabled', false);
+    });
+    $('#sendingForm input[type="checkbox"]').on('change', function () {
+        if ($('#sendingForm input[type="checkbox"]:checked').length) {
+            $('#sendingForm [type="submit"]').prop('disabled', false);
+        } else {
+            $('#sendingForm [type="submit"]').prop('disabled', true);
+        }
+        $(this).val($(this).prop('checked'));
+    });
+
+    function submitForm() {
+        $('#sendingForm').trigger('submit');
+        $('#sendingForm [type="submit"]').prop('disabled', true);
+    }
+</script>
+

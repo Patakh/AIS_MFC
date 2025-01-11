@@ -1,0 +1,58 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.MdmModelDto
+@{
+}
+
+<form asp-controller="Reference" asp-action="MdmSave" id="sendingForm" method="post" role="form">
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.ProcedureName)
+    <div class="form-body pt-1 pb-4">
+        <fieldset>
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="FrguTargetId">Идентификатор цели фргу</label>
+                    <input asp-for="FrguTargetId" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <input type="checkbox" asp-for="IsMdm" class="checkbox">
+                    <label class="form-label" asp-for="IsMdm">ИС МДМ</label>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+<script>
+    $(function () {
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                   
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }).on('core.form.valid', function () {
+                var $form = $("#sendingForm");
+                $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $table.DataTable().ajax.reload(null, false);
+                        $form.spinnerBtn("stop");
+                        $("#mainModal").modal('hide');
+                    }
+                });
+
+                return false;
+            });
+    });
+</script>

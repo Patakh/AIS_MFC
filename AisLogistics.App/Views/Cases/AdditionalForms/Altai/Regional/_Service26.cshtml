@@ -1,0 +1,393 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Regional.Service26Model
+@{
+    IEnumerable<SelectListItem> Request_Path = new List<SelectListItem>
+    {
+        new("личный прием", "1"),
+        new("через Единый портал государственных и муниципальных услуг (функций)", "2"),
+        new("через многофункциональный центр предоставления государственных и муниципальных услуг", "3"),
+        new("почтовая связь", "4"),
+
+    };
+    IEnumerable<SelectListItem> Professional = new List<SelectListItem>
+    {
+        new("высшее", "1"),
+        new("среднее", "2"),
+        new("неполное высшее", "3"),
+        new("начальное", "4"),
+
+    };
+    IEnumerable<SelectListItem> General = new List<SelectListItem>
+    {
+        new("среднее (полное)", "1"),
+        new("основное", "2"),
+        new("начальное", "3"),
+        new("Не имею образования", "4"),
+
+    };
+    
+}
+
+<div id="additional-data-content">
+<div class="row g-3">
+<div class="col-8 mx-auto">
+<div class="row mb-3">
+    <div class="col-12">
+        <label class="form-label" asp-for="Name_Organ">наименование органа, осуществляющего государственную регистрацию актов гражданского состояния </label>
+        <input type="text" asp-for="Name_Organ" class="form-control">
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-4">
+        <label class="form-label" asp-for="Date_Termination">расторжения брака назначена на</label>
+        <div class="input-group input-group-merge">
+            <span class="input-group-text">
+                <i class="bi bi-calendar3"></i>
+            </span>
+            <input asp-for="Date_Termination" type="text"
+                   class="form-control pickdate">
+        </div>
+    </div>
+    <div class="col-4">
+        <label class="form-label" asp-for="Request_Path">Заявление поступило</label>
+        <select class="select2-nosearch" asp-items="@Request_Path" asp-for="Request_Path"></select>                
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-12">
+        <label class="form-label" asp-for="Husband.Fio">(фамилия, имя, отчество (при наличии) супруга)</label>
+        <input type="text" asp-for="Husband.Fio" class="form-control">
+    </div>
+</div>
+<div class="row mb-3">       
+    <div class="col-12">
+        <label class="form-label" asp-for="Wife.Fio">(фамилия, имя, отчество (при наличии) супруги) </label>
+        <input type="text" asp-for="Wife.Fio" class="form-control">
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-4">
+        <label class="form-label" asp-for="Husband.Phone">Телефон супруга</label>
+        <input type="text" asp-for="Husband.Phone" class="form-control">
+    </div>
+    <div class="col-4">
+        <label class="form-label" asp-for="Wife.Phone">Телефон супруги</label>
+        <input type="text" asp-for="Wife.Phone" class="form-control">
+    </div>
+             
+</div>
+<hr/>
+<br/>
+<h5 class="my-2">Сведения о лицах, расторгающих брак:</h5>
+<h6 class="my-2">Супруга(муж)</h6>
+<div class="row mb-3">
+    <div class="col-8">
+        <label class="form-label" asp-for="Husband.Fio">ФИО</label>
+        <input type="text" asp-for="Husband.Fio" class="form-control">
+    </div>
+    <div class="col-4">
+        <label class="form-label" asp-for="Husband.BirthDate">Дата рождения</label>
+        <div class="input-group input-group-merge">
+            <span class="input-group-text">
+                <i class="bi bi-calendar3"></i>
+            </span>
+            <input asp-for="Husband.BirthDate" type="text"
+                   class="form-control pickdate">
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-12">
+        <label class="form-label" asp-for="Husband.Address">Адрес проживания</label>
+        <input type="text" asp-for="Husband.Address" class="form-control">
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-6">
+        <label class="form-label" asp-for="Husband.Citizenship">Гражданство</label>
+        <input type="text" asp-for="Husband.Citizenship" class="form-control">
+    </div>
+    <div class="col-6">
+        <label class="form-label" asp-for="Husband.Nationality">Национальность</label>
+        <input type="text" asp-for="Husband.Nationality" class="form-control">
+    </div>
+</div>
+<h6 class="my-2">Образование</h6>
+<div class="row mb-3">
+    <div class="col-3">
+        <label class="form-label" asp-for="Husband.Professional">Профессиональное</label>
+        <select class="select2-nosearch" asp-items="@Professional" asp-for="Husband.Professional"></select>                  
+    </div>
+    <div class="col-3">
+        <label class="form-label" asp-for="Husband.General">Общее</label>
+        <select class="select2-nosearch" asp-items="@General" asp-for="Husband.General"></select>                  
+    </div>
+</div>
+<h6 class="my-2">Паспортные данные</h6>
+<div class="row mb-3">
+    <div class="col-4">
+        <label class="form-label" asp-for="Husband.DocSeries">Серия</label>
+        <input type="text" class="form-control" asp-for="Husband.DocSeries">
+    </div>
+    <div class="col-4">
+        <label class="form-label" asp-for="Husband.DocNumber">Номер</label>
+        <input type="text" class="form-control" asp-for="Husband.DocNumber">
+    </div>
+    <div class="col-4">
+        <label class="form-label" asp-for="Husband.DocIssueDate">Дата выдачи</label>
+        <div class="input-group input-group-merge">
+            <span class="input-group-text">
+                <i class="bi bi-calendar3"></i>
+            </span>
+            <input asp-for="Husband.DocIssueDate" type="text"
+                   class="form-control pickdate">
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-12">
+        <label class="form-label" asp-for="Husband.DocIssuer">Кем выдан</label>
+        <input type="text" class="form-control" asp-for="Husband.DocIssuer">
+    </div>
+</div>
+<hr/>
+<br/>
+<h6 class="my-2">Супруги(жен)</h6>
+
+<div class="row mb-3">
+    <div class="col-8">
+        <label class="form-label" asp-for="Wife.Fio">ФИО</label>
+        <input type="text" asp-for="Wife.Fio" class="form-control">
+    </div>
+    <div class="col-4">
+        <label class="form-label" asp-for="Wife.BirthDate">Дата рождения</label>
+        <div class="input-group input-group-merge">
+            <span class="input-group-text">
+                <i class="bi bi-calendar3"></i>
+            </span>
+            <input asp-for="Wife.BirthDate" type="text"
+                   class="form-control pickdate">
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-12">
+        <label class="form-label" asp-for="Wife.Address">Адрес проживания</label>
+        <input type="text" asp-for="Wife.Address" class="form-control">
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-6">
+        <label class="form-label" asp-for="Wife.Citizenship">Гражданство</label>
+        <input type="text" asp-for="Wife.Citizenship" class="form-control">
+    </div>
+    <div class="col-6">
+        <label class="form-label" asp-for="Wife.Nationality">Национальность</label>
+        <input type="text" asp-for="Wife.Nationality" class="form-control">
+    </div>
+</div>
+<h6 class="my-2">Образование</h6>
+<div class="row mb-3">
+    <div class="col-3">
+        <label class="form-label" asp-for="Wife.Professional">Профессиональное</label>
+        <select class="select2-nosearch" asp-items="@Professional" asp-for="Wife.Professional"></select>                  
+    </div>
+    <div class="col-3">
+        <label class="form-label" asp-for="Wife.General">Общее</label>
+        <select class="select2-nosearch" asp-items="@General" asp-for="Wife.General"></select>                  
+    </div>
+</div>
+<h6 class="my-2">Паспортные данные</h6>
+<div class="row mb-3">
+    <div class="col-4">
+        <label class="form-label" asp-for="Wife.DocSeries">Серия</label>
+        <input type="text" class="form-control" asp-for="Wife.DocSeries">
+    </div>
+    <div class="col-4">
+        <label class="form-label" asp-for="Wife.DocNumber">Номер</label>
+        <input type="text" class="form-control" asp-for="Wife.DocNumber">
+    </div>
+    <div class="col-4">
+        <label class="form-label" asp-for="Wife.DocIssueDate">Дата выдачи</label>
+        <div class="input-group input-group-merge">
+            <span class="input-group-text">
+                <i class="bi bi-calendar3"></i>
+            </span>
+            <input asp-for="Wife.DocIssueDate" type="text"
+                   class="form-control pickdate">
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-12">
+        <label class="form-label" asp-for="Wife.DocIssuer">Кем выдан</label>
+        <input type="text" class="form-control" asp-for="Wife.DocIssuer">
+    </div>
+</div>
+<hr/>
+<br/>
+<h6 class="my-2">Реквизиты записи акта о заключении брака:</h6>
+<div class="row mb-3">
+    <div class="col-12">
+        <label class="form-label" asp-for="Name_Doc">(наименование органа, которым была произведена государственная регистрация)</label>
+        <input type="text" class="form-control" asp-for="Name_Doc">
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-8">
+        <label class="form-label" asp-for="Number_Doc">запись акта №</label>
+        <input type="text" class="form-control" asp-for="Number_Doc">
+    </div>
+    <div class="col-4">
+        <label class="form-label" asp-for=" Date_Doc">от</label>
+        <div class="input-group input-group-merge">
+            <span class="input-group-text">
+                <i class="bi bi-calendar3"></i>
+            </span>
+            <input asp-for="Date_Doc" type="text"
+                   class="form-control pickdate">
+        </div>
+    </div>
+</div>
+<hr/>
+<br/>
+
+<h6 class="my-2">Просим после расторжения брака присвоить фамилии</h6>
+
+<div class="row mb-3">
+    <div class="col-12">
+        <label class="form-label" asp-for="Husband.Fio_New">Супругу</label>
+        <input type="text" class="form-control" asp-for="Husband.Fio_New">
+    </div>
+</div>
+<div class="row mb-3">
+
+    <div class="col-12">
+        <label class="form-label" asp-for="Wife.Fio_New">Супруге</label>
+        <input type="text" class="form-control" asp-for="Wife.Fio_New">
+    </div>
+</div>
+<hr/>
+<br/>
+
+
+
+
+
+
+</div>
+</div>
+</div>
+
+  
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function() {
+        originalBlock.find('[data-original]').each(function(_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find('[data-disabled]').each(function() {
+            visibilityBlock($(this), true, true);
+        });
+
+          additionalForm.find("select.select2-search").each(function() {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function() {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('[name$="Phone"]').inputmask("9{1,15}", options);
+        additionalForm.find('[name$="Email"]').inputmask("email", options);
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.append($cloneBlock);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input").each(function() {
+                $(this).val("");
+            });
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function() {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function() {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function(index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

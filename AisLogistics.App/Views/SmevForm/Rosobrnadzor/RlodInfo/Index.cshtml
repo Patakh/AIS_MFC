@@ -1,0 +1,128 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new GetRlodInfoRequestData();
+}
+
+<style>
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+</style>
+
+<div class="row justify-content-center g-3">
+    <div class="col-10">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Данные заявителя</div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center mb-3" data-person id="flBlock">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <label class="form-label">Заявители</label>
+                <select class="form-select select2-nosearch applicants">
+                    <option value="">Выберите заявителя</option>
+                    @for (int i = 0; i < applicants.Count; i++)
+                    {
+                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="row justify-content-center mt-1">
+            <div class="col-10">
+                <div class="row justify-content-center">
+                    <div class="col-3">
+                        <label class="form-label" for="@request.ContragentType">Тип заявителя</label>
+                        <select class="form-select select2-nosearch" asp-for="@request.ContragentType" onchange="changeQueryType(this)">
+                            <option value="Fl">ФЛ</option>
+                            <option value="Ul">ЮЛ</option>
+                        </select>
+                    </div>
+                    <div class="col-5">
+                        <label class="form-label" asp-for="@request.Ogrn">ОГРН</label>
+                        <input type="text" class="form-control ogrn" placeholder="ОГРН" asp-for="@request.Ogrn" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request.Inn">ИНН</label>
+                        <input type="text" class="form-control inn" placeholder="ИНН" asp-for="@request.Inn" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ShowErrorInputs() {
+    }
+
+    var applicants = @Json.Serialize(applicants);
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                $(formContent).find('.required').each(function() {
+                    addValidation($(this));
+                });
+
+                $(formContent).find("select.select2-nosearch").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+
+                let options = { clearIncomplete: true, showMaskOnHover: false };
+
+                /* init inputmask */
+                $(formContent).find(".inn").inputmask("9{12}", options);
+                $(formContent).find(".ogrn").inputmask("9{15}", options);
+            }
+        };
+
+    function changeQueryType(el) {
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        switch (el.value) {
+            case 'Fl':
+                $(formContent).find(".inn").inputmask("9{12}", options);
+                $(formContent).find(".ogrn").inputmask("9{15}", options);
+                break;
+            case 'Ul':
+                $(formContent).find(".inn").inputmask("9{10}", options);
+                $(formContent).find(".ogrn").inputmask("9{13}", options);
+                break;
+        }
+    } 
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    $('select.applicants').each(function() {
+        $(this).on('change',
+            function() {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]').each(function() {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$="Inn"]').val(applicants[id].inn);
+                }
+            });
+    });
+</script>

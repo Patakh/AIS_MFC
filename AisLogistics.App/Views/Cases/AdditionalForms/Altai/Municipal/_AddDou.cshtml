@@ -1,0 +1,358 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Municipal.AddDouModel
+@{
+    IEnumerable<SelectListItem> Inform = new List<SelectListItem>
+    {
+        new("телефону", "телефону"),
+        new("почте", "почте"),
+        new("электронной почте", "электронной почте"),
+        new("через Личный кабинет", "через Личный кабинет")
+    };
+    IEnumerable<SelectListItem> Issue = new List<SelectListItem>
+    {
+        new("при личном обращении", "при личном обращении"),
+        new("по почте (заказным письмом)", "по почте (заказным письмом)"),
+        new("по электронной почте", "по электронной почте"),
+        new("в Личный кабинет", "в Личный кабинет")
+    };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FioChief">Ф.И.О Начальника МО</label>
+                    <input type="text" asp-for="FioChief" class="form-control">
+                </div>
+            </div>
+           <h5 class="my-2">Заявитель</h5> 
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Fio">Ф.И.О.</label>
+                    <input type="text" asp-for="Fio" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ResidenceAddress">Адрес регистрации</label>
+                    <input type="text" asp-for="ResidenceAddress" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FactAddress">Фактический адрес проживания</label>
+                    <input type="text" asp-for="FactAddress" class="form-control">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="Phone">Контактный телефон</label>
+                    <input type="text" asp-for="Phone" class="form-control">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="Email">Е-mail</label>
+                    <input type="text" asp-for="Email" class="form-control">
+                </div>
+            </div>
+            <h5 class="my-2">Ребенок</h5>
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="FioChild">Ф.И.О.</label>
+                    <input type="text" asp-for="FioChild" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="DateChild">Дата рождения </label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DateChild" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <h5 class="my-2">Дополнительные данные: </h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="MotherWork">место работы матери</label>
+                    <input type="text" asp-for="MotherWork" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FatherWork">место работы отца</label>
+                    <input type="text" asp-for="FatherWork" class="form-control">
+                </div>
+            </div>
+            <br />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="NameAvailability">наличие льготы для получения места</label>
+                    <input type="text" asp-for="NameAvailability" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="DesiredDate">желаемое время приема ребенка в детский сад (год)</label>
+                    <input type="number" asp-for="DesiredDate" class="form-control" min="@DateTime.Now.Year" value="@(Model.DesiredDate ?? DateTime.Now.Year.ToString())">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="NamePreschool">наименование детского дошкольного учреждения</label>
+                    <input type="text" asp-for="NamePreschool" class="form-control">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm">
+                    <label class="input-text" asp-for="Inform">информировать о результатах предоставления муниципальной услуги по</label>
+                    <select class="select2-nosearch" asp-for="Inform" asp-items="@Inform">
+                    </select>
+                </div>
+            </div>
+            <br />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Issue">выдать направление в МДОУ</label>
+                    <select class="select2-nosearch" asp-for="Issue" asp-items="@Issue">
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+    var btnNext = $('.btn-next');
+    btnNext.on('click', function appContent() {
+        additionalForm.find('#Fio').val($("#customer_LastName").val() + ' ' + $("#customer_FirstName").val() + ' ' + $("#customer_SecondName").val());
+        additionalForm.find('#FactAddress').val($("#customer_CustomerAddressResidence").val());
+        additionalForm.find('#ResidenceAddress').val($("#customer_CustomerAddress").val());
+        additionalForm.find('#Phone').val($("#customer_CustomerPhone1").val());
+        additionalForm.find('#Email').val($("#customer_CustomerEmail").val());
+
+        /*applicant.birthDate.val($("#customer_DocumentBirthDate").val());
+        applicant.SNILS.val($("#customer_CustomerSnils").val());
+        applicant.docSeries.val($("#customer_DocumentSerial").val());
+        applicant.docNumber.val($("#customer_DocumentNumber").val());
+        applicant.docIssueDate.val($("#customer_DocumentIssueDate").val());
+        applicant.docIssuer.val($("#customer_DocumentIssueBody").val());
+        applicant.residenceAddress.val($("#customer_CustomerAddressResidence").val());
+        applicant.birthAddress.val($("#customer_DocumentBirthPlace").val());*/
+    });
+    $(function () {
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+        select2Init(additionalForm);
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('#Phone').inputmask("+7(999) 999-99-99", options);
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+
+
+        function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select2-search").each(function () {
+                $(this).select2({
+                });
+            });
+        }
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.find("select").each(function () {
+                $(this).select2('destroy');
+            });
+            $cloneList.append($cloneBlock);
+            select2Init($cloneList);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input[type='text']").each(function () {
+                $(this).val("");
+            });
+        }
+    });
+    additionalForm.find("select.select2-search").each(function () {
+        $(this).select2({
+            //dropdownParent: $("#mainModal"),
+        });
+    });
+
+    additionalForm.find("select.select2-nosearch").each(function () {
+        $(this).select2({
+            minimumResultsForSearch: Infinity,
+        });
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    const options = { clearIncomplete: true, showMaskOnHover: false };
+
+    $('#Father_DocType').on('change', function () {
+        let $block = $(this).closest('[data-doc]');
+        console.log($block);
+        switch ($(this).val()) {
+            case 'Паспорт гражданина Российской Федерации':
+                $('#Father_DocSeries').inputmask("9999", options);
+                $('#Father_DocNumber').inputmask("999999", options);
+                break;
+            case 'Свидетельство о рождении':
+                $('#Father_DocSeries').inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                $('#Father_DocNumber').inputmask("", options);
+                break;
+            default:
+                $('#Father_DocSeries').inputmask("", options);
+                $('#Father_DocNumber').inputmask("", options);
+                break;
+        };
+    });
+    $('#Mother_DocType').on('change', function () {
+        let $block = $(this).closest('[data-doc]');
+        console.log($block);
+        switch ($(this).val()) {
+            case 'Паспорт гражданина Российской Федерации':
+                $('#Mother_DocSeries').inputmask("9999", options);
+                $('#Mother_DocNumber').inputmask("999999", options);
+                break;
+            case 'Свидетельство о рождении':
+                $('#Mother_DocSeries').inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                break;
+            default:
+                $('#Mother_DocSeries').inputmask("", options);
+                $('#Mother_DocNumber').inputmask("", options);
+                break;
+        };
+    });
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+    (function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function () {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post(`/SmevBase/SmevGetDictionary`,
+                    {
+                        type: options.dictionary
+                    },
+                    function (dictionary) {
+                        if (dictionary.error) return;
+                        fillSelect(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function () {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Не выбрано', ''));
+                }
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if ($this.data('dictionary').default_value) {
+                    let defVal = $this.data('dictionary').default_value;
+                    $this.val(defVal).trigger('update');
+                    $this.attr('data-def', defVal);
+                } else {
+                    $this.val('').trigger('update');
+                }
+            });
+    }
+</script>
+

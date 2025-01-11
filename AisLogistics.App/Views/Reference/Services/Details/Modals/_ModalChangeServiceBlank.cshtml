@@ -1,0 +1,154 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.ServiceBlancModelDto
+
+<form id="sendingForm" method="post" role="form">
+    <div class="form-body pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.SServicesId)
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SServicesProcedureId">Процедура</label>
+                    <select asp-for="SServicesProcedureId" asp-items="@ViewBag.Procedures" class="form-control no-search">
+                        <option selected value="">Не задано</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <div id="dropFrm" enctype="multipart/form-data" data-toggle="dropzone" class="dropzone needsclick">
+                        <div class="dz-message needsclick">
+                            Перетащите файл сюда или нажмите, чтобы загрузить
+                        </div>
+                        <div class="fallback">
+                            <input name="AddedFile" type="file" />
+                        </div>
+                    </div>
+                </div>
+           </div>
+
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="Commentt">Комментарий</label>
+                    <textarea asp-for="Commentt" class="form-control placeholder="Комментарий"></textarea>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    $(function(){
+         var previewTemplate = `<div class="dz-preview dz-file-preview"><div class="dz-details"><div class="dz-thumbnail"><img data-dz-thumbnail><span class="dz-nopreview">Просмотр недоступен</span><div class="dz-success-mark"></div><div class="dz-error-mark"></div><div class="dz-error-message"><span data-dz-errormessage></span></div><div class="progress"><div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-dz-uploadprogress></div></div></div><div class="dz-filename" data-dz-name></div><div class="dz-size" data-dz-size></div></div></div>`;
+        var urlAction = "@Url.Action("ServiceBlancSave", "Reference")";
+
+        var dropzoneBasic = new Dropzone("#dropFrm", {
+            url: urlAction,
+            paramName: "AddedFile",
+            autoProcessQueue: false,
+            autoDiscover: false,
+            previewTemplate: previewTemplate,
+            parallelUploads: 10,
+            maxFilesize: 15,
+            addRemoveLinks: true,
+            dictRemoveFile: "Удалить",
+            dictCancelUpload: "Отменить",
+            init: function() {
+                var dropFrm = this;
+                $('#sendingForm').on("submit", function(e){
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    fv.validate()
+                    .then(function(status){
+                        if (status == 'Valid')
+                        {
+                            //dropFrm.processQueue();
+                            if (dropFrm.getQueuedFiles().length > 0) {
+                                dropFrm.processQueue();
+                            }
+                            else {
+                                // не работает или генерит ебнутое событие
+                                //dropFrm.uploadFiles([ ]);
+
+                                // отправить форму без файла
+                                var $form = $("#sendingForm");
+                                $.ajax({
+                                    type: $form.attr('method'),
+                                    url: urlAction,
+                                    data: $form.serialize(),
+                                    dataType: 'json',
+                                    beforeSend: () => {
+                                        $form.spinnerBtn("start");
+                                    },
+                                    complete: () => {
+                                        $table.DataTable().ajax.reload(null, false);
+                                        $form.spinnerBtn("stop");
+                                        $("#mainModal").modal('hide');
+                                    }
+                                });
+
+                                return false;
+                            }
+                        }
+                    });
+                });
+            },
+            sending: function(file, xhr, formData) {
+                $('#sendingForm').spinnerBtn("start");
+
+                formData.append('Id', $('#Id').val());
+                formData.append('SServicesId', $('#SServicesId').val());
+                formData.append('SServicesProcedureId', $('#SServicesProcedureId').val());
+                formData.append('Commentt', $('#Commentt').val());
+                formData.append('FileSize', file.size);
+                formData.append('FileName', file.name);
+                formData.append('ActionType', $("#ActionType").val());
+                formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
+            },
+            success: function(file, response) {
+                
+            },
+            complete: function(){
+                tableBlancs.DataTable().ajax.reload(null, false);
+                $('#sendingForm').spinnerBtn("stop");
+                $("#mainModal").modal('hide');
+            },
+            error: function(file, msg){
+                $('#sendingForm').spinnerBtn("stop");
+            },
+        });
+
+
+
+
+        document.querySelectorAll('#sendingForm select').forEach(item => {
+            if (item.classList.contains('no-search')) {
+                $(item).select2({ dropdownParent: $('#mainModal'), minimumResultsForSearch: -1 });
+                return;
+            }
+            $(item).select2({ dropdownParent: $('#mainModal') });
+        });
+
+
+
+
+           const fv = FormValidation.formValidation(document.getElementById('sendingForm'),
+           {
+                fields: {
+                    @if (Model.Id == default(Guid))
+                    {
+                    <text>fileName: { validators: { notEmpty: { message: 'Выберите файл' } } },</text>
+                    }
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+           });  
+    });
+</script>

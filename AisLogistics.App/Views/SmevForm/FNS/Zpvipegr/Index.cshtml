@@ -1,0 +1,299 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicant = Model.GetApplicant();
+    var legal = Model.GetLegal();
+    var request = new GetFnsZpvipegrRequestData
+            {
+                ApplicantFl = new FnsZpvipegrApplicantFl
+                {
+                    Fio = new FioType
+                    {
+                        LastName = applicant?.LastName,
+                        FirstName = applicant?.FirstName,
+                        SecondName = applicant?.SecondName
+                    },
+                    InnFl = applicant?.Inn
+                },
+                ApplicantUl = new FnsZpvipegrApplicantUl
+                {
+                    OrgName = legal?.Name,
+                    Ogrn = legal?.Ogrn,
+                    InnUl = legal?.Inn
+                }
+            };
+}
+
+<div class="row g-3">
+    <div class="col-12 col-lg-10 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Детали запроса</div>
+        </div>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-12 col-lg-8 mx-auto">
+        <div class="row mb-3">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Registry">Вид реестра</label>
+                <select class="form-select" asp-for="@request.Registry">
+                    <option value="Egrul">ЕГРЮЛ</option>
+                    <option value="Egrip" selected="selected">ЕГРИП</option>
+                </select>
+            </div>
+            <div class="col-8">
+                <label class="form-label" asp-for="@request.ApplicantType">Тип заявителя</label>
+                <select class="form-select" asp-for="@request.ApplicantType">
+                    <option value="PersonRf" selected>Физическое лицо</option>
+                    <option value="Ip" selected="selected">Индивидуальный предприниматель</option>
+                    <option value="ForeignPerson">Иностранный гражданин</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3" id="flBlock">
+    <div class="col-12 col-lg-10 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Данные физического лица</div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-8 mx-auto">
+        <div class="row mb-3">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ApplicantFl.Fio.LastName">Фамилия</label>
+                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.ApplicantFl.Fio.LastName" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ApplicantFl.Fio.FirstName">Имя</label>
+                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.ApplicantFl.Fio.FirstName">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ApplicantFl.Fio.SecondName">Отчество</label>
+                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.ApplicantFl.Fio.SecondName">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.RequestValueType">Параметр запроса</label>
+                <select class="form-select select2-nosearch" asp-for="@request.RequestValueType" onchange="changeRequestValueType(this)">
+                    <option value="InnFl" selected="selected">ИНН</option>
+                    <option value="OgrnFl">ОГРН</option>
+                </select>
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ApplicantFl.InnFl">ИНН</label>
+                <input type="text" class="form-control required" placeholder="ИНН" asp-for="@request.ApplicantFl.InnFl" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ApplicantFl.OgrnIp">ОГРНИП</label>
+                <input type="text" class="form-control" placeholder="ОГРНИП" asp-for="@request.ApplicantFl.OgrnIp" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3" data-disabled id="ulBlock">
+    <div class="col-12 col-lg-10 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Данные юридического лица</div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-8 mx-auto">
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.ApplicantUl.OrgName">Наименование организации</label>
+                <input type="text" class="form-control required" placeholder="Наименование организации"
+                       asp-for="@request.ApplicantUl.OrgName" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.RequestValueType">Параметр запроса</label>
+                <select class="form-select select2-nosearch" asp-for="@request.RequestValueType" onchange="changeRequestValueType(this)">
+                    <option value="InnUl">ИНН</option>
+                    <option value="OgrnUl" selected="selected">ОГРН</option>
+                </select>
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ApplicantUl.InnUl">ИНН</label>
+                <input type="text" class="form-control" placeholder="ИНН" asp-for="@request.ApplicantUl.InnUl">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ApplicantUl.Ogrn">ОГРН</label>
+                <input type="text" class="form-control required" placeholder="ОГРН" asp-for="@request.ApplicantUl.Ogrn">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row d-none">
+    <div class="col-4">
+        <label class="form-label" asp-for="@request.RequestValue"></label>
+        <input type="text" class="form-control required" asp-for="@request.RequestValue" />
+    </div>
+</div>
+
+<script>
+    function ShowErrorInputs() {
+    }
+
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            fields: {
+                registry: formContent.querySelector("#request_Registry"),
+                applicantType: formContent.querySelector("#request_ApplicantType"),
+                flLastName: formContent.querySelector("#request_ApplicantFl_Fio_LastName"),
+                flFirstName: formContent.querySelector("#request_ApplicantFl_Fio_FirstName"),
+                flSecondName: formContent.querySelector("#request_ApplicantFl_Fio_SecondName"),
+                flInn: formContent.querySelector("#request_ApplicantFl_InnFl"),
+                flOgrn: formContent.querySelector("#request_ApplicantFl_OgrnIp"),
+                ulOgrName: formContent.querySelector("#request_ApplicantUl_OrgName"),
+                ulInn: formContent.querySelector("#request_ApplicantUl_InnUl"),
+                ulOgrn: formContent.querySelector("#request_ApplicantUl_Ogrn"),
+                requestValue: formContent.querySelector("#request_RequestValue"),
+            },
+            init: () => {
+                /* init validation */
+                SmevDataFormValidation.addField(smevForm.fields.flLastName.getAttribute('name'), {
+                    validators: {
+                        notEmpty: {}
+                    }
+                }).addField(smevForm.fields.flFirstName.getAttribute('name'), {
+                    validators: {
+                        notEmpty: {}
+                    }
+                }).addField(smevForm.fields.ulOgrName.getAttribute('name'), {
+                    validators: {
+                        notEmpty: {}
+                    }
+                }).addField(smevForm.fields.ulOgrn.getAttribute('name'), {
+                    validators: {
+                        notEmpty: {}
+                    }
+                });
+
+                // скрытие блоков
+                $(formContent).find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+
+                addValidation($('#flBlock [id$="InnFl"]'));
+
+                $(smevForm.fields.registry).on('change',
+                    (event) => {
+                        $(smevForm.fields.applicantType).empty();
+                        switch (event.target.value) {
+                            case 'Egrul':
+                                $(smevForm.fields.applicantType).append(new Option('Юридическое лицо', 'Company'));
+                                visibilityBlock($('#ulBlock'), false);
+                                visibilityBlock($('#flBlock'), true, true);
+                                $('#ulBlock [id$="RequestValueType"]').val('OgrnUl').trigger('change');
+                                break;
+                            case 'Egrip':
+                                $(smevForm.fields.applicantType).append(new Option('Физическое лицо', 'PersonRf'));
+                                $(smevForm.fields.applicantType).append(new Option('Индивидуальный предприниматель', 'Ip'));
+                                $(smevForm.fields.applicantType).append(new Option('Иностранный гражданин', 'ForeignPerson'));
+                                $(smevForm.fields.applicantType).val('Ip').trigger('change');
+                                visibilityBlock($('#flBlock'), false);
+                                visibilityBlock($('#ulBlock'), true, true);
+                                $('#flBlock [id$="RequestValueType"]').val('InnFl').trigger('change');
+                                break;
+                        }
+                    });
+
+                /* init select2 */
+                $(formContent).find("select").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+
+                /* init datepicker */
+                $(".pickadate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                });
+
+                var maskOptions = { clearIncomplete: true, showMaskOnHover: false };
+
+                /* init inputmask */
+                $(".pickadate").inputmask("99.99.9999", maskOptions);
+
+                $(smevForm.fields.flInn).inputmask("9{12}", maskOptions);
+
+                $(smevForm.fields.flOgrn).inputmask("9{15}", maskOptions);
+
+                $(smevForm.fields.ulInn).inputmask("9{10}", maskOptions);
+
+                $(smevForm.fields.ulOgrn).inputmask("9{13}", maskOptions);
+            }
+        };
+
+    function changeRequestValueType(el) {
+        switch (el.value) {
+            case 'InnFl':
+                addValidation($('#flBlock [id$="InnFl"]'));
+                removeValidation($('#flBlock [id$="OgrnIp"]'));
+                $('#flBlock [id$="OgrnIp"]').removeClass('is-invalid');
+                break;
+            case 'OgrnFl':
+                addValidation($('#flBlock [id$="OgrnIp"]'));
+                removeValidation($('#flBlock [id$="InnFl"]'));
+                $('#flBlock [id$="InnFl"]').removeClass('is-invalid');
+                break;
+            case 'InnUl':
+                addValidation($('#ulBlock [id$="InnUl"]'));
+                break;
+            case 'OgrnUl':
+                removeValidation($('#ulBlock [id$="InnUl"]'));
+                $('#ulBlock [id$="InnUl"]').removeClass('is-invalid');
+                break;
+        }
+    }
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+    function visibilityBlock($block, hide, isDisabled = false) {
+        if (hide) {
+            $block.hide();
+            $block.find('input, select').each(function() {
+                if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                    SmevDataFormValidation.removeField($(this).attr('name'));
+                }
+                if (isDisabled) $(this).prop('disabled', true);
+            });
+        } else {
+            $block.show();
+            $block.find('input, select').each(function() {
+                $(this).prop('disabled', false);
+                let $this = $(this);
+                if ($this.hasClass('required')) {
+                    SmevDataFormValidation.addField($this.attr('name'),
+                        {
+                            validators: {
+                                notEmpty: {}
+                            }
+                        });
+                    SmevDataFormValidation.elements[$this.attr('name')] = [$this[0]];
+                }
+            });
+
+            $block.find('[data-disabled]').each(function() {
+                visibilityBlock($(this), true, true);
+            });
+        }
+    }
+</script>

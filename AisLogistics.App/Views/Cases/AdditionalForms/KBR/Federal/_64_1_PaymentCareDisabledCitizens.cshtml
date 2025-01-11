@@ -1,0 +1,447 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.KBR.Federal._64_1_PaymentCareDisabledCitizensModel
+@{
+    if (Model.AppliedDocumentList.Length == 0)
+        Model.AppliedDocumentList = new[] { new AisLogistics.App.Models.AdditionalForms.KBR.Federal._64_1_PaymentCareDisabledCitizensModel.AppliedDocument() };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">Заявитель</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Citizenship">принадлежность к гражданству</label>
+                    <input type="text" class="form-control" asp-for="Citizenship">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ValidityPeriodDocument">Срок действия документа удостоверяющего личность</label>
+                    <input type="text" class="form-control" asp-for="ValidityPeriodDocument">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label asp-for="CaringStartDate" class="form-label">Осуществляю уход за нетрудоспособным гражданином с</label>
+                    <input asp-for="CaringStartDate" class="form-control pickdate" type="text">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="DisabledCitizenFullName" class="form-label">
+                        Фамилия, имя, отчество (при наличии) нетрудоспособного гражданина, за которым осуществляется уход
+                    </label>
+                    <input asp-for="DisabledCitizenFullName" class="form-control" type="text">
+                </div>
+            </div>
+
+            <h6 class="my-2">являющимся</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="DisableTypeId" id="DisableTypeId1" class="form-check-input" type="radio" value="1">
+                        <label for="DisableTypeId1" class="form-check-label">
+                            инвалидом I группы (за исключением инвалида с детства I группы)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="DisableTypeId" id="DisableTypeId2" class="form-check-input" type="radio" value="2">
+                        <label for="DisableTypeId2" class="form-check-label">
+                            престарелым, нуждающимся по заключению медицинской организации
+                            в постоянном постороннем уходе
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="DisableTypeId" id="DisableTypeId3" class="form-check-input" type="radio" value="3">
+                        <label for="DisableTypeId3" class="form-check-label">
+                            престарелым, достигшим возраста 80 лет
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <h6 class="my-2">В настоящее время</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="Employed" id="Employed1" class="form-check-input" type="radio" value="false">
+                        <label for="Employed1" class="form-check-label">не работаю</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="Employed" id="Employed2" class="form-check-input" type="radio" value="true">
+                        <label for="Employed2" class="form-check-label">работаю</label>
+                    </div>
+                </div>
+            </div>
+
+            <h6 class="my-2">
+                Являюсь получателем ежемесячной компенсационной выплаты в связи с осуществлением ухода за указанным нетрудоспособным гражданином в органе,
+                осуществляющем пенсионное обеспечение в соответствии с Законом Российской Федерации от 12 февраля 1993 г. № 4468-1
+                «О пенсионном обеспечении лиц, проходивших военную службу, службу в органах внутренних дел, Государственной противопожарной службе,
+                органах по контролю за оборотом наркотических средств и психотропных веществ, учреждениях и органах уголовно-исполнительной системы,
+                войсках национальной гвардии Российской Федерации, и их семей»
+            </h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="MonthlyCompensated" id="MonthlyCompensated1" class="form-check-input" type="radio" value="false">
+                        <label for="MonthlyCompensated1" class="form-check-label">не являюсь</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="MonthlyCompensated" id="MonthlyCompensated2" class="form-check-input" type="radio" value="true">
+                        <label for="MonthlyCompensated2" class="form-check-label">являюсь</label>
+                    </div>
+                </div>
+            </div>
+
+            <h6 class="my-2">
+                Получаю пособие по безработице в соответствии с Законом Российской Федерации от 19 апреля 1991 г. № 1032-1
+                «О занятости населения в Российской Федерации»
+            </h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="UnemploymentBenefit" id="UnemploymentBenefit1" class="form-check-input" type="radio" value="false">
+                        <label for="UnemploymentBenefit1" class="form-check-label">не получаю</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="UnemploymentBenefit" id="UnemploymentBenefit2" class="form-check-input" type="radio" value="true">
+                        <label for="UnemploymentBenefit2" class="form-check-label">получаю</label>
+                    </div>
+                </div>
+            </div>
+
+            <h6 class="my-2">
+                Обучаюсь по очной форме в образовательном учреждении
+            </h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="Studing" id="Studing1" class="form-check-input" type="radio" value="false">
+                        <label for="Studing1" class="form-check-label">не обучаюсь</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="Studing" id="Studing2" class="form-check-input" type="radio" value="true">
+                        <label for="Studing2" class="form-check-label">обучаюсь</label>
+                    </div>
+                </div>
+            </div>
+
+            <h6 class="my-2">
+                Назначалась пенсия в соответствии с законодательством Российской Федерации
+            </h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="PensionAssigned" id="PensionAssigned1" class="form-check-input" type="radio" value="false">
+                        <label for="PensionAssigned1" class="form-check-label">не назначалась</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="PensionAssigned" id="PensionAssigned2" class="form-check-input" type="radio" value="true">
+                        <label for="PensionAssigned2" class="form-check-label">назначалась</label>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="my-2">Представитель</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative">Тип</label>
+                    <select class="select2-nosearch" asp-for="Representative">
+                        <option value="">Не выбрано</option>
+                        <option value="законный представитель несовершеннолетнего или недееспособного лица">законный представитель несовершеннолетнего или недееспособного лица</option>
+                        <option value="организация, на которую возложено исполнение обязанностей опекуна или попечителя">организация, на которую возложено исполнение обязанностей опекуна или попечителя</option>
+                        <option value="доверенное лицо">доверенное лицо</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="GuardianOrganizationName">наименование организации, на которую возложено исполнение обязанностей опекуна или попечителя</label>
+                    <input type="text" class="form-control" asp-for="GuardianOrganizationName">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="GuardianOrganizationAddress">адрес места нахождения организации</label>
+                    <input type="text" class="form-control" asp-for="GuardianOrganizationAddress">
+                </div>
+            </div>
+
+            <h6 class="my-2">Предупреждение</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="AdditionalWarningText">иное</label>
+                    <input type="text" class="form-control" asp-for="AdditionalWarningText">
+                </div>
+            </div>
+
+            <h5 class="my-2">К заявлению прилагаю документы</h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (int i = 0; i < Model.AppliedDocumentList.Count(); i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Документ @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-6">
+                                <label class="form-label" asp-for="AppliedDocumentList[i].Name">Наименование</label>
+                                <input type="text" list="Docs" asp-for="AppliedDocumentList[i].Name" class="form-control">
+                                <datalist id="Docs">
+                                    <option value="Документ удостоверяющий личность">Документ удостоверяющий личность</option>
+                                    <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                    <option value="Свидетельство о заключении брака">Свидетельство о заключении брака</option>
+                                    <option value="Свидетельство о расторжении брака">Свидетельство о расторжении брака</option>
+                                    <option value="Свидетельство об установлении отцовства">Свидетельство об установлении отцовства</option>
+                                    <option value="Расчётный счёт">Расчётный счёт</option>
+                                    <option value="Сберкнижка">Сберкнижка</option>
+                                    <option value="Трудовая книжка">Трудовая книжка</option>
+                                    <option value="Свидетельство о регистрации по месту жительства/пребывания">Свидетельство о регистрации по месту жительства/пребывания</option>
+                                    <option value="Удостоверение">Удостоверение</option>
+                                    <option value="Справка МСЭ">Справка МСЭ</option>
+                                    <option value="Ветеран труда РА">Ветеран труда РА</option>
+                                </datalist>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="AppliedDocumentList[i].NumdberOriginals">Количество Экземпяров</label>
+                                <input type="number" min="0" asp-for="AppliedDocumentList[i].NumdberOriginals" class="form-control" />
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="AppliedDocumentList[i].NumdberCopies">Количество страниц</label>
+                                <input type="number" min="0" asp-for="AppliedDocumentList[i].NumdberCopies" class="form-control" />
+                            </div>
+                            <div class="col-1 mt-4">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2 mt-5">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+
+            <h6 class="my-2">Прошу</h6>
+            <div class="row mb-2" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="TypeNotification.NotificationTypeOne" class="form-check-input" type="checkbox" />
+                        <label asp-for="TypeNotification.NotificationTypeOne" class="form-check-label">
+                            направить уведомление, подтверждающее факт и дату приема территориальным органом Пенсионного фонда Российской Федерации настоящего заявления и
+                            представленных мною документов, на адрес электронной почты
+                        </label>
+                    </div>
+                </div>
+                <div class="row mb-3 justify-content-end" checkBlockBody>
+                    <div class="col-11 mb-2">
+                        <label class="form-label" asp-for="TypeNotification.EmailOne">адрес электронной почты гражданина</label>
+                        <input type="text" class="form-control" asp-for="TypeNotification.EmailOne">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="TypeNotification.NotificationTypeTwo" class="form-check-input" type="checkbox" />
+                        <label asp-for="TypeNotification.NotificationTypeTwo" class="form-check-label">осуществлять информирование о ходе предоставления государственной услуги путем передачи текстовых сообщений</label>
+                    </div>
+                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                        <div class="row mb-2 justify-content-end" checkBlock>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input asp-for="TypeNotification.NotificationTransmitionMethod" id="NotificationTransmitionMethod1" class="form-check-input" type="radio" value="1">
+                                    <label for="NotificationTransmitionMethod1" class="form-check-label">на адрес электронной почты</label>
+                                </div>
+                            </div>
+                            <div class="row mb-3 justify-content-end" checkBlockBody>
+                                <div class="col-11 mb-2">
+                                    <label class="form-label" asp-for="TypeNotification.EmailTwo">адрес электронной почты гражданина</label>
+                                    <input type="text" class="form-control" asp-for="TypeNotification.EmailTwo">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2 justify-content-end" checkBlock>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input asp-for="TypeNotification.NotificationTransmitionMethod" id="NotificationTransmitionMethod2" class="form-check-input" type="radio" value="2">
+                                    <label for="NotificationTransmitionMethod2" class="form-check-label">на абонентский номер устройства подвижной радиотелефонной связи</label>
+                                </div>
+                            </div>
+                            <div class="row mb-3 justify-content-end" checkBlockBody>
+                                <div class="col-11 mb-2">
+                                    <label class="form-label" asp-for="TypeNotification.SubscriberNumber">абонентский номер гражданина</label>
+                                    <input type="text" class="form-control" asp-for="TypeNotification.SubscriberNumber">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Документ 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-6">
+                <label class="form-label" asp-for="AppliedDocumentList[0].Name">Наименование</label>
+                <input type="text" list="Docs" asp-for="AppliedDocumentList[0].Name" class="form-control">
+                <datalist id="Docs">
+                    <option value="Документ удостоверяющий личность">Документ удостоверяющий личность</option>
+                    <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                    <option value="Свидетельство о заключении брака">Свидетельство о заключении брака</option>
+                    <option value="Свидетельство о расторжении брака">Свидетельство о расторжении брака</option>
+                    <option value="Свидетельство об установлении отцовства">Свидетельство об установлении отцовства</option>
+                    <option value="Расчётный счёт">Расчётный счёт</option>
+                    <option value="Сберкнижка">Сберкнижка</option>
+                    <option value="Трудовая книжка">Трудовая книжка</option>
+                    <option value="Свидетельство о регистрации по месту жительства/пребывания">Свидетельство о регистрации по месту жительства/пребывания</option>
+                    <option value="Удостоверение">Удостоверение</option>
+                    <option value="Справка МСЭ">Справка МСЭ</option>
+                    <option value="Ветеран труда РА">Ветеран труда РА</option>
+                </datalist>
+            </div>
+            <div class="col-2">
+                <label class="form-label" asp-for="AppliedDocumentList[0].NumdberOriginals">Количество Экземпяров</label>
+                <input type="number" min="0" asp-for="AppliedDocumentList[0].NumdberOriginals" class="form-control" />
+            </div>
+            <div class="col-2">
+                <label class="form-label" asp-for="AppliedDocumentList[0].NumdberCopies">Количество страниц</label>
+                <input type="number" min="0" asp-for="AppliedDocumentList[0].NumdberCopies" class="form-control" />
+            </div>
+            <div class="col-1 mt-4">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+        });
+
+        additionalForm.find('[type="radio"], input[type="checkbox"]').on('click', function () {
+            togleFields();
+        });
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", { clearIncomplete: true, showMaskOnHover: false });
+
+        togleFields();
+    });
+
+    function togleFields() {
+        additionalForm.find('[checkBlock] input[type="radio"], [checkBlock] input[type="checkbox"]').each(function () {
+            let $block = $(this).closest('[checkBlock]');
+
+            if ($(this).is(':checked')) {
+                visibilityBlock($block.find('[checkBlockBody]'), false, false);
+            } else {
+                visibilityBlock($block.find('[checkBlockBody]'), true, true);
+            }
+        })
+    }
+
+    function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+        let $cloneList = additionalForm.find(`#${cloneListId}`);
+        let $original = originalBlock.find(`#${originalId}`);
+        let $cloneBlock = $original.clone(true);
+        let indexId = $cloneList.find('[data-clone]').length;
+        renameBlock($cloneBlock, indexId);
+        blockInit($cloneBlock);
+        $cloneList.append($cloneBlock);
+    }
+
+    function blockInit($block) {
+        visibilityBlock($block, false, false);
+
+        $block.find("input").each(function () {
+            $(this).val("");
+        });
+        $block.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+        });
+    }
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

@@ -1,0 +1,189 @@
+﻿@model ViewModelBuilder
+@{
+    string Id = ViewData["Id"]?.ToString() ?? string.Empty;
+    string proceduresOptions = Model.Model as string;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                @if (Model.IsVisibleDescription)
+                {
+                    <div class="b-s-14">@Model.ViewDescription</div>
+                }
+            </div>
+
+            <div class="col-6 pull-right">
+                @if (User.HasClaim(AccessKeyNames.ReferenceService, AccessKeyValues.Add))
+                {
+                    <div class="col-auto text-md-end">
+                        <a href="javascript:void(0);" data-btn-params='{"actionType":"@ActionType.Add", "serviceId" : "@Id" }' data-btn-type="add" data-for-table="@Model.TableName" class="r-a-14">
+                            <i class="bi bi-plus"></i> Добавить
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive mt-3">
+                    <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceService" class="directory_names-items table table-striped"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $tableResults = $('#@(Model.TableName)');
+    $(document).ready(function () {
+        let isCanAddResults = $tableResults.is('[data-action-add]'),
+            isCanEditResults = $tableResults.is('[data-action-edit]'),
+            isCanRemoveResults = $tableResults.is('[data-action-remove]');
+
+        $tableResults.DataTable({
+            sDom: "<'row me-5 pe-1'<'col-md-6 'f><'col-md-6'<'#procedure'>>>" +
+                "<'row'<'col-sm-12'tr>>",
+            processing: true,
+            serverSide: true,
+            filter: true,
+            searchDelay: 1500,
+            ajax: {
+                url: $tableResults.data('action-table'),
+                type: "POST",
+                datatype: "json",
+                dataSrc: function (json) {
+                    return json.data;
+                }
+            },
+            initComplete: function () {
+                var procedureColumn = this.api().column(6);
+                var $procedure = $('#procedure');
+                $procedure.html('<label class="form-label" for="selectProcedure">Процедура</label>');
+                var $procedureSelect = $('<select id="selectProcedure" class="form-select form-select-sm"><option selected value="">ВСЕ</option>@Html.Raw(proceduresOptions)</select>')
+                    .appendTo($procedure)
+                    .select2({ minimumResultsForSearch: Infinity })
+                    .on('change', function () {
+                        procedureColumn.search($(this).val()).draw();
+                    });
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    title: 'Наименование',
+                    orderable: false
+                },
+                {
+                    targets: 2,
+                    title: 'Результат',
+                    className: 'text-center',
+                    orderable: false
+                },
+                {
+                    targets: 3,
+                    title: 'Способ получения',
+                    orderable: false
+                },
+                {
+                    targets: 4,
+                    title: 'Срок хранения в ОИВ',
+                    className: 'text-center',
+                    orderable: false
+                },
+                {
+                    targets: 5,
+                    title: 'Срок хранения в МФЦ',
+                    className: 'text-center',
+                    orderable: false
+                },
+                {
+                    name: "sServicesProcedureName",
+                    targets: 6,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: -1,
+                    title: 'Действия',
+                    data: "id",
+                    width: "80px",
+                    className: 'text-center editor-edit',
+                    sorting: false,
+                    orderable: false
+                }
+            ],
+            columns: [
+                {},
+                {
+                    render: function (data, type, row) {
+                        return `<span>${row.documentName}</span>
+                                ${row.procedureName === null ? '' : '<br /><small>' + row.procedureName + '</small>'}`;
+                    }
+                },
+                {
+                    render: function (data, type, row) {
+                        return row.documentResult === true ? 'Положительный' : 'Отрицательный';
+                    }
+                },
+                {
+                    data: "documentMethod"
+                },
+                {
+                    data: "documentPeriodProvider"
+                },
+                {
+                    data: "documentPeriodMfc"
+                },
+                {
+                    render: function (data, type, row) {
+                        return "";
+                    }
+                },
+                {
+                    render: function (data, type, row) {
+                        let content = "";
+                        if (isCanEditResults === true)
+                            content += EditBtnResults({ "id": data, "actionType": 1, "serviceId": "@Id" });
+                        if (isCanRemoveResults === true)
+                            content += DeleteBtnResults({ "id": data });
+                        return content;
+                    }
+                }
+            ]
+        });
+
+        $tableResults.on("reload", () => {
+            $tableResults.DataTable().ajax.reload(null, false);
+        });
+
+        $tableResults.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        let EditBtnResults = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="edit" data-bs-toggle="tooltip" title="Изменить" class="btn btn-sm btn-icon text-body">
+                    <i class="bi bi-pencil-square"></i></a>`;
+        }
+
+        let DeleteBtnResults = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-service-remove-btn-type data-bs-toggle="tooltip" title="Удалить" class="btn btn-sm btn-icon text-danger">
+                    <i class="bi bi-trash"></i></a>`;
+        }
+    });
+</script>

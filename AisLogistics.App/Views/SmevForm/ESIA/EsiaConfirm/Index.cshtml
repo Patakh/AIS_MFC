@@ -1,0 +1,332 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new GetEsiaConfirmRequestData
+            {
+                Fio = new FioType()
+            };
+}
+<style>
+    :where(input,input:required):invalid:not(:placeholder-shown) {
+        border-color: #ff5b5c;
+        box-shadow: 0 0 0.1875rem 0.0625rem rgb(57 218 138 / 18%);
+    }
+
+    :where(input,input:required):valid:not(:placeholder-shown):not(.form-check-input) {
+        border-color: #39da8a;
+        box-shadow: 0 0 0.1875rem 0.0625rem rgb(57 218 138 / 18%);
+    }
+
+    #smev-data-form-content span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content #smev-request-tabContent .tab-pane {
+        height: 550px;
+    }
+
+    #smev-data-form-content tr.is_active {
+        color: #39da8a;
+    }
+
+    #smev-data-form-content div.lg-container {
+        position: relative;
+        z-index: 9999;
+    }
+
+    #smev-data-form-content .accordion-button {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content #listService {
+        font-size: 16px;
+    }
+
+        #smev-data-form-content #listService .select2-selection.select2-selection--single {
+            height: auto !important;
+        }
+
+        #smev-data-form-content #listService .select2-selection__rendered {
+            white-space: normal !important;
+        }
+
+    #smev-data-form-content ul.address-list {
+        display: none;
+        width: 100%;
+        z-index: 1000;
+        position: absolute;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        background-clip: padding-box;
+    }
+
+        #smev-data-form-content ul.address-list li {
+            padding: 6px;
+        }
+
+            #smev-data-form-content ul.address-list li:hover {
+                color: white;
+                background-color: #5a8dee;
+                cursor: pointer
+            }
+</style>
+<div class="row justify-content-center" id="smev_request">
+    <div class="row justify-content-center g-3">
+        <div class="col-10">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Персональные данные </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-1 justify-content-center">
+        <div class="col-6">
+            <label class="form-label">Заявители</label>
+            <select class="form-select select2-nosearch applicants">
+                <option value="">Выберите заявителя</option>
+                @for (int i = 0; i < applicants.Count; i++)
+                {
+                    <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName @applicants[i].BirthDate.ToString()?.Remove(10, 8)</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row mb-1 justify-content-center">
+        <div class="col-2">
+            <label class="form-label" asp-for="@request.Fio.LastName">Фамилия</label>
+            <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Fio.LastName" />
+        </div>
+        <div class="col-2">
+            <label class="form-label" asp-for="@request.Fio.FirstName">Имя</label>
+            <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Fio.FirstName">
+        </div>
+        <div class="col-2">
+            <label class="form-label" asp-for="@request.Fio.SecondName">Отчество</label>
+            <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Fio.SecondName">
+        </div>
+    </div>
+    <div class="row  mb-3">
+        <div class="col-12 mx-auto">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Документ, идентифицирующий личность</div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-6">
+            <label class="form-label" asp-for="@request.IdentityType">Тип документа</label>
+            <select class="select2-nosearch" asp-for="@request.IdentityType">
+                <option value="RfPassport">Паспорт гражданина РФ</option>
+                <option value="FidDoc">Паспорт иностранного гражданина</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-2">
+            <label class="form-label" asp-for="@request.DocSeries">Серия</label>
+            <input class="form-control required" placeholder="Серия" asp-for="@request.DocSeries">
+        </div>
+        <div class="col-2">
+            <label class="form-label" asp-for="@request.DocNumber">Номер</label>
+            <input class="form-control required" placeholder="Номер" asp-for="@request.DocNumber" type="text">
+        </div>
+        <div class="col-2">
+            <label class="form-label" asp-for="@request.DocIssueDate">Дата выдачи</label>
+            <div class="input-group input-group-merge">
+                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                <input asp-for="@request.DocIssueDate" type="text" class="form-control pickdate required" placeholder="Дата" value="">
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center g-3">
+        <div class="col-10">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Контактные данные</div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3 justify-content-center">
+        <div class="col-2 mt-3">
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="Contact1" value="1" name="Contact" checked="checked">
+                <label class="form-check-label" for="Contact1">Телефон</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="Contact2" name="Contact" value="0">
+                <label class="form-check-label" for="Contact2">E-mail</label>
+            </div>
+        </div>
+        <div class="col-3" id="phone">
+            <label class="form-label" asp-for="@request.Mobile">Номер телефона</label>
+            <input type="text" class="form-control phone required" placeholder="Номер телефона" asp-for="@request.Mobile">
+        </div>
+        <div class="col-3" data-disabled id="email">
+            <label class="form-label" asp-for="@request.Email">E-mail</label>
+            <input type="text" class="form-control email required" placeholder="E-mail" asp-for="@request.Email">
+        </div>
+    </div>
+</div>
+
+<script>
+    var applicants = @Json.Serialize(applicants);
+    function ShowErrorInputs() { };
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+              
+                $(formContent).find(".pickdate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                });
+
+                let options = { clearIncomplete: true, showMaskOnHover: false };
+                $(formContent).find('.phone').inputmask("+7(999)9999999", options);
+                $(formContent).find('.email').inputmask("email", options);
+                $(formContent).find(".pickdate").inputmask("99.99.9999", options);
+                $(formContent).find("select.select2-nosearch").each(function () {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+            }
+        };
+
+    $(formContent).find('.required').each(function () {
+        addValidation($(this));
+    });
+
+    $(formContent).find('[data-disabled]').each(function () {
+        visibilityBlock($(this), true, true);
+    });
+
+    // var options = { clearIncomplete: true, showMaskOnHover: false };
+    // $(formContent).find('[name$="DocSeries"]').inputmask("9{4}", options);
+    // $(formContent).find('[name$="DocNumber"]').inputmask("9{6}", options);
+
+    $('.applicants').on('change',
+        function () {
+            let id = $(this).val();
+            let $block = $(formContent);
+            let options = { clearIncomplete: true, showMaskOnHover: false };
+            let $series = $(formContent).find('[name$="DocSeries"]');
+            let $number = $(formContent).find('[name$="DocNumber"]');
+            $block.find('[type="text"]').each(function () {
+                $(this).val('');
+            });
+            if (id) {
+                $block.find('[name$="LastName"]').val(applicants[id].lastName);
+                $block.find('[name$="FirstName"]').val(applicants[id].firstName);
+                $block.find('[name$="SecondName"]').val(applicants[id].secondName);
+                $block.find('[name$="DocSeries"]').val(applicants[id].documentSerial);
+                $block.find('[name$="DocNumber"]').val(applicants[id].documentNumber);
+                $block.find('[name$="DocIssueDate"]').val(new Date(applicants[id].documentIssueDate).toLocaleDateString());
+                $block.find('[name$="Mobile"]').val(applicants[id].phone);
+                $block.find('[name$="Email"]').val(applicants[id].email);
+                switch (applicants[id].documentTypeCode) {
+                    case '21':
+                        $series.inputmask("9{4}", options);
+                        $number.inputmask("9{6}", options);
+                        $series.attr('pattern', '[0-9]{4}');
+                        $number.attr('pattern', '[0-9]{6}');
+                        $block.find('[name$="IdentityType"]').html(`
+                                                            <option value="RfPassport">Паспорт гражданина РФ</option>
+                                                            <option value="FidDoc">Паспорт иностранного гражданина</option>`);
+
+                        break;
+                    case '10':
+                        removeValidation($series);
+                        $series.inputmask('', options);
+                        $number.inputmask('', options);
+                        $block.find('[name$="IdentityType"]').html(`
+                                                            <option value="FidDoc">Паспорт иностранного гражданина</option>
+                                                            <option value="RfPassport">Паспорт гражданина РФ</option>
+                                                            `);
+
+                        break;
+                }
+            }
+        });
+
+    $(formContent).find('[name$="IdentityType"]').on('change',
+        function () {
+            let options = { clearIncomplete: true, showMaskOnHover: false };
+            let $series = $(formContent).find('[name$="DocSeries"]');
+            let $number = $(formContent).find('[name$="DocNumber"]');
+            switch ($(this).val()) {
+                case 'RfPassport':
+                    addValidation($series);
+                    $series.inputmask("9{4}", options);
+                    $number.inputmask("9{6}", options);
+                    $series.attr('pattern', '[0-9]{4}');
+                    $number.attr('pattern', '[0-9]{6}');
+                    break;
+                case 'FidDoc':
+                    removeValidation($series);
+                    $series.removeClass('is-invalid');
+                    $series.inputmask('', options);
+                    $number.inputmask('', options);
+                    break;
+            }
+        });
+
+    $(formContent).find('[name="Contact"]').on('change', function () {
+        if ($(this).val() == '1') {
+            visibilityBlock($('#phone'), false, false);
+            visibilityBlock($('#email'), true, true);
+        } else {
+            visibilityBlock($('#phone'), true, true);
+            visibilityBlock($('#email'), false, false);
+        }
+    });
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').hide();
+                } else {
+                    $block.hide();
+                }
+                break;
+            case false:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').show();
+                } else {
+                    $block.removeClass('d-none')
+                    $block.show();
+                }
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        removeValidation($(this));
+                    }
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                    if ($(this).hasClass('required')) {
+                        addValidation($(this));
+                    }
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    $(formContent).find('.applicants').val('0').trigger('change');
+</script>

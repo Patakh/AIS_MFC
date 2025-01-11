@@ -1,0 +1,160 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    var detailModel = Model.Model as AisLogistics.DataLayer.Common.Dto.Reference.EmployeeModelDto;
+    bool isThisEmployee = (bool)ViewData["isThisEmployees"];
+}
+
+<!-- table -->
+
+
+<div>
+    <div class="row mb-3">
+        <div class="col-6">
+            @if (Model.IsVisibleDescription)
+            {
+                <div class="b-s-14">@Model.ViewDescription</div>
+            }
+        </div>
+               
+        <div class="col-6 text-end">
+            @if (User.HasClaim(AccessKeyNames.ReferenceEmployee, AccessKeyValues.Add))
+            {
+                <a asp-action="EmployeeChangeModal" asp-route-id="@detailModel.Id" asp-route-actiontype="edit" data-btn-type="modal" class="r-a-14 me-3">
+                    <i class="bi bi-pencil-square"></i> Редактировать данные
+                </a>
+            }
+            @if (isThisEmployee || User.HasClaim(AccessKeyNames.ReferenceEmployee, AccessKeyValues.Add))
+            {
+                <a asp-action="EmployeePasswordChangeModal" asp-route-id="@detailModel.Id" asp-route-actiontype="edit" data-btn-type="modal" class="r-a-14">
+                    <i class="bi bi-pencil-square"></i> Изменить пароль
+                </a>
+            }
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Табельный номер
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.EmployeePersonalNumber ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            ФИО                             
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.EmployeeName ?? "-")
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Логин
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.EmployeeLogin ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Номер телефона
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.EmployeePhone ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Почта
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.EmployeeEmail ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Документ удостоверяющий личность
+        </div>
+        <div class="col-12 m-s-14">
+            Паспорт
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Серия Номер
+        </div>
+        <div class="col-12 m-s-14">
+            @(string.IsNullOrEmpty(detailModel.EmployeeDocSerial) && string.IsNullOrEmpty(detailModel.EmployeeDocNumber) ? "-" : $"{detailModel.EmployeeDocSerial ?? ""} {detailModel.EmployeeDocSerial ?? ""}")  
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Дата выдачи
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.EmployeeDocIssueDate?.ToString("dd.MM.yyyy") ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Кем выдан
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.EmployeeDocIssuePlace ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Дата рождения
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.EmployeeDocBirthDate?.ToString("dd.MM.yyyy") ?? "-")
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Место рождения
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.EmployeeDocBirthPlace ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            СНИЛС
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.EmployeeSnils ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            ИНН
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.EmployeeInn ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Номер сертификата
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.EmployeeCertificateNumber ?? "-")
+        </div>
+    </div>
+</div>
+   
+<!--/ table -->

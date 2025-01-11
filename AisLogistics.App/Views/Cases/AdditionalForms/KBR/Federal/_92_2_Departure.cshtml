@@ -1,0 +1,278 @@
+﻿ @model _92_2_DepartureModel
+@{
+
+    IEnumerable<SelectListItem> DocumentIdentity = new List<SelectListItem> {
+             new ("Паспорт гражданина РФ", "Паспорт гражданина РФ"),
+             new ("Свидетельство о рождении",  "Свидетельство о рождении"),
+             new ( "Паспорт иностранного гражданина", "Паспорт иностранного гражданина"),
+             new ( "Свидетельство о рождении иностранного гражданина", "Свидетельство о рождении иностранного гражданина"),
+             new ("Вид на жительство", "Вид на жительство"),
+             new ("Загранпаспорт гражданина РФ", "Загранпаспорт гражданина РФ"),
+             new ("Паспорт моряка", "Паспорт моряка"),
+    };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">Сведения о лице, подлежащем снятию с учета по месту пребывания</h5>
+            <div class="row">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant!.LastName">Фамилия</label>
+                    <input type="text" class="form-control" asp-for="Applicant!.LastName" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant!.FirstName">Имя</label>
+                    <input type="text" class="form-control" asp-for="Applicant.FirstName">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant!.SecondName">Отчество</label>
+                    <input type="text" class="form-control" asp-for="Applicant!.SecondName">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Citizenship">гражданство (подданство)</label>
+                    <input type="text" class="form-control" asp-for="Citizenship">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant!.Gender">Пол</label>
+                    <select class="select2-nosearch" asp-for="Applicant!.Gender">
+                        <option value="1">Мужской</option>
+                        <option value="2">Женский</option>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant!.BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="Applicant!.BirthDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant!.Phone">Телефон</label>
+                    <input type="text" class="form-control " asp-for="Applicant!.Phone" maxlength="10">
+                </div> 
+                <div class="col-4">
+                    <label class="form-label" asp-for="DepartureDate">Дата убытия</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="DepartureDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <br />
+            <h5 class="my-2">Адрес места пребывания</h5>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="AddressPlaceStay!.Region">Область, край, республика, АО</label>
+                    <input type="text" class="form-control" asp-for="AddressPlaceStay!.Region">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="AddressPlaceStay!.District">Район</label>
+                    <input type="text" class="form-control" asp-for="AddressPlaceStay!.District">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="AddressPlaceStay!.City">Город или другой населенный пункт</label>
+                    <input type="text" class="form-control" asp-for="AddressPlaceStay!.City">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="AddressPlaceStay!.Street">Улица</label>
+                    <input type="text" class="form-control" asp-for="AddressPlaceStay!.Street">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="AddressPlaceStay!.House">Дом</label>
+                    <input type="text" class="form-control" asp-for="AddressPlaceStay!.House">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="AddressPlaceStay!.Body">Корпус</label>
+                    <input type="text" class="form-control" asp-for="AddressPlaceStay!.Body">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="AddressPlaceStay!.Building">Строение</label>
+                    <input type="text" class="form-control" asp-for="AddressPlaceStay!.Building">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="AddressPlaceStay!.Flat">Квартира</label>
+                    <input type="text" class="form-control" asp-for="AddressPlaceStay!.Flat">
+                </div>
+            </div>
+            <br />
+            <h5 class="my-2">Сведения о принимающей стороне</h5> 
+            <br />
+            <h6 class="my-2">Документ, удостоверяющий личность принимающей стороны</h6>
+            <div class="row mb-3"> 
+                <div class="col-3">
+                    <label class="form-label" asp-for="ReceivingParty!.IdentityDocument!.ValidUntil">Действителен до</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="ReceivingParty!.IdentityDocument!.ValidUntil" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">Адрес регистрации по месту жительства принимающей стороны</h6>
+            <div class="row">
+                <div class="col-6">
+                    <label class="form-label" asp-for="ReceivingParty!.ResidenceAddress!.Region">Область, край, республика, АО</label>
+                    <input type="text" class="form-control" asp-for="ReceivingParty!.ResidenceAddress!.Region">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="ReceivingParty!.ResidenceAddress!.District">Район</label>
+                    <input type="text" class="form-control" asp-for="ReceivingParty!.ResidenceAddress!.District">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="ReceivingParty!.ResidenceAddress!.City">Город или другой населенный пункт</label>
+                    <input type="text" class="form-control" asp-for="ReceivingParty!.ResidenceAddress!.City">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="ReceivingParty!.ResidenceAddress!.Street">Улица</label>
+                    <input type="text" class="form-control" asp-for="ReceivingParty!.ResidenceAddress!.Street">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ReceivingParty!.ResidenceAddress!.House">Дом</label>
+                    <input type="text" class="form-control" asp-for="ReceivingParty!.ResidenceAddress!.House">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ReceivingParty!.ResidenceAddress!.Body">Корпус</label>
+                    <input type="text" class="form-control" asp-for="ReceivingParty!.ResidenceAddress!.Body">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ReceivingParty!.ResidenceAddress!.Building">Строение</label>
+                    <input type="text" class="form-control" asp-for="ReceivingParty!.ResidenceAddress!.Building">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ReceivingParty!.ResidenceAddress!.Flat">Квартира</label>
+                    <input type="text" class="form-control" asp-for="ReceivingParty!.ResidenceAddress!.Flat">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="ReceivingParty!.OrganizationName">Наименование организации </label>
+                    <input type="text" class="form-control" asp-for="ReceivingParty!.OrganizationName">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ReceivingParty!.OrganizationINN">ИНН</label>
+                    <input type="text" class="form-control" asp-for="ReceivingParty!.OrganizationINN">
+                </div>
+                <div class="col-12">
+                    <label class="form-label" asp-for="ReceivingParty!.OrganizationAdressRegistration">Адрес организации</label>
+                    <input type="text" class="form-control" asp-for="ReceivingParty!.OrganizationAdressRegistration">
+                </div>
+            </div> 
+            <br />
+            <h6 class="my-2">Документ, подтверждающий полномочия представителя организации</h6>
+            <div class="row">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ReceivingPartyLegalDocument!.Type">Вид</label>
+                    <input type="text" class="form-control" asp-for="ReceivingPartyLegalDocument!.Type">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="ReceivingPartyLegalDocument!.Series">Серия</label>
+                    <input type="text" class="form-control" asp-for="ReceivingPartyLegalDocument!.Series">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ReceivingPartyLegalDocument!.Number">Номер</label>
+                    <input type="text" class="form-control" asp-for="ReceivingPartyLegalDocument!.Number">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ReceivingPartyLegalDocument!.IssuerDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="ReceivingPartyLegalDocument!.IssuerDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ReceivingPartyLegalDocument!.ValidUntil">Действителен до</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="ReceivingPartyLegalDocument!.ValidUntil" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var additionalForm = $('#additional-data-content');
+    var btnNext = $('.btn-next');
+
+    $(function () {
+
+        let options = {
+            clearIncomplete: true,
+            showMaskOnHover: false
+        };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("[name$=Phone]").inputmask("[9]{10}", options);
+        additionalForm.find("[name$=OrganizationINN]").inputmask("[9]{10}", options);
+
+        additionalForm.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+        });
+
+        togleFields();
+    });
+
+    additionalForm.find("#IsActualResidenceAddress").on('click', function () {
+        togleFields();
+    });
+    function togleFields() {
+        additionalForm.find('[checkBlock] input[type="radio"], [checkBlock] input[type="checkbox"]').each(function () {
+            let $block = $(this).closest('[checkBlock]');
+
+            if ($(this).is(':checked')) {
+                visibilityBlock($block.find('[checkBlockBody]'), false, false);
+            } else {
+                visibilityBlock($block.find('[checkBlockBody]'), true, true);
+            }
+        })
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

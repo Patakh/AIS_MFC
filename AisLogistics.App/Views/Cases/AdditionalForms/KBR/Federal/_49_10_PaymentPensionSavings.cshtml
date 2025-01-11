@@ -1,0 +1,177 @@
+﻿@model _49_10_PaymentPensionSavingsModel
+<style>
+    .form-check {
+        margin-left: 10px;
+    }
+
+    .form-check label {
+        padding-left: 10px;
+    }
+</style>
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">Заявитель</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Citizenship">Гражданство</label>
+                    <input type="text" class="form-control" asp-for="Citizenship">
+                </div>
+            </div>
+            <h6 class="my-2">Способ оплаты</h6>
+            <div class="row mb-2" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="PaymentTypeInfo.IsChecked" id="PaymentType1" class="form-check-input" type="radio" value="1">
+                        <label for="PaymentType1" class="form-check-label">через кредитную организацию</label>
+                    </div>
+                </div>
+                <div class="row mb-3 justify-content-end" checkBlockBody>
+                    <div class="col-11 mb-2">
+                        <label class="form-label" asp-for="PaymentTypeInfo.PaymentBankInfo.Score">на счет №</label>
+                        <input type="text" class="form-control" asp-for="PaymentTypeInfo.PaymentBankInfo.Score">
+                    </div>
+                    <div class="col-11">
+                        <label class="form-label" asp-for="PaymentTypeInfo.PaymentBankInfo.OpenIn">наименование кредитной организации</label>
+                        <input type="text" class="form-control" asp-for="PaymentTypeInfo.PaymentBankInfo.OpenIn">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="PaymentTypeInfo.IsChecked" id="PaymentType2" class="form-check-input" type="radio" value="2">
+                        <label for="PaymentType2" class="form-check-label">через организацию федеральной почтовой связи</label>
+                    </div>
+                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                        <div class="col-11 mb-2" checkBlock>
+                            <div class="form-check">
+                                <input asp-for="PaymentTypeInfo.PaymentPochtaInfo.IsChecked" id="PaymentPochtaType1" class="form-check-input" type="radio" value="1">
+                                <label for="PaymentPochtaType1" class="form-check-label">путем вручения на дому</label>
+                            </div>
+                            <div class="row mb-3 justify-content-end" checkBlockBody>
+                                <div class="col-11">
+                                    <label class="form-label" asp-for="PaymentTypeInfo.PaymentPochtaInfo.PostalDeliveryHome">почтовый адрес, по которому должна производиться доставкау</label>
+                                    <input type="text" class="form-control" asp-for="PaymentTypeInfo.PaymentPochtaInfo.PostalDeliveryHome">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-11 mb-2" checkBlock>
+                            <div class="form-check">
+                                <input asp-for="PaymentTypeInfo.PaymentPochtaInfo.IsChecked" id="PaymentPochtaType2" class="form-check-input" type="radio" value="2">
+                                <label for="PaymentPochtaType2" class="form-check-label">путем вручения в кассе организации</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="PaymentTypeInfo.IsChecked" id="PaymentType3" class="form-check-input" type="radio" value="3">
+                        <label for="PaymentType3" class="form-check-label">через иную организацию, занимающуюся доставкой пенсий</label>
+                    </div>
+                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                        <div class="col-11 mb-3">
+                            <label class="form-label" asp-for="PaymentTypeInfo.PaymentOrherInfo.OtherDeliveryOrganizationName">название организации</label>
+                            <input type="text" class="form-control" asp-for="PaymentTypeInfo.PaymentOrherInfo.OtherDeliveryOrganizationName">
+                        </div>
+                        <div class="col-11 mb-2" checkBlock>
+                            <div class="form-check">
+                                <input asp-for="PaymentTypeInfo.PaymentOrherInfo.IsChecked" id="PaymentOtherType1" class="form-check-input" type="radio" value="1">
+                                <label for="PaymentOtherType1" class="form-check-label">путем вручения на дому</label>
+                            </div>
+                            <div class="row mb-3 justify-content-end" checkBlockBody>
+                                <div class="col-11">
+                                    <label class="form-label" asp-for="PaymentTypeInfo.PaymentOrherInfo.OtherDeliveryHome">почтовый адрес, по которому должна производиться доставка</label>
+                                    <input type="text" class="form-control" asp-for="PaymentTypeInfo.PaymentOrherInfo.OtherDeliveryHome">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-11 mb-2" checkBlock>
+                            <div class="form-check">
+                                <input asp-for="PaymentTypeInfo.PaymentOrherInfo.IsChecked" id="PaymentOtherType2" class="form-check-input" type="radio" value="2">
+                                <label for="PaymentOtherType2" class="form-check-label">путем вручения в кассе организации</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () {
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        togleFields()
+    });
+
+    additionalForm.find('[type="radio"]').on('click', function () {
+        togleFields();
+    });
+
+    function togleFields() {
+        additionalForm.find('[checkBlock] input[type="radio"]').each(function () { 
+            let $block = $(this).closest('[checkBlock]');
+
+            if ($(this).is(':checked')) {
+                visibilityBlock($block.find('[checkBlockBody]'), false, false); 
+            } else {
+                visibilityBlock($block.find('[checkBlockBody]'), true, true);
+            }
+        })
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

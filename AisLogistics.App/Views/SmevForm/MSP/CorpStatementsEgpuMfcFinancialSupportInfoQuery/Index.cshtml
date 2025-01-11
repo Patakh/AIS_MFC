@@ -1,0 +1,443 @@
+﻿@using AisLogistics.DataLayer.Utils
+@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var request = new MspCorpStatementsEgpuMfcFinancialSupportInfoQueryRequestData
+            {
+                ApplicationPurpose = new MspCorpApplicationPurposeType(),
+                ObtainingInfoPurpose = new MspCorpObtainingInfoPurposeType(),
+                TargetUse = new MspCorpTargetUseType()
+            };
+}
+<style>
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+</style>
+<div class="row justify-content-center g-3">
+    <div class="col-12">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Данные заявителя</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-1">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ApplicationType">Тип заявителя</label>
+                <select class="form-select select2-nosearch" asp-for="@request.ApplicationType">
+                    <option value="PersonApplication">Физическое лицо</option>
+                    <option value="IpApplication">Индивидуальный предприниматель</option>
+                    <option value="LegalApplication">Юридическое лицо</option>
+                </select>
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Inn">ИНН</label>
+                <input type="text" class="form-control required" placeholder="ИНН" asp-for="@request.Inn" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.RegionCode">Регион получения финансовой или гарантийной поддержки</label>
+                <select class="select2-search required" asp-for="@request.RegionCode"
+                        data-dictionary='{"dictionary":"RosReestrEgrnRegionsRf"}'>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-1">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <label class="form-label">Цель получения запрашиваемой информации</label>
+                <select class="form-select select2-nosearch" id="ObtainingInfoPurpose">
+                    <option value="">Не выбранно</option>
+                    <option value="Purpose1">Для получения финансирования, банковской гарантии у финансовых партнеров АО «Корпорация «МСП»</option>
+                    <option value="Purpose2">Для получения независимой гарантии АО «Корпорация «МСП»</option>
+                    <option value="Other">Иное</option>
+                </select>
+            </div>
+            <div class="col-12 mt-2" data-disable id="ObtainingInfoPurposeOther">
+                <label class="form-label" asp-for="@request.ObtainingInfoPurpose.Other">Иная цель получения запрашиваемой информации</label>
+                <input type="text" class="form-control required" placeholder="Иная цель получения запрашиваемой информации" asp-for="@request.ObtainingInfoPurpose.Other" />
+            </div>
+            <div class="col-6 mt-2">
+                <label class="form-label" asp-for="@request.MainActivity">Основной вид деятельности</label>
+                <input type="text" class="form-control" placeholder="Основной вид деятельности" asp-for="@request.MainActivity" />
+            </div>
+            <div class="col-6 mt-2">
+                <label class="form-label" asp-for="@request.LoanTerms">Срок кредитования/лизинга/банковской гарантии</label>
+                <input type="number" class="form-control" placeholder="Срок кредитования/лизинга/банковской гарантии" asp-for="@request.LoanTerms" />
+            </div>
+            <div class="col-12 mt-2">
+                <label class="form-label" asp-for="@request.FundingAmount">Сумма финансирования/банковской гарантии</label>
+                <input type="number" class="form-control" placeholder="Сумма финансирования/банковской гарантии" asp-for="@request.FundingAmount" />
+            </div>
+            <div class="col-12 mt-2">
+                <label class="form-label" asp-for="@request.AdditionalInfo">Дополнительная информация по кредиту/лизингу/банковской гарантии, планируемому Заявителем к получению</label>
+                <input type="text" class="form-control" placeholder="Дополнительная информация по кредиту/лизингу/банковской гарантии, планируемому Заявителем к получению" asp-for="@request.AdditionalInfo" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center g-3">
+    <div class="col-12">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Состав предоставляемой информации</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-1">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-12 form-check form-switch">
+                <label class="form-check-label fs-5 b-s-16" asp-for="@request.ApplicationPurpose.Purpose1">Перечень финансовых партнеров АО «Корпорация «МСП», предоставляющих финансовую поддержку субъектам малого и среднего предпринимательства, и оказываемой ими финансовой поддержки</label>
+                <input class="form-check-input" type="checkbox" asp-for="@request.ApplicationPurpose.Purpose1">
+            </div>
+            <div class="col-12 form-check form-switch mt-2">
+                <label class="form-check-label fs-5 b-s-16" asp-for="@request.ApplicationPurpose.Purpose2">Перечень и условия гарантийной поддержки субъектов малого и среднего предпринимательства, предоставляемой АО «Корпорация МСП» и информацию о порядке ее получения</label>
+                <input class="form-check-input" type="checkbox" asp-for="@request.ApplicationPurpose.Purpose2">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center g-3">
+    <div class="col-12">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Целевое использование</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-1">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-12 form-check form-switch">
+                <label class="form-check-label fs-5 b-s-16" asp-for="@request.TargetUse.ObligationsEnsureFulfillment">Обеспечение исполнения обязательств по государственному/муниципальному контракту в рамках Федеральных законов № 44-ФЗ и 223-ФЗ</label>
+                <input class="form-check-input" type="checkbox" asp-for="@request.TargetUse.ObligationsEnsureFulfillment">
+            </div>
+            <div class="col-4 form-check form-switch mt-2">
+                <label class="form-check-label fs-5 b-s-16" asp-for="@request.TargetUse.InvestmentObjectives">Инвестиционные цели</label>
+                <input class="form-check-input" type="checkbox" asp-for="@request.TargetUse.InvestmentObjectives">
+            </div>
+            <div class="col-5 form-check form-switch mt-2">
+                <label class="form-check-label fs-5 b-s-16" asp-for="@request.TargetUse.WorkingCapitalReplenishment">Пополнение оборотных средств</label>
+                <input class="form-check-input" type="checkbox" asp-for="@request.TargetUse.WorkingCapitalReplenishment">
+            </div>
+            <div class="col-3 form-check form-switch mt-2">
+                <label class="form-check-label fs-5 b-s-16" asp-for="@request.TargetUse.Other">Прочее</label>
+                <input class="form-check-input" type="checkbox" asp-for="@request.TargetUse.Other">
+            </div>
+            <div class="col-12 mt-2" data-disabled id="OtherDetails">
+                <label class="form-label" asp-for="@request.TargetUse.OtherDetails">Срок кредитования/лизинга/банковской гарантии</label>
+                <input type="text" class="form-control" placeholder="Срок кредитования/лизинга/банковской гарантии" asp-for="@request.TargetUse.OtherDetails" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center mb-3">
+    <div class="row justify-content-center g-3">
+        <div class="col-12 mx-auto">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Подписка</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="row ">
+            <div class="col-4">
+                <div class="for-check form-check-inline mx-0">
+                    <input class="form-check-input" type="checkbox" asp-for="@request.IsSubscribe">
+                    <label class="form-check-label" asp-for="@request.IsSubscribe">Подписка на результат услуги</label>
+                </div>
+            </div>
+            <div class="col-3" id="SubscriptionEndDate" data-disabled>
+                <div class="input-group input-group-merge">
+                    <input asp-for="@request.SubscriptionEndDate" type="text" class="form-control pickdate required" placeholder="Дата окончания подписки" value="">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center g-3">
+    <div class="col-12 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Способ предоставления информации</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div class="row mb-2">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ReportingMethod">Вариант предоставления</label>
+                <select class="form-select select2-nosearch" asp-for="@request.ReportingMethod" data-dictionary='{"dictionary":"MspCorpReportingMethodTypes","default_value":"2"}'></select>
+            </div>
+            <div class="col-4" data-disabled>
+                <label class="form-label" asp-for="@request.ReportingMethodOtherTypeText">Введите email</label>
+                <input type="text" class="form-control required" asp-for="@request.ReportingMethodOtherTypeText" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center g-3">
+    <div class="col-12 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Способ информирования о готовности результата услуги</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3">
+    <div class="col-8">
+        <div class="row ">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.InformingMethodPhone">Номер телефона</label>
+                <input type="text" class="form-control phone" placeholder="Номер телефона" asp-for="@request.InformingMethodPhone">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.InformingMethodEmail">E-mail</label>
+                <input type="text" class="form-control email" placeholder="E-mail" asp-for="@request.InformingMethodEmail">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function ShowErrorInputs() {
+
+    }
+
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                $(formContent).find('.required').each(function() {
+                    addValidation($(this));
+                });
+
+                $(formContent).find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+
+                /* init datepicker */
+                $(formContent).find(".pickdate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                });
+
+                let options = { clearIncomplete: true, showMaskOnHover: false };
+
+                /* init inputmask */
+                $(formContent).find('.phone').inputmask("9999999999", options);
+                $(formContent).find('.email').inputmask("email", options);
+
+                $(formContent).find("select.select2-nosearch").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+                $(formContent).find("select.select2-search").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal")
+                    });
+                });
+
+                function openItemForm(el) {
+
+                    if (el.value == 'true') {
+                        el.value = 'false';
+                        if (el.dataset.openitem != 'null') {
+                            document.querySelector(`#${el.dataset.openitem}`).classList.add('d-none')
+                            addDisabled(`${el.dataset.openitem}`, true)
+                        }
+                    }
+
+                    else {
+                        el.value = 'true';
+                        if (el.dataset.openitem != 'null') {
+                            document.querySelector(`#${el.dataset.openitem}`).classList.remove('d-none')
+                            addDisabled(`${el.dataset.openitem}`, false)
+                        }
+                    }
+                }
+
+
+                $(formContent).find('[name$="ReportingMethod"]').on('change',
+                    function() {
+                        let $mobile = $('#request_InformingMethodPhone');
+                        let $email = $('#request_InformingMethodEmail');
+                        let $coment = $('#request_ReportingMethodOtherTypeText');
+
+                        switch ($(this).val()) {
+                            case '1':
+                                $coment.prev().text('Введите email');
+                                visibilityBlock($coment.parent(), false, false);
+                                break;
+                            case '2':
+                                visibilityBlock($coment.parent(), true, true);
+                                break;
+                            case '3':
+                                $coment.prev().text('Введите комментарий');
+                                visibilityBlock($coment.parent(), false, false);
+                                break;
+
+                        };
+
+                    });
+                $(formContent).find('#request_IsSubscribe').on('change',
+                    function() {
+                        if ($(this).is(':checked')) {
+                            visibilityBlock($('#SubscriptionEndDate'), false, false);
+                        };
+                        if ($(this).is(':not(:checked)')) {
+                            visibilityBlock($('#SubscriptionEndDate'), true, true);
+                        };
+                    });
+
+                $(formContent).find('#ObtainingInfoPurpose').on('change',
+                    function() {
+                        switch ($(this).val()) {
+                            case 'Other':
+                                visibilityBlock($('#ObtainingInfoPurposeOther'), false, false);
+                                break;
+                            default:
+                                visibilityBlock($('#ObtainingInfoPurposeOther'), true, true);
+                                break;
+                        }
+                    });
+
+                $(formContent).find('#request_TargetUse_Other').on('change',
+                    function() {
+
+                        if ($(this).is(':checked')) {
+                            visibilityBlock($('#OtherDetails'), false, false);
+                        };
+                        if ($(this).is(':not(:checked)')) {
+                            visibilityBlock($('#OtherDetails'), true, true);
+                        };
+                    });
+
+                $(formContent).find('[name$="Inn"]').inputmask('999999999999', options);
+                $(formContent).find('[name$="ApplicationType"]').on('change',
+                    function() {
+                        let options = { clearIncomplete: true, showMaskOnHover: false };
+                        let $inn = $(formContent).find('[name$="Inn"]');
+                        switch ($(this).val()) {
+                            case 'LegalApplication':
+                                $inn.inputmask('9999999999', options);
+                                break;
+                            default:
+                                $inn.inputmask('999999999999', options);
+                        }
+                    });
+            }
+        };
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').hide();
+                } else {
+                    $block.hide();
+                }
+                break;
+            case false:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').show();
+                } else {
+                    $block.show();
+                }
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        removeValidation($(this));
+                    }
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                    if ($(this).hasClass('required')) {
+                        addValidation($(this));
+                    }
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    (function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function() {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post(`/SmevBase/SmevGetDictionary`,
+                    {
+                        type: options.dictionary
+                    },
+                    function(dictionary) {
+                        fillSelect(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function() {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+            });
+    }
+
+</script>

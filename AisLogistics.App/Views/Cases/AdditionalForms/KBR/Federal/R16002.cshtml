@@ -1,0 +1,323 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.KBR.Federal.R16002Model
+@{
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">Сведения о юридическом лице, содержатиеся в Едином государственном реестре юридических лиц</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label asp-for="LegalEntityOGRN" class="form-label">ОГРН</label>
+                            <input asp-for="LegalEntityOGRN" class="form-control" type="text">
+                        </div>
+                        <div class="col-6">
+                            <label asp-for="LegalEntityINN" class="form-label">ИНН</label>
+                            <input asp-for="LegalEntityINN" class="form-control" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="my-2">Основание прекращения</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="row" checkBlock>
+                        <div class="form-check">
+                            <input id="checkr" class="form-check-input" type="radio" value="0">
+                            <label for="checkr" class="form-check-label">
+                                Для унитарного предприятия
+                            </label>
+                        </div>
+                        <div class="row mb-3 justify-content-end" checkBlockBody>
+                            <div class="form-check">
+                                <input asp-for="TerminationReasonTypeId" id="TerminationReasonTypeId1" class="form-check-input" type="radio" value="1">
+                                <label for="TerminationReasonTypeId1" class="form-check-label">
+                                    продажа имущественного комплекса
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input asp-for="TerminationReasonTypeId" id="TerminationReasonTypeId2" class="form-check-input" type="radio" value="2">
+                                <label for="TerminationReasonTypeId2" class="form-check-label">
+                                    внесение имущественного комплекса в уставный капитал акционерного общества
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input asp-for="TerminationReasonTypeId" id="TerminationReasonTypeId3" class="form-check-input" type="radio" value="3">
+                                <label for="TerminationReasonTypeId3" class="form-check-label">
+                                    передача имущественного комплекса в собственность государственной корпорации
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" checkBlock>
+                        <div class="form-check">
+                            <input id="checkr" class="form-check-input" type="radio" value="1">
+                            <label for="checkr" class="form-check-label">
+                                Для государственного или муниципалъного учреждения
+                            </label>
+                        </div>
+                        <div class="row mb-3 justify-content-end" checkBlockBody>
+                            <div class="form-check">
+                                <input asp-for="TerminationReasonTypeId" id="TerminationReasonTypeId4" class="form-check-input" type="radio" value="4">
+                                <label for="TerminationReasonTypeId4" class="form-check-label">
+                                    внесение имущества в уставный капитал акционерного общества
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input asp-for="TerminationReasonTypeId" id="TerminationReasonTypeId5" class="form-check-input" type="radio" value="5">
+                                <label for="TerminationReasonTypeId5" class="form-check-label">
+                                    передача имущества в собственность государственной корпорации
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="my-2">Сведения о заявителе</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <h6 class="my-2">Заявителем является</h6>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input asp-for="ApplicantTypeId" id="ApplicantTypeId1" class="form-check-input" type="radio" value="1">
+                                <label for="LegalEntityReorganizationStatusTypeId1" class="form-check-label">
+                                    представителъ уполномоченного федералъного органа исполнителъной власти
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input asp-for="ApplicantTypeId" id="ApplicantTypeId2" class="form-check-input" type="radio" value="2">
+                                <label for="ApplicantTypeId2" class="form-check-label">
+                                    представителъ уполномоченного органа субъекта Российской Федерации
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input asp-for="ApplicantTypeId" id="ApplicantTypeId3" class="form-check-input" type="radio" value="3">
+                                <label for="ApplicantTypeId3" class="form-check-label">
+                                    представителъ уполномоченного органа муниципалъного образования
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="my-2">Фамилия, имя, отчество физического лица</h6>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label asp-for="ApplicantLastName" class="form-label">Фамилия</label>
+                                    <input asp-for="ApplicantLastName" class="form-control" type="text">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label asp-for="ApplicantFirstName" class="form-label">Имя</label>
+                                    <input asp-for="ApplicantFirstName" class="form-control" type="text">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label asp-for="ApplicantMiddleName" class="form-label">Отчество</label>
+                                    <input asp-for="ApplicantMiddleName" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="my-2">ИНН (при наличии)</h6>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <input asp-for="ApplicantINN" class="form-control" type="text">
+                        </div>
+                    </div>
+
+                    <h6 class="my-2">Сведения о рождении</h6>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="row mb-3">
+                                <div class="col-4">
+                                    <label asp-for="ApplicantBirthDate" class="form-label">Дата рождения</label>
+                                    <input asp-for="ApplicantBirthDate" class="form-control pickdate" type="text">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label asp-for="ApplicantBirthPlace" class="form-label">Место рождения</label>
+                                    <input asp-for="ApplicantBirthPlace" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="my-2">Сведения о документе, удостоверяютем личность</h6>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label asp-for="ApplicantDocumentTypeCode" class="form-label">Вид документа (код)</label>
+                                    <input asp-for="ApplicantDocumentTypeCode" class="form-control" type="text">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label asp-for="ApplicantDocumentSeriesNumber" class="form-label">Серия и номер документа</label>
+                                    <input asp-for="ApplicantDocumentSeriesNumber" class="form-control" type="text">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-4">
+                                    <label asp-for="ApplicantDocumentGivenDate" class="form-label">Дата вьдачи</label>
+                                    <input asp-for="ApplicantDocumentGivenDate" class="form-control pickdate" type="text">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label asp-for="ApplicantDocumentGivenBy" class="form-label">Кем вьдан</label>
+                                    <input asp-for="ApplicantDocumentGivenBy" class="form-control" type="text">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label asp-for="ApplicantDocumentDepartmentCode" class="form-label">Код подразделения</label>
+                                    <input asp-for="ApplicantDocumentDepartmentCode" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="my-2">
+                Документы, связанные с предоставлением государственной услуги по государственной регистрации индивидуального предпринимателя
+            </h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="row" checkBlock>
+                        <div class="form-check">
+                            <input asp-for="DocumentSendingTypeId" id="DocumentSendingTypeId1" class="form-check-input" type="radio" value="1">
+                            <label for="DocumentSendingTypeId1" class="form-check-label">
+                                направить по электронной почте
+                            </label>
+                        </div>
+                        <div class="row mb-3 justify-content-end" checkBlockBody>
+                            <div class="col-11 mb-2">
+                                <input type="text" class="form-control" asp-for="DocumentSendingEmail">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-check">
+                        <input asp-for="DocumentSendingTypeId" id="DocumentSendingTypeId2" class="form-check-input" type="radio" value="2">
+                        <label for="DocumentSendingTypeId2" class="form-check-label">вьдать на бумажном носителе</label>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="my-2">Нoмep контактного телефона заявителя</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <input type="text" class="form-control" asp-for="ApplicantPhone">
+                </div>
+            </div>
+
+            <h5 class="my-2">Сведения о лице, засвидетельствовавшим подлинность подписи заявителя в нотариальном порядке</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <h6 class="my-2">Лицом, засвидетельствовавшим подлинность подписи заявителя, является</h6>
+                    <div class="form-check">
+                        <input asp-for="PersonAuthenticatedSignatureTypeId" id="PersonAuthenticatedSignatureTypeId1" class="form-check-input" type="radio" value="1">
+                        <label for="PersonAuthenticatedSignatureTypeId1" class="form-check-label">нотариус</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="PersonAuthenticatedSignatureTypeId" id="PersonAuthenticatedSignatureTypeId2" class="form-check-input" type="radio" value="2">
+                        <label for="PersonAuthenticatedSignatureTypeId2" class="form-check-label">
+                            лицо, замещающее временно отсутствующего нотариуса
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="PersonAuthenticatedSignatureTypeId" id="PersonAuthenticatedSignatureTypeId3" class="form-check-input" type="radio" value="3">
+                        <label for="PersonAuthenticatedSignatureTypeId3" class="form-check-label">
+                            должностное лицо, уполномоченное на совершение нотариалъного действия
+                        </label>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label asp-for="PersonAuthenticatedSignatureINN" class="form-label">
+                                ИНН лица, засвидетелъствовавтего подлинность подписи заявителя
+                            </label>
+                            <input asp-for="PersonAuthenticatedSignatureINN" class="form-control" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () {
+        additionalForm.find('[type="radio"], input[type="checkbox"]').on('click', function () {
+            togleFields();
+        });
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", { clearIncomplete: true, showMaskOnHover: false });
+
+        togleFields();
+    })
+
+    function togleFields() {
+        additionalForm.find('[checkBlock] input[type="radio"], [checkBlock] input[type="checkbox"]').each(function () {
+            let $block = $(this).closest('[checkBlock]');
+
+            if ($(this).is(':checked')) {
+                visibilityBlock($block.find('[checkBlockBody]'), false, false);
+            } else {
+                visibilityBlock($block.find('[checkBlockBody]'), true, true);
+            }
+        })
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

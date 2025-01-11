@@ -1,0 +1,101 @@
+﻿@model _9_HuntingTicketModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h6 class="my-2">Заявитель</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="BirthsTown">Место рождения гор.</label>
+                    <input type="text" asp-for="BirthsTown" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="PlaceWork">Место работы</label>
+                    <input type="text" asp-for="PlaceWork" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Post">Должность</label>
+                    <input type="text" asp-for="Post" class="form-control">
+                </div>
+            </div>
+            <h6 class="my-2">Ранее состоял на учете в</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="OrganizationName">наименование организации</label>
+                    <input type="text" asp-for="OrganizationName" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-4">
+                    <label class="form-label" asp-for="HuntingTicketSeries">серия</label>
+                    <input type="text" asp-for="HuntingTicketSeries" class="form-control">
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" asp-for="HuntingTicketNumber">номер охотничьего билета</label>
+                    <input type="text" asp-for="HuntingTicketNumber" class="form-control">
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" asp-for="HuntingTicketIsueDate">дата выдачи охотничьего билета</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="HuntingTicketIsueDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <h6 class="my-2">Имею охотничье оружие:</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="WeaponsType">вид и калибр оружия</label>
+                    <input type="text" asp-for="WeaponsType" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="WeaponsSeriesNumber">серия и номер оружия</label>
+                    <input type="text" asp-for="WeaponsSeriesNumber" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="RightNumber">номер разрешения на право хранения и ношения оружия</label>
+                    <input type="text" asp-for="RightNumber" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-8">
+                    <label class="form-label" asp-for="RightIssuer">кем выдано</label>
+                    <input type="text" asp-for="RightIssuer" class="form-control">
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" asp-for="RightIssuerDate">кем и когда выдано указанное разрешение</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="RightIssuerDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () { 
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+       
+    }); 
+</script>

@@ -1,0 +1,234 @@
+﻿@model _7_SuperannuationPensionModel
+<style>
+    .form-check {
+        margin-left: 10px;
+    }
+
+        .form-check label {
+            padding-left: 10px;
+        }
+</style>
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FIOGen">от</label>
+                    <input type="text" asp-for="FIOGen" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="InsurancePension">Страховую пенсию по старости</label>
+                    <select class="select2-nosearch" asp-for="InsurancePension">
+                        <option value="по старости">по старости</option>
+                        <option value="по инвалидности">по инвалидности</option>
+                    </select>
+                </div>
+                <div class="col-7">
+                    <label class="form-label" asp-for="DepartmentPensionFund">получаю в Отделении Пенсионного фонда  (города, района)</label>
+                    <input type="text" asp-for="DepartmentPensionFund" class="form-control">
+                </div>
+            </div> 
+
+            <h6 class="my-2">Способ выплаты</h6>
+            <div class="row" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="PaymentMethod" class="form-check-input" type="radio" value="1" checked="@(string.IsNullOrEmpty(Model.PaymentMethod) ? "checked" : "")" />
+                        <label asp-for="PaymentMethod" class="form-check-label">
+                            Кредитная организация
+                        </label>
+                    </div>
+                </div>
+                <div class="row justify-content-end" checkBlockBody> 
+                    <div class="col-8">
+                        <label class="form-label" asp-for="NameCreditOrgan">Наименование банка</label>
+                        <input type="text" asp-for="NameCreditOrgan" class="form-control">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="BankCardNumber">Номер банковской карты</label>
+                        <input type="text" asp-for="BankCardNumber" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input id="PaymentMethod2" name="PaymentMethod" class="form-check-input" type="radio" value="2" />
+                        <label  for="PaymentMethod2" class="form-check-label">
+                            Почтовое отделение
+                        </label>
+                    </div>
+                </div>
+                <div class="row mb-3 justify-content-end" checkBlockBody> 
+                    <div class="col-11">
+                        <label class="form-label" asp-for="PostOffice">адрес или номер почтового отделенияя</label>
+                        <input type="text" asp-for="PostOffice" class="form-control">
+                    </div> 
+                </div>
+            </div>
+             
+            <h6 class="my-2">Результат рассмотрения заявления прошу</h6>
+            <div class="row mb-2" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input name="Response" id="Response" class="form-check-input" type="radio" value="1" checked="@(string.IsNullOrEmpty(Model.Response) ? "checked" : "")" />
+                        <label for="Response" class="form-check-label">
+                            Выдать на руки в Министерстве
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input name="Response" id="Response1" class="form-check-input" type="radio" value="2" />
+                        <label for="Response1"  class="form-check-label">
+                            выдать на руки в МФЦ
+                        </label>
+                    </div>
+                </div>
+                <div class="row mb-3 justify-content-end" checkBlockBody>
+                    <div class="col-11 mb-2">
+                        <label class="form-label" asp-for="ResponseAddress1">расположенном по адресу:</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text pe-0">КБР, </span>
+                            <input type="text" class="form-control" asp-for="ResponseAddress1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-2" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input name="Response" id="Response3" class="form-check-input" type="radio" value="3" />
+                        <label for="Response3" class="form-check-label">
+                            направить по почте
+                        </label>
+                    </div>
+                </div>
+                <div class="row mb-3 justify-content-end" checkBlockBody>
+                    <div class="col-11 mb-2">
+                        <label class="form-label" asp-for="ResponseAddress2">указать адрес</label>
+                        <input type="text" class="form-control" asp-for="ResponseAddress2">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input name="Response" id="Response4" class="form-check-input" type="radio" value="4" />
+                        <label for="Response4" class="form-check-label">
+                            направить в электронной форме в личный кабинет на портале
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-2" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input name="Response" id="Response5" class="form-check-input" type="radio" value="5" />
+                        <label for="Response5" class="form-check-label">
+                            направить по электронной почте
+                        </label>
+                    </div>
+                </div>
+                <div class="row mb-3 justify-content-end" checkBlockBody>
+                    <div class="col-11 mb-2">
+                        <label class="form-label" asp-for="ResponseAddress3">указать адрес</label>
+                        <input type="text" class="form-control" asp-for="ResponseAddress3">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () {
+
+        $('.btn-next').on('click', function () {
+            let gender = $('[name="customer.CustomerGender"]').val() == 1 ? 'm' : 'f';
+            let lastName = $("#customer_LastName").val().trim();
+            let firstName = $("#customer_FirstName").val().trim();
+            let secondName = $("#customer_SecondName").val().trim();
+            var rn = new RussianName(lastName, firstName, secondName, gender);
+            $("#FIOGen").val(rn.fullName(rn.gcaseGen));
+        });
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+          
+        if (document.getElementById('PaymentMethod').value)
+            additionalForm.find('#PaymentMethod').val(document.getElementById('PaymentMethod').value).trigger('change');
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        additionalForm.find('[type="radio"], input[type="checkbox"]').on('click', toggleFields);
+
+        toggleFields();
+    });
+
+    function toggleFields() {
+        additionalForm.find('[checkBlock] input[type="radio"], [checkBlock] input[type="checkbox"]').each(function () {
+            let $block = $(this).closest('[checkBlock]');
+
+            if ($(this).is(':checked')) {
+                visibilityBlock($block.find('[checkBlockBody]'), false, false);
+            } else {
+                visibilityBlock($block.find('[checkBlockBody]'), true, true);
+            }
+        })
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

@@ -1,0 +1,137 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.SmevRequestModelDto
+@{
+    Model.OldId = (int)Model.Id;
+}
+<form asp-controller="Reference" asp-action="SmevRequestSave" id="sendingForm" method="post" role="form">
+    <div class="form-body pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.OldId)
+            @Html.HiddenFor(m => m.IsRequestActive)
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SSmevId">Сервис</label>
+                    <select asp-for="SSmevId" asp-items="@ViewBag.Services" class="form-control">
+                        <option disabled selected value="">Не задано</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SSmevTypeRequestId">Тип запроса</label>
+                    <select asp-for="SSmevTypeRequestId" asp-items="Html.GetEnumSelectList<SmevRequestType>()" class="form-control no-search">
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="RequestName">Наименование</label>
+                    <input type="text" asp-for="RequestName" maxlength="350" class="form-control" placeholder="Наименование">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="Id">Код</label>
+                    <input type="number" min="0" asp-for="Id" class="form-control" placeholder="Код">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="CountDayExecution">Дни</label>
+                    <input type="number" min="0" asp-for="CountDayExecution" class="form-control" placeholder="Дни">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SServicesWeekId">Тип дней</label>
+                    <select asp-for="SServicesWeekId" asp-items="@ViewBag.DayTypes" class="form-control no-search">  
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="Path">Путь</label>
+                    <input type="text" asp-for="Path" class="form-control" placeholder="Путь">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="ServiceOrFunctionCode">Номер услуги</label>
+                    <input type="text" asp-for="ServiceOrFunctionCode" class="form-control" placeholder="Номер услуги">
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    document.querySelectorAll('#sendingForm select').forEach(item => {
+        if (item.classList.contains('no-search')) {
+            $(item).select2({ dropdownParent: $('#mainModal'), minimumResultsForSearch: -1 });
+            return;
+        }
+        $(item).select2({ dropdownParent: $('#mainModal') });
+    });
+
+    $(document).ready(function() {
+        const fv = FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    RequestName: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    SSmevId : {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    Id : {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            },
+                            integer: {
+                                message: 'Укажите число',
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }) .on('core.form.valid', function() {
+            var $form = $("#sendingForm");
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                dataType: 'json',
+                beforeSend: () => {
+                    $form.spinnerBtn("start");
+                },
+                complete: () => {
+                    $table.DataTable().ajax.reload(null, false);
+                    $form.spinnerBtn("stop");
+                    $("#mainModal").modal('hide');
+                }
+            });
+            return false;
+        });
+    });
+</script>

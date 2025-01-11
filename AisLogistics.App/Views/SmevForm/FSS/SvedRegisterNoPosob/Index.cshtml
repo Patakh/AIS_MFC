@@ -1,0 +1,327 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new GetFssSvedRegisterNoPosobRequestData
+            {
+                CivFio = new(),
+                ChildFio = new(),
+                DateFrame = new()
+            };
+}
+
+<style>
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+</style>
+
+<div class="row justify-content-center g-3">
+    <div class="col-10">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Детали запроса</div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center mb-3">
+    <div class="col-8">
+        <label class="form-label w-100 text-center">Период поиска сведений</label>
+        <div class="row justify-content-center">
+            <div class="col-3">
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.DateFrame.Begin" type="text" class="form-control pickadate required" placeholder="Дата начала">
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.DateFrame.End" type="text" class="form-control pickadate required" placeholder="Дата окончания">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center g-3">
+    <div class="col-10">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Данные лица, о котором запрашиваются сведения</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3" data-person>
+    <div class="col-12">
+        <div class="row justify-content-center mb-3">
+            <div class="col-8">
+                <label class="form-label">Заявители</label>
+                <select class="form-select select2-nosearch applicants">
+                    <option value="">Выберите заявителя</option>
+                    @for (int i = 0; i < applicants.Count; i++)
+                    {
+                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="row mb-1">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.CivFio.LastName">Фамилия</label>
+                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.CivFio.LastName" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.CivFio.FirstName">Имя</label>
+                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.CivFio.FirstName">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.CivFio.SecondName">Отчество</label>
+                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.CivFio.SecondName">
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ProtectorStatusCode">Статус лица</label>
+                <select class="form-select select2-nosearch required" asp-for="@request.ProtectorStatusCode"
+                        data-dictionary='{"dictionary":"FssProtectorStatus", "default_value":"01"}'>
+                </select>
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Snils">СНИЛС</label>
+                <input type="text" class="form-control snils required" placeholder="СНИЛС" asp-for="@request.Snils">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Inn">ИНН</label>
+                <input type="text" class="form-control inn-fl required" placeholder="ИНН" asp-for="@request.Inn">
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-12 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Документ, удостоверящий личность</div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.DocKindCode">Тип документа</label>
+                <select class="form-select select2-nosearch required" asp-for="@request.DocKindCode"
+                        data-dictionary='{"dictionary":"FnsDocTypes", "default_value":"21"}'>
+                </select>
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.DocSeries">Серия</label>
+                <input type="text" class="form-control required" placeholder="Серия" asp-for="@request.DocSeries">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.DocNumber">Номер</label>
+                <input type="text" class="form-control required" placeholder="Номер" asp-for="@request.DocNumber">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.CivDocDate">Дата выдачи документа</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.CivDocDate" type="text" class="form-control pickadate required" placeholder="Дата">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-10">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Данные ребенка</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3" data-person>
+    <div class="col-12">
+        <div class="row justify-content-center mb-1">
+            <div class="col-8">
+                <label class="form-label">Заявители</label>
+                <select class="form-select select2-nosearch applicants">
+                    <option value="">Выберите заявителя</option>
+                    @for (int i = 0; i < applicants.Count; i++)
+                    {
+                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="row mb-1">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ChildFio.LastName">Фамилия</label>
+                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.ChildFio.LastName" />
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ChildFio.FirstName">Имя</label>
+                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.ChildFio.FirstName">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ChildFio.SecondName">Отчество</label>
+                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.ChildFio.SecondName">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ChildBirthDate">Дата рождения</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.ChildBirthDate" type="text" class="form-control pickadate required" placeholder="Дата рождения">
+                </div>
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-12">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Свидетельство о рождении</div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mb-1">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ChildDocSeries">Серия</label>
+                <input type="text" class="form-control required" placeholder="Серия" asp-for="@request.ChildDocSeries">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ChildDocNumber">Номер</label>
+                <input type="text" class="form-control required" placeholder="Номер" asp-for="@request.ChildDocNumber">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function ShowErrorInputs() {
+    }
+
+    var applicants = @Json.Serialize(applicants);
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+
+                $(formContent).find('.required').each(function() {
+                    addValidation($(this));
+                });
+
+                /* init datepicker */
+                $(formContent).find(".pickadate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                });
+
+                let options = { clearIncomplete: true, showMaskOnHover: false };
+
+                /* init inputmask */
+                $(formContent).find(".pickadate").inputmask("99.99.9999", options).val('');
+
+                $(formContent).find('.snils').inputmask("999-999-999 99", options); 
+
+                $(formContent).find('[name$="ChildDocSeries"]').inputmask({ 
+                    regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$"
+                });
+                
+                $(formContent).find('[name$="ChildDocNumber"]').inputmask("999999", options);
+
+                $(formContent).find("select.select2-nosearch").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+
+                $(formContent).find("select.select2-search").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal")
+                    });
+                });
+            }
+        };
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    $('select.applicants').each(function() {
+        $(this).on('change',
+            function() {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]').each(function() {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$="LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$="FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$="SecondName"]').val(applicants[id].secondName);
+                    $block.find('[name$="Snils"]').val(applicants[id].snils);
+                    $block.find('[name$="Inn"]').val(applicants[id].inn);
+                    $block.find('[name$="BirthDate"]').val(applicants[id].birthDate ? new Date(applicants[id].birthDate).toLocaleDateString() : '');
+
+                    $block.find('[name$="DocKindCode"]').val(applicants[id].documentTypeCode.padStart(2, '0')).trigger('change');
+                    $block.find('[name$="Series"]').val(applicants[id].documentSerial.toUpperCase());
+                    $block.find('[name$="Number"]').val(applicants[id].documentNumber);
+                    $block.find('[name$="CivDocDate"]').val(applicants[id].documentIssueDate ? new Date(applicants[id].documentIssueDate).toLocaleDateString() : '');
+                }
+            });
+    });
+
+    (function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function() {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post(`/SmevBase/SmevGetDictionary`,
+                    {
+                        type: options.dictionary
+                    },
+                    function(dictionary) {
+                        fillSelect(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function() {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+            });
+    }
+</script>

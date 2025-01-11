@@ -1,0 +1,279 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+   // var applicants = Model.GetApplicants();
+    var request = new MinoPensionAmountRequestData
+            {
+                Fio = new(),
+                Address = new MinoAddressType()
+            };
+}
+
+<style>
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+</style>
+
+
+@*
+<div class="row justify-content-center mb-3" data-person>
+    <div class="col-12">
+        <div class="row justify-content-center mb-3">
+            <div class="col-8">
+                <label class="form-label">Заявители</label>
+                <select class="form-select select2-nosearch applicants">
+                    <option value="">Выберите заявителя</option>
+                    @for (int i = 0; i < applicants.Count; i++)
+                    {
+                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+</div>*@
+<div class="row justify-content-center g-3">
+    <div class="col-10">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Детали запроса</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center g-3">
+    <div class="col-8">
+        <div class="row mb-1">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.MilitaryDepNumber">Номер военкомата</label>
+                <input type="text" class="form-control required" placeholder="Номер военкомата" asp-for="@request.MilitaryDepNumber" />
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.PensionDocNumber">Номер пенсионного дела</label>
+                <input type="text" class="form-control required" placeholder="Номер пенсионного дела" asp-for="@request.PensionDocNumber">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.PeriodStartDate">Начало периода</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.PeriodStartDate" type="text" class="form-control pickdate required" placeholder="Начало периода" value=""/>
+                </div>
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.PeriodEndDate">Конец периода</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.PeriodEndDate" type="text" class="form-control pickdate required" placeholder="Конец периода" value="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center g-3">
+    <div class="col-12">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Персональные данные</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center g-3">
+    <div class="col-8">
+        <div class="row mb-1 justify-content-center">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Fio.LastName">Фамилия</label>
+                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Fio.LastName" />
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Fio.FirstName">Имя</label>
+                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Fio.FirstName">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Fio.SecondName">Отчество</label>
+                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Fio.SecondName">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.BirthDate">Дата рождения</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.BirthDate" type="text" class="form-control pickdate required" placeholder="Дата" value="">
+                </div>
+            </div>
+        </div>
+        <div class="row mb-1 justify-content-center">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Snils">СНИЛС</label>
+                <input type="text" class="form-control snils" placeholder="СНИЛС" asp-for="@request.Snils" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center g-3">
+    <div class="col-10">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Адрес</div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center mb-3">
+    <div class="col-8">
+        <div class="row justify-content-center mb-2">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Address.Region">Регион </label>
+                <select class="select2-search required" asp-for="@request.Address.Region"
+                        data-dictionary='{"dictionary":"MspCorpRegionsRf"}' data-value-value>
+                </select>
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Address.District">Район</label>
+                <input type="text" class="form-control" asp-for="@request.Address.District">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Address.City">Город</label>
+                <input type="text" class="form-control" asp-for="@request.Address.City">
+            </div>
+        </div>
+        <div class="row justify-content-center mb-2">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Address.Locality">Населенный пункт</label>
+                <input type="text" class="form-control" asp-for="@request.Address.Locality">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Address.Street">Улица</label>
+                <input type="text" class="form-control" asp-for="@request.Address.Street">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Address.House">Дом</label>
+                <input type="text" class="form-control" asp-for="@request.Address.House">
+            </div>
+        </div>
+        <div class="row justify-content-center mb-2">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Address.Korpus">Корпус</label>
+                <input type="text" class="form-control" asp-for="@request.Address.Korpus">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Address.Building">Строение</label>
+                <input type="text" class="form-control" asp-for="@request.Address.Building">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Address.Apartment">Квартира</label>
+                <input type="text" class="form-control" asp-for="@request.Address.Apartment">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function ShowErrorInputs() {
+    }
+
+   @* var applicants = @Json.Serialize(applicants);*@
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                $(formContent).find('.required').each(function() {
+                    addValidation($(this));
+                });
+                getDictionaries();
+                /* init datepicker */
+                $(formContent).find(".pickdate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                });
+
+                let options = { clearIncomplete: true, showMaskOnHover: false };
+
+                /* init inputmask */
+                $(formContent).find(".pickdate").inputmask("99.99.9999", options);
+                $(formContent).find(".snils").inputmask("9{3}-9{3}-9{3} 9{2}", options);
+
+                $(formContent).find("select.select2-nosearch").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+            }
+        };
+         $(formContent).find("select.select2-search").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal")
+                    });
+                });
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+    
+    $('select.applicants').each(function() {
+        $(this).on('change',
+            function() {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]').each(function() {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$="LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$="FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$="SecondName"]').val(applicants[id].secondName);
+                    $block.find('[name$="BirthDate"]').val(applicants[id].birthDate ? new Date(applicants[id].birthDate).toLocaleDateString() : '');
+                    $block.find('[name$="Snils"]').val(applicants[id].snils);
+                }
+            });
+    });
+    
+    (function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function() {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post(`/SmevBase/SmevGetDictionary`,
+                    {
+                        type: options.dictionary
+                    },
+                    function(dictionary) {
+                        fillSelect(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function() {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+            });
+    }
+</script>

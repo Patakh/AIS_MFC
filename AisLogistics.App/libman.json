@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "lodash.js@4.17.21",
+      "destination": "wwwroot/assets/vendor/libs/lodash.js/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "suggestions-jquery@21.12.0",
+      "destination": "wwwroot/assets/vendor/libs/suggestions-jquery/",
+      "files": [
+        "dist/css/suggestions.min.css",
+        "dist/js/jquery.suggestions.min.js",
+        "dist/js/jquery.suggestions.js",
+        "dist/css/suggestions.css"
+      ]
+    },
+    {
+      "library": "jquery.inputmask@5.0.7",
+      "destination": "wwwroot/assets/vendor/libs/jquery.inputmask/"
+    },
+    {
+      "library": "dropzone@5.9.3",
+      "destination": "wwwroot/assets/vendor/libs/dropzone"
+    },
+    {
+      "library": "lightgallery@2.4.0",
+      "destination": "wwwroot/assets/vendor/libs/lightgallery/"
+    },
+    {
+      "library": "magnific-popup.js@1.1.0",
+      "destination": "wwwroot/assets/vendor/libs/magnific-popup.js/"
+    }
+  ]
+}

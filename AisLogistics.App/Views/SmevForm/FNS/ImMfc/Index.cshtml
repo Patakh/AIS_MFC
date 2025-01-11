@@ -1,0 +1,799 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new FnsImMfcRequestData()
+            {
+                Fio = new FioType(),
+                Attachments = new[] { new RequestAttachment() },
+                CustomModeInfo = new CustomModeInformation()
+            };
+}
+<style>
+    #smev-data-form-content span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content #smev-request-tabContent .tab-pane {
+        height: 550px;
+    }
+
+    #smev-data-form-content tr.is_active {
+        color: #39da8a;
+    }
+
+    #smev-data-form-content div.lg-container {
+        position: relative;
+        z-index: 9999;
+    }
+
+    #smev-data-form-content .accordion-button {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content #listService {
+        font-size: 16px;
+    }
+
+        #smev-data-form-content #listService .select2-selection.select2-selection--single {
+            height: auto !important;
+        }
+
+        #smev-data-form-content #listService .select2-selection__rendered {
+            white-space: normal !important;
+        }
+
+    #smev-data-form-content ul.address-list {
+        display: none;
+        width: 100%;
+        z-index: 1000;
+        position: absolute;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        background-clip: padding-box;
+    }
+
+        #smev-data-form-content ul.address-list li {
+            padding: 6px;
+        }
+
+            #smev-data-form-content ul.address-list li:hover {
+                color: white;
+                background-color: #5a8dee;
+                cursor: pointer
+            }
+
+</style>
+<div class="row justify-content-center" id="smev_request">
+    <div class="col-10">
+        <ul class="nav nav-tabs nav-justified tabs-line mb-3" id="smev-request-tablist" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#smev-request-tab1" type="button">Заявитель</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#smev-request-tab6" type="button">Документы</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="smev-request-tab-content">
+            <div class="tab-pane fade show active" id="smev-request-tab1" role="tabpanel">
+                <div class="row g-3">
+                    <div class="col-12 mx-auto">
+                        <div class="divider text-start">
+                            <div class="divider-text fs-5 b-s-16">Заявитель</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center" data-person>
+                    <div class="col-8">
+                        <div class="row mb-1">
+                            <div class="col-12">
+                                <label class="form-label">Заявители</label>
+                                <select class="form-select select2-nosearch applicants">
+                                    <option value="">Выберите заявителя</option>
+                                    @for (int i = 0; i < applicants.Count; i++)
+                                    {
+                                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Fio.LastName">Фамилия</label>
+                                <input type="text" class="form-control" placeholder="Фамилия" required asp-for="@request.Fio.LastName" />
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Fio.FirstName">Имя</label>
+                                <input type="text" class="form-control" placeholder="Имя" required asp-for="@request.Fio.FirstName">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Fio.SecondName">Отчество</label>
+                                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Fio.SecondName">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.InnFl">ИНН</label>
+                                <input type="text" class="form-control" placeholder="ИНН" asp-for="@request.InnFl">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Snils">СНИЛС</label>
+                                <input type="text" class="form-control required snils" placeholder="СНИЛС" asp-for="@request.Snils">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.BirthDate">Дата рождения</label>
+                                <div class="input-group input-group-merge">
+                                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                    <input asp-for="@request.BirthDate" type="text" class="form-control pickdate required" value="" placeholder="Дата рождения" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-12 mx-auto">
+                                <div class="fs-6 b-s-16">Документ, удостоверяющий личность</div>
+                            </div>
+                            <div class="col-10">
+                                <div class="row mb-1 align-items-end">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="@request.IdentityDocTypeCode">Наименование</label>
+                                        <select class="select2-search required" asp-for="@request.IdentityDocTypeCode"
+                                                data-dictionary='{"dictionary":"FssIdentityDocTypes"}'>
+                                        </select>
+                                    </div>
+                                    <div class="col-8">
+                                        <label class="form-label" asp-for="@request.IdentityDocSeriesNumber">Серия и Номер</label>
+                                        <input type="text" class="form-control" placeholder="Серия и Номер"
+                                               asp-for="@request.IdentityDocSeriesNumber">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="@request.IdentityDocDate">Дата выдачи</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input type="text" class="form-control pickdate required" placeholder="Дата выдачи"
+                                                   asp-for="@request.IdentityDocDate" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <label class="form-label" asp-for="@request.IdentityDocIssuer">Орган выдачи</label>
+                                        <input type="text" class="form-control required" placeholder="Орган выдачи"
+                                               asp-for="@request.IdentityDocIssuer">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="@request.IdentityDocIssuerCode">Код подразделения</label>
+                                        <input type="text" class="form-control" placeholder="Код подразделения"
+                                               asp-for="@request.IdentityDocIssuerCode">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="form-label" asp-for="@request.FnsDepartmentId">Налоговый орган</label>
+                                <select class="select2-search required" asp-for="@request.FnsDepartmentId">
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" asp-for="@request.KndId">Тип заявления</label>
+                                <select class="select2-search required" asp-for="@request.KndId" data-dictionary='{"dictionary":"FnsKnd"}'>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade show" id="smev-request-tab6" role="tabpanel">
+                <div class="justify-content-end">
+                    <div class="col-10">
+                        <button type="button" class="btn btn-outline-secondary buttons_height lh-1" onclick="getServiceDocuments()">
+                            ОБНОВИТЬ
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary buttons_height lh-1" data-upload-type="Desktop">
+                            ЗАГР
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary buttons_height lh-1" data-upload-type="Scan">
+                            СКАН
+                        </button>
+                    </div>
+                </div>
+                <div class="justify-content-center mt-3">
+                    <div class="col-12">
+                        <div class="alert alert-warning" role="alert">
+                            <i class="fa fa-exclamation-circle pr-4" style="color: #856404" aria-hidden="true"></i>
+                            Внимание! В данном виде запроса необходимо соблюдать порядок страниц во вложениях. Порядок вложений должен соответствовать порядку страниц в документах. Порядок возможно изменить стрелочками возле документов.
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <table id="attachmentsBlock" class="table table-hover table-striped" style="table-layout: fixed">
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-10" id="noDocuments" style="display:none">
+                        <div class="alert alert-primary" role="alert">
+                            <h6 class="alert-heading mb-1">Нет документов</h6>
+                            <span>Добавьте файлы к услуге</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var applicants = @Json.Serialize(applicants);
+    var $formContent = $("#smev_request");
+    var documentId;
+    var smevForm = {
+        init: () => {
+            fileUploadInit($formContent); 
+            $formContent.find('input:required').each(function () {
+                addValidation($(this));
+            });
+            $formContent.find('[data-disabled]').each(function () {
+                visibilityBlock($(this), true, true);
+            });
+            $formContent.find('[data-disabled]').each(function () {
+                if (!$(this).hasSelector(":invalid")) {
+                    showMessage("Invalid value");
+                }
+            });
+            select2Init($formContent);
+            let options = { clearIncomplete: true, showMaskOnHover: false }
+            $formContent.find('[name$="InnFl"]').inputmask("9{12}", options);
+            $formContent.find(".snils").inputmask("9{3}-9{3}-9{3} 9{2}", options);
+            $formContent.find(".pickdate").inputmask("99.99.9999", options);
+            /* init datepicker */
+            $formContent.find(".pickdate").datepicker({
+                language: "ru",
+                autoclose: true
+            });
+            getDictionaries();
+        }
+    };
+
+    $.post(`/SmevFns/GetFnsDepartments`,
+        function (items) {
+            let regionCode = '04';
+            items.sort((prev, next) => {
+                if (next.code.startsWith(regionCode)) {
+                    return 1;
+                } else return -1;
+            });
+
+            items.forEach((item) => {
+                $('#request_FnsDepartmentId').append(new Option(`${item.name} (${item.address})`, item.code));
+            });
+    });
+
+    function updateAttach() {
+        let val = $formContent.find('#request_KndId option:selected').attr('value');
+        $.ajax({
+            url: '/SmevFns/GetFnsImMfcAppliedDocuments',
+            type: 'POST',
+            data: { kndId: val },
+            success: function (data) {
+                let smevDocTypes = '';
+                smevDocTypes = `<option value="">Не выбрано</option>`;
+                data.dictionary.forEach(function (item) {
+                    console.log(item.value);
+                    smevDocTypes += `<option value=${item.key}>${item.value}</option>`;
+                });
+                $formContent.find('.select2DOC').each(function () {
+                    $(this).html(smevDocTypes);
+                })
+            }
+        });
+    }
+
+    $formContent.find('#request_KndId').on('change', function () {
+        updateAttach();
+    })
+
+    getServiceDocuments();
+
+    function getServiceDocuments() {
+        $.ajax({
+            url: '/Cases/ServiceDocumentsJson',
+            type: "POST",
+            async: false,
+            data: { id: $('#ServiceId').val() },
+            success: function (data) {
+                $('#attachmentsBlock tbody').empty();
+                documentId = data[0].id;
+                let k = 0;
+                data.forEach(doc =>
+                    doc.files.forEach(file => {
+                        k++;
+                        let container = $('<div class="my-3">');
+                        container.attr('data-attach', k - 1);
+                        let index = k - 1;
+                        let tr = $('<tr>');
+                        tr.addClass('align-middle');
+                        tr.append(`<td data-index class="px-2" style="width: 1%;">${k}.</td>`);
+                        tr.append(`<td data-name class="px-2">${file.name}${file.extension}</td>`);
+                        tr.append(
+                            `<td class="px-2" style="width: 10%;">${(file.size / 1024).toFixed(2)} кБ</td>`);
+
+                        tr.append(
+                            `<td class="px-2" style="width: 250px; max-width: 250px;">
+                                                                                 <select onchage="docChange(this)" required class="select2DOC Fns select2-search required">
+                                                                                  </select>
+                                                                             </td>`);
+                        tr.append(
+                            `<td class="px-2" style="width: 1%;">
+                                                                       <a class="btn btn-sm btn-icon viewing-file" data-bs-toggle="tooltip" title="" data-sub-html="${file.name}${file.extension}" href="/SmevBase/DownloadFile/${file.id}" data-bs-original-title="Просмотр" aria-label="Просмотр">
+                                                                                 <i class="bi bi-eye"></i>
+                                                                       </a>
+                                                                     </td>`);
+                        tr.append(
+                            `<td class="px-2" style="width: 1%;">
+                                                                         <i onclick="docRemove(this)" role="button" class='bi bi-trash'></i>
+                                                                     </td>`);
+                        tr.append(
+                            `<td class="px-2" style="width: 1%;">
+                                                                 <i onclick="docMove('up', this)" role="button" class='bi bi-chevron-up btn-link'></i>
+                                                                 <i onclick="docMove('down', this)" role="button" class='bi bi-chevron-down btn-link'></i>
+                                                         </td>`);
+                        let trHide = $(
+                            '<tr class="" style="display:none" >');
+                        trHide.append(
+                            `<td style="width: 1%;">
+                                                                        <input type="text" name="request.Attachments[${k - 1}].FileName" disabled value="${file.id}">
+                                                                     </td>`);
+                        trHide.append(
+                            `<td style="width: 1%;">
+                                                                        <input type="text" name="request.Attachments[${k - 1}].IsFtpReference" disabled value="true">
+                                                                     </td>`);
+                        trHide.append(`<td style="width: 1%;"><input type="text" name="request.Attachments[${k - 1}].AttachmentTypeCode" disabled value=""></td>`);
+                        container.append(tr);
+                        container.append(trHide);
+                        $('#attachmentsBlock tbody').append(container);
+                        renameAttach();
+
+                    })
+                )
+                $('.select2DOC').select2();
+
+                $(document).on('change', 'select.select2DOC', function (event) {
+                    var $select = $(this);
+                    var $option = $select.find('option:selected').val();
+                    var row = $select.closest('tr');
+                    if ($option == '') {
+                        row.removeClass('is_active');
+                    } else {
+                        row.addClass('is_active');
+                    }
+                });
+                $('#attachmentsBlock').find("select").each(function () {
+                    $(this).on('change', function (event) {
+
+                        let trHide = event.target.closest('tr').nextSibling;
+                        $(trHide).find('[name$="AttachmentTypeCode"]').val(event.target.value);
+                        switch (event.target.value) {
+                            case '':
+                                $(trHide).removeClass('active');
+                                visibilityBlock($(trHide), true, true);
+                                break;
+
+                            default:
+                                $(trHide).addClass('active');
+                                visibilityBlock($(trHide), true, false);
+                        }
+                        renameAttach();
+                    });
+                });
+                $formContent.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                if (data.length == 0) $formContent.find('#noDocuments').show();
+
+                const dynamicGallery = document.getElementById('smev-request-tab6');
+                dynamicGallery.addEventListener('lgBeforeOpen', (event) => {
+                    $(dynamicGallery).find('[data-bs-toggle="tooltip"], .tooltip').tooltip("hide");
+                });
+                lightGallery(dynamicGallery, {
+                    selector: '.viewing-file',
+                    escKey: false
+                }); 
+                updateAttach();
+            }
+        });
+
+    };
+
+    function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function () {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.ajax({
+                    url: '/SmevBase/SmevGetDictionary',
+                    type: 'POST',
+                    async: false,
+                    data: { type: options.dictionary },
+                    success: function (dictionary) {
+                        fillSelect(options.dictionary, dictionary);
+                    }
+                });
+            }
+        });
+    };
+
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function () {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Не выбран', ''));
+                }
+
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+            }
+        );
+
+    }
+    function changeAddInfoParentType(el) {
+        switch (el.value) {
+            case "SecondParentDied":
+                visibilityBlock($(el).closest('[id^="ParentClone"]').find('[data-marriage]'), false, false);
+                break;
+            default:
+                disabledBlok($(el).closest('[id^="ParentClone"]').find('[data-marriage]'), true, true);
+                break;
+        }
+    }
+
+    function docMove(direction, el) {
+        if (direction) {
+            let attach = el.closest('[data-attach]');
+            const index = $(attach).attr('data-attach');
+            const count = $('#attachmentsBlock [data-attach]').length;
+
+            switch (direction) {
+                case 'up':
+                    if (index > 0) {
+                        let attachPrev = $(attach).prev('[data-attach]');
+                        attachPrev.before(attach);
+                    }
+                    break;
+                case 'down':
+                    if (index < count - 1) {
+                        let attachNext = $(attach).next('[data-attach]');
+                        attachNext.after(attach);
+                    }
+                    break;
+            }
+
+            renameAttach();
+        }
+    };
+
+    function identityDocChange(el) {
+        let blockDoc = el.closest('fieldset');
+        let blockAct = blockDoc.closest('[data-clone]').querySelector('[data-child-act]');
+        switch (el.value) {
+            case "1":
+                $(blockAct).addClass('d-none');
+                $(blockDoc).find('input[id$="CodePodr"]').attr('disabled', false);
+                $(blockDoc).find('input[id$="CodePodr"]').addClass('required');
+                break;
+            case "4":
+                $(blockAct).removeClass('d-none');
+                if (!$(blockAct).find('.act').is(':checked')) {
+                    $(blockAct).find('.act').click();
+                }
+                $(blockDoc).find('input[id$="CodePodr"]').removeClass('required');
+                $(blockDoc).find('input[id$="CodePodr"]').attr('disabled', true);
+                break;
+        }
+    }
+
+    function hidingblock(blockId, tid, status) { //Функция запускается при клике ПОКАЗАТЬ
+        if (!tid) {
+            tid = blockId.id.split('_');
+            tid.pop();
+            tid = tid.join('_');
+            tid = tid + '_';
+        }
+        blockId?.querySelectorAll('input')?.forEach(item => {
+            item.value != '' ? item.classList.add('custom-input-value') : item.classList.remove('custom-input-value');
+        });
+        status ? blockId.classList.remove('d-none') : blockId.classList.toggle('d-none');
+        disableAddress('[data-disable-address]');
+        document.querySelector(`#${tid}Apartmen_Valuee`) ? document.querySelector(`#${tid}Apartmen_Valuee`).removeAttribute('disabled') : void 0;
+        document.querySelector(`#${tid}Apartmen_Typee`) ? document.querySelector(`#${tid}Apartmen_Typee`).removeAttribute('disabled') : void 0;
+    };
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').hide();
+                } else {
+                    $block.hide();
+                }
+                break;
+            case false:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').show();
+                } else {
+                    $block.removeClass('d-none')
+                    $block.show();
+                }
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        removeValidation($(this));
+                    }
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                    if ($(this).hasClass('required')) {
+                        addValidation($(this));
+                    }
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    function renameAttach() {
+        let indexActive = 0;
+        $('#attachmentsBlock [data-attach]').each((index, item) => {
+            $(item).attr('data-attach', index);
+            $(item).find('[data-index]').html(index + 1);
+            $(item).find('input[type="text"]').each(function () {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexActive));
+            });
+            if ($(item).find('tr.active').length > 0) indexActive++;
+        });
+    }
+
+    function docRemove(el) {
+        el.closest('[data-attach]').remove();
+        renameAttach();
+    }
+
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.attr("id", `clone${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        let $adrBlock = $cloneBlock.find('[data-address]');
+        if ($adrBlock.length > 0) {
+            $adrBlock.attr('data-address', $adrBlock.attr('data-address').replace(/\d+/, indexId));
+        }
+
+        $cloneBlock.find('input, select').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            if ($(this).is('[for]')) {
+                $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('span').each(function () {
+            if ($(this).is('[id]')) {
+                $(this).attr('id', $(this).attr('id').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('select').each(function () {
+            if ($(this).is('[id]')) {
+                $(this).attr('id', $(this).attr('id').replace(/\d+/, indexId));
+            }
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+            $(this).removeAttr('data-select2-id');
+        });
+    }
+
+    function renameParentBlock(cloneBlock, indexId) {
+        cloneBlock.id = `${cloneBlock.id}${indexId}`;
+        cloneBlock.querySelector('span').innerText = cloneBlock.querySelector('span').innerText.replace(/\d+/, 1 + indexId);
+
+        cloneBlock.querySelectorAll('input').forEach(item => {
+            item.id = item.id.replace(/ParentDataBlock\d+/, `ParentDataBlock${indexId}`);
+            item.name = item.name.replace(/ParentDataBlock\[\d+\]/, `ParentDataBlock[${indexId}]`);
+        });
+        cloneBlock.querySelectorAll('label').forEach(item => {
+            item.getAttribute('for') ? item.setAttribute('for', item.getAttribute('for').replace(/ParentDataBlock\d+/, `ParentDataBlock${indexId}`)) : void 0;
+        });
+        cloneBlock.querySelectorAll('select').forEach(item => {
+            item.id ? item.id = item.id.replace(/ParentDataBlock\d+/, `ParentDataBlock${indexId}`) : void 0;
+            item.name ? item.name = item.name.replace(/ParentDataBlock\[\d+\]/, `ParentDataBlock[${indexId}]`) : void 0;
+            item.hasAttribute('data-select2-id') ? item.removeAttribute('data-select2-id') : void 0;
+        });
+        return cloneBlock;
+    }
+
+    function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+        let $cloneList = $formContent.find(`#${cloneListId}`);
+        Select2Destroy($cloneList);
+        let $original = $originalBlock.find(`#${originalId}`);
+        let $cloneBlock = $original.clone(true);
+        let indexId = $cloneList.find('[data-clone]').length;
+        renameBlock($cloneBlock, indexId);
+        blockInit($cloneBlock);
+        $cloneList.append($cloneBlock);
+        select2Init($cloneList);
+
+        let input = $cloneBlock.find('[id$="_RegAddressSearchFias"]');
+        if (input) {
+            let $adrList = $cloneBlock.find('.address-list');
+            let $adrBlock = $adrList.closest('[data-address]');
+            let url = '/SmevBase/GarSearchAddressExtended';
+            input.keyup(garRequest).focusin(() => {
+                $adrList.show();
+            }).focusout(() => {
+                $adrList.delay(250).hide(0);
+            });
+        }
+    }
+    var addresses = new Map();
+
+    $.each($('[data-input-location]'), function () {
+        var $input = $(this);
+        let $adrList = $input.closest('[data-address]').find('.address-list');
+        var url = '/SmevBase/GarSearchAddressExtended';
+        $input.keyup(garRequest).focusin(() => {
+            $adrList.show();
+        }).focusout(() => {
+            $adrList.delay(250).hide(0);
+        });
+    });
+
+
+    function blockRemove(el, cloneListId) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        Select2Destroy($cloneList);
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+        select2Init($cloneList);
+    }
+
+    function select2Init($block) {
+        $block.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                dropdownParent: $("#mainModal"),
+                minimumResultsForSearch: Infinity
+            });
+        });
+
+        $block.find("select.select2-search").each(function () {
+            $(this).select2({
+                dropdownParent: $("#mainModal")
+            });
+        });
+    }
+
+    function Select2Destroy($block) {
+        $block.find('select').each((_, el) => {
+            if (el.parentNode.querySelector('span')) {
+                $(el).select2('destroy');
+                el.hasAttribute('data-select2-id') ? el.removeAttribute('data-select2-id') : void 0;
+                el.querySelectorAll('option').forEach(itemOption => itemOption.hasAttribute('data-select2-id') ? itemOption.removeAttribute('data-select2-id') : void 0)
+                if (el.parentNode.querySelector('span')) el.parentNode.querySelector('span').remove();
+            }
+        });
+    }
+
+    function checkboxChange(el) {
+        visibilityBlock($(el).closest('.row').find('[data-disabled]'), !$(el).prop('checked'), !$(el).prop('checked'));
+    }
+
+    function changeAddressMatch(el) {
+        let $clone = $(el).closest('[data-clone]').find('[data-child-adr]');
+        visibilityBlock($clone, el.checked, el.checked);
+    }
+
+    function ShowErrorInputs() {
+        for (let item of document.querySelectorAll('#smev_request input,select')) {
+            if (item.getAttribute('disabled') == null && item.classList.contains('required') && item.value == '') {
+                $('#smev_request').find(`button[data-bs-target="#${item.closest('.tab-pane').id}"]`).trigger('click');
+                break;
+            }
+        };
+    }
+
+    $('select.applicants').each(function () {
+        $(this).on('change',
+            function () {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]').each(function () {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$="LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$="FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$="SecondName"]').val(applicants[id].secondName);
+                    $block.find('[name$="BirthDate"]').val(applicants[id].birthDate ? new Date(applicants[id].birthDate).toLocaleDateString() : '');
+                    $block.find('[name$="InnFl"]').val(applicants[id].inn);
+                    $block.find('[name$="Snils"]').val(applicants[id].snils);
+                    $block.find('[name$="IdentityDocSeriesNumber"]').val(applicants[id].documentSerial.replace(' ', '') + ' ' + applicants[id].documentNumber);
+                    $block.find('[name$="IdentityDocDate"]').val(applicants[id].documentIssueDate ? new Date(applicants[id].documentIssueDate).toLocaleDateString() : '');
+                    $block.find('[name$="IdentityDocIssuer"]').val(applicants[id].documentIssueBody);
+                    $block.find('[name$="IdentityDocIssuerCode"]').val(applicants[id].documentCode);
+                }
+            }
+        );
+    });
+
+    $(function(){
+       updateAttach();
+    });
+</script>

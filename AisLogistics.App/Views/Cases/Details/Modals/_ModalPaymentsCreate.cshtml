@@ -1,0 +1,376 @@
+﻿@model AisLogistics.App.ViewModels.Cases.PaymentsCreateResponseModel
+@{
+}
+
+<form id="sendingForm" method="post" role="form">
+    <input type="hidden" asp-for="DCaseId" />
+    <input type="hidden" asp-for="DServicesId" />
+    <fieldset>
+        <div class="row">
+            <div class="col-4 mb-4">
+                <label for="isActiveUin" class="form-label">Оплата по УИН</label>
+                <input type="checkbox" id="isActiveUin" name="isActiveUin" class="form-check-input" />
+            </div>
+            <div class="col-4 mb-4">
+                <label for="isMirCard" class="form-label">Карта мир</label>
+                <input type="checkbox" id="isMirCard" name="isMirCard" class="form-check-input" />
+            </div>
+            <div class="col-12 mb-4">
+                <label for="ipWindow" class="form-label">Терминал Оплаты</label>
+                <select id="ipWindow" name="ipWindow" asp-items="@Model.DAcquirings" class="select2 form-select"></select>
+            </div>
+            <div class="col-12 mb-4">
+                <label for="dServicesCustomersId" class="form-label">Заявитель</label>
+                <select id="dServicesCustomersId" name="dServicesCustomersId" asp-items="@Model.CustomerPayments" class="select2 form-select"></select>
+            </div>
+            <div class="col-12 mb-4">
+                <label for="typePaymet" class="form-label">Заявитель</label>
+                <select id="typePaymet" name="typePaymet"  class="select2 form-select">
+                    <option value="1" data-summ="@Model.TariffState">Гос пошлина</option>
+                    @if (Model.TariffMfc != null)
+                    {
+                        <option value="2" data-summ="@Model.TariffMfc">Тариф МФЦ</option>
+                    }
+                </select>
+            </div>
+            <div class="col-12 mb-4 changing">
+                <label for="sRecipientPaymentId" class="form-label">Получатель денежных средств</label>
+                <select id="sRecipientPaymentId" name="sRecipientPaymentId" asp-items="@Model.PaymentBeneficiaries" class="select2 form-select"></select>
+            </div>
+            <div class="col-12 mb-4 changing">
+                <label for="summ" class="form-label">Сумма</label>
+                <input id="summ" name="summ" value="@Model.TariffState" class="form-control" readonly disabled />
+            </div>
+            <div class="col-12 mb-4 changing">
+                <label for="uin" class="form-label">UIN</label>
+                <input id="uin" name="uin" type="number" value="" class="form-control" />
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<script>
+    $(function () {
+        $(".select2").select2({
+            dropdownParent: $("#mainModal")
+        });
+        
+        var FormValidationPayment = FormValidation.formValidation(document.getElementById('sendingForm'),
+        {
+            locale: 'ru_RU',
+            localization: FormValidation.locales.ru_RU,
+            fields: {
+                'ipWindow': {
+                    validators: {
+                        notEmpty: {
+                        }
+                    }
+                },
+                'sRecipientPaymentId': {
+                    validators: {
+                        notEmpty: {
+                            enabled: true
+                        }
+                    }
+                },
+                'uin': {
+                    validators: {
+                        notEmpty: {
+                            enabled: false
+                        },
+                        callback: {
+                            callback: function (value) {
+                                let result = CheckUin(value);
+                                if (result) {
+                                    return {
+                                        valid: true,    // or false
+                                    };
+                                }
+                                return {
+                                    valid: false,       // or true
+                                    message: 'Введите корректный UIN',
+                                };
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                submitButton: new FormValidation.plugins.SubmitButton(),
+                bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                autoFocus: new FormValidation.plugins.AutoFocus()
+            }
+        }).on('core.form.valid', function () {
+            var $form = $("#sendingForm");
+
+            $.ajax({
+                url: '/SmevSber/CasePaymentAddSberInit',
+                type: 'POST',
+                data: $form.serialize(),
+                beforeSend: function () {
+                    $.blockUI({
+                        message: '<h1><i class="ion ion-android-globe" style="padding-top: 1.55px;animation: spin 1s infinite linear;"></i> Инициализация платежа</h1>',
+                        css: {
+                            border: 'none',
+                            padding: '15px',
+                            backgroundColor: '#000',
+                            'z-index': '1060',
+                            '-webkit-border-radius': '10px',
+                            '-moz-border-radius': '10px',
+                            opacity: .5,
+                            color: '#fff'
+                        }
+                    });
+                },
+                success: function (response) {
+                    $.unblockUI();
+                    $.ajax({
+                        url: '/SmevSber/CasePaymentAddSberPayment',
+                        type: 'POST',
+                        data: { id: response },
+                        beforeSend: function () {
+                            $.blockUI({
+                                message: '<h1><i class="ion ion-android-globe" style="padding-top: 1.55px;animation: spin 1s infinite linear;"></i> Ожидает оплаты</h1>',
+                                css: {
+                                    border: 'none',
+                                    padding: '15px',
+                                    backgroundColor: '#000',
+                                    'z-index': '1060',
+                                    '-webkit-border-radius': '10px',
+                                    '-moz-border-radius': '10px',
+                                    opacity: .5,
+                                    color: '#fff'
+                                }
+                            });
+
+                        },
+                        success: function (data) {
+                            $.unblockUI();
+                            $.ajax({
+                                url: '/SmevSber/CasePaymentInvoiceSber',
+                                type: 'POST',
+                                data: { id: data },
+                                beforeSend: function () {
+                                    $.blockUI({
+                                        message: '<h1><i class="ion ion-android-globe" style="padding-top: 1.55px;animation: spin 1s infinite linear;"></i> Формирование квитанции</h1>',
+                                        css: {
+                                            border: 'none',
+                                            padding: '15px',
+                                            backgroundColor: '#000',
+                                            'z-index': '1060',
+                                            '-webkit-border-radius': '10px',
+                                            '-moz-border-radius': '10px',
+                                            opacity: .5,
+                                            color: '#fff'
+                                        }
+                                    });
+
+                                },
+                                success: function (content) {
+                                    $.unblockUI();
+                                    //var check = $('#check').clone(true);
+                                    //var iframe = $('<iframe id="iframe1">');
+                                    //iframe.css('width', '100%');
+                                    //iframe.css('height', 'calc(100vh - 300px)');
+                                    //iframe.attr("src", "data:application/pdf;base64," + content);
+                                    //$(check).find('.check-response-report').html(iframe);
+                                    //$(check).find('#attachCheckToResultDoc').data('payId', data);
+                                    //$(check).removeClass('d-none');
+                                    //$('#modalContainerOver').html($(check)).modal('show');
+                                    //getPayments();
+                                },
+                                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                    $.unblockUI();
+                                        toastr['error'](XMLHttpRequest.responseJSON.detail, 'Ошибка', {
+                                        closeButton: true,
+                                        tapToDismiss: false,
+                                        rtl: false
+                                    });
+                                } 
+                            });
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            console.log(1,XMLHttpRequest);
+                            console.log(2, textStatus);
+                            console.log(3, errorThrown);
+                            $.unblockUI();
+                                toastr['error'](XMLHttpRequest.responseJSON.detail, 'Ошибка', {
+                                closeButton: true,
+                                tapToDismiss: false,
+                                rtl: false
+                            });
+                        }
+                    });
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    console.log(1,XMLHttpRequest);
+                    console.log(2, textStatus);
+                    console.log(3, errorThrown);
+                    $.unblockUI();
+                    toastr['error'](XMLHttpRequest.responseJSON.detail, 'Ошибка', {
+                        closeButton: true,
+                        tapToDismiss: false,
+                        rtl: false
+                    });
+                }
+            });
+            return false;
+        });
+
+        $("#isMirCard").change(function () {
+            let mir_card = $(this);
+            mir_card.val(mir_card.prop('checked'));
+        })
+
+        $('#isActiveUin').change(function () {
+            if ($(this).prop('checked') == true) {
+
+                $('#sRecipientPaymentId').parent(".changing").hide();
+                $('#sRecipientPaymentId').attr("disabled", "disabled");
+                FormValidationPayment.disableValidator('sRecipientPaymentId');
+              
+                $('#summ').parent(".changing").hide();
+                $('#summ').attr("disabled", "disabled");
+
+                $('#uin').removeAttr('disabled');
+                FormValidationPayment.enableValidator('uin');
+                $('#uin').parent(".changing").show();
+            }
+            else {
+                $('#sRecipientPaymentId').removeAttr('disabled');
+                FormValidationPayment.enableValidator('sRecipientPaymentId');
+                $('#sRecipientPaymentId').parent(".changing").show();
+                
+                $('#summ').removeAttr('disabled');
+                $('#summ').parent(".changing").show();
+
+                $('#uin').parent(".changing").hide();
+                FormValidationPayment.disableValidator('uin');
+                $('#uin').attr("disabled", "disabled");
+            }
+        });
+
+        $('#isActiveUin').change();
+
+        $('#typePaymet').change(function () {
+            let $val = $('#typePaymet option:selected').data("summ");
+            console.log($val);
+            $('#summ').val($val);
+        });
+
+        function CheckUin(val) {
+            if ((val.length == 20 || val.length == 25) && (val.split(val.substr(0, 1)).length - 1 != val.length)) {
+                var controlDigit = calculateControlDigit(val.substr(0, val.length - 1));
+                if (controlDigit == val.substr(val.length - 1, 1)) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+
+        // Массив
+        var mapSymbolValue = {
+            "А": 1,
+            "Б": 2,
+            "В": 3,
+            "Г": 4,
+            "Д": 5,
+            "Е": 6,
+            "Ж": 7,
+            "З": 8,
+            "И": 9,
+            "К": 10,
+            "Л": 11,
+            "М": 12,
+            "Н": 13,
+            "О": 14,
+            "П": 15,
+            "Р": 16,
+            "С": 17,
+            "Т": 18,
+            "У": 19,
+            "Ф": 20,
+            "Х": 21,
+            "Ц": 22,
+            "Ч": 23,
+            "Ш": 24,
+            "Щ": 25,
+            "Э": 26,
+            "Ю": 27,
+            "Я": 28,
+            "Ъ": 33,
+            "Ы": 36,
+            "Ь": 42,
+            //Latin
+            "A": 1,
+            "B": 3,
+            "E": 6,
+            "K": 10,
+            "M": 12,
+            "H": 13,
+            "O": 14,
+            "P": 16,
+            "C": 17,
+            "T": 18,
+            "Y": 19,
+            "X": 21,
+            "D": 29,
+            "F": 30,
+            "G": 31,
+            "I": 32,
+            "J": 33,
+            "L": 34,
+            "N": 35,
+            "Q": 36,
+            "R": 37,
+            "S": 38,
+            "U": 39,
+            "V": 40,
+            "W": 41,
+            "Z": 42,
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            "3": 3,
+            "4": 4,
+            "5": 5,
+            "6": 6,
+            "7": 7,
+            "8": 8,
+            "9": 9,
+        };
+        // значение контрольного разряда
+        function calculateControlDigit(uin) {
+            var strings = uin.split('');
+            var result;
+            try {
+                result = run(strings, 0);
+            } catch (err) {
+                try {
+                    result = run(strings, 2);
+                } catch (err2) {
+                    result = 0;
+                }
+            }
+            return result;
+        };
+
+        function run(strings, leftShift) {
+            var controlSum = 0;
+            for (i = 0; i < strings.length; i++) {
+                controlSum += (mapSymbolValue[strings[i]] % 10) * (((i + leftShift) % 10) + 1);
+            }
+            if ((controlSum % 11) == 10) {
+                throw new Error();
+            }
+
+            return controlSum % 11;
+        }
+
+    })
+</script>

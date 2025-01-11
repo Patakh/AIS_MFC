@@ -1,0 +1,138 @@
+﻿@model _33_TechnicalDocumentationModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">Прошу выдать</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check" checkBlock>
+                        <input asp-for="DocumentIssuance" id="DocumentIssuance1" class="form-check-input" type="radio" value="Справку">
+                        <label for="DocumentIssuance1" class="form-check-label">Справку</label>
+                    </div>
+                </div>
+                <div class="col-12" checkBlock>
+                    <div class="form-check">
+                        <input asp-for="DocumentIssuance" id="DocumentIssuance2" class="form-check-input" type="radio" value="по обычному тарифу">
+                        <label for="DocumentIssuance2" class="form-check-label">Копию технического паспорта</label>
+                    </div>
+                </div>
+                <div class="col-12" checkBlock>
+                    <div class="form-check">
+                        <input asp-for="DocumentIssuance" id="DocumentIssuance3" class="form-check-input" type="radio" value="Экспликацию">
+                        <label for="DocumentIssuance3" class="form-check-label">Экспликацию</label>
+                    </div>
+                </div>
+                <div class="col-12" checkBlock>
+                    <div class="form-check">
+                        <input asp-for="DocumentIssuance" id="DocumentIssuance4" class="form-check-input" type="radio" value="Поэтажный план объекта">
+                        <label for="DocumentIssuance4" class="form-check-label">Поэтажный план объекта</label>
+                    </div>
+                </div>
+                <div class="col-12" checkBlock>
+                    <div class="form-check">
+                        <input asp-for="DocumentIssuance" id="DocumentIssuance5" class="form-check-input" type="radio" value="Ситуационный план объекта">
+                        <label for="DocumentIssuance5" class="form-check-label">Ситуационный план объекта</label>
+                    </div>
+                </div>
+                <div class="col-12" checkBlock>
+                    <div class="form-check">
+                        <input asp-for="DocumentIssuance" id="DocumentIssuance6" class="form-check-input" type="radio" value="Правоустанавливающий документ">
+                        <label for="DocumentIssuance6" class="form-check-label">Правоустанавливающий документ</label>
+                    </div>
+                </div>
+                <div class="col-12" checkBlock>
+                    <div class="form-check">
+                        <input asp-for="DocumentIssuance" id="DocumentIssuance7" class="form-check-input" type="radio" value="Иное">
+                        <label for="DocumentIssuance7" class="form-check-label">Иное</label>
+                    </div>
+                    <div class="row justify-content-end" checkBlockBody>
+                        <div class="col-11">
+                            <label class="form-label" asp-for="OtherDocument">адрес электронной почты гражданина</label>
+                            <input type="text" class="form-control" asp-for="OtherDocument">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="Service" id="Service1" class="form-check-input" type="radio" value="в срочном порядке">
+                        <label for="Service1" class="form-check-label">в срочном порядке</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="Service" id="Service2" class="form-check-input" type="radio" value="по обычному тарифу">
+                        <label for="Service2" class="form-check-label">по обычному тарифу</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Object">На объект недвижимости</label>
+                    <input type="text" asp-for="Object" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ObjectAddress">Расположение</label>
+                    <input type="text" asp-for="ObjectAddress" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () {
+
+        additionalForm.find('[type="radio"], input[type="checkbox"]').on('click', function () {
+            togleFields();
+        });
+
+        togleFields();
+    });
+
+    function togleFields() {
+        additionalForm.find('[checkBlock] input[type="radio"], [checkBlock] input[type="checkbox"]').each(function () {
+            let $block = $(this).closest('[checkBlock]');
+
+            if ($(this).is(':checked')) {
+                visibilityBlock($block.find('[checkBlockBody]'), false, false);
+            } else {
+                visibilityBlock($block.find('[checkBlockBody]'), true, true);
+            }
+        })
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+</script>

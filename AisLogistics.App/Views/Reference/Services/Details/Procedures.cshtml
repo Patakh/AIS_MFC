@@ -1,0 +1,176 @@
+﻿@model ViewModelBuilder
+@{
+    string Id = ViewData["Id"]?.ToString() ?? string.Empty;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                @if (Model.IsVisibleDescription)
+                {
+                    <div class="b-s-14">@Model.ViewDescription</div>
+                }
+            </div>
+
+            <div class="col-6 pull-right">
+                @if (User.HasClaim(AccessKeyNames.ReferenceService, AccessKeyValues.Add))
+                {
+                    <div class="col-auto text-md-end">
+                        <a href="javascript:void(0);" data-btn-params='{"actionType":"@ActionType.Add", "serviceId" : "@Id" }' data-btn-type="add" data-for-table="@Model.TableName" class="r-a-14">
+                            <i class="bi bi-plus"></i> Добавить
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive mt-3">
+                    <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceService" class="directory_names-items table table-striped"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $tableProcedures = $('#@(Model.TableName)');
+    $(document).ready(function () {
+        let isCanAddProcedures = $tableProcedures.is('[data-action-add]'),
+            isCanEditProcedures = $tableProcedures.is('[data-action-edit]'),
+            isCanRemoveProcedures = $tableProcedures.is('[data-action-remove]');
+
+        $tableProcedures.DataTable({
+            sDom:
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            processing: true,
+            serverSide: true,
+            filter: true,
+            searching: false,
+            searchDelay: 1500,
+            ajax: {
+                url: $tableProcedures.data('action-table'),
+                type: "POST",
+                datatype: "json",
+                dataSrc: function (json) {
+                    return json.data;
+                }
+            },
+            initComplete: function () {
+
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    title: 'Наименование',
+                    orderable: false
+                },
+                {
+                    data: "frguTargetId",
+                    targets: 2,
+                    title: 'Идентификатор цели фргу',
+                    orderable: false
+                },
+                {
+                    targets: 3,
+                    title: 'Сотрудник',
+                    orderable: false
+                },
+                {
+                    targets: 4,
+                    title: 'Активность',
+                    className: 'text-center',
+                    orderable: false
+                },
+                {
+                    targets: 5,
+                    title: 'МДМ',
+                    className: 'text-center',
+                    orderable: false
+                },
+                {
+                    targets: -1,
+                    title: 'Действия',
+                    data: "id",
+                    width: "80px",
+                    className: 'text-center editor-edit',
+                    sorting: false,
+                    orderable: false
+                }
+            ],
+            columns: [
+                {},
+                {
+                    data: "procedureName",
+                    render: function (data, type, row) {
+                        return `${data}
+                                <br /><small>${row.id}</small>
+                                ${row.extraFormPath === null ? '' : '<br /><small>' + row.extraFormPath + '</small>'}`;
+                    }
+                },
+                {
+                },
+                {
+                    render: function (data, type, row) {
+                        return `${row.employeesFioAdd}<br /><small>${row.dateAdd}</small>`;
+                    }
+                },
+                {
+                    data: "procedureActive",
+                    render: function (data, type, row) {
+                        return `${data === true ? '<i class="bi bi-check-circle text-success"></i>' : '<i class="bi bi-x-circle text-danger"></i>'}`;
+                    }
+                },
+                {
+                    data: "isMdm",
+                    render: function (data, type, row) {
+                        return `${data === true ? '<i class="bi bi-check-circle text-success"></i>' : '<i class="bi bi-x-circle text-danger"></i>'}`;
+                    }
+                },
+                {
+                    render: function (data, type, row) {
+                        let content = "";
+                        if (isCanEditProcedures === true)
+                            content += EditBtnProcedures({ "id": data, "actionType": 1, "serviceId": "@Id" });
+                        if (isCanRemoveProcedures === true)
+                            content += DeleteBtnProcedures({ "id": data });
+                        return content;
+                    }
+                }
+            ]
+        });
+        $tableProcedures.on("reload", () => {
+            $tableProcedures.DataTable().ajax.reload(null, false);
+        });
+
+        $tableProcedures.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        let EditBtnProcedures = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="edit" data-bs-toggle="tooltip" title="Изменить" class="btn btn-sm btn-icon text-body">
+                        <i class="bi bi-pencil-square"></i></a>`;
+        }
+
+        let DeleteBtnProcedures = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-service-remove-btn-type data-bs-toggle="tooltip" title="Удалить" class="btn btn-sm btn-icon text-danger">
+                        <i class="bi bi-trash"></i></a>`;
+        }
+    });
+</script>

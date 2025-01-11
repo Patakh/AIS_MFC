@@ -1,0 +1,174 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    var detailModel = Model.Model as AisLogistics.DataLayer.Common.Dto.Case.CustomerModelDto;
+}
+
+
+<div>
+    <div class="row mb-3">
+        <div class="col-6">
+            @if (Model.IsVisibleDescription)
+            {
+                <div class="b-s-14">@Model.ViewDescription</div>
+            }
+        </div>
+
+        <div class="col-6 text-end">
+           
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Дата получения информации
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.DateAdd.ToString("dd.MM.yyyy") ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            ФИО
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.Fio() ?? "-")
+        </div>
+    </div>
+   
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Пол
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.CustomerGender==1 ? "Муж" : "Жен")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Документ удостоверяющий личность
+        </div>
+        <div class="col-12 m-s-14">
+            @SelectListViewModel.DocumentTypeDictonary[detailModel.SDocumentsIdentityId]
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Серия Номер
+        </div>
+        <div class="col-12 m-s-14">
+            @($"{detailModel.DocumentSerial+" " ?? ""}{detailModel.DocumentNumber ?? ""}")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Дата выдачи
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.DocumentIssueDate?.ToString("dd.MM.yyyy") ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Кем выдан
+        </div>
+        <div class="col-12 m-s-14">
+            @($"{detailModel.DocumentCode+" " ?? ""}{detailModel.DocumentIssueBody ?? "-"}")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Дата рождения
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.DocumentBirthDate?.ToString("dd.MM.yyyy") ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Место рождения
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.DocumentBirthPlace ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Адрес регистрации
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.CustomerAddress ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Адрес проживания
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.CustomerAddressResidence ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Дата временной регистрации
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.DateTempRegistration?.ToString("dd.MM.yyyy") ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Адрес регистрации временный
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.CustomerAddressTemp ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            СНИЛС
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.CustomerSnils ?? "-")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            ИНН
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.CustomerInn ?? "-")
+        </div>
+    </div>
+
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Номер телефона
+        </div>
+        <div class="col-12 m-s-14">
+            @($"{detailModel.CustomerPhone1+" " ?? ""}{detailModel.CustomerPhone2 ?? ""}")
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 m-l-12">
+            Почта
+        </div>
+        <div class="col-12 m-s-14">
+            @(detailModel.CustomerEmail ?? "-")
+        </div>
+    </div>
+</div>

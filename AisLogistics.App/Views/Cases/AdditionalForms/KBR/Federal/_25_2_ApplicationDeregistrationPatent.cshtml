@@ -1,0 +1,277 @@
+﻿@model _25_2_ApplicationDeregistrationPatentModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="col-12">
+                <label class="form-label" asp-for="Code">Предоставляется в налоговый орган (код)</label>
+                <input type="text" class="form-control" asp-for="Code">
+            </div>
+            <br />
+            <div>заявляет об утрате права на применение патентной системы налогооблажения и о переходе на общий режим налогооблажения по основаниям, указанным в подпунткке 1 или 2 пунтка 6 статьи 346.45 Налогового кодекса Российской Федерации: </div>
+            <div class="col-12">
+                <div class="form-check" checkBlock>
+                    <input asp-for="Justification" id="Justification1" class="form-check-input" type="radio" value="1">
+                    <label for="Justification1" class="form-check-label">с начала календарного года доходы от реализации, определяемые в соответствии со статьей 249 Налогового кодекса Российской Федерации, по всем видам предпринимательской деятельности,в отношении которых применяется патентная система налогооблажения и упрощенная система налогооблажения, превысили 60 млн.рублей</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-check" checkBlock>
+                    <input asp-for="Justification" id="Justification2" class="form-check-input" type="radio" value="2">
+                    <label for="Justification2" class="form-check-label">в течение налогового периода было допущено несоответствие требованию, установленному пунктом 5 статьи 346.43 Налогового кодекса Российской Федерации, согласно которому при применении патентной системы налогооблажения индивидуальный предприниматель вправе привлекать наемных работников, в том числе по договорам гражданско-правового характера, средняя численность которых не должна превышать за налоговый период 15 человек по всем осуществляемым видам препринимательской деятельности.</label>
+                </div>
+            </div>
+            <br />
+            <div class="col-12">
+                <label class="form-label" asp-for="DateOfOccurrenceOfCircumstances">Дата наступления обязательств, являющегося основанием для утраты права на применение патентной систесы налогооблаженя</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar3"></i>
+                    </span>
+                    <input asp-for="DateOfOccurrenceOfCircumstances" type="text"
+                           class="form-control pickdate">
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="SheetCount">с приложением копии документа на листах</label>
+                <input type="number" class="form-control" asp-for="SheetCount" min="0">
+            </div> 
+            <br />
+            <h5 class="my-2">Сведения об имеющихся патентах на право применения патентной системы налогооблажения с не истекшим сроком действия</h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.DataOfPatentList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Патент @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-6">
+                                <label class="form-label" asp-for="DataOfPatentList[i].Number">Номер патента</label>
+                                <input type="text" list="Docs" asp-for="DataOfPatentList[i].Number" class="form-control">
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="DataOfPatentList[i].DateStart">Дата начала действия патентов</label>
+                                <div class="input-group input-group-merge">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-calendar3"></i>
+                                    </span>
+                                    <input asp-for="DataOfPatentList[i].DateStart" type="text"
+                                           class="form-control pickdate">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="DataOfPatentList[i].DateEnd">Дата окончания действия патентов</label>
+                                <div class="input-group input-group-merge">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-calendar3"></i>
+                                    </span>
+                                    <input asp-for="DataOfPatentList[i].DateEnd" type="text"
+                                           class="form-control pickdate">
+                                </div>
+                            </div>
+                            <div class="col-1 mt-4">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Патент 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-6">
+                <label class="form-label" asp-for="DataOfPatentList[0].Number">Номер патента</label>
+                <input type="text" list="Docs" asp-for="DataOfPatentList[0].Number" class="form-control">
+            </div>
+            <div class="col-2">
+                <label class="form-label" asp-for="DataOfPatentList[0].DateStart">Дата начала действия патентов</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar3"></i>
+                    </span>
+                    <input asp-for="DataOfPatentList[0].DateStart" type="text"
+                           class="form-control pickdate">
+                </div>
+            </div>
+            <div class="col-2">
+                <label class="form-label" asp-for="DataOfPatentList[0].DateEnd">Дата окончания действия патентов</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar3"></i>
+                    </span>
+                    <input asp-for="DataOfPatentList[0].DateEnd" type="text"
+                           class="form-control pickdate">
+                </div>
+            </div>
+            <div class="col-1 mt-4">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+
+        });
+
+        togleFields();
+
+        if ($('.btn-next')) {
+
+            $('.btn-next').on('click', function () {
+                let gender = $('[name="customer.CustomerGender"]').val() == 1 ? 'm' : 'f';
+                let lastName = $("#customer_LastName").val().trim();
+                let firstName = $("#customer_FirstName").val().trim();
+                let secondName = $("#customer_SecondName").val().trim();
+
+                var rn = new RussianName(lastName, firstName, secondName, gender);
+
+                additionalForm.find("#FioGenitiveCase").val(rn.fullName(rn.gcaseGen));
+            })
+        }
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        originalBlock.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        additionalForm.find('[type="radio"], input[type="checkbox"]').on('click', function () {
+            togleFields();
+        });
+        function togleFields() {
+            additionalForm.find('[checkBlock] input[type="radio"], [checkBlock] input[type="checkbox"]').each(function () {
+                let $block = $(this).closest('[checkBlock]');
+
+                if ($(this).is(':checked')) {
+                    visibilityBlock($block.find('[checkBlockBody]'), false, false);
+                } else {
+                    visibilityBlock($block.find('[checkBlockBody]'), true, true);
+                }
+            })
+        }
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.append($cloneBlock);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input").each(function () {
+                $(this).val("");
+            });
+            $block.find('select.select2-nosearch').each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity,
+                })
+            });
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+</script>

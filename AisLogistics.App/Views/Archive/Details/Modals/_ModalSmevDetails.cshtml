@@ -1,0 +1,57 @@
+﻿@model AisLogistics.App.ViewModels.Cases.SmevDetailsResponseModel
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+}
+<div class="row h-100">
+    <div class="col-lg-9">
+        <pdf src="@Convert.ToBase64String(Model.Document)"></pdf>
+    </div>
+    <div class="col-lg-3 border-start">
+        <h6 class="m-0">@Model.RequestInformation.Service.Name</h6>
+        <small>@Model.RequestInformation.Service.Office</small>
+        <small class="d-block text-muted mb-3">от @Model.RequestInformation.Service.Date?.ToShortDateString()</small>
+
+        <div class="mb-n1">@Model.RequestInformation.Employee.Name</div>
+        <small class="text-muted">@Model.RequestInformation.Employee.Job</small>
+
+        <div class="row mt-3 small">
+            <div class="col-lg-4">Дата запроса</div>
+            <div class="col-lg-8">
+                <time>@Model.RequestInformation.DateAdd.ToShortDateString()</time>
+            </div>
+        </div>
+        <div class="row small">
+            <div class="col-lg-4">Дата ответа</div>
+            <div class="col-lg-8">
+                <time>@(Model.RequestInformation.DateRequest?.ToShortDateString() ?? "-")</time>
+            </div>
+        </div>
+        <div class="row small">
+            <div class="col-lg-4">Регламентная</div>
+            <div class="col-lg-8">
+                <time>@Model.RequestInformation.DateReg.ToShortDateString()</time>
+            </div>
+        </div>
+
+        <hr />
+        <div class="d-grid text-end">
+            <div class="d-flex justify-content-between mb-1">
+                <a asp-controller="SmevBase" asp-action="Smev_SaveResponseAttachments" asp-route-id="@Model.RequestInformation.Id" class="btn btn-primary text-white" style="width: 45%" role="button" target="_blank" data-bs-toggle="tooltip" title="Скачать">
+                    Выгрузить вложения в ответе
+                </a>
+                <a asp-controller="SmevBase" asp-action="Smev_SaveRequestAttachments" asp-route-id="@Model.RequestInformation.Id" class="btn btn-primary text-white" style="width: 45%" role="button" target="_blank" data-bs-toggle="tooltip" title="Скачать">
+                    Выгрузить вложения в запросе
+                </a>
+            </div>
+            @*<a asp-controller="SmevBase" asp-action="Smev_SaveResponseAttachmentsForms" asp-route-id="@Model.RequestInformation.Id" target="_blank" data-bs-toggle="tooltip" title="Скачать">
+            Выгрузить доп. формы
+            </a>*@
+            @if (User.IsInRole("Администратор"))
+            {
+                <a asp-controller="SmevBase" asp-action="Smev_SaveXml" asp-route-id="@Model.RequestInformation.Id" target="_blank" data-bs-toggle="tooltip" title="Скачать">
+                    Выгрузить XML-логи
+                </a>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,96 @@
+﻿@using AisLogistics.App.Models.Queue
+@model RegistrationModelDto
+
+
+<form asp-controller="Queue" asp-action="CancelPreRegistrationModelSave" id="sendingForm" method="post" role="form">
+    <fieldset>
+        <div class="row">
+
+            <div class="col-12 mb-4">
+                <label for="queue_id" class="form-label">Филиал</label>
+                @Html.DropDownList("queue_id", Model.MFC, new { @class = "select2", @id = "queue_id" })
+            </div>
+
+            <div class="col-6 mb-4">
+                <label class="form-label" for="date">Дата записи</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input type="text" id="date" name="date" class="form-control pickadate" placeholder="Дата записи">
+                </div>
+            </div>
+ 
+            <div class="col-6 mb-4">
+                <label for="code" class="form-label">Код</label>
+                <input type="text" id="code" name="code" class="form-control" placeholder="Код" />
+            </div>
+
+        </div>
+    </fieldset>
+</form>
+
+<script>
+    $(function () {
+        $(".select2").select2({
+            dropdownParent: $("#mainModal")
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        $("#mainModal .pickadate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        $('#code').inputmask("9999", options);
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                locale: 'ru_RU',
+                localization: FormValidation.locales.ru_RU,
+                fields: {
+                    'queue_id': {
+                        validators: {
+                            notEmpty: {
+
+                            }
+                        }
+                    },
+                    'date': {
+                        validators: {
+                            notEmpty: {
+
+                            }
+                        }
+                    },
+                    'code': {
+                        validators: {
+                            notEmpty: {
+
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }).on('core.form.valid', function () {
+                var $form = $("#sendingForm");
+                $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $('#mainModal').modal('hide');
+                    }
+                });
+                return false;
+            });
+    });
+</script>

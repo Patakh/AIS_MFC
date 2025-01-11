@@ -1,0 +1,188 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    (string officeTypeOptions, string officeParents) = (ValueTuple<string, string>)Model.Model;
+}
+
+<!-- table -->
+<section id="content-datatable">
+    <div class="row">
+        <div class="col-12">
+            @if (Model.IsVisibleTitle)
+            {
+                <div class="card-header">
+                    <h4 class="card-title">@Model.ViewTitle</h4>
+                </div>
+            }
+
+            <div class="row">
+                <div class="col-md-10">
+                    @if (Model.IsVisibleDescription)
+                    {
+                        <div class="b-s-14">@Model.ViewDescription</div>
+                    }
+                </div>
+            </div>
+            <div class="table-responsive mt-3">
+                <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceOffice" class="directory_names-items table"></table>
+            </div>
+        </div>
+    </div>
+</section>
+<!--/ table -->
+@section Scripts
+    {
+    <script>
+        const $table = $('#@(Model.TableName)'),
+            isCanAdd = $table.is('[data-action-add]'),
+            isCanEdit = $table.is('[data-action-edit]'),
+            isCanRemove = $table.is('[data-action-remove]');
+
+        $(document).ready(function () {
+            $table.DataTable({
+                sDom: "<'row align-items-center'<'col-md-4 'f>" +
+                    "<'col-md-3'<'#parentOffice'>><'col-md-3'<'#officeType'>><'col-md-auto mt-auto ms-auto'<'#btnCreate'>>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                processing: true,
+                serverSide: true,
+                filter: true,
+                searchDelay: 1500,
+                ajax: {
+                    url: $table.data('action-table'),
+                    type: "POST",
+                    datatype: "json",
+                    dataSrc: function (json) {
+                        return json.data;
+                    }
+                },
+                initComplete: function () {
+                    var officesTypeColumn = this.api().column(2);
+                    if (`@(User.HasClaim(AccessKeyNames.ReferenceOffice, AccessKeyValues.Add))` == 'True') {
+                        $('#btnCreate').append(`
+                                                <button data-btn-params='{"actionType":"@ActionType.Add"}' data-btn-type="add" data-for-table="@Model.TableName" type="button" class="btn btn-primary ">
+                                                    <i class="bi bi-plus"></i> Добавить
+                                                </button>`);
+
+                    }
+                    var $officeType = $('#officeType');
+                    $officeType.html('<label class="form-label" for="selectOfficesProviders">Тип</label>');
+                    var $procedureSelect = $('<select id="selectOfficesProviders" class="form-select"><option selected value="">ВСЕ</option>@Html.Raw(officeTypeOptions)</select>')
+                        .appendTo($officeType)
+                        .select2({
+                            language: "ru",
+                        })
+                        .on('change', function () {
+                            officesTypeColumn.search($(this).val()).draw();
+                        });
+
+                    var officesParentsColumn = this.api().column(3);
+
+                    var $officeParents = $('#parentOffice');
+                    $officeParents.html('<label class="form-label" for="selectOfficesProviders">Головная организация</label>');
+                    var $officeParentsSelect = $('<select id="selectOfficesParents" class="form-select"><option selected value="">ВСЕ</option>@Html.Raw(officeParents)</select>')
+                        .appendTo($officeParents)
+                        .select2({
+                            language: "ru",
+                        })
+                        .on('change', function () {
+                            officesParentsColumn.search($(this).val()).draw();
+                        });
+                },
+                columnDefs: [
+                    {
+                        data: "id",
+                        targets: 0,
+                        title: '',
+                        visible: false,
+                        orderable: false
+                    },
+                    {
+                        targets: 1,
+                        title: 'Наименование',
+                        orderable: false
+                    },
+                    {
+                        name: "officeType",
+                        targets: 2,
+                        title: '',
+                        visible: false,
+                        orderable: false
+                    },
+                    {
+                        name: "parentOffice",
+                        targets: 3,
+                        title: '',
+                        visible: false,
+                        orderable: false
+                    },
+                    {
+                        targets: -1,
+                        title: 'Действия',
+                        data: "id",
+                        className: 'text-center editor-edit',
+                        sorting: false,
+                        orderable: false
+                    },
+
+
+                ],
+                columns: [
+                    {},
+                    {
+                        data: "officeName",
+                        render: function (data, type, row) {
+                            return `<a href="@Url.Action("OfficeInfoModal", "Reference")?id=${row.id}" data-btn-type="modal"><div class="b-s-14 reference">${data}</div></a>
+                                    ${row.parentOfficeName === null ? '' : '<div class="r-l-12">' + row.parentOfficeName + '</div>'}`;
+                        }
+                    },
+                    {
+                        render: function (data, type, row) {
+                            return "";
+                        }
+                    },
+                    {
+                        render: function (data, type, row) {
+                            return "";
+                        }
+                    },
+                    {
+                        render: function (data, type, row) {
+                            let content = "";
+                            if (isCanEdit === true)
+                                content += EditBtn({ "id": data, "actionType": 1 });
+                            if (isCanRemove === true)
+                                content += DeleteBtn({ "id": data });
+                            return content;
+                        }
+                    },
+                ]
+            });
+            $table.on("reload", () => {
+                $table.DataTable().ajax.reload(null, false);
+            });
+        });
+
+        $table.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        const EditBtn = (data) => {
+            const params = JSON.stringify(data);
+            return `<span class="d-block"><a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="edit" data-bs-toggle="tooltip" title="Изменить" class="btn btn-sm btn-icon text-body py-0">
+                    <i class="bi bi-pencil-square"></i></a>`;
+        }
+
+        const DeleteBtn = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="remove" data-bs-toggle="tooltip" title="Удалить" class="btn btn-sm btn-icon text-danger py-0">
+                    <i class="bi bi-trash"></i></a></span>`;
+        }
+    </script>
+}
+

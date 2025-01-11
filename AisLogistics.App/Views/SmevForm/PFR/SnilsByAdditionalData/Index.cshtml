@@ -1,0 +1,277 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new GetSnilsByAdditionalDataRequestData
+            {
+                Fio = new FioType(),
+                BirthPlace = new SnilsByAdditionalDataBirthPlace(),
+            };
+}
+
+<style>
+
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-request-tabContent .tab-pane {
+        height: 550px;
+    }
+</style>
+
+<div class="row justify-content-center g-3">
+    <div class="col-12 col-lg-10">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Персональные данные</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center g-3">
+    <div class="col-12 col-lg-8">
+        <div class="row mb-1">
+            <div class="col-12">
+                <label class="form-label">Заявители</label>
+                <select class="form-select select2-nosearch applicants">
+                    <option value="">Выберите заявителя</option>
+                    @for (int i = 0; i < applicants.Count; i++)
+                    {
+                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Fio.LastName">Фамилия</label>
+                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Fio.LastName" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Fio.FirstName">Имя</label>
+                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Fio.FirstName">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Fio.SecondName">Отчество</label>
+                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Fio.SecondName">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.BirthDate">Дата рождения</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.BirthDate" type="text" class="form-control pickadate required" placeholder="Дата рождения" value="">
+                </div>
+            </div>
+            <div class="col-4">
+                <label class="d-block form-label mb-3">Пол</label>
+                <div class="form-check form-check-inline mx-0">
+                    <input class="form-check-input" type="radio" asp-for="@request.Gender" id="smevModel_Gender1" value="0">
+                    <label class="form-check-label" for="smevModel_Gender1"><i class="bi bi-gender-male fs-6"></i>Мужской</label>
+                </div>
+                <div class="form-check form-check-inline mx-0">
+                    <input class="form-check-input" type="radio" asp-for="@request.Gender" id="smevModel_Gender2" value="1">
+                    <label class="form-check-label" for="smevModel_Gender2"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center g-3" data-block>
+    <div class="col-10 form-check form-switch">
+        <input class="form-check-input" checked type="checkbox" id="check1" onchange="checkboxChange(this)">
+        <label class="form-check-label fs-5 b-s-16" for="check1">Документ, удостоверяющий личность</label>
+    </div>
+    <div class="col-8" data-disabled>
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.IdentityKindCode">Наименование</label>
+                <select class="form-control select2-nosearch" asp-for="@request.IdentityKindCode"
+                        data-dictionary='{"dictionary":"SnilsByAdditionalDataIndentityType", "default_value":"01"}'></select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.IdentitySeries">Серия</label>
+                <input type="text" class="form-control" placeholder="Серия" asp-for="@request.IdentitySeries">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.IdentityNumber">Номер</label>
+                <input type="text" class="form-control required" placeholder="Номер" asp-for="@request.IdentityNumber">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.IdentityIssueDate">Дата выдачи</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.IdentityIssueDate" type="text" class="form-control pickadate required" placeholder="Дата выдачи">
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.IdentityIssuer">Орган выдачи</label>
+                <input type="text" class="form-control required" placeholder="Орган выдачи" asp-for="@request.IdentityIssuer">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center g-3">
+    <div class="col-10 form-check form-switch">
+        <input class="form-check-input" checked type="checkbox" id="check2" onchange="checkboxChange(this)">
+        <label class="form-check-label fs-5 b-s-16" for="check2">Место рождения</label>
+    </div>
+    <div class="col-8" data-disabled>
+        <div class="row mb-3">
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.BirthPlace.Country">Страна</label>
+                <select class="form-control select2-search" asp-for="@request.BirthPlace.Country"
+                        data-dictionary='{"dictionary":"OksmCodes", "default_value":"643"}'></select>
+            </div>
+            <div class="col-6" id="regionCode">
+                <label class="form-label" asp-for="@request.BirthPlace.Region">Регион</label>
+                <select class="form-control select2-search" asp-for="@request.BirthPlace.Region" data-value-value
+                        data-dictionary='{"dictionary":"FnsRegionCodes", "default_value":"Республика Дагестан"}'></select>
+            </div>
+            <div class="col-6" data-disabled id="regionName">
+                <label class="form-label" asp-for="@request.BirthPlace.Region">Регион</label>
+                <input type="text" class="form-control" placeholder="Регион" asp-for="@request.BirthPlace.Region">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.BirthPlace.District">Район</label>
+                <input type="text" class="form-control" placeholder="Район" asp-for="@request.BirthPlace.District">
+            </div>
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.BirthPlace.Settlement">Город / населенный пункт</label>
+                <input type="text" class="form-control required" placeholder="Город / населенный пункт" asp-for="@request.BirthPlace.Settlement">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function ShowErrorInputs() {
+    }
+    getDictionaries(false);
+
+    var applicants = @Json.Serialize(applicants);
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                $(formContent).find('.required').each(function () {
+                    addValidation($(this));
+                });
+
+                // скрытие блоков
+                //$(formContent).find('[data-disabled]').each(function () {
+                //    visibilityBlock($(this), true, true);
+                //});
+
+                visibilityBlock($('#regionName'), true, true);
+
+                /* init datepicker */
+                $(".pickadate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                });
+
+                /* init select2 */
+                $(formContent).find("select.select2-nosearch").each(function () {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+                $(formContent).find("select.select2-search").each(function () {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal")
+                    });
+                });
+
+                /* init inputmask */
+                $(".pickadate").inputmask("99.99.9999", {
+                    clearIncomplete: true,
+                    showMaskOnHover: false
+                });                
+            }
+        };
+
+    $('#request_BirthPlace_Country').on('change', (event) => {
+        if (event.target.value == '643') {
+            visibilityBlock($('#regionCode'), false, false);
+            visibilityBlock($('#regionName'), true, true);
+        } else {
+            visibilityBlock($('#regionName'), false, false);
+            visibilityBlock($('#regionCode'), true, true);
+        }
+    });
+
+    function checkboxChange(el) {
+        visibilityBlock($(el).closest('.row').find('[data-disabled]'), !$(el).prop('checked'), !$(el).prop('checked'));
+    }
+
+    $('.accordion-button').on('click',
+        (event) => {
+            let accordionBody = $(event.target).closest('.accordion').find('.accordion-body');
+            if ($(event.target).hasClass('collapsed')) {
+                visibilityBlock(accordionBody, false, false);
+            } else {
+                visibilityBlock(accordionBody, true, true);
+            }
+            $(event.target).toggleClass('collapsed');
+        });
+
+    function convertDocumentIdentity(id) {
+        switch (id) {
+        case "21":
+            return "01";
+        case "3":
+            return "02";
+        case "26":
+            return "11";
+        case "12":
+            return "10";
+        case "10":
+            return "04";
+        case "22":
+            return "06";
+        }
+    }
+
+    $('select.applicants').each(function () {
+        $(this).on('change',
+            function () {
+                let id = $(this).val();
+                let $block = $(this).closest('#smev-data-form-content');
+                $block.find('[type="text"]').each(function () {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$="LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$="FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$="SecondName"]').val(applicants[id].secondName);
+                    $block.find('[name$="BirthDate"]').val(applicants[id].birthDate ? new Date(applicants[id].birthDate).toLocaleDateString() : '');
+                    $block.find('[name$="Snils"]').val(applicants[id].snils);
+                    $block.find('[name$="Mobile"]').val(applicants[id].phone);
+
+                    switch (applicants[id].gender) {
+                        case 1:
+                            $block.find('[id$="Gender1"]').prop('checked', true);
+                            break;
+                        case 2:
+                            $block.find('[id$="Gender2"]').prop('checked', true);
+                            break;
+                    }
+                    
+                    $block.find('[name$="IdentityKindCode"]').val(convertDocumentIdentity(applicants[id].documentTypeCode)).trigger('change');
+                    $block.find('[name$="IdentitySeries"]').val(applicants[id].documentSerial.replace(' ', ''));
+                    $block.find('[name$="IdentityNumber"]').val(applicants[id].documentNumber);
+                    $block.find('[name$="IdentityIssueDate"]').val(applicants[id].documentIssueDate ? new Date(applicants[id].documentIssueDate).toLocaleDateString() : '');
+                    $block.find('[name$="IdentityIssuer"]').val(applicants[id].documentIssueBody);
+                }
+            });
+    });
+
+    $(formContent).find('.applicants').val('0').trigger('change');
+</script>

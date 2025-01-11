@@ -1,0 +1,96 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+}
+
+<style>
+    .search-employees {
+        background: #FFFFFF !important;
+        border-radius: .25rem !important;
+        border: 1px solid #D0D5DD !important;
+    }
+
+    .active-row {
+        border-left: 3px solid #5a8dee !important;
+    }
+
+    .table-employee {
+        margin: 0 !important;
+    }
+
+        .table-employee td {
+            padding: 0 !important;
+            margin-bottom: 1rem !important;
+        }
+
+    table.dataTable {
+        margin-top: 0 !important;
+    }
+
+
+
+    .pagination .page-item.previous .page-link {
+        display: none !important;
+    }
+
+    .pagination .page-item.next .page-link {
+        display: none !important;
+    }
+
+    .employees-table__wrapper {
+        height: 63vh;
+    }
+
+        .employees-table__wrapper table.dataTable thead tr {
+            display: none !important
+        }
+
+    .employees-content__wrapper {
+        height: 72vh;
+    }
+
+    .badge-employee {
+        font-weight: 500 !important;
+    }
+</style>
+<!-- table -->
+<section id="content-datatable">
+    <div class="row">
+        <div class="col-3">
+            
+            
+      
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="table-responsive employees-table__wrapper" id="employees-table-wrapper">
+                        <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceEmployee" class="table table-employee table-no-border"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="card active-border" id="empty-table">
+                <div class="card-body">
+                    <div class="alert-custom" role="alert">
+                        <div class="b-s-16">Внимание</div>
+                        <div class="r-s-14">Выберите сотрудника</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card d-none" id="employees-content__wrapper">
+                <div class="card-header border-0">
+                    <div id="menu-content-description" class="b-s-18"></div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-3">
+                            <partial name="Employees/Details/_NavLeft" />
+                        </div>
+                        <div class="col-9 employees-content__wrapper" id="navs-tabs-default"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

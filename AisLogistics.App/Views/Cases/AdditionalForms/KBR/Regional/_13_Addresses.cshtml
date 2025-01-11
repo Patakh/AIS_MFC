@@ -1,0 +1,2253 @@
+﻿@model _13_AddressesModel
+@{
+    IEnumerable<SelectListItem> MethodReceiving = new List<SelectListItem>
+    {
+            new("Лично", "1"),
+            new("В многофункциональном центре", "2"),
+            new("Почтовым отправлением", "3"),
+            new("В личном кабинете Единого портала государственных и муниципальных услуг, региональных порталов государственных и муниципальных услуг", "4"),
+            new("В личном кабинете федеральной информационной адресной системы", "5"),
+            new("На адрес электронной почты (для сообщения о получении заявления и документов)", "6"),
+    };
+    IEnumerable<SelectListItem> Receipt = new List<SelectListItem>
+    {
+            new("Выдать лично", "1"),
+            new("Расписка получена", "2"),
+            new("Направить почтовым отправлением", "3"),
+            new("Не направлять", "4"),
+    };
+    IEnumerable<SelectListItem> View = new List<SelectListItem>
+    {
+            new("Земельный участок", "1"),
+            new("Здание (строение)", "2"),
+            new("Сооружение", "3"),
+            new("Помещение", "4"),
+            new("Машино-место", "5"),
+    };
+    IEnumerable<SelectListItem> Reason = new List<SelectListItem>
+    {
+            new("Образованием земельного участка(ов) из земель, находящихся в государственной или муниципальной собственности", "1"),
+            new("Образованием земельного участка(ов) путем раздела земельного участка", "2"),
+            new("Образованием земельного участка путем объединения земельных участков", "3"),
+            new("Образованием земельного участка(ов) путем выдела из земельного участка", "4"),
+            new("Образованием земельного участка(ов) путем перераспределения земельных участков", "5"),
+            new ("Строительством,реконструкцией здания (строения), сооружения", "6"),
+            new ("Подготовкой в отношении следующего объекта адресации документов,необходимых для осуществления " + 
+                 "государственного кадастрового учета указанного объекта адресации, в случае, если в соответствии с " + 
+                 "Градостроительным кодексом Российской Федерации, законодательством субъектов Российской Федерации о "+ 
+                 "градостроительной деятельности для его строительства, реконструкции выдача разрешения на строительство" + 
+                 " не требуется", "7"),
+            new("Переводом жилого помещения в нежилое помещение и нежилого помещения в жилое помещение", "8"),
+            new("Образованием помещения(ий) в здании (строении), сооружении путем раздела здания (строения), сооружения", "9"),
+            new("Образованием помещения(ий) в здании (строении), сооружении путем раздела помещения, машино-места", "10"),
+            new("Образованием помещения в здании (строении), сооружении путем объединения помещений, машино-мест в здании (строении), сооружении", "11"),
+            new("Образованием помещения в здании, сооружении путем переустройства и (или) перепланировки мест общего пользования", "12"),
+            new("Образованием машино-места в здании, сооружении путем раздела здания, сооружения", "13"),
+            new("Образованием машино-места (машино-мест) в здании, сооружении путем раздела помещения, машино-места", "14"),
+            new("Образованием машино-места в здании, сооружении путем объединения помещений, машино-мест в здании, сооружении", "15"),
+            new("Образованием машино-места в здании, сооружении путем переустройства и (или) перепланировки мест общего пользования", "16"),
+            new("Необходимостью приведения адреса земельного участка, здания (строения), сооружения, помещения, " +
+               "машино-места, государственный кадастровый учет которого осуществлен в соответствии с Федеральным законом " +
+               "от 13 июля 2015 г", "17"),
+            new("Отсутствием у земельного участка, здания (строения), сооружения, помещения, машино-места, государственный"+
+                "кадастровый учет которого осуществлен в соответствии с Федеральным законом О государственной регистрации недвижимости, адреса", "18"),
+    };
+      IEnumerable<SelectListItem> DueTo = new List<SelectListItem>
+    {
+            new("Прекращением существования объекта адресации и (или) снятием с государственного кадастрового учета объекта недвижимости, являющегося объектом адресации", "1"),
+            new("Исключением из Единого государственного реестра недвижимости указанных в части 7 статьи 72 Федерального закона\"О государственной регистрации недвижимости\" сведений об объекте недвижимости, являющемся объектом адресации", "2"),
+            new("Присвоением объекту адресации нового адреса", "3"),
+    };
+     IEnumerable<SelectListItem> Face = new List<SelectListItem>
+    {
+            new("Физическое лицо", "1"),
+            new("Юридическое лицо", "2"),
+    };
+     IEnumerable<SelectListItem> FaceApplicant = new List<SelectListItem>
+    {
+            new("Физическое лицо", "1"),
+            new("Юридическое лицо", "2"),
+    };
+     IEnumerable<SelectListItem> Applicant = new List<SelectListItem>
+    {
+            new("Собственник объекта адресации или лицо, обладающее иным вещным правом на объект адресации", "1"),
+            new("Представитель собственника объекта адресации или лица, обладающего иным вещным правом на объект адресации", "2"),
+    };
+     IEnumerable<SelectListItem> Education = new List<SelectListItem>
+    {
+            new("Жилое помещение", "Жилое помещение"),
+            new("Нежилое помещение", "Нежилоео помещене"),
+    };
+     IEnumerable<SelectListItem> Right = new List<SelectListItem>
+    {
+            new("Право собственности", "1"),
+            new("Право хозяйственного ведения имуществом на объект адресации", "2"),
+            new("Право оперативного управления имуществом на объект адресации", "3"),
+            new("Право пожизненно наследуемого владения земельным участком", "4"),
+            new("Право постоянного (бессрочного) пользования земельным участком", "5"),
+    };
+    }
+<div id="additional-data-content">
+     <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="View">в отношении объекта адресации:</label>
+                    <select class="select2-nosearch" asp-items="@View" asp-for="View"></select>                
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Reason">Присвоить адрес в связи с</label>
+                    <select class="select2-nosearch w-100" asp-items="@Reason" asp-for="Reason"></select>                
+                </div>
+            </div>
+            <div data-app-1>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="LocatedOwnership.NumberPlotFormed">Количество образуемых земельных участков</label>
+                       <input type="text" asp-for="LocatedOwnership.NumberPlotFormed" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="LocatedOwnership.AdditionalInformation">Дополнительная информация</label>
+                       <input type="text" asp-for="LocatedOwnership.AdditionalInformation" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-2>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Land.NumberPlotFormed">Количество образуемых земельных участков</label>
+                       <input type="text" asp-for="Land.NumberPlotFormed" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Land.CadastralNumber">Кадастровый номер земельного участка</label>
+                       <input type="text" asp-for="Land.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Land.AddressPlot">Адрес земельного участка</label>
+                       <input type="text" asp-for="Land.AddressPlot" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-3>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Associations.NumberPlotFormed">Количество объединяемых земельных участков</label>
+                       <input type="text" asp-for="Associations.NumberPlotFormed" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Associations.CadastralNumber">Кадастровый номер объединяемого земельного участка</label>
+                       <input type="text" asp-for="Associations.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Associations.AddressPlot">Адрес объединяемого земельного участка</label>
+                       <input type="text" asp-for="Associations.AddressPlot" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-4>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Allotment.NumberPlotFormed">Количество образуемых земельных участков (за исключением земельного участка, из которого осуществляется выдел)</label>
+                       <input type="text" asp-for="Allotment.NumberPlotFormed" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Allotment.CadastralNumber">Кадастровый номер земельного участка,из которого осуществляется выдел</label>
+                       <input type="text" asp-for="Allotment.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Allotment.AddressPlot">Адрес земельного участка, из которого осуществляется выдел</label>
+                       <input type="text" asp-for="Allotment.AddressPlot" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-5>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Redistributions.NumberPlotFormed">Количество образуемых земельных участков</label>
+                       <input type="text" asp-for="Redistributions.NumberPlotFormed" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Redistributions.NumberPlotRedistributed">Количество земельных участков, которые перераспределяются</label>
+                       <input type="text" asp-for="Redistributions.NumberPlotRedistributed" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Redistributions.CadastralNumber">Кадастровый номер земельного участка, который перераспределяется </label>
+                       <input type="text" asp-for="Redistributions.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Redistributions.AddressPlot">Адрес земельного участка, который перераспределяется</label>
+                       <input type="text" asp-for="Redistributions.AddressPlot" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-6>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Construction.NumberPlotFormed">Наименование объекта строительства</label>
+                       <input type="text" asp-for="Construction.NumberPlotFormed" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Construction.CadastralNumber">Кадастровый номер земельного участка, на котором осуществляется строительство </label>
+                       <input type="text" asp-for="Construction.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Construction.AddressPlot">Адрес земельного участка, на котором осуществляется строительство </label>
+                       <input type="text" asp-for="Construction.AddressPlot" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-7>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Preparation.TypeBuilding">Тип здания</label>
+                       <input type="text" asp-for="Preparation.TypeBuilding" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Preparation.NameConstructionObject">Наименование объекта строительства </label>
+                       <input type="text" asp-for="Preparation.NameConstructionObject" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Preparation.CadastralNumber">Кадастровый номер земельного участка, на котором осуществляется строительство</label>
+                       <input type="text" asp-for="Preparation.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Preparation.AddressPlot">Адрес земельного участка, на котором осуществляется строительство</label>
+                       <input type="text" asp-for="Preparation.AddressPlot" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-8>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Translation.CadastralNumber">Кадастровый номер помещения</label>
+                       <input type="text" asp-for="Translation.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Translation.AddressPlot">Адрес помещения</label>
+                       <input type="text" asp-for="Translation.AddressPlot" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-9>
+                <div class="row mb-3">
+                    <div class="col-3">
+                        <select class="select2-nosearch" asp-items="@Education" asp-for="BuilingPremises.Education"></select>                
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="BuilingPremises.NumberPremises">Количество образуемых помещений</label>
+                       <input type="text" asp-for="BuilingPremises.NumberPremises" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="BuilingPremises.CadastralNumber">Кадастровый номер здания</label>
+                       <input type="text" asp-for="BuilingPremises.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="BuilingPremises.AdditionalInformation">Дополнительная информация</label>
+                       <input type="text" asp-for="BuilingPremises.AdditionalInformation" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="BuilingPremises.AddressPlot">Адрес здания</label>
+                       <input type="text" asp-for="BuilingPremises.AddressPlot" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-10>
+                <div class="row mb-3">
+                    <div class="col-3">
+                        <label class="form-label" asp-for="PremisesSection.Education">Назначение помещения</label>
+                        <select class="select2-nosearch" asp-items="@Education" asp-for="PremisesSection.Education"></select>                
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="PremisesSection.TypeRoom">Вид помещения </label>
+                       <input type="text" asp-for="PremisesSection.TypeRoom" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="PremisesSection.NumberPremises">Количество помещений</label>
+                       <input type="text" asp-for="PremisesSection.NumberPremises" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="PremisesSection.CadastralNumber">Кадастровый номер помещения</label>
+                       <input type="text" asp-for="PremisesSection.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="PremisesSection.AddressPlot">Адрес помещения</label>
+                       <input type="text" asp-for="PremisesSection.AddressPlot" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="PremisesSection.AdditionalInformation">Дополнительная информация</label>
+                       <input type="text" asp-for="PremisesSection.AdditionalInformation" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-11>
+                <div class="row mb-3">
+                    <div class="col-3">
+                        <label class="form-label" asp-for="AssociationsParkingSpaces.Education">Назначение помещения</label>
+                        <select class="select2-nosearch" asp-items="@Education" asp-for="AssociationsParkingSpaces.Education"></select>                
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="AssociationsParkingSpaces.NumberPremises">Количество объединяемых помещений</label>
+                       <input type="text" asp-for="AssociationsParkingSpaces.NumberPremises" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="AssociationsParkingSpaces.CadastralNumber">Кадастровый номер объединяемого помещения</label>
+                       <input type="text" asp-for="AssociationsParkingSpaces.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="AssociationsParkingSpaces.AddressPlot">Адрес объединяемого помещения </label>
+                       <input type="text" asp-for="AssociationsParkingSpaces.AddressPlot" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="AssociationsParkingSpaces.AdditionalInformation">Дополнительная информация</label>
+                       <input type="text" asp-for="AssociationsParkingSpaces.AdditionalInformation" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-12>
+                <div class="row mb-3">
+                    <div class="col-3">
+                        <label class="form-label" asp-for="Realignments.Education">Назначение помещения</label>
+                        <select class="select2-nosearch" asp-items="@Education" asp-for="Realignments.Education"></select>                
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Realignments.NumberPremises">Количество образуемых помещений</label>
+                       <input type="text" asp-for="Realignments.NumberPremises" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Realignments.CadastralNumber">Кадастровый номер здания, сооружения</label>
+                       <input type="text" asp-for="Realignments.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Realignments.AddressPlot">Адрес здания, сооружения</label>
+                       <input type="text" asp-for="Realignments.AddressPlot" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="Realignments.AdditionalInformation">Дополнительная информация</label>
+                       <input type="text" asp-for="Realignments.AdditionalInformation" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-13>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="DividingBuilding.NumberParkingSpaces">Количество образуемых машино-мест</label>
+                       <input type="text" asp-for="DividingBuilding.NumberParkingSpaces" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="DividingBuilding.CadastralNumber">Кадастровый номер здания</label>
+                       <input type="text" asp-for="DividingBuilding.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="DividingBuilding.AddressPlot">Адрес здания, сооружения</label>
+                       <input type="text" asp-for="DividingBuilding.AddressPlot" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="DividingBuilding.AdditionalInformation">Дополнительная информация</label>
+                       <input type="text" asp-for="DividingBuilding.AdditionalInformation" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-14>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="SectionRoom.NumberParkingSpaces">Количество машино-мест</label>
+                       <input type="text" asp-for="SectionRoom.NumberPlotFormed" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="SectionRoom.CadastralNumber">Кадастровый номер помещения</label>
+                       <input type="text" asp-for="SectionRoom.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="SectionRoom.AddressPlot">Адрес помещения, машино-места раздел которого осуществляется</label>
+                       <input type="text" asp-for="SectionRoom.AddressPlot" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="SectionRoom.AdditionalInformation">Дополнительная информация</label>
+                       <input type="text" asp-for="SectionRoom.AdditionalInformation" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-15>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="AssociationsPremises.NumberParkingSpaces">Количество объединяемых помещений,машино-мест</label>
+                       <input type="text" asp-for="AssociationsPremises.NumberParkingSpaces" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="AssociationsPremises.CadastralNumber">Кадастровый номер объединяемого помещения</label>
+                       <input type="text" asp-for="AssociationsPremises.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="AssociationsPremises.AddressPlot">Адрес объединяемого помещения </label>
+                       <input type="text" asp-for="AssociationsPremises.AddressPlot" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="AssociationsPremises.AdditionalInformation">Дополнительная информация</label>
+                       <input type="text" asp-for="AssociationsPremises.AdditionalInformation" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-16>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="RedevelopmentPlaces.NumberParkingSpaces">Количество образуемых машино-мест</label>
+                       <input type="text" asp-for="RedevelopmentPlaces.NumberParkingSpaces" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="RedevelopmentPlaces.CadastralNumber">Кадастровый номер здания</label>
+                       <input type="text" asp-for="RedevelopmentPlaces.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="RedevelopmentPlaces.AddressPlot">Адрес здания</label>
+                       <input type="text" asp-for="RedevelopmentPlaces.AddressPlot" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="RedevelopmentPlaces.AdditionalInformation">Дополнительная информация</label>
+                       <input type="text" asp-for="RedevelopmentPlaces.AdditionalInformation" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-17>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="NecessityBringing.CadastralNumber">Кадастровый номер земельного участка</label>
+                       <input type="text" asp-for="NecessityBringing.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="NecessityBringing.AddressPlot">Существующий адрес земельного участка</label>
+                       <input type="text" asp-for="NecessityBringing.AddressPlot" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="NecessityBringing.AdditionalInformation">Дополнительная информация</label>
+                       <input type="text" asp-for="NecessityBringing.AdditionalInformation" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div data-app-18>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="AbsenceLandPlot.CadastralNumber">Кадастровый номер земельного участка</label>
+                       <input type="text" asp-for="AbsenceLandPlot.CadastralNumber" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="AbsenceLandPlot.AddressPlot">Адрес земельного участка</label>
+                       <input type="text" asp-for="AbsenceLandPlot.AddressPlot" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3" >
+                    <div class="col-12">
+                       <label class="form-label" asp-for="AbsenceLandPlot.AdditionalInformation">Дополнительная информация</label>
+                       <input type="text" asp-for="AbsenceLandPlot.AdditionalInformation" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <hr/>
+        <br/>
+         <h6 class="my-2">Аннулировать адрес объекта адресации:</h6>
+            <div class="row mb-3" >
+                  <div class="col-12">
+                     <label class="form-label" asp-for="Сountry">страна</label>
+                     <input type="text" asp-for="Сountry" class="form-control">
+                 </div>
+            </div>
+            <div class="row mb-3" >
+                <div class="col-12">
+                    <label class="form-label" asp-for="Subject">субъект</label>
+                    <input type="text" asp-for="Subject" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3" >
+                <div class="col-12">
+                    <label class="form-label" asp-for="Territories">Наименование муниципального района, городского, муниципального округа или внутригородской территории</label>
+                    <input type="text" asp-for="Territories" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3" >
+                  <div class="col-12">
+                     <label class="form-label" asp-for="Settlements">Наименование поселения</label>
+                     <input type="text" asp-for="Settlements" class="form-control">
+                 </div>
+            </div>
+            <div class="row mb-3" >
+                <div class="col-12">
+                    <label class="form-label" asp-for="CityDistrict">Наименование внутригородского района городского округа</label>
+                    <input type="text" asp-for="CityDistrict" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3" >
+                <div class="col-12">
+                    <label class="form-label" asp-for="Locality">Наименование населенного пункта</label>
+                    <input type="text" asp-for="Locality" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3" >
+                  <div class="col-12">
+                     <label class="form-label" asp-for="ElementPlanningStructure">Наименование элемента планировочной структуры</label>
+                     <input type="text" asp-for="ElementPlanningStructure" class="form-control">
+                 </div>
+            </div>
+            <div class="row mb-3" >
+                <div class="col-12">
+                    <label class="form-label" asp-for="ElementRoadNetwork"> Наименование элемента улично-дорожной сети</label>
+                    <input type="text" asp-for="ElementRoadNetwork" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3" >
+                <div class="col-12">
+                    <label class="form-label" asp-for="LandPlotNumber">Номер земельного участка</label>
+                    <input type="text" asp-for="LandPlotNumber" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3" >
+                <div class="col-12">
+                    <label class="form-label" asp-for="TypeBuilding">Тип здания</label>
+                    <input type="text" asp-for="TypeBuilding" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3" >
+                  <div class="col-12">
+                     <label class="form-label" asp-for="NumberBuilding">Номер здания</label>
+                     <input type="text" asp-for="NumberBuilding" class="form-control">
+                 </div>
+            </div>
+            <div class="row mb-3" >
+                <div class="col-12">
+                    <label class="form-label" asp-for="TypePremises"> Тип помещения</label>
+                    <input type="text" asp-for="TypePremises" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3" >
+                <div class="col-12">
+                    <label class="form-label" asp-for="NumberPremises">Номер помещения</label>
+                    <input type="text" asp-for="NumberPremises" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3" >
+                  <div class="col-12">
+                     <label class="form-label" asp-for="TypeFlat">Тип помещения в пределах квартиры</label>
+                     <input type="text" asp-for="TypeFlat" class="form-control">
+                 </div>
+            </div>
+            <div class="row mb-3" >
+                <div class="col-12">
+                    <label class="form-label" asp-for="NumberFlat">Номер помещения в пределах квартиры</label>
+                    <input type="text" asp-for="NumberFlat" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3" >
+                <div class="col-12">
+                    <label class="form-label" asp-for="AdditionalInformation">Дополнительная информация</label>
+                    <input type="text" asp-for="AdditionalInformation" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                     <label class="form-label" asp-for="DueTo">В связи с</label>
+                     <select class="select2-nosearch w-100" asp-items="@DueTo" asp-for="DueTo"></select>                
+                </div>
+            </div>
+             <div class="row mb-3" >
+                <div class="col-12">
+                    <label class="form-label" asp-for="DueToAdditionalInformation">Дополнительная информация</label>
+                    <input type="text" asp-for="DueToAdditionalInformation" class="form-control">
+                </div>
+            </div>
+            <hr/>
+            <br/>
+            <h6 class="my-2">Собственник объекта адресации или лицо, обладающее иным вещным правом на объект адресации</h6>
+            <div class="row mb-3">
+                <div class="col-3">
+                     <select class="select2-nosearch" asp-items="@Face" asp-for="Face"></select>                
+                </div>
+            </div>
+            <div data-app-111>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="OwnerObject.Fio">ФИО</label>
+                        <input type="text" asp-for="OwnerObject.Fio" class="form-control">                
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="OwnerObject.INN">ИНН</label>
+                        <input type="text" asp-for="OwnerObject.INN" class="form-control">                
+                    </div>
+                </div>
+                <br/>
+                <h6 class="my-2">Документ, удостоверяющий личность</h6>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="OwnerObject.DocType">Тип документа</label>
+                        <select class="form-select select2-nosearch" asp-for="OwnerObject.DocType"
+                                data-dictionary='{"dictionary":"FnsDocTypes"}' data-value-value>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="OwnerObject.Series">серия</label>
+                        <input type="text" asp-for="OwnerObject.Series" class="form-control">                
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="OwnerObject.Number">номер</label>
+                        <input type="text" asp-for="OwnerObject.Number" class="form-control">                
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="OwnerObject.DocIssueDate">Дата выдачи</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                           <input asp-for="OwnerObject.DocIssueDate" type="text"
+                            class="form-control pickdate">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="OwnerObject.DocIssuer">Кем выдан </label>
+                        <input type="text" asp-for="OwnerObject.DocIssuer" class="form-control">                
+                    </div>
+                </div>
+                <br/>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="OwnerObject.PostalAddress">почтовый адрес </label>
+                        <input type="text" asp-for="OwnerObject.PostalAddress" class="form-control">                
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                     <label class="form-label" asp-for="Right">Вещное право на объект адресации</label>
+                     <select class="select2-nosearch" asp-items="@Right" asp-for="Right"></select>                
+                </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="OwnerObject.Phone">Телефон для связи </label>
+                        <input type="text" asp-for="OwnerObject.Phone" class="form-control">                
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="OwnerObject.Email">Адрес электронной почты </label>
+                        <input type="text" asp-for="OwnerObject.Email" class="form-control">                
+                    </div>
+                </div>
+            </div>
+            <div data-app-222>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="OwnerObject.FullName"> полное наименование</label>
+                        <input type="text" asp-for="OwnerObject.FullName" class="form-control">                
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="OwnerObject.INNLegal">ИНН</label>
+                        <input type="text" asp-for="OwnerObject.INNLegal" class="form-control">                
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="OwnerObject.CHECKPOINT">КПП</label>
+                        <input type="text" asp-for="OwnerObject.CHECKPOINT" class="form-control">                
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="OwnerObject.PostalAddressLegal">Почтовый адрес</label>
+                        <input type="text" asp-for="OwnerObject.PostalAddressLegal" class="form-control">                
+                    </div>
+                </div> 
+                <div class="row mb-3">
+                    <div class="col-3">
+                        <label class="form-label" asp-for="OwnerObject.PhoneLegal">Телефон для связи </label>
+                        <input type="text" asp-for="OwnerObject.PhoneLegal" class="form-control">                
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="OwnerObject.EmailLegal">Адрес электронной почты </label>
+                        <input type="text" asp-for="OwnerObject.EmailLegal" class="form-control">                
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="RightLegal">Вещное право на объект адресации :</label>
+                        <select class="select2-nosearch " asp-items="@Right" asp-for="RightLegal"></select>                
+                    </div>
+                </div>
+            </div>
+            <hr/>
+            <br/>
+            <div class="row mb-3">
+                <div class="col-8">
+                    <label class="form-label" asp-for="MethodReceiving">Способ получения документов</label>
+                    <select class="select2-nosearch w-100" asp-items="@MethodReceiving" asp-for="MethodReceiving"></select>                
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Receipt">Расписку в получении документов</label>
+                    <select class="select2-nosearch" asp-items="@Receipt" asp-for="Receipt"></select>                
+                </div>
+            </div>
+            <hr/> 
+            <br/>
+            <h5 class="my-2">Приложенные документы</h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedDocumentList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <h6 class="my-2 title">Документ @(i+1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3 align-items-end">
+                                    <div class="col-11 w-100">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].Name">Наименование</label>
+                                        <input type="text" class="form-control" asp-for="AppliedDocumentList[i].Name">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-3">
+                                         <label class="form-label" asp-for="AppliedDocumentList[i].OriginalCount">Количество оригиналов</label>
+                                         <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[i].OriginalCount">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].OriginalList">Количество листов</label>
+                                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[i].OriginalList">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].CopyCount">Количество копий</label>
+                                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[i].CopyCount">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].CopyList">Количество листов</label>
+                                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[i].CopyList">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                 <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <br/>
+            <hr/>
+            <div class="row mb-3">
+                 <div class="col-12">
+                    <label class="form-label" asp-for="Note">Примечание</label>
+                    <textarea asp-for="Note" class="form-control"></textarea>
+                </div>
+             </div>
+             <br/>
+        </div>
+    </div>
+</div>
+<div id="originalBlock">
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+       <br/>
+        <h6 class="my-2 title">Документ 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-11">
+                <div class="row mb-1 align-items-end">
+                    <div class="col-11 w-100">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].Name">Наименование</label>
+                        <input type="text" class="form-control" asp-for="AppliedDocumentList[0].Name">
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-3">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].OriginalCount">Количество оригиналов</label>
+                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[0].OriginalCount">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].OriginalList">Количество листов</label>
+                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[0].OriginalList">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].CopyCount">Количество копий</label>
+                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[0].CopyCount">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].CopyList">Количество листов</label>
+                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[0].CopyList">
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                  <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+     $(function() {
+        originalBlock.find('[data-original]').each(function(_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find('[data-disabled]').each(function() {
+            visibilityBlock($(this), true, true);
+        });
+                
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('#Phone').inputmask("9{1,15}", options);        
+        additionalForm.find('#PersonalAccount').inputmask("9{20}", options);        
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);                
+
+         function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function() {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function() {
+                $(this).select2({
+                });
+            });
+        }
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.find("select").each(function() {
+                $(this).select2('destroy');
+            });
+            $cloneList.append($cloneBlock);
+            select2Init($cloneList);
+        }        
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input[type='text']").each(function() {
+                $(this).val("");
+            });
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function() {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function() {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function(index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    var additionalForm = $('#additional-data-content');
+
+    $(function() {
+        additionalForm.find("select.select2-search").each(function() {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function() {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+        additionalForm.find('[name^="FnsDepartment"]').inputmask("9999", options);
+        additionalForm.find('[name$="Email"]').inputmask("email", options);
+        additionalForm.find('[name$="Phone"]').inputmask("9{1,12}", options);
+        additionalForm.find('[name$="Inn"]').inputmask("9{12}", options);
+
+        additionalForm.find('#Reason').on('change', function() {
+            let $app1 = $('[data-app-1]');
+            let $app2 = $('[data-app-2]');
+            let $app3 = $('[data-app-3]');
+            let $app4 = $('[data-app-4]');
+            let $app5 = $('[data-app-5]');
+            let $app6 = $('[data-app-6]');
+            let $app7 = $('[data-app-7]');
+            let $app8 = $('[data-app-8]');
+            let $app9 = $('[data-app-9]');
+            let $app10 = $('[data-app-10]');
+            let $app11 = $('[data-app-11]');
+            let $app12 = $('[data-app-12]');
+            let $app13 = $('[data-app-13]');
+            let $app14 = $('[data-app-14]');
+            let $app15 = $('[data-app-15]');
+            let $app16 = $('[data-app-16]');
+            let $app17 = $('[data-app-17]');
+            let $app18 = $('[data-app-18]');
+          
+            switch ($(this).val()) {
+                case '1':
+                    $app1.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                  
+                    break;
+
+                case '2':
+                    $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+
+                    break;
+
+               case '3':
+                   $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+
+                    break;
+               case '4':
+                     $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+
+                    break;
+               case '5':
+                   $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    break;
+               case '6':
+                    $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    break;
+               case '7':
+                      $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+
+                    break;
+                case '8':
+                    $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+
+                    break;
+               case '9':
+                    $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+
+                    break; 
+               case '10':
+                    $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+
+                    break;
+               case '11':
+                    $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+
+                    break;
+               case '12':
+                    $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+
+                    break;
+               case '13':
+                    $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+
+                    break; 
+               case '14':
+                     $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+
+                    break; 
+               case '15':
+                      $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+
+                    break; 
+               case '16':
+                          $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                     $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+
+                    break;
+               case '17':
+                        $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app17.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+
+                    break; 
+               case '18':
+                            $app1.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app3.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app4.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app5.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app6.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app7.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app8.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app9.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app10.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app11.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app12.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app13.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app14.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app15.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app16.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app17.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                     $app18.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+
+                    break; 
+            }
+        });
+        additionalForm.find('#Reason').trigger('change');
+
+        function visibilityBlock($block, hide, isDisabled) {
+            switch (hide) {
+                case true:
+                    $block.hide();
+                    break;
+                case false:
+                    $block.show();
+                    break;
+            }
+
+            switch (isDisabled) {
+                case true:
+                    $block.find('input, select').each(function() {
+                        $(this).prop('disabled', true);
+                    });
+                    break;
+                case false:
+                    $block.find('input, select').each(function() {
+                        $(this).prop('disabled', false);
+                    });
+                    $block.find('[data-disabled]').each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    break;
+            }
+        }
+    
+        additionalForm.find('#Face').on('change', function() {
+            let $app111 = $('[data-app-111]');
+            let $app222 = $('[data-app-222]');
+            switch ($(this).val()) {
+                case '1':
+                    $app111.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                    $app222.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    break;
+                case '2':
+                    $app111.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app222.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                    break;
+            }
+        });
+        additionalForm.find('#Face').trigger('change');
+
+        function visibilityBlock($block, hide, isDisabled) {
+            switch (hide) {
+                case true:
+                    $block.hide();
+                    break;
+                case false:
+                    $block.show();
+                    break;
+            }
+
+            switch (isDisabled) {
+                case true:
+                    $block.find('input, select').each(function() {
+                        $(this).prop('disabled', true);
+                    });
+                    break;
+                case false:
+                    $block.find('input, select').each(function() {
+                        $(this).prop('disabled', false);
+                    });
+                    $block.find('[data-disabled]').each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    break;
+            }
+        }
+
+        additionalForm.find('#FaceApplicant').on('change', function() {
+            let $app1111 = $('[data-app-1111]');
+            let $app2222 = $('[data-app-2222]');
+            switch ($(this).val()) {
+                case '1':
+                    $app1111.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                    $app2222.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    break;
+                case '2':
+                    $app1111.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2222.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                    break;
+            }
+        });
+        additionalForm.find('#FaceApplicant').trigger('change');
+
+        function visibilityBlock($block, hide, isDisabled) {
+            switch (hide) {
+                case true:
+                    $block.hide();
+                    break;
+                case false:
+                    $block.show();
+                    break;
+            }
+
+            switch (isDisabled) {
+                case true:
+                    $block.find('input, select').each(function() {
+                        $(this).prop('disabled', true);
+                    });
+                    break;
+                case false:
+                    $block.find('input, select').each(function() {
+                        $(this).prop('disabled', false);
+                    });
+                    $block.find('[data-disabled]').each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    break;
+            }
+        }
+        (function getDictionaries() {
+            let dicts = new Set();
+            $('[data-dictionary]').each(function() {
+                let $this = $(this);
+                let options = $this.data('dictionary');
+                if (!dicts.has(options.dictionary)) {
+                    dicts.add(options.dictionary);
+                    $.post(`/SmevBase/SmevGetDictionary`,
+                        {
+                            type: options.dictionary
+                        },
+                        function(dictionary) {
+                            if (dictionary.error) return;
+                            fillSelect(options.dictionary, dictionary);
+                        });
+                }
+            });
+        }());
+
+        function fillSelect(dictName, dictionary) {
+            $.each($(`[data-dictionary*='"${dictName}"']`),
+                function() {
+                    let $this = $(this);
+                    let items = dictionary;
+                    $this.empty();
+                    if (!$this.hasClass('required')) {
+                        $this.append(new Option('Не выбрано', ''));
+                    }
+                    if ($this.is('[data-value-value]')) {
+                        items.dictionary.forEach(function(item) {
+                            $this.append(new Option(item.value, item.value));
+                        });
+                    } else {
+                        items.dictionary.forEach(function(item) {
+                            $this.append(new Option(item.value, item.key));
+                        });
+                    }
+
+                    if ($this.data('dictionary').default_value) {
+                        let defVal = $this.data('dictionary').default_value;
+                        if (defVal) {
+                            $this.val(defVal).trigger('update');
+                            $this.attr('data-def', defVal);
+                        }
+                    } else {
+                        $this.val('').trigger('update');
+                    }
+                });
+        }
+    });
+</script>
+

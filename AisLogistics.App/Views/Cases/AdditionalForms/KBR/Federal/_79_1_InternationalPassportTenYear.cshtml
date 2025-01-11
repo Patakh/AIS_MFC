@@ -1,0 +1,756 @@
+﻿@model _79_1_InternationalPassportTenYearModel
+<style>
+    .form-check {
+        margin-left: 10px;
+    }
+
+</style>
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-sm-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" asp-for="HasGosuslugi">
+                        <label class="form-check-label" asp-for="HasGosuslugi">
+                            Получено в электронном виде с Единого портала
+                            государственных и муниципальных услуг и функций
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8">
+                    <label class="d-block form-label">ранее имели другие фамилию, имя, отчество</label>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" name="IsBefore" id="IsBefore1" value="true" checked="@(Model.IsBefore)">
+                        <label class="form-check-label" for="IsBefore1">Да</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="IsBefore" id="IsBefore2" value="false" checked="@(!Model.IsBefore)">
+                        <label class="form-check-label" for="IsBefore2">Нет</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row" Before>
+                <div class="col-sm-3">
+                    <label class="form-label" asp-for="LastNameBefore">Фамилия</label>
+                    <input type="text" asp-for="LastNameBefore" class="form-control">
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-label" asp-for="FirstNameBefore">Имя</label>
+                    <input type="text" asp-for="FirstNameBefore" class="form-control">
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-label" asp-for="SecondNameBefore">Отчество</label>
+                    <input type="text" asp-for="SecondNameBefore" class="form-control">
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-label" asp-for="ShiftsDate">Дата изменения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="ShiftsDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="ShiftsPlace">Место изменения</label>
+                    <input type="text" asp-for="ShiftsPlace" class="form-control">
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">Адрес места жительства</h6>
+            <div class="row mb-2">
+                <div class="col-sm-4">
+                    <label class="form-label" asp-for="ResidenceAddress.Country">Страна</label>
+                    <input type="text" asp-for="ResidenceAddress.Country" class="form-control">
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" asp-for="ResidenceAddress.Region">Субъект</label>
+                    <input type="text" asp-for="ResidenceAddress.Region" class="form-control">
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" asp-for="ResidenceAddress.District">Район</label>
+                    <input type="text" asp-for="ResidenceAddress.District" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-5">
+                    <label class="form-label" asp-for="ResidenceAddress.Locality">Населенный пункт</label>
+                    <input type="text" asp-for="ResidenceAddress.Locality" class="form-control">
+                </div>
+                <div class="col-sm-5">
+                    <label class="form-label" asp-for="ResidenceAddress.Street">Улица</label>
+                    <input type="text" asp-for="ResidenceAddress.Street" class="form-control">
+                </div>
+                <div class="col-sm-2">
+                    <label class="form-label" asp-for="ResidenceAddress.House">Дом</label>
+                    <input type="text" asp-for="ResidenceAddress.House" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-3">
+                    <label class="form-label" asp-for="ResidenceAddress.Housing">Корпус</label>
+                    <input type="text" asp-for="ResidenceAddress.Housing" class="form-control">
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-label" asp-for="ResidenceAddress.Building">Строение</label>
+                    <input type="text" asp-for="ResidenceAddress.Building" class="form-control">
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-label" asp-for="ResidenceAddress.Flat">Квартира</label>
+                    <input type="text" asp-for="ResidenceAddress.Flat" class="form-control">
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-label" asp-for="ResidenceAddress.RegistrateDate">Дата регистрации</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="ResidenceAddress.RegistrateDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <label asp-for="RegistrationAddress.AddressType" class="form-label me-3">Адрес</label>
+                    <select asp-for="RegistrationAddress.AddressType" class="select2-nosearch">
+                        <option value="">Не выбрано</option>
+                        <option value="1">Места пребывания</option>
+                        <option value="2">Фактического проживания</option>
+                    </select>
+                </div>
+            </div>
+            <div id="RegistrationAddress"> 
+                <div class="row mb-2">
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="RegistrationAddress.Country">Страна</label>
+                        <input type="text" asp-for="RegistrationAddress.Country" class="form-control">
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="RegistrationAddress.Region">Субъект</label>
+                        <input type="text" asp-for="RegistrationAddress.Region" class="form-control">
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="RegistrationAddress.District">Район</label>
+                        <input type="text" asp-for="RegistrationAddress.District" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-5">
+                        <label class="form-label" asp-for="RegistrationAddress.Locality">Населенный пункт</label>
+                        <input type="text" asp-for="RegistrationAddress.Locality" class="form-control">
+                    </div>
+                    <div class="col-sm-5">
+                        <label class="form-label" asp-for="RegistrationAddress.Street">Улица</label>
+                        <input type="text" asp-for="RegistrationAddress.Street" class="form-control">
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="form-label" asp-for="RegistrationAddress.House">Дом</label>
+                        <input type="text" asp-for="RegistrationAddress.House" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-3">
+                        <label class="form-label" asp-for="RegistrationAddress.Housing">Корпус</label>
+                        <input type="text" asp-for="RegistrationAddress.Housing" class="form-control">
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="form-label" asp-for="RegistrationAddress.Building">Строение</label>
+                        <input type="text" asp-for="RegistrationAddress.Building" class="form-control">
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="form-label" asp-for="RegistrationAddress.Flat">Квартира</label>
+                        <input type="text" asp-for="RegistrationAddress.Flat" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="RegistrationAddress.WithDate">Срок регистрации с</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                            <input asp-for="RegistrationAddress.WithDate" type="text" class="form-control pickdate">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="RegistrationAddress.ByDate">Срок регистрации </label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                            <input asp-for="RegistrationAddress.ByDate" type="text" class="form-control pickdate">
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+            <h6 class="my-2">Получение паспорта</h6>
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="radio" id="GettingPassport1" name="GettingPassport" value="1" checked="@(Model.GettingPassport == 0 || Model.GettingPassport == 1)">
+                        <label class="form-check-label" for="GettingPassport1">первичное</label>
+                    </div>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="radio" id="GettingPassport2" name="GettingPassport" value="2" checked="@(Model.GettingPassport == 2)">
+                        <label class="form-check-label" for="GettingPassport2">в дополнение к действующему</label>
+                    </div>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="radio" id="GettingPassport3" name="GettingPassport" value="3" checked="@(Model.GettingPassport == 3)">
+                        <label class="form-check-label" for="GettingPassport3">взамен действующего(-их)</label>
+                    </div>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="radio" id="GettingPassport4" name="GettingPassport" value="4" checked="@(Model.GettingPassport == 4)">
+                        <label class="form-check-label" for="GettingPassport4">взамен утраченного</label>
+                    </div>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="radio" id="GettingPassport5" name="GettingPassport" value="5" checked="@(Model.GettingPassport == 5)">
+                        <label class="form-check-label" for="GettingPassport5">взамен использованного/испорченного</label>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">Имеются ли обстоятельства, при которых может быть ограничено Ваше право на выезд из Российской Федерации</h6>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" id="IsLimitedDeparture1" name="IsLimitedDeparture" value="true" checked="@(Model.IsLimitedDeparture)">
+                        <label class="form-check-label" for="IsLimitedDeparture1">Да</label>
+                    </div>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" id="IsLimitedDeparture2" name="IsLimitedDeparture" value="false" checked="@(!Model.IsLimitedDeparture)">
+                        <label class="form-check-label" for="IsLimitedDeparture2">Нет</label>
+                    </div>
+                    <div class="col-sm-12" LimitedDeparture>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" asp-for="LimitedDepartureSet0" value="true">
+                            <label class="form-check-label" asp-for="LimitedDepartureSet0">
+                                призваны на военную службу или направлены на альтернативную
+                                гражданскую службу (для мужчин в возрасте от 18 до 27 лет)
+                            </label>
+                        </div>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" asp-for="LimitedDepartureSet1" value="true">
+                            <label class="form-check-label" asp-for="LimitedDepartureSet1">
+                                осуждены за совершение преступления (не указывать после отбытия
+                                (исполнения наказания) или освобождения от наказания)
+                            </label>
+                        </div>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" asp-for="LimitedDepartureSet2" value="true">
+                            <label class="form-check-label" asp-for="LimitedDepartureSet2">
+                                являетесь подозреваемым или обвиняемым
+                            </label>
+                        </div>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" asp-for="LimitedDepartureSet3" value="true">
+                            <label class="form-check-label" asp-for="LimitedDepartureSet3">уклоняетесь от исполнения обязательств, наложенных судом</label>
+                        </div>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" asp-for="LimitedDepartureSet4" value="true">
+                            <label class="form-check-label" asp-for="LimitedDepartureSet4">признаны несостоятельным/банкротом</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">Был допуск к государственной тайне</h6>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" name="IsRoote" id="IsRoote1" value="true" checked="@(Model.IsRoote)">
+                        <label class="form-check-label" for="IsRoote1">Да</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="IsRoote" id="IsRoote2" value="false" checked="@(!Model.IsRoote)">
+                        <label class="form-check-label" for="IsRoote2">Нет</label>
+                    </div>
+                </div>
+                <div class="row" Roote>
+                    <div class="col-sm-10">
+                        <label class="form-label" asp-for="RootOrganization">Организация</label>
+                        <input type="text" asp-for="RootOrganization" class="form-control">
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="form-label" asp-for="RootDate">Год</label>
+                        <input type="text" asp-for="RootDate" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <br />
+
+            <h6 class="my-2">Имеете договорные, контрактные обязательства, препятствующие выезду за границу</h6>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" name="IsObstacles" id="IsObstacles1" value="true" checked="@(Model.IsObstacles)">
+                        <label class="form-check-label" for="IsObstacles1">Да</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="IsObstacles" id="IsObstacles2" value="false" checked="@(!Model.IsObstacles)">
+                        <label class="form-check-label" for="IsObstacles2">Нет</label>
+                    </div>
+                </div>
+                <div class="row" Obstacles>
+                    <div class="col-sm-10">
+                        <label class="form-label" asp-for="ObstaclesOrganization">Организация</label>
+                        <input type="text" asp-for="ObstaclesOrganization" class="form-control">
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="form-label" asp-for="ObstaclesDate">Год</label>
+                        <input type="text" asp-for="ObstaclesDate" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">
+                Имеются документы, удостоверяющие личность гражданина Российской Федерации за пределами территории
+                Российской Федерации, в том числе содержащие электронный носитель информации (паспорта)
+            </h6>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" id="HasOverseas1" name="HasOverseas" value="true" checked="@(Model.HasOverseas)">
+                        <label class="form-check-label" for="HasOverseas1">Да</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="HasOverseas2" name="HasOverseas" value="false" checked="@(!Model.HasOverseas)">
+                        <label class="form-check-label" for="HasOverseas2">Нет</label>
+                    </div>
+                </div>
+                <br />
+                <h6 class="my-2" Overseas>
+                    Документы, удостоверяющие личность гражданина Российской Федерации за пределами территории
+                    Российской Федерации
+                </h6>
+                <div class="col-sm-12" Overseas>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label class="form-label" asp-for="Overseas1!.Series">Серия</label>
+                            <input type="text" class="form-control" asp-for="Overseas1!.Series">
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="form-label" asp-for="Overseas1!.Number">Номер</label>
+                            <input type="text" class="form-control" asp-for="Overseas1!.Number">
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="form-label" asp-for="Overseas1!.IssueDate">Дата выдачи</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                <input asp-for="Overseas1!.IssueDate" type="text" class="form-control pickdate">
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="form-label" asp-for="Overseas1.Issuer">Орган, выдавший документ</label>
+                            <input type="text" class="form-control" asp-for="Overseas1.Issuer">
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <label class="d-block form-label">
+                                Будет представлен для аннулирования
+                            </label>
+                            <div class="form-check form-check-inline mt-2">
+                                <input class="form-check-input" type="radio" id="Overseas1_IsCancellation1" name="Overseas1.IsCancellation" value="true" checked="@(Model.Overseas1 == null || Model.Overseas1.IsCancellation)">
+                                <label class="form-check-label" for="Overseas1_IsCancellation1">Да</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="Overseas1_IsCancellation1" name="Overseas1.IsCancellation" value="false" checked="@(Model.Overseas1 != null && !Model.Overseas1.IsCancellation)">
+                                <label class="form-check-label" for="Overseas1_IsCancellation1">Нет</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" asp-for="Overseas1.Lost">
+                                <label class="form-check-label" asp-for="Overseas1.Lost">
+                                    Утрачен
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                </div>
+                <br />
+                <div class="col-sm-12" Overseas>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label class="form-label" asp-for="Overseas2!.Series">Серия</label>
+                            <input type="text" class="form-control" asp-for="Overseas2!.Series">
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="form-label" asp-for="Overseas2!.Number">Номер</label>
+                            <input type="text" class="form-control" asp-for="Overseas2!.Number">
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="form-label" asp-for="Overseas2!.IssueDate">Дата выдачи</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                <input asp-for="Overseas2!.IssueDate" type="text" class="form-control pickdate">
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="form-label" asp-for="Overseas2!.Issuer">Орган, выдавший документ</label>
+                            <input type="text" class="form-control" asp-for="Overseas2!.Issuer">
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <label class="d-block form-label">
+                                Будет представлен для аннулирования
+                            </label>
+                            <div class="form-check form-check-inline mt-2">
+                                <input class="form-check-input" type="radio" id="Overseas2_IsCancellation1" name="Overseas2.IsCancellation" value="true" checked="@(Model.Overseas2 == null || Model.Overseas2.IsCancellation)">
+                                <label class="form-check-label" for="Overseas2_IsCancellation1">Да</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="Overseas2_IsCancellation1" name="Overseas2.IsCancellation" value="false" checked="@(Model.Overseas2 != null && !Model.Overseas2.IsCancellation)">
+                                <label class="form-check-label" for="Overseas2_IsCancellation1">Нет</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" asp-for="Overseas2.Lost">
+                                <label class="form-check-label" asp-for="Overseas2.Lost">
+                                    Утрачен
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" asp-for="OthersOverseasNotHas">
+                        <label class="form-check-label" asp-for="OthersOverseasNotHas">
+                            Других действующих паспортов не имею.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <h5 class="my-2">Сведения о трудовой деятельности за последние 10 лет(включая учебу в учебных заведениях и военную службу)</h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedDocumentList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-sm-11">
+                                <div class="row mb-3 align-items-end">
+                                    <div class="col-sm-6">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].ReceiptsDate">Месяц и год поступления</label>
+                                        <input type="text" class="form-control" asp-for="AppliedDocumentList[i].ReceiptsDate">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].DismissalsDate">Месяц и год увольнения</label>
+                                        <input type="text" class="form-control" asp-for="AppliedDocumentList[i].DismissalsDate">
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].Post">
+                                            Должность и место работы
+                                            (учебы, службы, номер войсковой части)
+                                        </label>
+                                        <input type="text" class="form-control" asp-for="AppliedDocumentList[i].Post">
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].AdressOrganization">
+                                            Место нахождения организации, учебного заведения
+                                            (полный почтовый адрес), войсковой части
+                                        </label>
+                                        <input type="text" class="form-control" asp-for="AppliedDocumentList[i].AdressOrganization">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <br /> 
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" asp-for="IsServing">
+                        <label class="form-check-label" asp-for="IsServing">
+                            Подаю заявление в отношении гражданина, признанного судом недееспособным (ограниченно дееспособным)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="originalBlock">
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <div class="row mb-1 align-items-center">
+            <div class="col-sm-11">
+                <div class="row mb-3 align-items-end">
+                    <div class="col-sm-6">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].ReceiptsDate">Месяц и год поступления</label>
+                        <input type="text" class="form-control" asp-for="AppliedDocumentList[0].ReceiptsDate">
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].DismissalsDate">Месяц и год увольнения</label>
+                        <input type="text" class="form-control" asp-for="AppliedDocumentList[0].DismissalsDate">
+                    </div>
+                    <div class="col-sm-12">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].Post">
+                            Должность и место работы
+                            (учебы, службы, номер войсковой части)
+                        </label>
+                        <input type="text" class="form-control" asp-for="AppliedDocumentList[0].Post">
+                    </div>
+                    <div class="col-sm-12">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].AdressOrganization">
+                            Место нахождения организации, учебного заведения
+                            (полный почтовый адрес), войсковой части
+                        </label>
+                        <input type="text" class="form-control" asp-for="AppliedDocumentList[0].AdressOrganization">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    var applicant = {
+        lastName: $('#LastName'),
+        firstName: $('#FirstName'),
+        secondName: $('#SecondName'),
+        birthDate: $('#BirthDate'),
+        addressBirth: $('#AddressBirth'),
+        docSeries: $('#MainDocSeries'),
+        docNumber: $('#MainDocNumber'),
+        docIssueDate: $('#MainDocIssueDate'),
+        docIssuer: $('#MainDocIssuer'),
+        phone: $('#Phone'),
+        email: $('#Email')
+    }
+
+    var residenceAddress = {
+        region: $("#ResidenceAddress_Region"),
+        district: $("#ResidenceAddress_District"),
+        locality: $("#ResidenceAddress_Locality"),
+        street: $("#ResidenceAddress_Street"),
+        house: $("#ResidenceAddress_House"),
+        housing: $("#ResidenceAddress_Housing"),
+        building: $("#ResidenceAddress_Building"),
+        flat: $('#ResidenceAddress_Flat')
+    }
+
+    var registrationAddress = {
+        region: $("#RegistrationAddress_Region"),
+        district: $("#RegistrationAddress_District"),
+        locality: $("#RegistrationAddress_Locality"),
+        street: $("#RegistrationAddress_Street"),
+        house: $("#RegistrationAddress_House"),
+        housing: $("#RegistrationAddress_Housing"),
+        building: $("#RegistrationAddress_Building"),
+        flat: $('#RegistrationAddress_Flat')
+    }
+
+    var btnNext = $('.btn-next');
+    btnNext.on('click', function appContent() {
+        residenceAddress.region.val(`${$("#customer_AddressDetails_Region_Value").val()} ${$("#customer_AddressDetails_Region_ShortName").val()}`);
+        residenceAddress.district.val($("#customer_AddressDetails_Area_Value").val() ?? $("#customer_AddressDetails_City_Value").val());
+        residenceAddress.locality.val($("#customer_AddressDetails_Settlement_Value").val());
+        residenceAddress.street.val($("#customer_AddressDetails_Street_Value").val());
+        residenceAddress.house.val($("#customer_AddressDetails_House_HouseNum").val());
+        residenceAddress.housing.val($("#customer_AddressDetails_House_BuildNum").val());
+        residenceAddress.building.val($("#customer_AddressDetails_House_StructNum").val());
+        residenceAddress.flat.val($("#customer_AddressDetails_Room_FlatNumber").val());
+
+        if ($('#customerAddressCoincide').is(':checked')) {
+            registrationAddress.region.val(`${$("#customer_AddressDetails_Region_Value").val()} ${$("#customer_AddressDetails_Region_ShortName").val()}`);
+            registrationAddress.district.val($("#customer_AddressDetails_Area_Value").val() ?? $("#customer_AddressDetails_City_Value").val());
+            registrationAddress.locality.val($("#customer_AddressDetails_Settlement_Value").val());
+            registrationAddress.street.val($("#customer_AddressDetails_Street_Value").val());
+            registrationAddress.house.val($("#customer_AddressDetails_House_HouseNum").val());
+            registrationAddress.housing.val($("#customer_AddressDetails_House_BuildNum").val());
+            registrationAddress.building.val($("#customer_AddressDetails_House_StructNum").val());
+            registrationAddress.flat.val($("#customer_AddressDetails_Room_FlatNumber").val());
+        }
+
+    });
+
+
+    $(function () {
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        toggleBefore();
+        toggleLimitedDeparture();
+        toggleRoote();
+        toggleObstacles();
+        toggleOverseas();
+        toggleRegistrationAddress($('#RegistrationAddress_AddressType').val())
+
+        $('[name="IsBefore"]').on('change', () => toggleBefore());
+        $('[name="IsLimitedDeparture"]').on('change', () => toggleLimitedDeparture());
+        $('[name="IsRoote"]').on('change', () => toggleRoote());
+        $('[name="IsObstacles"]').on('change', () => toggleObstacles());
+        $('[name="HasOverseas"]').on('change', () => toggleOverseas());
+
+        $('#RegistrationAddress_AddressType').on('change', function () {
+            toggleRegistrationAddress($(this).val()) 
+        });
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function () {
+                $(this).select2({
+                });
+            });
+        }
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.find("select").each(function () {
+                $(this).select2('destroy');
+            });
+            $cloneList.append($cloneBlock);
+            select2Init($cloneList);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input[type='text']").each(function () {
+                $(this).val("");
+            });
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled, sliding = 0) {
+        switch (hide) {
+            case true:
+                $block.slideUp(sliding);
+                break;
+            case false:
+                $block.slideDown(sliding);
+                break;
+        }
+         
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    function toggleBefore() {
+        let visible = $('#IsBefore1').is(':checked');
+        visibilityBlock($('[Before]'), !visible, !visible, 400)
+    }
+
+    function toggleLimitedDeparture() {
+        let visible = $('#IsLimitedDeparture1').is(':checked');
+        visibilityBlock($('[LimitedDeparture]'), !visible, !visible, 400)
+    }
+
+    function toggleRoote() {
+        let visible = $('#IsRoote1').is(':checked');
+        visibilityBlock($('[Roote]'), !visible, !visible, 400)
+    }
+
+    function toggleObstacles() {
+        let visible = $('#IsObstacles1').is(':checked');
+        visibilityBlock($('[Obstacles]'), !visible, !visible, 400)
+    }
+
+    function toggleOverseas() {
+        let visible = $('#HasOverseas1').is(':checked');
+        visibilityBlock($('[Overseas]'), !visible, !visible, 400)
+    }
+
+    function toggleRegistrationAddress(val) { 
+        let visible = (val == '');
+        visibilityBlock($('#RegistrationAddress'), visible, visible, 400)
+    }
+
+</script>
+

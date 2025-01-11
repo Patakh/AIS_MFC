@@ -1,0 +1,184 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.ServiceCustomerTariffModelDto
+@{
+
+}
+
+<form asp-controller="Reference" asp-action="ServiceCustomerTariffSave" id="sendingForm" method="post" role="form">
+    <div class="form-body pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SServicesCustomerId">Получатель</label>
+                    <select asp-for="SServicesCustomerId" asp-items="@ViewBag.ServiceCustomers" class="form-control">
+                        <option disabled selected value="">Не задано</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SServicesProcedureId">Процедура</label>
+                    <select asp-for="SServicesProcedureId" asp-items="@ViewBag.Procedures" class="form-control no-search">
+                        <option selected value="">Не задано</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SServicesTariffTypeId">Тип</label>
+                    <select asp-for="SServicesTariffTypeId" asp-items="@ViewBag.TariffTypes" class="form-control no-search">  
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SServicesWeekId">Тип дней</label>
+                    <select asp-for="SServicesWeekId" asp-items="@ViewBag.DayTypes" class="form-control no-search">  
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="CountDayProcessing">Количество дней на обработку</label>
+                    <input type="number" min="0" asp-for="CountDayProcessing" class="form-control" placeholder="Количество дней на обработку">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="CountDayExecution">Количество дней на исполнение</label>
+                    <input type="number" min="0" asp-for="CountDayExecution" class="form-control" placeholder="Количество дней на исполнение">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="CountDayReturn">Количество дней на возврат</label>
+                    <input type="number" min="0" asp-for="CountDayReturn" class="form-control" placeholder="Количество дней на возврат">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="Tariff">Тариф</label>
+                    <input type="text" asp-for="Tariff" class="form-control" placeholder="Тариф">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="TariffMfc">Тариф МФЦ</label>
+                    <input type="text" asp-for="TariffMfc" class="form-control" placeholder="Тариф МФЦ">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="Commentt">Комментарий</label>
+                    <textarea asp-for="Commentt" class="form-control placeholder="Комментарий"></textarea>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    $(function(){
+        //$('#sendingForm select').each(function(idx, item){
+        //    if ($(item).hasClass("no-search"))
+        //        $(item).select2({ dropdownParent: $('#mainModal'), minimumResultsForSearch: -1 });
+        //    else
+        //        $(item).select2({ dropdownParent: $('#mainModal') });
+        //}); 
+        document.querySelectorAll('#sendingForm select').forEach(item => {
+            if (item.classList.contains('no-search')) {
+                $(item).select2({ dropdownParent: $('#mainModal'), minimumResultsForSearch: -1 });
+                return;
+            }
+
+            $(item).select2({ dropdownParent: $('#mainModal') });
+        });
+
+        var numericValidator = {
+            validators: {
+                numeric: {
+                    message: 'Укажите число',
+                    thousandsSeparator: '',
+                    decimalSeparator: '@Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator',
+                },
+            },
+        };
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    SServicesCustomerId: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            },
+                        }
+                    },
+                    SServicesProcedureId: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            },
+                        }
+                    },
+                    CountDayProcessing: {
+                        validators: {
+                            integer: {
+                                message: 'Укажите число',
+                            },
+                        },
+                    },
+                    CountDayExecution: {
+                        validators: {
+                            integer: {
+                                message: 'Укажите число',
+                            },
+                        },
+                    },
+                    CountDayReturn: {
+                        validators: {
+                            integer: {
+                                message: 'Укажите число',
+                            },
+                        },
+                    },
+                    Tariff: numericValidator,
+                    TariffMfc: numericValidator,
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }) .on('core.form.valid', function() {
+            var $form = $("#sendingForm");
+            $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $table.DataTable().ajax.reload(null, false);
+                        $tableTariffs.DataTable().ajax.reload(null, false);
+                        $form.spinnerBtn("stop");
+                        $("#mainModal").modal('hide');
+                    }
+                });
+            return false;
+        });
+    });
+</script>

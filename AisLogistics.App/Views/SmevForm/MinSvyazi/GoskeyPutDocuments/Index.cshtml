@@ -1,0 +1,197 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new GoskeyPutDocumentRequestData();
+}
+
+<div class="row justify-content-center" id="smev_request">
+    <div class="col-10">
+        <ul class="nav nav-tabs nav-justified tabs-line mb-3" id="smev-request-tablist" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#smev-request-tab1" type="button">Данные запроса</button>
+            </li>
+        </ul>
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <div class="row mb-1">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request.WorkflowId">Номер заявки</label>
+                        <input type="text" class="form-control required" asp-for="@request.WorkflowId" />
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content" id="smev-request-tab-content">
+                <div class="tab-pane fade show active" id="smev-request-tab1" role="tabpanel">
+                    <div class="row justify-content-center">
+                        <div class="row justify-content-end">
+                            <div class="col-12">
+                                <button type="button" class="btn btn-outline-secondary buttons_height lh-1" onclick="getServiceDocuments()">
+                                    ОБНОВИТЬ
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary buttons_height lh-1" data-upload-type="Desktop">
+                                    ЗАГР
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary buttons_height lh-1" data-upload-type="Scan">
+                                    СКАН
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <table id="attachmentsBlock" class="table table-hover table-striped" style="table-layout: fixed">
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-10" id="noDocuments" style="display:none">
+                            <div class="alert alert-primary" role="alert">
+                                <h6 class="alert-heading mb-1">Нет документов</h6>
+                                <span>Добавьте файлы к услуге</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var applicants = @Json.Serialize(applicants);
+    var $formContent = $("#smev_request");
+    var documentId;
+    var smevForm = {
+        init: () => {
+            fileUploadInit($formContent);
+            $formContent.find('.required').each(function () {
+                addValidation($(this));
+            });
+        }
+    }
+
+    getServiceDocuments();
+    function getServiceDocuments() {
+        $.ajax({
+            url: '/Cases/ServiceDocumentsJson',
+            type: "POST",
+            async: false,
+            data: { id: $('#ServiceId').val() },
+            success: function (data) {
+                $('#attachmentsBlock tbody').empty();
+                const fileTypes = ['.PDF', '.JPEG', '.JPG'];
+                documentId = data[0].id;
+                let k = 0;
+                data.forEach(doc =>
+                    doc.files.forEach(file => {
+                        if (fileTypes.includes(file.extension.toUpperCase())) {
+                            k++;
+                            //let docTypes = $('<select>');
+                            //docTypes.attr('data-dictionary', '{"dictionary":"MvdAisOpvAttachmentTypeCodesChild", "default_value":"02"}')
+                            //docTypes.addClass('required');
+                            //docTypes.addClass('form-select');
+
+                            let container = $('<div class="my-3">');
+                            container.attr('data-attach', k - 1);
+                            let tr = $('<tr>');
+                            tr.addClass('align-middle');
+                            tr.append(`<td data-index class="px-2" style="width: 1%;">${k}.</td>`);
+                            tr.append(`<td style="width: 1%;"><input type="text" placeholder="Идентификатор документа" name="request.Attachments[${k - 1}].Id" value=""></td>`);
+                            tr.append(`<td data-name class="px-2">${file.name}${file.extension}</td>`);
+                            tr.append(`<td class="px-2" style="width: 10%;">${(file.size / 1024).toFixed(2)} кБ</td>`);
+                            tr.append(`<td class="px-2" style="width: 1%;"><i onclick="docRemove(this)" role="button" class='bi bi-trash'></i></td>`);
+                            
+                            let trHide = $('<tr class="active" style="display: none;">');
+                            trHide.append(`<td style="width: 1%;"><input type="text" name="request.Attachments[${k - 1}].FileName" value="${file.id}"></td>`);
+                            trHide.append(`<td style="width: 1%;"><input type="text" name="request.Attachments[${k - 1}].IsFtpReference" value="true"></td>`);
+
+                            container.append(tr);
+                            container.append(trHide);
+                            $('#attachmentsBlock tbody').append(container);
+                        }
+                    }));
+
+                $('#attachmentsBlock').find('[type="checkbox"]').each(function () {
+                    $(this).on('change', function (event) {
+                        let trHide = event.target.closest('tr').nextSibling;
+                        switch (event.target.checked) {
+                            case false:
+                                $(trHide).removeClass('active');
+                                visibilityBlock($(trHide), true, true);
+                                break;
+                            case true:
+                                $(trHide).addClass('active');
+                                visibilityBlock($(trHide), true, false);
+                        }
+                        renameAttach();
+                    });
+                });
+
+                if (data.length == 0) $formContent.find('#noDocuments').show();
+
+                const dynamicGallery = document.getElementById('smev-request-tab1');
+                dynamicGallery.addEventListener('lgBeforeOpen', (event) => {
+                    $(dynamicGallery).find('[data-bs-toggle="tooltip"], .tooltip').tooltip("hide");
+                });
+                lightGallery(dynamicGallery, {
+                    selector: '.viewing-file',
+                    escKey: false
+                });
+            }
+        });
+    }
+
+    function docRemove(el) {
+        el.closest('[data-attach]').remove();
+        renameAttach();
+    }
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.attr("id", `clone${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            if ($(this).is('[for]')) {
+                $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('span').each(function () {
+            if ($(this).is('[id]')) {
+                $(this).attr('id', $(this).attr('id').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('select').each(function () {
+            if ($(this).is('[id]')) {
+                $(this).attr('id', $(this).attr('id').replace(/\d+/, indexId));
+            }
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+            $(this).removeAttr('data-select2-id');
+        });
+    }
+
+    function renameAttach() {
+        let indexActive = 0;
+        $('#attachmentsBlock [data-attach]').each((index, item) => {
+            $(item).attr('data-attach', index);
+            $(item).find('[data-index]').html(index + 1);
+            $(item).find('input[type="text"]').each(function () {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexActive));
+            });
+            if ($(item).find('tr.active').length > 0) indexActive++;
+        });
+    }
+</script>

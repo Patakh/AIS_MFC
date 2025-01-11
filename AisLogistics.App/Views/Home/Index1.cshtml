@@ -1,0 +1,526 @@
+﻿@using AisLogistics.App.ViewModels.Home
+@model ViewModelBuilder
+@{
+    ViewData["Title"] = Model.ViewTitle;
+}
+<link rel="stylesheet" href="~/assets/css/home-details.css" />
+
+<style>
+    .table-not-margin {
+        margin: 0 !important;
+    }
+        .table-td td {
+            padding: 0 !important;
+            margin-bottom: 1rem !important;
+        }
+
+    .table-not-margin-bottom {
+        margin-bottom: 0px !important;
+    }
+
+    .table-not-margin-bottom.dataTable {
+        margin-bottom: 0px !important;
+    }
+
+    table.dataTable {
+        margin-top: 0 !important;
+    }
+</style>
+
+<section>
+    <div class="row">
+        <div class="col-3">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="b-s-18">Информация</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table id="table-information" class="table table-not-margin table-td"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="b-s-18">
+                                        Рейтинг по сотрудникам
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card mt-3 mb-3">
+                                        <div class="card-title">
+                                            <ul class="nav nav-pills nav-fill" id="rating-employee-tab">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" data-employee-tab="1" href="javascript:void(0);">День</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-employee-tab="2" href="javascript:void(0);">Месяц</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-employee-tab="3" href="javascript:void(0);">Год</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-employee-tab="4" href="javascript:void(0);">Период</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <div class="table-responsive">
+                                                <table id="table-rating-employees" class="table table-rating table-not-margin-bottom"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="b-s-18">
+                                        Рейтинг по офисам
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card mt-3">
+                                        <div class="card-title">
+                                            <ul class="nav nav-pills nav-fill" id="rating-office-tab">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" data-office-tab="1" href="javascript:void(0);">День</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-office-tab="2" href="javascript:void(0);">Месяц</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-office-tab="3" href="javascript:void(0);">Год</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-office-tab="4" href="javascript:void(0);">Период</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <div class="table-responsive">
+                                                <table id="table-rating-offices" class="table table-rating table-not-margin-bottom"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="b-s-18">Заметки</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table id="table-notes" class="table table-not-margin table-td"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        const $tableInformation = $("#table-information");
+        const $tableNotes = $("#table-notes");
+        const $tableRatingEmployees = $("#table-rating-employees");
+        const $tableRatingOffices = $("#table-rating-offices");
+
+        $(document).ready(function () {
+           
+            $tableInformation.DataTable({
+                sDom: "<'row'<'col-sm-12 col-md-12'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-12'p>>",
+                processing: true,
+                serverSide: true,
+                filter: false,
+                ordering: false,
+                sorting: false,
+                pageLength: 10,
+                searchDelay: 1500,
+                ajax: {
+                    url: '/Home/GetInformationDataJson',
+                    type: "POST",
+                    datatype: "json",
+                    dataSrc: function (json) {
+                        return json.data;
+                    }
+                },
+                initComplete: function () {
+
+                },
+                columns: [
+                    {
+                        title: '',
+                        name: 'information',
+                        orderable: false,
+                        render: function (data, type, row) {
+
+                            let textSubstring = row.text.length > 150 ? row.text.substring(0, 150) + ' ...' : row.text;
+
+                            let content = `<div data-information-id = "${row.id}" class="card cursor-pointer mb-3">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-6">
+                                                                    <span class="r-s-14">${row.type}</span>
+                                                                </div>
+                                                                <div class="col-6 text-end">
+                                                                    <span class="r-s-14">${row.dateAddToString}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <span class="b-s-14">${row.topic}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <span class="r-s-12">${textSubstring}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-6">
+                                                                    <span class="r-l-12">${row.employeeFio}</span>
+                                                                </div>
+                                                                <div class="col-6 text-end">
+                                                                    <span class="r-l-12">${row.employeeJob}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>`;
+                            return content;
+                        }
+
+                    }
+                ]
+            }).on('click', '[data-information-id]', function (e) { informationInfoView(e) });
+
+            $tableNotes.DataTable({
+                sDom: "<'row'<'col-sm-12 col-md-12'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-12'p>>",
+                processing: true,
+                serverSide: true,
+                filter: false,
+                ordering: false,
+                sorting: false,
+                pageLength: 10,
+                searchDelay: 1500,
+                ajax: {
+                    url: '/Home/GetNotesDataJson',
+                    type: "POST",
+                    datatype: "json",
+                    dataSrc: function (json) {
+                        return json.data;
+                    }
+                },
+                initComplete: function () {
+
+                },
+                columns: [
+                    {
+                        title: '',
+                        name: 'notes',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            let content = `<div data-case-id="${row.dCasesId}" class="card cursor-pointer mb-3">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <span class="r-l-14">${row.dCasesId}</span>
+                                                        </div>
+                                                        <div class="col-6 text-end">
+                                                            <span class="r-s-14">Напомнить</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <span class="b-s-14">${row.applicantName}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <span class="r-l-14">${row.noteText}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>`;
+                            return content;
+                        }
+
+                    }
+                ]
+            }).on('click', '[data-case-id]', function (e) { casesInfoView(e) });
+
+            $tableRatingEmployees.DataTable({
+                sDom: "<'row'<'col-sm-12 col-md-12'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-12'p>>",
+                processing: true,
+                serverSide: true,
+                filter: false,
+                ordering: false,
+                sorting: false,
+                paging: false,
+                pageLength: 10,
+                searchDelay: 1500,
+                ajax: {
+                    url: '/Home/GetEmployeeRatingDataJson',
+                    type: "POST",
+                    data: function (data) {
+                        data.typeId = activeRatingEmployeeTabId();
+                    }
+                },
+                initComplete: function () {
+
+                },
+                columns: [
+                    {
+                        title: `Место`,
+                        orderable: false,
+                        render: function (data, type, row) {
+                            if(row.isSkip) {
+                                return "";
+                            }
+                            else {
+                                let positionMoving = "";
+                                switch (row.employee.positionMovingId) {
+                                    case 0:
+                                        positionMoving = "";
+                                        break;
+                                    case 1:
+                                        positionMoving = `<i class="bi bi-caret-up-fill text-success"></i>`;
+                                        break;
+                                    case -1:
+                                        positionMoving = `<i class="bi bi-caret-down-fill text-danger"></i>`;
+                                        break;
+                                };
+                                return row.employee.positionId + ` <span>${positionMoving}</span>`;
+                            }
+                            
+                        }
+                    },
+                    {
+                        title: `ФИО`,
+                        sWidth: '45%',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            if (row.isSkip) {
+                                return "";
+                            }
+                            else {
+                                return row.employee.employeeName;
+                            }
+
+                        }
+                    },
+                    {
+                        title: `Принято`,
+                        className: 'total',
+                        orderable: true,
+                        render: function (data, type, row) {
+                            if (row.isSkip) {
+                                return "";
+                            }
+                            else {
+                                return row.employee.receivedCount;
+                            }
+                        }
+                    },
+                    {
+                        title: `Выдано`,
+                        className: 'total',
+                        orderable: true,
+                        render: function (data, type, row) {
+                            if (row.isSkip) {
+                                return "";
+                            }
+                            else {
+                                return row.employee.issuedCount; 
+                            }
+                        }
+                    },
+                    {
+                        title: `Консультация`,
+                        className: 'total',
+                        orderable: true,
+                        render: function (data, type, row) {
+                            if (row.isSkip) {
+                                return "";
+                            }
+                            else {
+                                return row.employee.consultationCount;
+                            }
+                        }
+                    },
+                    {
+                        title: `Всего`,
+                        orderable: true,
+                        className: 'total',
+                        render: function (data, type, row) {
+                            if (row.isSkip) {
+                                return "";
+                            }
+                            else {
+                                return row.employee.employeePoint;
+                            }
+                        }
+                    }
+                ]
+            });
+
+            $tableRatingEmployees.on("reload", () => {
+                $tableRatingEmployees.DataTable().ajax.reload(null, false);
+            });
+
+            $tableRatingOffices.DataTable({
+                sDom: "<'row'<'col-sm-12 col-md-12'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-12'p>>",
+                processing: true,
+                serverSide: true,
+                filter: false,
+                ordering: false,
+                sorting: false,
+                paging: false,
+                pageLength: 10,
+                searchDelay: 1500,
+                ajax: {
+                    url: '/Home/GetOfficeRatingDataJson',
+                    type: "POST",
+                    data: function (data) {
+                        data.typeId = activeRatingOfficeTabId();
+                    }
+                },
+                initComplete: function () {
+
+                },
+                columns: [
+                    {
+                        title: `Место`,
+                        orderable: false,
+                        data: "office.positionId"
+                    },
+                    {
+                        title: `Перемешение`,
+                        orderable: false,
+                        data: "office.positionMovingId"
+                    },
+                    {
+                        title: `ФИО`,
+                        sWidth: '45%',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return row.office.employeeName + `<p class="offices mt-1 mb-2">${row.office.officessName}</p>`;
+                        }
+                    },
+                    {
+                        title: `Принято`,
+                        className: 'total',
+                        orderable: true,
+                        data: "office.receivedCount"
+                    },
+                    {
+                        title: `Выдано`,
+                        className: 'total',
+                        orderable: true,
+                        data: "office.issuedCount"
+                    },
+                    {
+                        title: `Консультация`,
+                        className: 'total',
+                        orderable: true,
+                        data: "office.consultationCount"
+                    },
+                    {
+                        title: `Всего`,
+                        orderable: true,
+                        className: 'total',
+                        data: "office.employeePoint"
+                    }
+                ]
+            });
+
+            $tableRatingOffices.on("reload", () => {
+                $tableRatingOffices.DataTable().ajax.reload(null, false);
+            });
+
+            $('[data-employee-tab]').click(function () {
+                $('[data-employee-tab]').removeClass('active');
+                $(this).addClass('active');
+                $tableRatingEmployees.DataTable().ajax.reload();
+            });
+
+            $('[data-office-tab]').click(function () {
+                $('[data-office-tab]').removeClass('active');
+                $(this).addClass('active');
+                $tableRatingOffices.DataTable().ajax.reload();
+            });
+
+        })
+
+        function activeRatingEmployeeTabId() {
+            return $('#rating-employee-tab').find('.active').data('employee-tab');
+        }
+
+        function activeRatingOfficeTabId() {
+            return $('#rating-office-tab').find('.active').data('office-tab');
+        }
+
+        function informationInfoView(e) {
+            let id = $(e.currentTarget).data("information-id");
+            $.ajax({
+                url: '/Home/InformationDetailsModal',
+                type: 'POST',
+                data: { id: id },
+                beforeSend: () => {
+                    $.pageBlock();
+                },
+                complete: () => {
+                    $.unblockUI();
+                },
+                success: function (content) {
+                    $('#mainModal').html(content).modal('show');
+                }
+            });
+        };
+
+        function casesInfoView(e) {
+            let id = $(e.currentTarget).data("case-id");
+            window.open(`Cases/Details?id=${id}`, "_blank");
+        };
+
+    </script>
+}

@@ -1,0 +1,101 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.ServiceReasonModelDto
+
+<form asp-controller="Reference" asp-action="ServiceReasonSave" id="sendingForm" method="post" role="form">
+    <div class="form-body pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.SServicesId)
+            @Html.HiddenFor(m => m.ReasonType)
+            @if (Model.ReasonType != (int)ServiceReasonType.Suspend)
+            {
+                Html.HiddenFor(m => m.CountDay);
+                Html.HiddenFor(m => m.SServicesWeekId);
+            }
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="ReasonText">Основание</label>
+                    <input type="text" asp-for="ReasonText" class="form-control" placeholder="Основание">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="LegalAct">НПА</label>
+                    <input type="text" asp-for="LegalAct" class="form-control" placeholder="НПА">
+                </div>
+            </div>
+
+            @if (Model.ReasonType == (int)ServiceReasonType.Suspend)
+            {
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SServicesWeekId">Тип отсчета дней</label>
+                    <select asp-for="SServicesWeekId" asp-items="@ViewBag.DayTypes" class="form-control">
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="CountDay">Количество дней</label>
+                    <input type="number" min="0" asp-for="CountDay" class="form-control" placeholder="Количество дней">
+                </div>
+            </div>
+            }
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="Commentt">Комментарий</label>
+                    <textarea asp-for="Commentt" class="form-control" placeholder="Комментарий"></textarea>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    $(function(){
+        @if (Model.ReasonType == (int)ServiceReasonType.Suspend)
+        {
+        <text>$('#SServicesWeekId').select2({ dropdownParent: $('#mainModal'), minimumResultsForSearch: -1 });</text>
+        }
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    ReasonText: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            },
+                        }
+                    },
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }) .on('core.form.valid', function() {
+            var $form = $("#sendingForm");
+            $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $table.DataTable().ajax.reload(null, false);
+                        $tableServicesReason.DataTable().ajax.reload(null, false);
+                        $form.spinnerBtn("stop");
+                        $("#mainModal").modal('hide');
+                    }
+                });
+            return false;
+        });
+    });
+</script>

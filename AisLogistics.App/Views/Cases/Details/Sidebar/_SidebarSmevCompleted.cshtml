@@ -1,0 +1,115 @@
+﻿@model ViewModelBuilder
+@{
+    var items = Model.Model as List<CaseServiceSmevСompletedDto>;
+}
+
+<style>
+    .table-smev .accordion-item {
+        cursor: pointer;
+    }
+
+    .smevAddRequest {
+        border-radius: 3px;
+        cursor: pointer;
+        padding: 12px;
+        height: 45px !important;
+    }
+
+    .smevAddRequest span {
+           font-family: bold;
+            color: #077EFA;
+            font-size: 18px;
+    }
+
+     .smevAddRequest * {
+            font-family: medium;
+            font-size: 14px;
+            color: #fff !important;
+     }
+      
+
+    #accordionWithIcon .status-smev {
+        color: #fff !important;
+        font-weight: 700 !important;
+        font-size: 12px;
+        border-radius: 4px 4px !important;
+        font-family: "bold";
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 1rem !important;
+        margin-top: 0.25rem !important;
+    }
+
+    [data-smev-request-id]{
+        cursor:pointer;
+    }
+
+    #accordionWithIcon{
+        overflow-x:hidden  !important;
+    }
+     
+</style>
+
+<!-- Detailed case Content starts -->
+
+<div class="case-app-details overflow-auto">
+    <div class="case-scroll-area ps">
+        <div class="mail-message-wrapper active" id="SMEV">
+            <a asp-action="ServiceSmevCreate" asp-route-id="@ViewBag.Id" data-bs-toggle="tooltip" title="Добавить" data-btn-type="modal" class="col-12 btn btn-primary smevAddRequest d-flex justify-content-center align-items-center mt-3 justify-content-center">
+                <p class="m-0 text-center"><span class="me-2">+</span>Добавить запрос</p>
+            </a>
+            <div class="accordion" id="accordionWithIcon">
+                @if (items.Any())
+                {
+                    @foreach (var item in items)
+                    {
+                        <div class="row py-3 border-bottom" data-smev-request-id="@item.Id">
+                            <div class="col-2 status-smev @(item.Status == 3 ? "success" : item.Status == 2 ? "danger" : item.Status == 1 ? "warning" : "")">
+                                @(item.Status == 3 ? "Получен ответ" : item.Status == 2 ? "Ошибка" : item.Status == 1 ? "На исполнении" : "")
+                            </div>
+                            <div class="col ms-4">
+                                <p class="r-s-12 mb-1">@item.Name</p>
+                                <p class="r-l-12 mb-1">@item.Description</p>
+                                <div class="mb-1"><span class="r-s-12 me-2">@item.EmployeeAdd.Job:</span><span class="b-s-12 mb-0"> @item.EmployeeAdd.Name</span></div>
+                                <div><span class="r-l-12">@item.DateCreate.ToString("g")</span><span class="ms-4 r-l-12 mb-0">@item.DateResponse.ToString("g")</span></div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+     
+<script>
+    (function () {
+        $("[data-smev-request-id]").on('click', function (e) {
+            let th = e.currentTarget;
+            let id = $(th).data('smev-request-id');
+            $.ajax({
+                url: '/SmevBase/GetSmevDetailsModal',
+                type: 'POST',
+                data: { id: id },
+                beforeSend: () => {
+                    $.pageBlock();
+                },
+                complete: () => {
+                    $.unblockUI();
+                },
+                success: function (content) {
+                    $('#mainModal').html(content).modal('show');
+                },
+                error: function (event) {
+                    toastr['error'](event.responseText, 'Ошибка', {
+                        closeButton: true,
+                        tapToDismiss: false,
+                        rtl: false
+                    });
+                }
+            });
+        });
+    }())
+</script>
+<!-- Detailed case Content ends -->

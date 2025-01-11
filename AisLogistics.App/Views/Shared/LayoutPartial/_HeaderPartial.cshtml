@@ -1,0 +1,37 @@
+﻿@using System.Resources
+<header class="d-flex align-items-lg-start align-items-xl-center bg-white px-4 py-3 mb-3">
+    <div class="col-xl-auto d-xl-inline-block d-none me-xxl-5 me-lg-2">
+        <a href="/">
+            <img src="/img/logo-mini.svg" alt="">
+        </a>
+    </div>
+    <nav class="col-7 col-xxl-7 col-md-4 col-xl-auto col-sm-auto">
+        <partial name="LayoutPartial/_MainMenuPartial" />
+    </nav>
+    <div class="d-flex align-items-center col justify-content-end">
+
+            @if (User.HasClaim(AccessKeyNames.DataCase, AccessKeyValues.Add))
+            {
+                <div class="col-sm-3 btn-group me-3">
+                    <a asp-action="Create" asp-controller="Cases" role="button" class="btn btn-primary waves-effect waves-float waves-light shadow-none text-white">Создать</a>
+                </div>
+            }
+             
+            <!-- Notification -->
+            @await Component.InvokeAsync("NotificationPartial")
+            <!--/ Notification -->
+
+            <!-- Queue -->
+            @if (User.HasClaim(AccessKeyNames.EmployeeQueue, AccessKeyValues.View))
+            {
+                @await Component.InvokeAsync("QueuePartial")
+            }
+            <!-- Queue -->
+
+            <!-- User -->
+            @await Component.InvokeAsync("LoginPartial")
+            <!--/ User -->
+
+    </div>
+</header>
+

@@ -1,0 +1,390 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var request = new MspCorpPropertySupportInfoQuery20RequestData()
+            {
+
+                Location = new MspCorpLocationType(),
+                MspCorpRealEstateCharacteristics = new MspCorpRealEstateCharacteristicsType
+                {
+                    Area = new MspCorpAreaType()
+                }
+            };
+}
+
+<style>
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+</style>
+<div class="row justify-content-center g-3">
+    <div class="col-12">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Данные заявителя</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-5">
+                <label class="form-label" asp-for="@request.ApplicationType">Тип заявителя</label>
+                <select class="form-select select2-nosearch" asp-for="@request.ApplicationType">
+                    <option value="IpApplication">Индивидуальный предприниматель</option>
+                    <option value="LegalApplication">Юридическое лицо</option>
+                    <option value="PersonApplication">Физическое лицо</option>
+                </select>
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Inn">ИНН</label>
+                <input type="text" class="form-control required" placeholder="ИНН" asp-for="@request.Inn" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center g-3">
+    <div class="col-12 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Вид имущества</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-3">
+                <div class="for-check form-check-inline mx-0">
+                    <input class="form-check-input" type="radio" name="request.MspCorpRealEstateCharacteristics" id="nomoveable" value="nomoveable" checked="checked">
+                    <label class="form-check-label" for="nomoveable">Недвижимое</label>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class=" form-check form-check-inline mx-0">
+                    <input class="form-check-input" type="radio" name="request.MspCorpRealEstateCharacteristics" id="moveable" value="moveable">
+                    <label class="form-check-label" for="moveable">Движимое</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3" id="CorpRealEstate">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.MspCorpRealEstateCharacteristics.PropertyType">Тип недвижимости</label>
+                <select class="form-select select2-nosearch" asp-for="@request.MspCorpRealEstateCharacteristics.PropertyType">
+                    <option value="1">Здание</option>
+                    <option value="2">Соружение</option>
+                    <option value="3">Помещение</option>
+                </select>
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.MspCorpRealEstateCharacteristics.Area.MinArea">Площадь минимальная</label>
+                <input type="number" class="form-control" asp-for="@request.MspCorpRealEstateCharacteristics.Area.MinArea" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.MspCorpRealEstateCharacteristics.Area.MaxArea">Площадь максимальная</label>
+                <input type="number" class="form-control" asp-for="@request.MspCorpRealEstateCharacteristics.Area.MaxArea" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3" id="MovableProperty" data-disabled>
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.MovablePropertyCharacteristicsKey">Тип движимого имущества</label>
+                <select class="form-select select2-nosearch" asp-for="@request.MovablePropertyCharacteristicsKey">
+                    <option value="1">Транспорт</option>
+                    <option value="2">Оборудование</option>
+                    <option value="3">Инвентарь</option>
+                    <option value="4">Иное</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center g-3">
+    <div class="col-12 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Местонахождение имущества</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3">
+    <div class="col-8">
+        <div class="row justify-content-center mb-2">
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.Location.RegionRf">Регион </label>
+                <select class="select2-search required" asp-for="@request.Location.RegionRf"
+                        data-dictionary='{"dictionary":"MspCorpRegionsRf"}' data-value-value>
+                </select>
+            </div>
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.Location.City">Муниципальный район/городской округ</label>
+                <input type="text" class="form-control" asp-for="@request.Location.City">
+            </div>
+        </div>
+        <div class="row justify-content-center mb-2">
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.Location.Locality">Населенный пункт (город, село, поселок, деревня)</label>
+                <input type="text" class="form-control" asp-for="@request.Location.Locality">
+            </div>
+
+
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.Location.Quarter">Квартал (массив, район, микрорайон)</label>
+                <input type="text" class="form-control" asp-for="@request.Location.Quarter">
+            </div>
+        </div>
+        <div class="row justify-content-center mb-2">
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.Location.Street">Улица (площадь, микрорайон, квартал, проезд и др.)</label>
+                <input type="text" class="form-control" asp-for="@request.Location.Street">
+            </div>
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.Location.House">Дом, корпус, строение</label>
+                <input type="text" class="form-control" asp-for="@request.Location.House">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center g-3">
+    <div class="col-12 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Дополнительно</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3">
+    <div class="col-8">
+        <div class="row mb-2">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ReportingMethod">Вариант получения ответа</label>
+                <select class="form-select select2-nosearch" asp-for="@request.ReportingMethod" data-dictionary='{"dictionary":"MspCorpReportingMethodTypes","default_value":"2"}'></select>
+            </div>
+            <div class="col-9" data-disable>
+                <label class="form-label" asp-for="@request.ReportingMethodOtherTypeText">Введите email</label>
+                <input type="text" class="form-control required" asp-for="@request.ReportingMethodOtherTypeText"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center g-3">
+    <div class="col-12 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Контактные данные</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3">
+    <div class="col-8">
+        <div class="row">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.InformingMethodPhone">Номер телефона</label>
+                <input type="text" class="form-control phone" placeholder="Номер телефона" asp-for="@request.InformingMethodPhone">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.InformingMethodEmail">E-mail</label>
+                <input type="text" class="form-control email" placeholder="E-mail" asp-for="@request.InformingMethodEmail">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function ShowErrorInputs() {
+    }
+
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                $(formContent).find('.required').each(function() {
+                    addValidation($(this));
+                });
+
+                $(formContent).find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+
+                /* init datepicker */
+                $(formContent).find(".pickdate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                });
+
+                let options = { clearIncomplete: true, showMaskOnHover: false };
+
+                /* init inputmask */
+                $(formContent).find('.phone').inputmask("9999999999", options);
+                $(formContent).find('.email').inputmask("email", options);
+
+                $(formContent).find("select.select2-nosearch").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+                $(formContent).find("select.select2-search").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal")
+                    });
+                });
+                $(formContent).find('[name$="MspCorpRealEstateCharacteristics"]').on('change',
+                    function() {
+                        switch ($(this).val()) {
+                            case 'nomoveable':
+                                visibilityBlock($('#CorpRealEstate'), false, false);
+                                visibilityBlock($('#MovableProperty'), true, true);
+                                break;
+                            case 'moveable':
+                                visibilityBlock($('#MovableProperty'), false, false);
+                                visibilityBlock($('#CorpRealEstate'), true, true);
+                                break;
+                        }
+                    });$(formContent).find('[name$="ReportingMethod"]').on('change',
+                    function() {
+                        let $mobile = $('#request_InformingMethodPhone');
+                        let $email = $('#request_InformingMethodEmail');
+                        let $coment = $('#request_ReportingMethodOtherTypeText');
+
+                        switch ($(this).val()) {
+                            case '1':
+                                $coment.prev().text('Введите email');
+                                visibilityBlock($coment.parent(), false, false);
+                                break;
+                            case '2':
+                                 visibilityBlock($coment.parent(), true, true);
+                                break;
+                            case '3':
+                                $coment.prev().text('Введите комментарий');
+                                 visibilityBlock($coment.parent(), false, false);
+                                break;
+
+                        };
+
+                    });
+
+
+                $(formContent).find('[name$="Inn"]').inputmask('999999999999', options);
+                $(formContent).find('[name$="ApplicationType"]').on('change',
+                    function() {
+                        let options = { clearIncomplete: true, showMaskOnHover: false };
+                        let $inn = $(formContent).find('[name$="Inn"]');
+                        switch ($(this).val()) {
+                            case 'LegalApplication':
+                                $inn.inputmask('9999999999', options);
+                                break;
+                            default:
+                                $inn.inputmask('999999999999', options);
+                        }
+                    });
+            }
+        };
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').hide();
+                } else {
+                    $block.hide();
+                }
+                break;
+            case false:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').show();
+                } else {
+                    $block.show();
+                }
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        removeValidation($(this));
+                    }
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                    if ($(this).hasClass('required')) {
+                        addValidation($(this));
+                    }
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    (function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function() {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post(`/SmevBase/SmevGetDictionary`,
+                    {
+                        type: options.dictionary
+                    },
+                    function(dictionary) {
+                        fillSelect(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function() {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+            });
+    }
+</script>

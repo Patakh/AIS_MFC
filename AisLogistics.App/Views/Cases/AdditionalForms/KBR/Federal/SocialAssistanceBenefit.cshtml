@@ -1,0 +1,359 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.KBR.Federal.SocialAssistanceBenefitModel
+@{
+    IEnumerable<SelectListItem>? docList = Model.AppliedDocuments?.Select(i => new SelectListItem(i, i));
+    if (Model.FamilyMembers.Length == 0)
+        Model.FamilyMembers = new[] { new AisLogistics.App.Models.AdditionalForms.KBR.Federal.SocialAssistanceBenefitModel.FamilyMember() };
+
+    if (Model.FamilyMembersEstate.Length == 0)
+        Model.FamilyMembersEstate = new[] { new AisLogistics.App.Models.AdditionalForms.KBR.Federal.SocialAssistanceBenefitModel.FamilyMemberEstateItem() };
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="AppealanseReason" class="form-label">
+                        Прошу оказать государственную социальную помощь в виде социального пособия в связи с
+                    </label>
+                    <input asp-for="AppealanseReason" class="form-control" type="text">
+                </div>
+            </div>
+
+            <h5 class="my-2">
+                Сведения о членах семьи, с которыми веду совместное хозяйство
+            </h5>
+            <div id="familyMembersList" data-clone-list>
+                @for (var i = 0; i < Model.FamilyMembers.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Член семьи @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-6">
+                                <label class="form-label" asp-for="FamilyMembers[i].FullName">Ф.И.О.</label>
+                                <input type="text" asp-for="FamilyMembers[i].FullName" class="form-control">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="FamilyMembers[i].Kinship">Степень родства</label>
+                                <input type="number" min="0" asp-for="FamilyMembers[i].Kinship" class="form-control" />
+                            </div>
+                            <div class="col-1 mt-2">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-6">
+                                <h6 class="my-2">Род занятий</h6>
+                                <div class="form-check">
+                                    <input asp-for="FamilyMembers[i].OccupationTypeId" id="OccupationTypeId1" class="form-check-input" type="radio" value="1">
+                                    <label for="OccupationTypeId1" class="form-check-label">работает</label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="FamilyMembers[i].OccupationTypeId" id="OccupationTypeId2" class="form-check-input" type="radio" value="2">
+                                    <label for="OccupationTypeId2" class="form-check-label">учится</label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="FamilyMembers[i].OccupationTypeId" id="OccupationTypeId3" class="form-check-input" type="radio" value="3">
+                                    <label for="OccupationTypeId3" class="form-check-label">служит</label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="FamilyMembers[i].OccupationTypeId" id="OccupationTypeId4" class="form-check-input" type="radio" value="4">
+                                    <label for="OccupationTypeId4" class="form-check-label">независящие причины</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <h6 class="my-2">Вид дохода</h6>
+                                <div class="form-check">
+                                    <input asp-for="FamilyMembers[i].ProfitTypeId" id="ProfitTypeId1" class="form-check-input" type="radio" value="1">
+                                    <label for="ProfitTypeId1" class="form-check-label">
+                                        доходы от трудовой, предпринимательской деятельности
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="FamilyMembers[i].ProfitTypeId" id="ProfitTypeId2" class="form-check-input" type="radio" value="2">
+                                    <label for="ProfitTypeId2" class="form-check-label">выплаты социального характера</label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="FamilyMembers[i].ProfitTypeId" id="ProfitTypeId3" class="form-check-input" type="radio" value="3">
+                                    <label for="ProfitTypeId3" class="form-check-label">полученные алименты</label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="FamilyMembers[i].ProfitTypeId" id="ProfitTypeId4" class="form-check-input" type="radio" value="4">
+                                    <label for="ProfitTypeId4" class="form-check-label">доходы от имущества</label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="FamilyMembers[i].ProfitTypeId" id="ProfitTypeId5" class="form-check-input" type="radio" value="5">
+                                    <label for="ProfitTypeId5" class="form-check-label">от личного подсобного хозяйства</label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="FamilyMembers[i].ProfitTypeId" id="ProfitTypeId6" class="form-check-input" type="radio" value="6">
+                                    <label for="ProfitTypeId6" class="form-check-label">иные доходы</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addFamilyMember"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+
+            <h5 class="my-2">
+                Прошу исключить из общей суммы дохода моей семьи уплаченные алименты
+            </h5>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label asp-for="AlimentsAmount" class="form-label">Сумма</label>
+                    <input asp-for="AlimentsAmount" class="form-control" type="number">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="AlimentsReason" class="form-label">Основание для удержания алиментов</label>
+                    <input asp-for="AlimentsReason" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="AlimentsPerson" class="form-label">
+                        Фамилия, имя, отчество лица, в пользу которого производится удержание
+                    </label>
+                    <input asp-for="AlimentsPerson" class="form-control" type="text">
+                </div>
+            </div>
+
+            <h5 class="my-2">
+                Сообщаю, что мне и членам моей семьи на праве собственности принадлежит следующее имущество
+            </h5>
+            <div id="familyMembersEstateList" data-clone-list>
+                @for (var i = 0; i < Model.FamilyMembersEstate.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Запись @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-5">
+                                <label class="form-label" asp-for="FamilyMembersEstate[i].FullName">Ф.И.О.</label>
+                                <input type="text" asp-for="FamilyMembersEstate[i].FullName" class="form-control">
+                            </div>
+                            <div class="col-5">
+                                <label class="form-label" asp-for="FamilyMembersEstate[i].EstateTypeName">Вид имущества</label>
+                                <input type="text" asp-for="FamilyMembersEstate[i].EstateTypeName" class="form-control">
+                            </div>
+                            <div class="col-1 mt-2">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addFamilyMembersEstate"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="AppliedDocuments">Приложенные документы</label>
+                    <select class="select2" multiple="multiple" asp-items="@docList" asp-for="AppliedDocuments"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="familyMember" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Член семьи 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-6">
+                <label class="form-label" asp-for="FamilyMembers[0].FullName">Ф.И.О.</label>
+                <input type="text" asp-for="FamilyMembers[0].FullName" class="form-control">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="FamilyMembers[0].Kinship">Степень родства</label>
+                <input type="number" min="0" asp-for="FamilyMembers[0].Kinship" class="form-control" />
+            </div>
+            <div class="col-1 mt-2">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+        <div class="row mb-1 align-items-center">
+            <div class="col-6">
+                <h6 class="my-2">Род занятий</h6>
+                <div class="form-check">
+                    <input asp-for="FamilyMembers[0].OccupationTypeId" id="OccupationTypeId1" class="form-check-input" type="radio" value="1">
+                    <label for="OccupationTypeId1" class="form-check-label">работает</label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="FamilyMembers[0].OccupationTypeId" id="OccupationTypeId2" class="form-check-input" type="radio" value="2">
+                    <label for="OccupationTypeId2" class="form-check-label">учится</label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="FamilyMembers[0].OccupationTypeId" id="OccupationTypeId3" class="form-check-input" type="radio" value="3">
+                    <label for="OccupationTypeId3" class="form-check-label">служит</label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="FamilyMembers[0].OccupationTypeId" id="OccupationTypeId4" class="form-check-input" type="radio" value="4">
+                    <label for="OccupationTypeId4" class="form-check-label">независящие причины</label>
+                </div>
+            </div>
+            <div class="col-6">
+                <h6 class="my-2">Вид дохода</h6>
+                <div class="form-check">
+                    <input asp-for="FamilyMembers[0].ProfitTypeId" id="ProfitTypeId1" class="form-check-input" type="radio" value="1">
+                    <label for="ProfitTypeId1" class="form-check-label">
+                        доходы от трудовой, предпринимательской деятельности
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="FamilyMembers[0].ProfitTypeId" id="ProfitTypeId2" class="form-check-input" type="radio" value="2">
+                    <label for="ProfitTypeId2" class="form-check-label">выплаты социального характера</label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="FamilyMembers[0].ProfitTypeId" id="ProfitTypeId3" class="form-check-input" type="radio" value="3">
+                    <label for="ProfitTypeId3" class="form-check-label">полученные алименты</label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="FamilyMembers[0].ProfitTypeId" id="ProfitTypeId4" class="form-check-input" type="radio" value="4">
+                    <label for="ProfitTypeId4" class="form-check-label">доходы от имущества</label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="FamilyMembers[0].ProfitTypeId" id="ProfitTypeId5" class="form-check-input" type="radio" value="5">
+                    <label for="ProfitTypeId5" class="form-check-label">от личного подсобного хозяйства</label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="FamilyMembers[0].ProfitTypeId" id="ProfitTypeId6" class="form-check-input" type="radio" value="6">
+                    <label for="ProfitTypeId6" class="form-check-label">иные доходы</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="g-3" id="familyMembersEstate" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Запись 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-5">
+                <label class="form-label" asp-for="FamilyMembersEstate[0].FullName">Ф.И.О.</label>
+                <input type="text" asp-for="FamilyMembersEstate[0].FullName" class="form-control">
+            </div>
+            <div class="col-5">
+                <label class="form-label" asp-for="FamilyMembersEstate[0].EstateTypeName">Вид имущества</label>
+                <input type="text" asp-for="FamilyMembersEstate[0].EstateTypeName" class="form-control">
+            </div>
+            <div class="col-2 mt-2">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('#addFamilyMember').on('click', () => addForm('familyMembersList', 'familyMember'));
+        additionalForm.find('#addFamilyMembersEstate').on('click', () => addForm('familyMembersEstateList', 'familyMembersEstate'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        additionalForm.find("select.select2").each(function () {
+            $(this).select2({
+                tags: true,
+                minimumResultsForSearch: -1,
+                language: "ru",
+                allowClear: true,
+                showSearchBox: false
+            });
+        });
+    });
+
+    function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+        let $cloneList = additionalForm.find(`#${cloneListId}`);
+        let $original = originalBlock.find(`#${originalId}`);
+        let $cloneBlock = $original.clone(true);
+        let indexId = $cloneList.find('[data-clone]').length;
+        renameBlock($cloneBlock, indexId);
+        blockInit($cloneBlock);
+        $cloneList.append($cloneBlock);
+    }
+
+    function blockInit($block) {
+        visibilityBlock($block, false, false);
+
+        $block.find("input").each(function () {
+            $(this).val("");
+        });
+    }
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

@@ -1,0 +1,362 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Municipal._23_1_Model
+@{
+     IEnumerable<SelectListItem> FaceApplicant = new List<SelectListItem>
+    {
+            new("Физическое лицо", "1"),
+            new("Юридическое лицо", "2"),
+    };
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Recipient">Место направления заявления</label>
+                    <input type="text" asp-for="Recipient" class="form-control">
+                </div>
+            </div>
+            <hr/>
+            <br/>
+            <h6 class="my-2">Сведения о заявителе</h6>
+            <div class="row mb-3">
+                 <div class="col-4">
+                     <select class="select2-nosearch" asp-items="@FaceApplicant" asp-for="FaceApplicant"></select>                
+                </div>
+            </div>
+            <div data-app-1111>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="Applicant.Fio">ФИО</label>
+                        <input type="text" asp-for="Applicant.Fio" class="form-control">                
+                    </div>
+                </div>
+                <br/>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="Applicant.PostalAddress">почтовый адрес </label>
+                        <input type="text" asp-for="Applicant.PostalAddress" class="form-control">                
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label" asp-for="Applicant.Phone">телефон</label>
+                        <input type="text" asp-for="Applicant.Phone" class="form-control">                
+                    </div>
+                </div>
+            </div>
+            <div data-app-2222>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="Applicant.FullName"> полное наименование</label>
+                        <input type="text" asp-for="Applicant.FullName" class="form-control">                
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="Applicant.PostalAddressLegal">почтовый адрес</label>
+                        <input type="text" asp-for="Applicant.PostalAddressLegal" class="form-control">                
+                    </div>
+                </div> 
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label" asp-for="Applicant.PhoneLegal">телефон</label>
+                        <input type="text" asp-for="Applicant.PhoneLegal" class="form-control">                
+                    </div>
+                </div>
+            </div>
+            <hr/>
+            <br/>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ConsistingIn">ошибка заключается в</label>
+                    <input type="text" asp-for="ConsistingIn" class="form-control">
+                </div>
+            </div>
+            <hr/>
+            <br/>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedDocumentList.Length; i++)
+                {   <br/>
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <h6 class="my-2">Приложение @(i+1)</h6>
+                        <div class="row mb-1 align-items-end">
+                            <div class="col-10">
+                                  <label  class="form-label" asp-for="AppliedDocumentList[i].Applications">Наименование</label>
+                                  <input type="text" class="form-control" asp-for="AppliedDocumentList[i].Applications">
+                            </div>
+                            <div class="col-1">
+                                 <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="originalBlock">
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <br/>
+        <h6 class="my-2 title">Приложение 0</h6>
+        <div class="row mb-1 align-items-end">
+            <div class="col-10">
+                <label class="form-label" asp-for="AppliedDocumentList[0].Applications">Наименование</label>
+                <input type="text" class="form-control" asp-for="AppliedDocumentList[0].Applications">
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger content-center" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+        
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+     $(function() {
+        originalBlock.find('[data-original]').each(function(_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find('[data-disabled]').each(function() {
+            visibilityBlock($(this), true, true);
+        });
+                
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('#Phone').inputmask("9{1,15}", options);        
+        additionalForm.find('#PersonalAccount').inputmask("9{20}", options);        
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);                
+
+         function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function() {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function() {
+                $(this).select2({
+                });
+            });
+        }
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.find("select").each(function() {
+                $(this).select2('destroy');
+            });
+            $cloneList.append($cloneBlock);
+            select2Init($cloneList);
+        }        
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input[type='text']").each(function() {
+                $(this).val("");
+            });
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function() {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function() {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function(index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    var additionalForm = $('#additional-data-content');
+
+    $(function() {
+        additionalForm.find("select.select2-search").each(function() {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function() {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+        additionalForm.find('[name^="FnsDepartment"]').inputmask("9999", options);
+        additionalForm.find('[name$="Email"]').inputmask("email", options);
+        additionalForm.find('[name$="Phone"]').inputmask("9{1,12}", options);
+        additionalForm.find('[name$="Inn"]').inputmask("9{12}", options);
+
+        additionalForm.find('#FaceApplicant').on('change', function() {
+            let $app1111 = $('[data-app-1111]');
+            let $app2222 = $('[data-app-2222]');
+            switch ($(this).val()) {
+                case '1':
+                    $app1111.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                    $app2222.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    break;
+                case '2':
+                    $app1111.each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    $app2222.each(function() {
+                        visibilityBlock($(this), false, false);
+                    });
+                    break;
+            }
+        });
+        additionalForm.find('#FaceApplicant').trigger('change');
+
+        function visibilityBlock($block, hide, isDisabled) {
+            switch (hide) {
+                case true:
+                    $block.hide();
+                    break;
+                case false:
+                    $block.show();
+                    break;
+            }
+
+            switch (isDisabled) {
+                case true:
+                    $block.find('input, select').each(function() {
+                        $(this).prop('disabled', true);
+                    });
+                    break;
+                case false:
+                    $block.find('input, select').each(function() {
+                        $(this).prop('disabled', false);
+                    });
+                    $block.find('[data-disabled]').each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    break;
+            }
+        }
+        (function getDictionaries() {
+            let dicts = new Set();
+            $('[data-dictionary]').each(function() {
+                let $this = $(this);
+                let options = $this.data('dictionary');
+                if (!dicts.has(options.dictionary)) {
+                    dicts.add(options.dictionary);
+                    $.post(`/SmevBase/SmevGetDictionary`,
+                        {
+                            type: options.dictionary
+                        },
+                        function(dictionary) {
+                            if (dictionary.error) return;
+                            fillSelect(options.dictionary, dictionary);
+                        });
+                }
+            });
+        }());
+
+        function fillSelect(dictName, dictionary) {
+            $.each($(`[data-dictionary*='"${dictName}"']`),
+                function() {
+                    let $this = $(this);
+                    let items = dictionary;
+                    $this.empty();
+                    if (!$this.hasClass('required')) {
+                        $this.append(new Option('Не выбрано', ''));
+                    }
+                    if ($this.is('[data-value-value]')) {
+                        items.dictionary.forEach(function(item) {
+                            $this.append(new Option(item.value, item.value));
+                        });
+                    } else {
+                        items.dictionary.forEach(function(item) {
+                            $this.append(new Option(item.value, item.key));
+                        });
+                    }
+
+                    if ($this.data('dictionary').default_value) {
+                        let defVal = $this.data('dictionary').default_value;
+                        if (defVal) {
+                            $this.val(defVal).trigger('update');
+                            $this.attr('data-def', defVal);
+                        }
+                    } else {
+                        $this.val('').trigger('update');
+                    }
+                });
+        }
+    });
+</script>
+

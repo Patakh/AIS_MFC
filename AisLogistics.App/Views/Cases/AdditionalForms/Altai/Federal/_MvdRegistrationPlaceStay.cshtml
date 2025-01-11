@@ -1,0 +1,1141 @@
+﻿@using AisLogistics.App.ViewModels.SelectListViewModel
+@model AisLogistics.App.Models.AdditionalForms.MvdRegistrationPlaceStayModel
+@{
+    IEnumerable<SelectListItem> registrationTypeList = new List<SelectListItem> {
+        new ("по месту жительства", "2"),
+        new ("по месту пребывания","4"),
+        new ("по месту жительства в связи с изменением гражданства", "15")
+    };
+
+    IEnumerable<SelectListItem> relocationReasonTypeList = new List<SelectListItem> {
+        new ("Не выбрано", ""),
+        new ("в связи с учебой", "2"),
+        new ("в связи с работой", "3"),
+        new ("возвращение к прежнему месту жительства", "4"),
+        new ("из-за обострения межнациональных отношений", "5"),
+        new ("из-за обострения криминогенной обстановки", "6"),
+        new ("экологическое неблагополучие", "7"),
+        new ("несоответствие природно-климатическим условиям", "8"),
+        new ("причины личного, семейного характера", "9"),
+        new ("иная причина", "10"),
+        new ("в том числе в связи с переменой места работы супруга(и)", "91"),
+        new ("в связи с вступлением в брак", "92"),
+        new ("к детям", "93"),
+        new ("к родителям", "94"),
+        new ("в том числе приобретение жилья (покупка, наследование и тому подобное)", "95")
+    };
+
+    var group1 = new SelectListGroup { Name = "Специалисты высшего уровня квалификации, имеющие высшее образование:" };
+    var group2 = new SelectListGroup { Name = "Специалисты среднего уровня квалификации, имеющие среднее профессиональное образование:" };
+    var group3 = new SelectListGroup { Name = "Служащие, занятые подготовкой и оформлением документации, учетом и обслуживанием:" };
+
+    IEnumerable<SelectListItem> professionTypeList = new List<SelectListItem>
+    {
+        new("Не выбрано", ""),
+        new("Военнослужащие (за исключением военнослужащих срочной службы по призыву)", "0"),
+        new("Руководители (включая руководителей высшего звена, высших должностных лиц и законодателей; управляющих в корпоративном секторе и в других организациях; руководителей подразделений в сфере производства и специализированных сервисных услуг; руководителей в гостиничном и ресторанном бизнесе, розничной и оптовой торговле и родственных сферах обслуживания)", "1"),
+        new SelectListItem { Text = "специалисты в области науки и техники", Value = "21", Group = group1 },
+        new SelectListItem { Text = "специалисты в области здравоохранения", Value = "22", Group = group1 },
+        new SelectListItem { Text = "специалисты в области образования", Value = "23", Group = group1 },
+        new SelectListItem { Text = "специалисты в сфере бизнеса и администрирования", Value = "24", Group = group1 },
+        new SelectListItem { Text = "информационно-коммуникационным", Value = "25", Group = group1 },
+        new SelectListItem { Text = "специалисты в области права, гуманитарных областей и культуры", Value = "26", Group = group1 },
+        new SelectListItem { Text = "специалисты-техники в области науки и техники", Value = "31", Group = group2 },
+        new SelectListItem { Text = "средний медицинский персонал здравоохранения", Value = "32", Group = group2 },
+        new SelectListItem { Text = "средний специальный персонал по экономической и административной деятельности", Value = "33", Group = group2 },
+        new SelectListItem { Text = "средний специальный персонал в области правовой, социальной работы, культуры, спорта и родственных занятий", Value = "34", Group = group2 },
+        new SelectListItem { Text = "специалисты по информационно-коммуникационным технологиям (ИКТ)", Value = "35", Group = group2 },
+        new SelectListItem { Text = "специалисты-техники в области науки и техники", Value = "41", Group = group3 },
+        new SelectListItem { Text = "средний медицинский персонал здравоохранения", Value = "42", Group = group3 },
+        new SelectListItem { Text = "средний специальный персонал по экономической и административной деятельности", Value = "43", Group = group3 },
+        new ("Работники сферы обслуживания и торговли, охраны граждан", "5"),
+        new ("Квалифицированные работники сельского и лесного хозяйства, рыбоводства", "6"),
+        new ("Квалифицированные рабочие промышленности, строительства, транспорта и рабочие родственных занятий", "7"),
+        new ("Операторы производственных установок и машин, сборщики и водители", "8"),
+        new ("Неквалифицированные рабочие", "9")
+    };
+    IEnumerable<SelectListItem> educationTypeList = new List<SelectListItem> {
+        new ("Не выбрано", ""),
+        new ("основное общее (неполное среднее)", "1"),
+        new ("неполное высшее, высшее (бакалавр)", "19"),
+        new ("среднее общее (полное)", "21"),
+        new ("кандидата наук", "31"),
+        new ("в том числе имеет ученую степень: доктора наук", "32"),
+        new ("высшее профессиональное: магистр", "36"),
+        new ("специалист", "37"),
+        new ("начальное общее (начальное) и не имеющие начального", "84"),
+        new ("среднее профессиональное, среднее специальное (по программам подготовки специалистов среднего звена)", "126"),
+        new ("начальное профессиональное (среднее профессиональное образование по программам подготовки квалифицированных рабочих, служащих)", "129")
+    };
+    IEnumerable<SelectListItem> familyStatusTypeList = new List<SelectListItem> {
+        new ("Не выбрано",""),
+        new ("женат (замужем)", "34"),
+        new ("никогда не был женат (замужем) (никогда не состоял в браке)", "11"),
+        new ("разведен(а)", "13"),
+        new ("вдовец (вдова)", "10")
+    };
+
+    IEnumerable<SelectListItem> legalRepresentativeTypeList = new List<SelectListItem> {
+        new ("Не выбрано",""),
+        new ("отец", "отец"),
+        new ("мать", "мать"),
+        new ("опекун", "опекун"),
+        new ("попечитель", "попечитель")
+    };
+
+    IEnumerable<SelectListItem> BasisMovingIntoList = new List<SelectListItem> {
+        new ("Не выбрано",""),
+        new ("Правоустанавливающий документ", "Правоустанавливающий документ"),
+        new ("Договор социального найма", "Договор социального найма"),
+        new ("Иное", "Иное")
+    };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <br />
+            <h5 class="my-2">Заявитель</h5>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="Applicant.LastName">Фамилия</label>
+                    <input type="text" asp-for="Applicant.LastName" class="form-control" placeholder="Фамилия">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Applicant.FirstName">Имя</label>
+                    <input type="text" asp-for="Applicant.FirstName" class="form-control" placeholder="Имя">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Applicant.SecondName">Отчество</label>
+                    <input type="text" asp-for="Applicant.SecondName" class="form-control" placeholder="Отчество">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Applicant.BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input type="text" asp-for="Applicant.BirthDate" class="form-control pickdate" placeholder="Дата рождения">
+                    </div>
+                </div>
+            </div>
+            <h6 class="my-2">Документ, удостоверяющий личность</h6>
+            <div class="row mb-2">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Applicant.DocType">Тип документа</label>
+                    <select class="form-select select2-nosearch required" asp-for="Applicant.DocType">
+                        <option value="">Не выбрано</option>
+                        <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                        <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                        <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина</option>
+                        <option value="Вид на жительство">Вид на жительство</option>
+                        <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                        <option value="Паспорт моряка">Паспорт моряка</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.DocSeries">Серия</label>
+                    <input type="text" class="form-control" placeholder="Серия" asp-for="Applicant.DocSeries">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.DocNumber">Номер</label>
+                    <input type="text" class="form-control" placeholder="Номер" asp-for="Applicant.DocNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.DocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="Applicant.DocIssueDate" type="text" class="form-control pickdate" placeholder="Дата выдачи">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="Applicant.DocIssuer">Кем выдан</label>
+                    <input type="text" class="form-control" placeholder="Кем выдан" asp-for="Applicant.DocIssuer">
+                </div>
+                <div class="col-3" data-document-code>
+                    <label class="form-label" asp-for="Applicant.DocIssuerCode">Код</label>
+                    <input type="text" class="form-control" placeholder="Код" asp-for="Applicant.DocIssuerCode">
+                </div>
+            </div> 
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="BirthPlace">Место рождения</label>
+                    <input type="text" asp-for="BirthPlace" class="form-control">
+                </div>
+            </div> 
+            <div class="row mb-3">
+                <div class="col-8">
+                    <label class="form-label" asp-for="Snils">СНИЛС</label>
+                    <input type="text" class="form-control" placeholder="СНИЛС" asp-for="Snils">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Phone">Телефон</label>
+                    <input type="text" class="form-control" placeholder="Телефон" asp-for="Phone">
+                </div>
+            </div>
+            <h6 class="my-2">Адрес места жительства, прибывшего(ей) гражданина(ки)</h6>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="RegistrationAddressPrev.Locality">город, поселок, село, иной населенный пункт</label>
+                    <input type="text" asp-for="RegistrationAddressPrev.Locality" class="form-control" placeholder="Населенный пункт">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="RegistrationAddressPrev.Street">Улица</label>
+                    <input type="text" asp-for="RegistrationAddressPrev.Street" class="form-control" placeholder="Улица">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="RegistrationAddressPrev.House">Дом</label>
+                    <input type="text" asp-for="RegistrationAddressPrev.House" class="form-control" placeholder="Дом">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="RegistrationAddressPrev.Housing">Корпус</label>
+                    <input type="text" asp-for="RegistrationAddressPrev.Housing" class="form-control" placeholder="Корпус">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="RegistrationAddressPrev.Flat">Квартира</label>
+                    <input type="text" asp-for="RegistrationAddressPrev.Flat" class="form-control" placeholder="Квартира">
+                </div>
+            </div>
+            <br />
+            <hr />
+            <h5 class="my-2">Законный представитель</h5>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="LegalRepresentativeType">Степень родства</label>
+                    <select class="select2-nosearch" asp-for="LegalRepresentativeType">
+                        <option value="">Не выбрано</option>
+                        <option value="супруг(а)">супруг(а)</option>
+                        <option value="сын">сын</option>
+                        <option value="дочь">дочь</option>
+                        <option value="мать">мать</option>
+                        <option value="отец">отец</option>
+                        <option value="брат">брат</option>
+                        <option value="сестра">сестра</option>
+                        <option value="попечитель">попечитель</option>
+                        <option value="опекун">опекун</option>
+                        <option value="иной родственник">иной родственник</option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="LegalRepresentative.LastName">Фамилия</label>
+                    <input type="text" class="form-control" placeholder="Фамилия" asp-for="LegalRepresentative.LastName" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="LegalRepresentative.FirstName">Имя</label>
+                    <input type="text" class="form-control" placeholder="Имя" asp-for="LegalRepresentative.FirstName">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="LegalRepresentative.SecondName">Отчество</label>
+                    <input type="text" class="form-control" placeholder="Отчество" asp-for="LegalRepresentative.SecondName">
+                </div>
+            </div>
+            <h6 class="my-2">Документ, удостоверяющий личность</h6>
+            <input type="hidden" asp-for="OwnerRoom.FIOGen">
+            <div class="row mb-2">
+                <div class="col-12">
+                    <label class="form-label" asp-for="LegalRepresentative.DocType">Тип документа</label>
+                    <select class="form-select select2-nosearch required" asp-for="LegalRepresentative.DocType" asp-items="@SelectListViewModel.DocumentTypeList"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="LegalRepresentative.DocSeries">Серия</label>
+                    <input type="text" class="form-control" placeholder="Серия" asp-for="LegalRepresentative.DocSeries">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="LegalRepresentative.DocNumber">Номер</label>
+                    <input type="text" class="form-control" placeholder="Номер" asp-for="LegalRepresentative.DocNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="LegalRepresentative.DocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="LegalRepresentative.DocIssueDate" type="text" class="form-control pickdate" placeholder="Дата выдачи">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="LegalRepresentative.DocIssuer">Кем выдан</label>
+                    <input type="text" class="form-control" placeholder="Кем выдан" asp-for="LegalRepresentative.DocIssuer">
+                </div>
+                <div class="col-3" data-document-codelegal>
+                    <label class="form-label" asp-for="LegalRepresentative.DocIssuerCode">Код</label>
+                    <input type="text" class="form-control" placeholder="Код" asp-for="LegalRepresentative.DocIssuerCode">
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">период регистрации по месту пребывания</h5>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="DateWith">С</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="DateWith" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="ByDate">По</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="ByDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <br />
+            <hr />
+            <h5 class="my-2">Лицо предоставившее жилое помещение</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="OwnerRoom.RelationDegree">Степень родства</label>
+                    <select class="select2-nosearch" asp-for="OwnerRoom.RelationDegree">
+                        <option value="">Не выбрано</option>
+                        <option value="супруг(а)">супруг(а)</option>
+                        <option value="сын">сын</option>
+                        <option value="дочь">дочь</option>
+                        <option value="мать">мать</option>
+                        <option value="отец">отец</option>
+                        <option value="брат">брат</option>
+                        <option value="сестра">сестра</option>
+                        <option value="иной родственник">иной родственник</option>
+                        <option value="собственник">собственник</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="OwnerRoom.LastName">Фамилия</label>
+                    <input type="text" class="form-control" placeholder="Фамилия" asp-for="OwnerRoom.LastName" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="OwnerRoom.FirstName">Имя</label>
+                    <input type="text" class="form-control" placeholder="Имя" asp-for="OwnerRoom.FirstName">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="OwnerRoom.SecondName">Отчество</label>
+                    <input type="text" class="form-control" placeholder="Отчество" asp-for="OwnerRoom.SecondName">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="OwnerRoom.BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input type="text" asp-for="OwnerRoom.BirthDate" class="form-control pickdate" placeholder="Дата рождения">
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="BasisMovingInto">документ, в соответствии с жилищным законодательством РФ основанием для вселения</label>
+                    <select asp-items="@BasisMovingIntoList" class="form-select select2-nosearch" asp-for="BasisMovingInto"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="BasisInfo">Реквизиты</label>
+                    <input type="text" class="form-control" placeholder="Реквизиты" asp-for="BasisInfo">
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">Адрес места пребывания:</h6>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="ProvidedAddress.Locality">город, поселок, село, иной населенный пункт</label>
+                    <input type="text" asp-for="ProvidedAddress.Locality" class="form-control" placeholder="Населенный пункт">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="ProvidedAddress.Street">Улица</label>
+                    <input type="text" asp-for="ProvidedAddress.Street" class="form-control" placeholder="Улица">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="ProvidedAddress.House">Дом</label>
+                    <input type="text" asp-for="ProvidedAddress.House" class="form-control" placeholder="Дом">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="ProvidedAddress.Housing">Корпус</label>
+                    <input type="text" asp-for="ProvidedAddress.Housing" class="form-control" placeholder="Корпус">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="ProvidedAddress.Flat">Квартира</label>
+                    <input type="text" asp-for="ProvidedAddress.Flat" class="form-control" placeholder="Квартира">
+                </div>
+            </div>
+            <br />
+            <h6 class="my-3">Документ, удостоверяющий личность</h6>
+            <div class="row mb-2">
+                <div class="col-12">
+                    <label class="form-label" asp-for="OwnerRoom.DocType">Тип документа</label>
+                    <select class="form-select select2-nosearch required" asp-for="OwnerRoom.DocType" asp-items="@SelectListViewModel.DocumentTypeList"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="OwnerRoom.DocSeries">Серия</label>
+                    <input type="text" class="form-control" placeholder="Серия" asp-for="OwnerRoom.DocSeries">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="OwnerRoom.DocNumber">Номер</label>
+                    <input type="text" class="form-control" placeholder="Номер" asp-for="OwnerRoom.DocNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="OwnerRoom.DocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="OwnerRoom.DocIssueDate" type="text" class="form-control pickdate" placeholder="Дата выдачи">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="OwnerRoom.DocIssuer">Кем выдан</label>
+                    <input type="text" class="form-control" placeholder="Кем выдан" asp-for="OwnerRoom.DocIssuer">
+                </div>
+                <div class="col-3" data-document-codeown>
+                    <label class="form-label" asp-for="OwnerRoom.DocIssuerCode">Код</label>
+                    <input type="text" class="form-control" placeholder="Код" asp-for="OwnerRoom.DocIssuerCode">
+                </div>
+            </div>
+            <br />
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="d-block form-label">способ получения свидетельства о регистрации по месту пребывания</label>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" name="MethodObtaining" id="MethodObtaining1" value="1">
+                        <label class="form-check-label" for="MethodObtaining1">направить по почте</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="MethodObtaining" id="MethodObtaining2" value="2">
+                        <label class="form-check-label" for="MethodObtaining2">выдать на руки</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Decision">Принятое решение</label>
+                    <input type="text" asp-for="Decision" class="form-control" placeholder="Принятое решение">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="RegistrationCert">№ выданого свидетельства о регистрации по месту пребывания</label>
+                    <input type="text" asp-for="RegistrationCert" class="form-control" placeholder="№ выданого свидетельства о регистрации по месту пребывания">
+                </div>
+            </div>
+
+            <!--Сведения о прибывших гражданах Российской Федерации-->
+
+            <hr />
+            <br />
+            <h5 class="my-2">Сведения о прибывших гражданах Российской Федерации</h5>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="RegistrationType">Вид регистрации</label>
+                    <select class="form-select select2-nosearch" asp-for="RegistrationType">
+                        <option value="4">по месту пребывания</option>
+                        <option value="2">по месту жительства</option>
+                        <option value="15">по месту жительства в связи с изменением гражданства</option>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="StayPeriodEnd">Дата окончания срока пребывания</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="StayPeriodEnd" type="text" class="form-control pickdate" placeholder="Дата">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Citizenship">гражданство и для ЭВ код по ОКСМ</label>
+                    <input type="text" class="form-control" placeholder="Гражданство" asp-for="Citizenship">
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">Место рождения</h6>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthPlaceCountryCod">код по ОКСМ и для рожденных в России или РСФСР — 2-значный код по ОКТМО</label>
+                    <input type="text" asp-for="BirthPlaceCountryCod" class="form-control">
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="BirthPlaceCountry">наименование государства (для рожденных в СССР — указать наименование республики)</label>
+                    <input type="text" asp-for="BirthPlaceCountry" class="form-control">
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="BirthPlaceSubject">для рожденных в России или РСФСР указать наименование субъекта РФ</label>
+                    <select class="select2-search" asp-for="BirthPlaceSubject"
+                            data-dictionary='{"dictionary":"FnsRegionCodes", "default_value":"@Model.BirthPlaceSubject"}' data-value-value>
+                    </select>
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">Адрес места регистрации куда прибыл(а)</h6>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="RegistrationNewAddress.Region">Субъект РФ</label>
+                    <select class="select2-search" asp-for="RegistrationNewAddress.Region"
+                            data-dictionary='{"dictionary":"FnsRegionCodes", "default_value":"@Model.RegistrationNewAddress.Region"}' data-value-value>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="RegistrationNewAddress.Area">Муниципальный район,городской округ</label>
+                    <input type="text" asp-for="RegistrationNewAddress.Area" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="RegistrationNewAddress.CitySettlement">город/сельское поселение</label>
+                    <input type="text" class="form-control" asp-for="RegistrationNewAddress.CitySettlement">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-5">
+                    <label class="form-label" asp-for="RegistrationNewAddress.Locality">город, поселк, сельский населенный пункт</label>
+                    <input type="text" asp-for="RegistrationNewAddress.Locality" class="form-control">
+                </div>
+                <div class="col-7">
+                    <label class="form-label" asp-for="RegistrationNewAddress.IntracityTerritory">внутригородской район, административный район города федерального значения</label>
+                    <input type="text" class="form-control" asp-for="RegistrationNewAddress.IntracityTerritory">
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">Адрес предыдущего места жительства</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="CountryPrev.Country">Страна, для ЭВ код по ОКСМ</label>
+                    <input type="text" asp-for="CountryPrev.Country" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="CountryPrev.Region">Субъект РФ</label>
+                    <select class="select2-search" asp-for="CountryPrev.Region"
+                            data-dictionary='{"dictionary":"FnsRegionCodes", "default_value":"@Model.CountryPrev.Region"}' data-value-value>
+                    </select>
+                </div>
+                <div class="col-5">
+                    <label class="form-label" asp-for="CountryPrev.Area">муниципальный район, городской округ</label>
+                    <input type="text" asp-for="CountryPrev.Area" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="CountryPrev.CitySettlement">городское/сельское поселение</label>
+                    <input type="text" class="form-control" asp-for="CountryPrev.CitySettlement">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="CountryPrev.Locality">город, поселк, населенный пункт</label>
+                    <input type="text" asp-for="CountryPrev.Locality" class="form-control">
+                </div>
+                <div class="col-8">
+                    <label class="form-label" asp-for="CountryPrev.IntracityTerritory">внутригородской район, административный район города федерального значения</label>
+                    <input type="text" class="form-control" asp-for="CountryPrev.IntracityTerritory">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="RegistrationPrevYearStart">Год, с которого проживал(а) в предыдущем месте жительства</label>
+                    <input type="number" class="form-control" asp-for="RegistrationPrevYearStart">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="RelocationReason">Основное обстоятельство, вызвавшее необходимость переселения</label>
+                    <select asp-items="@relocationReasonTypeList" class="form-select select2-nosearch" asp-for="RelocationReason"></select>
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label" asp-for="Profession">Вид занятий (профессия)</label>
+                    <select asp-items="@professionTypeList" class="form-select select2-search" asp-for="Profession"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="Education">Уровень образования</label>
+                    <select asp-items="@educationTypeList" class="form-select select2-search" asp-for="Education"></select>
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label" asp-for="FamilyStatus">Семейное положение</label>
+                    <select asp-items="@familyStatusTypeList" class="form-select select2-nosearch" asp-for="FamilyStatus"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var additionalForm = $('#additional-data-content');
+    var btnNext = $('.btn-next');
+    var info = {
+        registrationAuthority: $("#RegistrationAuthority"),
+        decision: $("#Decision"),
+        registrationCert: $("#RegistrationCert")
+    };
+    var applicant = {
+        documentsIdentityId: $("#Applicant_DocType"),
+        lastName: $("#Applicant_LastName"),
+        firstName: $("#Applicant_FirstName"),
+        secondName: $("#Applicant_SecondName"),
+        birthDate: $("#Applicant_BirthDate"),
+        birthPlace: $("#BirthPlace"),
+        snils: $("#Snils"),
+        phone: $("#Phone"),
+        birthDate: $("#Applicant_BirthDate"),
+        docType: $("#Applicant_DocType"),
+        docSeries: $("#Applicant_DocSeries"),
+        docNumber: $("#Applicant_DocNumber"),
+        docIssueDate: $("#Applicant_DocIssueDate"),
+        docIssuerCode: $("#Applicant_DocIssuerCode"),
+        docIssuer: $("#Applicant_DocIssuer")
+    };
+
+    var ownerRoom = {
+        lastName: $("#OwnerRoom_LastName"),
+        firstName: $("#OwnerRoom_FirstName"),
+        secondName: $("#OwnerRoom_SecondName"),
+        docType: $("#OwnerRoom_DocType"),
+        docSeries: $("#OwnerRoom_DocSeries"),
+        docNumber: $("#OwnerRoom_DocNumber"),
+        docIssueDate: $("#OwnerRoom_DocIssueDate"),
+        docIssuer: $("#OwnerRoom_DocIssuer"),
+        docIssuerCode: $("#OwnerRoom_DocIssuerCode"),
+        relationDegree: $("#OwnerRoom_RelationDegree"),
+        basisMovingInto: $("#BasisMovingInto"),
+        fioGeg: $("#OwnerRoom_FIOGen"),
+    };
+
+    var legalRepresentative = {
+        legalRepresentativeType: $("#LegalRepresentativeType"),
+        lastName: $("#LegalRepresentative_LastName"),
+        firstName: $("#LegalRepresentative_FirstName"),
+        secondName: $("#LegalRepresentative_SecondName"),
+        docType: $("#LegalRepresentative_DocType"),
+        docSeries: $("#LegalRepresentative_DocSeries"),
+        docNumber: $("#LegalRepresentative_DocNumber"),
+        docIssueDate: $("#LegalRepresentative_DocIssueDate"),
+        docIssuer: $("#LegalRepresentative_DocIssuer"),
+        docIssuerCode: $("#LegalRepresentative_DocIssuerCode")
+    };
+
+    switch ($('#select2-Applicant_DocType-container').text()) {
+
+        case "21":
+            applicant.docSeries.inputmask("99 99", { clearIncomplete: true, showMaskOnHover: false });
+            applicant.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+            applicant.docIssuerCode.parent('[data-document-code]').removeClass('d-none');
+            applicant.docIssuerCode.val($("#customer_DocumentCode").val());
+            break;
+        case "3":
+            applicant.docSeries.inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+            applicant.docIssuerCode.parent('[data-document-code]').addClass('d-none');
+            applicant.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+            applicant.docIssuerCode.val('');
+            break;
+        default:
+            applicant.docSeries.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+            applicant.docNumber.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+            applicant.docIssuerCode.parent('[data-document-code]').addClass('d-none');
+            applicant.docIssuerCode.val('');
+            break;
+    };
+
+    $(function () {
+
+        Select2Build();
+        getDictionariesDataBase();
+        getDictionaries();
+
+
+        btnNext.on('click', function appContent() {
+
+            let gender = $('[name="customer.CustomerGender"]').val() == 1 ? 'm' : 'f';
+            let lastName = $("#customer_LastName").val().trim();
+            let firstName = $("#customer_FirstName").val().trim();
+            let secondName = $("#customer_SecondName").val().trim();
+            var rn = new RussianName(lastName, firstName, secondName, gender);
+            let fioGen = rn.fullName(rn.gcaseGen).split(' ');
+
+            applicant.lastName.val(fioGen[0]);
+            applicant.firstName.val(fioGen[1]);
+            if (fioGen[2]) applicant.secondName.val(fioGen[2]);
+
+            switch ($("#customer_SDocumentsIdentityId").val()) {
+                case "21":
+                    applicant.docSeries.inputmask("99 99", { clearIncomplete: true, showMaskOnHover: false });
+                    applicant.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                    applicant.docIssuerCode.parent('[data-document-code]').removeClass('d-none');
+                    break;
+                case "3":
+                    applicant.docSeries.inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                    applicant.docIssuerCode.parent('[data-document-code]').addClass('d-none');
+                    applicant.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                    applicant.docIssuerCode.val('');
+                    break;
+                default:
+                    applicant.docSeries.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                    applicant.docNumber.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                    applicant.docIssuerCode.parent('[data-document-code]').addClass('d-none');
+                    applicant.docIssuerCode.val('');
+                    break;
+            };
+
+            switch ($("#representative_SDocumentsIdentityId").val()) {
+
+                case "21":
+                    legalRepresentative.docSeries.inputmask("99 99", { clearIncomplete: true, showMaskOnHover: false });
+                    legalRepresentative.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                    legalRepresentative.docIssuerCode.parent('[data-document-codelegal]').removeClass('d-none');
+                    break;
+                case "3":
+                    legalRepresentative.docSeries.inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                    legalRepresentative.docIssuerCode.parent('[data-document-codelegal]').addClass('d-none');
+                    legalRepresentative.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                    legalRepresentative.docIssuerCode.val('');
+                    break;
+                default:
+                    legalRepresentative.docSeries.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                    legalRepresentative.docNumber.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                    legalRepresentative.docIssuerCode.parent('[data-document-codelegal]').addClass('d-none');
+                    legalRepresentative.docIssuerCode.val('');
+                    break;
+            }
+
+            applicant.birthPlace.val($("#customer_DocumentBirthPlace").val());
+            applicant.snils.val($("#customer_CustomerSnils").val());
+            applicant.phone.val($("#customer_CustomerPhone1").val());
+            applicant.birthDate.val($("#customer_DocumentBirthDate").val());
+            applicant.docType.val($("#customer_SDocumentsIdentityId").val());
+            applicant.docSeries.val($("#customer_DocumentSerial").val());
+            applicant.docNumber.val($("#customer_DocumentNumber").val());
+            applicant.docIssuerCode.val($("#customer_DocumentCode").val());
+            applicant.docIssueDate.val($("#customer_DocumentIssueDate").val());
+            applicant.docIssuer.val($("#customer_DocumentIssueBody").val()); 
+
+            legalRepresentative.lastName.val($("#representative_LastName").val());
+            legalRepresentative.firstName.val($("#representative_FirstName").val());
+            legalRepresentative.secondName.val($("#representative_SecondName").val());
+            legalRepresentative.docType.val($("#representative_SDocumentsIdentityId").val());
+            legalRepresentative.docSeries.val($("#representative_DocumentSerial").val());
+            legalRepresentative.docNumber.val($("#representative_DocumentNumber").val());
+            legalRepresentative.docIssuerCode.val($("#representative_DocumentCode").val());
+            legalRepresentative.docIssueDate.val($("#representative_DocumentIssueDate").val());
+            legalRepresentative.docIssuer.val($("#representative_DocumentIssueBody").val());
+
+            switch ($('#representative_SDocumentsIdentityId').val()) {
+
+                case '21':
+                    legalRepresentative.docType.html(`
+                                <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                                <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                                <option value="Вид на жительство">Вид на жительство </option>
+                                <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                                <option value="Паспорт моряка">Паспорт моряка</option>
+                        `);
+                    break;
+                case '3':
+                    legalRepresentative.docType.html(`
+                                <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                                <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                                <option value="Вид на жительство">Вид на жительство </option>
+                                <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                                <option value="Паспорт моряка">Паспорт моряка</option>
+                        `);
+
+                    break;
+                case '10':
+                    legalRepresentative.docType.html(`
+                                <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                                <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                                <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                <option value="Вид на жительство">Вид на жительство </option>
+                                <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                                <option value="Паспорт моряка">Паспорт моряка</option>
+                        `);
+                    break;
+                case '12':
+                    legalRepresentative.docType.html(`
+                               <option value="Вид на жительство">Вид на жительство </option>
+                                <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                                <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                                <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                                <option value="Паспорт моряка">Паспорт моряка</option>
+                        `);
+                    break;
+                case '22':
+                    legalRepresentative.docType.html(`
+                                <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                                <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                                <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                                <option value="Вид на жительство">Вид на жительство </option>
+                                <option value="Паспорт моряка">Паспорт моряка</option>
+                        `);
+                    break;
+                case '26':
+                    legalRepresentative.docType.html(`
+                                <option value="Паспорт моряка">Паспорт моряка</option>
+                                <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                                <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                                <option value="Вид на жительство">Вид на жительство </option>
+                                <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                        `);
+                    break;
+            }
+            $('#gender1').attr('checked', false);
+            $('#gender2').attr('checked', false);
+
+            if ($('#customer_CustomerGender1').is(':checked')) {
+                $('#gender1').attr('checked', true)
+            };
+
+            if ($('#customer_CustomerGender2').is(':checked')) {
+                $('#gender2').attr('checked', true);
+            };
+
+
+            switch ($('#customer_SDocumentsIdentityId').val()) {
+
+                case '21':
+                    applicant.docType.html(`
+                                <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                                <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                                <option value="Вид на жительство">Вид на жительство </option>
+                                <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                                <option value="Паспорт моряка">Паспорт моряка</option>
+                        `);
+                    break;
+                case '3':
+                    applicant.docType.html(`
+                                <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                                <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                                <option value="Вид на жительство">Вид на жительство </option>
+                                <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                                <option value="Паспорт моряка">Паспорт моряка</option>
+                        `);
+
+                    break;
+                case '10':
+                    applicant.docType.html(`
+                                <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                                <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                                <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                <option value="Вид на жительство">Вид на жительство </option>
+                                <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                                <option value="Паспорт моряка">Паспорт моряка</option>
+                        `);
+                    break;
+                case '12':
+                    applicant.docType.html(`
+                               <option value="Вид на жительство">Вид на жительство </option>
+                                <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                                <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                                <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                                <option value="Паспорт моряка">Паспорт моряка</option>
+                        `);
+                    break;
+                case '22':
+                    applicant.docType.html(`
+                                <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                                <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                                <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                                <option value="Вид на жительство">Вид на жительство </option>
+                                <option value="Паспорт моряка">Паспорт моряка</option>
+                        `);
+                    break;
+                case '26':
+                    applicant.docType.html(`
+                                <option value="Паспорт моряка">Паспорт моряка</option>
+                                <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                                <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                                <option value="Вид на жительство">Вид на жительство </option>
+                                <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                        `);
+                    break;
+            }
+        });
+
+
+        let options = {
+            clearIncomplete: true,
+            showMaskOnHover: false
+        };
+
+        additionalForm.find(".pickdate-short").datepicker({
+            format: "mm.yyyy",
+            startView: "months",
+            minViewMode: "months",
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.9999", options);
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        $('#RelocationReason').on("change", function () {
+            switch ($(this).val()) {
+                case '10':
+                    $('#RelocationReasonOtherBlock').show();
+                    break;
+                default:
+                    $('#RelocationReasonOtherBlock').hide();
+            }
+        });
+
+        $("#OwnerRoom_LastName, #OwnerRoom_FirstName, #OwnerRoom_SecondName").on('change', function () {
+            let lastName = ownerRoom.lastName.val().trim();
+            let firstName = ownerRoom.firstName.val().trim();
+            let secondName = ownerRoom.secondName.val().trim();
+            let rn = new RussianName(lastName, firstName, secondName);
+
+            let fioGen = rn.fullName(rn.gcaseGen);
+            ownerRoom.fioGeg.val(fioGen);
+        });
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        additionalForm.find('#Phone').inputmask("+7(999) 999-99-99", { clearIncomplete: true, showMaskOnHover: false });
+        applicant.snils.inputmask("999-999-99999", { clearIncomplete: true, showMaskOnHover: false });
+        applicant.docIssuerCode.inputmask("999-999", { clearIncomplete: true, showMaskOnHover: false });
+        applicant.docType.on('change', function () {
+            switch ($(this).val()) {
+                case "Паспорт гражданина РФ":
+                    applicant.docSeries.inputmask("99 99", { clearIncomplete: true, showMaskOnHover: false });
+                    applicant.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                    applicant.docIssuerCode.parent('[data-document-code]').removeClass('d-none');
+
+                    break;
+                case "Свидетельство о рождении":
+                    applicant.docSeries.inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                    applicant.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                    applicant.docIssuerCode.parent('[data-document-code]').addClass('d-none');
+                    applicant.docIssuerCode.val('');
+                    break;
+                default:
+                    applicant.docSeries.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                    applicant.docNumber.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                    applicant.docIssuerCode.parent('[data-document-code]').addClass('d-none');
+                    applicant.docIssuerCode.val('');
+                    break;
+            }
+        });
+        switch ($('#select2-Applicant_DocType-container').text()) {
+            case "Паспорт гражданина РФ":
+                applicant.docSeries.inputmask("99 99", { clearIncomplete: true, showMaskOnHover: false });
+                applicant.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                applicant.docIssuerCode.parent('[data-document-code]').removeClass('d-none');
+                break;
+            case "Свидетельство о рождении":
+                applicant.docSeries.inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                applicant.docIssuerCode.parent('[data-document-code]').addClass('d-none');
+                applicant.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                applicant.docIssuerCode.val('');
+                break;
+            default:
+                applicant.docSeries.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                applicant.docNumber.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                applicant.docIssuerCode.parent('[data-document-code]').addClass('d-none');
+                applicant.docIssuerCode.val('');
+                break;
+        };
+        switch ($('#select2-Applicant_DocType-container').text()) {
+            case "Паспорт гражданина РФ":
+                applicant.docSeries.inputmask("99 99", { clearIncomplete: true, showMaskOnHover: false });
+                applicant.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                applicant.docIssuerCode.parent('[data-document-code]').removeClass('d-none');
+                break;
+            case "Свидетельство о рождении":
+                applicant.docSeries.inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                applicant.docIssuerCode.parent('[data-document-code]').addClass('d-none');
+                applicant.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                applicant.docIssuerCode.val('');
+                break;
+            default:
+                applicant.docSeries.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                applicant.docNumber.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                applicant.docIssuerCode.parent('[data-document-code]').addClass('d-none');
+                applicant.docIssuerCode.val('');
+                break;
+        };
+        ownerRoom.docIssuerCode.inputmask("999-999", { clearIncomplete: true, showMaskOnHover: false });
+        ownerRoom.docSeries.inputmask("99 99", { clearIncomplete: true, showMaskOnHover: false });
+        ownerRoom.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+        ownerRoom.docType.on('change', function () {
+            switch ($(this).val()) {
+                case "Паспорт гражданина РФ":
+                    ownerRoom.docSeries.inputmask("99 99", { clearIncomplete: true, showMaskOnHover: false });
+                    ownerRoom.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                    ownerRoom.docIssuerCode.parent('[data-document-codeown]').removeClass('d-none');
+
+                    break;
+                case "Свидетельство о рождении":
+                    ownerRoom.docSeries.inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                    ownerRoom.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                    ownerRoom.docIssuerCode.parent('[data-document-codeown]').addClass('d-none');
+                    ownerRoom.docIssuerCode.val('');
+                    break;
+                default:
+                    ownerRoom.docSeries.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                    ownerRoom.docNumber.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                    ownerRoom.docIssuerCode.parent('[data-document-codeown]').addClass('d-none');
+                    ownerRoom.docIssuerCode.val('');
+                    break;
+            }
+        });
+        switch ($('#select2-OwnerRoom_DocType-container').text()) {
+            case "Паспорт гражданина РФ":
+                ownerRoom.docSeries.inputmask("99 99", { clearIncomplete: true, showMaskOnHover: false });
+                ownerRoom.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                ownerRoom.docIssuerCode.parent('[data-document-codeown]').removeClass('d-none');
+
+                break;
+            case "Свидетельство о рождении":
+                ownerRoom.docSeries.inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                ownerRoom.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                ownerRoom.docIssuerCode.parent('[data-document-codeown]').addClass('d-none');
+                ownerRoom.docIssuerCode.val('');
+                break;
+            default:
+                ownerRoom.docSeries.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                ownerRoom.docNumber.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                ownerRoom.docIssuerCode.parent('[data-document-codeown]').addClass('d-none');
+                ownerRoom.docIssuerCode.val('');
+                break;
+        };
+
+        legalRepresentative.docIssuerCode.inputmask("999-999", { clearIncomplete: true, showMaskOnHover: false });
+        legalRepresentative.docSeries.inputmask("99 99", { clearIncomplete: true, showMaskOnHover: false });
+        legalRepresentative.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+        legalRepresentative.docType.on('change', function () {
+            switch ($(this).val()) {
+                case "Паспорт гражданина РФ":
+                    legalRepresentative.docSeries.inputmask("99 99", { clearIncomplete: true, showMaskOnHover: false });
+                    legalRepresentative.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                    legalRepresentative.docIssuerCode.parent('[data-document-codelegal]').removeClass('d-none');
+
+                    break;
+                case "Свидетельство о рождении":
+                    legalRepresentative.docSeries.inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                    legalRepresentative.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                    legalRepresentative.docIssuerCode.parent('[data-document-codelegal]').addClass('d-none');
+                    legalRepresentative.docIssuerCode.val('');
+                    break;
+                default:
+                    legalRepresentative.docSeries.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                    legalRepresentative.docNumber.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                    legalRepresentative.docIssuerCode.parent('[data-document-codelegal]').addClass('d-none');
+                    legalRepresentative.docIssuerCode.val('');
+                    break;
+            }
+        });
+        switch ($('#select2-LegalRepresentative_DocType-container').text()) {
+            case "Паспорт гражданина РФ":
+                legalRepresentative.docSeries.inputmask("99 99", { clearIncomplete: true, showMaskOnHover: false });
+                legalRepresentative.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                legalRepresentative.docIssuerCode.parent('[data-document-codelegal]').removeClass('d-none');
+
+                break;
+            case "Свидетельство о рождении":
+                legalRepresentative.docSeries.inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                legalRepresentative.docNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+                legalRepresentative.docIssuerCode.parent('[data-document-codelegal]').addClass('d-none');
+                legalRepresentative.docIssuerCode.val('');
+                break;
+            default:
+                legalRepresentative.docSeries.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                legalRepresentative.docNumber.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                legalRepresentative.docIssuerCode.parent('[data-document-codelegal]').addClass('d-none');
+                legalRepresentative.docIssuerCode.val('');
+                break;
+        };
+
+        legalRepresentative.docSeries.val(legalRepresentative.docSeries.attr('value'));
+        legalRepresentative.docNumber.val(legalRepresentative.docNumber.attr('value'));
+        legalRepresentative.docIssuerCode.val(legalRepresentative.docIssuerCode.attr('value'));
+
+        applicant.docSeries.val(applicant.docSeries.attr('value'));
+        applicant.docNumber.val(applicant.docNumber.attr('value'));
+        applicant.docIssuerCode.val(applicant.docIssuerCode.attr('value'));
+
+        ownerRoom.docSeries.val(ownerRoom.docSeries.attr('value'));
+        ownerRoom.docNumber.val(ownerRoom.docNumber.attr('value'));
+        ownerRoom.docIssuerCode.val(ownerRoom.docIssuerCode.attr('value'));
+
+        (function getDictionaries() {
+            let dicts = new Set();
+            $('[data-dictionary]').each(function () {
+                let $this = $(this);
+                let options = $this.data('dictionary');
+                if (!dicts.has(options.dictionary)) {
+                    dicts.add(options.dictionary);
+                    $.post(`/SmevBase/SmevGetDictionary`,
+                        {
+                            type: options.dictionary
+                        },
+                        function (dictionary) {
+                            if (dictionary.error) return;
+                            fillSelect(options.dictionary, dictionary);
+                        });
+                }
+            });
+        }());
+
+        function fillSelect(dictName, dictionary) {
+            $.each($(`[data-dictionary*='"${dictName}"']`),
+                function () {
+                    let $this = $(this);
+                    let items = dictionary;
+                    $this.empty();
+                    if (!$this.hasClass('required')) {
+                        $this.append(new Option('Не выбрано', ''));
+                    }
+                    if ($this.is('[data-value-value]')) {
+                        items.dictionary.forEach(function (item) {
+                            $this.append(new Option(item.value, item.value));
+                        });
+                    } else {
+                        items.dictionary.forEach(function (item) {
+                            $this.append(new Option(item.value, item.key));
+                        });
+                    }
+
+                    if ($this.data('dictionary').default_value) {
+                        let defVal = $this.data('dictionary').default_value;
+                        if (defVal) {
+                            $this.val(defVal).trigger('update');
+                            $this.attr('data-def', defVal);
+                        }
+                    } else {
+                        $this.val('').trigger('update');
+                    }
+                });
+        }
+
+    });
+</script>

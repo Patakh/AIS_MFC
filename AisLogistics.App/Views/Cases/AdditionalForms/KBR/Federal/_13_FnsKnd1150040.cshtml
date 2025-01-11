@@ -1,0 +1,326 @@
+﻿@model _13_FnsKnd1150040Model
+@{
+    IEnumerable<SelectListItem> methodInforming = new List<SelectListItem>
+    {
+        new ("в налоговом органе, через который подано настоящее уведомление", "1"),
+        new (" по почте по имеющемуся у налогового органа адресу места жительства (места пребывания) налогоплательщика – физического лица,подавшего уведомление, или по предоставленному налоговому органу адресу для направления по почте документов, которые используются налоговыми органами при реализации своих полномочий в отношениях, регулируемых законодательством о налогах и сборах", "2"),
+        new ("в многофункциональном центре предоставления государственных и муниципальных услуг (далее - МФЦ), через который подано настоящее уведомление, для чего выражаю согласие на передачу мне документов, составляющих налоговую тайну, на бумажном носителе через МФЦ", "3"),
+    };
+
+    IEnumerable<SelectListItem> numberTypeList = new List<SelectListItem>
+   {
+       new("кадастровый", "1"),
+       new("условный", "2"),
+       new("инвентарный", "3")
+   };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-sm-8 mx-auto"> 
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="CodeFNS">Налоговый орган</label>
+                    <select class="form-select select2-search required" asp-for="CodeFNS"
+                            data-fns-dictionary='{"dictionary":"null", "default_value":"@(Model.CodeFNS  == null || string.IsNullOrEmpty(Model.CodeFNS) ?  "" : Model.CodeFNS)"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="MethodInforming">Способ информирования</label>
+                    <select class="select2-nosearch" asp-items="@methodInforming" asp-for="MethodInforming"></select>
+                </div>
+            </div>
+            <br />
+            <h5 class="my-2">Жилой дом</h5>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="ResidentialBuilding!.DateStart">Начало применения налоговой льготы (месяц, год) </label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="ResidentialBuilding!.DateStart" type="text"
+                               class="form-control pickdate-short">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="ResidentialBuilding!.Region">Субъект РФ</label>
+                    <select class="select2-search" asp-for="ResidentialBuilding!.Region" data-value-value
+                            data-dictionary='{"dictionary":"FnsRegionCodes", "default_value":"@Model.ResidentialBuilding?.Region"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="ResidentialBuilding!.NumberType">Тип номера</label>
+                    <select class="select2-nosearch" asp-items="@numberTypeList" asp-for="ResidentialBuilding!.NumberType"></select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="ResidentialBuilding!.Number">Номер</label>
+                    <input type="text" class="form-control" asp-for="ResidentialBuilding!.Number">
+                </div>
+            </div>
+            <br />
+            <h5 class="my-2">Квартира</h5>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="Flat!.DateStart">Начало применения налоговой льготы (месяц, год) </label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Flat!.DateStart" type="text"
+                               class="form-control pickdate-short">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="Flat!.Region">Субъект РФ</label>
+                    <select class="select2-search" asp-for="Flat!.Region" data-value-value
+                            data-dictionary='{"dictionary":"FnsRegionCodes", "default_value":"@Model.Flat?.Region"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="Flat!.NumberType">Тип номера</label>
+                    <select class="select2-nosearch" asp-items="@numberTypeList" asp-for="Flat!.NumberType"></select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="Flat.Number">Номер</label>
+                    <input type="text" class="form-control" asp-for="Flat.Number">
+                </div>
+            </div>
+            <br />
+            <h5 class="my-2">Гараж</h5>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="Garage!.DateStart">Начало применения налоговой льготы (месяц, год) </label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Garage!.DateStart" type="text"
+                               class="form-control pickdate-short">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="Garage!.Region">Субъект РФ</label>
+                    <select class="select2-search" asp-for="Garage!.Region" data-value-value
+                            data-dictionary='{"dictionary":"FnsRegionCodes", "default_value":"@Model.Garage?.Region"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="Garage!.NumberType">Тип номера</label>
+                    <select class="select2-nosearch" asp-items="@numberTypeList" asp-for="Garage!.NumberType"></select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="Garage!.Number">Номер</label>
+                    <input type="text" class="form-control" asp-for="Garage!.Number">
+                </div>
+            </div>
+            <br />
+            <h5 class="my-2">Помещение или сооружение, указанные в подпункте 14 пункта 1 статьи 407 Налогового кодекса Российской Федерации</h5>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="Room!.DateStart">Начало применения налоговой льготы (месяц, год) </label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Room!.DateStart" type="text"
+                               class="form-control pickdate-short">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="Room!.Region">Субъект РФ</label>
+                    <select class="select2-search" asp-for="Room!.Region" data-value-value
+                            data-dictionary='{"dictionary":"FnsRegionCodes", "default_value":"@Model.Room?.Region"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="Room!.NumberType">Тип номера</label>
+                    <select class="select2-nosearch" asp-items="@numberTypeList" asp-for="Room!.NumberType"></select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="Room!.Number">Номер</label>
+                    <input type="text" class="form-control" asp-for="Room!.Number">
+                </div>
+            </div>
+            <br/>
+            <h5 class="my-2">Хозяйственное строение или сооружение, указанные в подпункте 15 пункта 1 статьи 407 Налогового кодекса Российской Федерации</h5>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="EconomicStructure!.DateStart">Начало применения налоговой льготы (месяц, год) </label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="EconomicStructure!.DateStart" type="text"
+                               class="form-control pickdate-short">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="EconomicStructure!.Region">Субъект РФ</label>
+                    <select class="select2-search" asp-for="EconomicStructure!.Region" data-value-value
+                            data-dictionary='{"dictionary":"FnsRegionCodes", "default_value":"@Model.EconomicStructure?.Region"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="EconomicStructure!.NumberType">Тип номера</label>
+                    <select class="select2-nosearch" asp-items="@numberTypeList" asp-for="EconomicStructure!.NumberType"></select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="EconomicStructure!.Number">Номер</label>
+                    <input type="text" class="form-control" placeholder="Номер" asp-for="EconomicStructure!.Number">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var regionCode = @Json.Serialize(Options.Value.Region);
+
+    $(function () {
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+
+        });
+
+        let options = {
+            clearIncomplete: true,
+            showMaskOnHover: false
+        };
+
+        additionalForm.find(".pickdate-short").datepicker({
+            format: "mm.yyyy",
+            startView: "months",
+            minViewMode: "months",
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.9999", options);
+    });
+
+    (function getDictionariesfns() {
+        let dicts = new Set();
+        $('[data-fns-dictionary]').each(function () {
+            let $this = $(this);
+            let options = $this.data('fns-dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post('/SmevFns/GetFnsDepartments', null,
+                    function (dictionary) {
+
+                        if (dictionary.error) return;
+                        dictionary.sort((prev, next) => {
+                            if (next.code.startsWith(`${regionCode}`)) {
+                                return 1;
+                            } else return -1;
+                        });
+
+                        fillSelectFns(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelectFns(dictName, dictionary) {
+        $.each($(`[data-fns-dictionary*='"${dictName}"']`),
+            function () {
+                let $this = $(this);
+                let items = dictionary;
+
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Не выбрано', ''));
+                }
+                if ($this.is('[data-value-value]')) {
+                    items.forEach(function (item) {
+                        $this.append(new Option(item.name, item.name))
+                    });
+                } else {
+                    items.forEach(function (item) {
+                        $this.append(new Option(item.name, item.code))
+                    });
+                }
+
+                if ($this.data('fns-dictionary').default_value) {
+                    let defVal = $this.data('fns-dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                } else {
+                    $this.val('').trigger('update');
+                }
+            });
+    }
+
+    (function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function () {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post(`/SmevBase/SmevGetDictionary`,
+                    {
+                        type: options.dictionary
+                    },
+                    function (dictionary) {
+                        if (dictionary.error) return;
+                        fillSelect(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function () {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Не выбрано', ''));
+                }
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if ($this.data('dictionary').default_value) {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                } else {
+                    $this.val('').trigger('update');
+                }
+            });
+    }
+</script>

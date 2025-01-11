@@ -1,0 +1,436 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+}
+
+<style>
+
+    .search-services {
+        background: #FFFFFF !important;
+        border-radius: .25rem !important;
+        border: 1px solid #D0D5DD !important;
+    }
+
+    .active-row {
+        border-left: 3px solid #5a8dee !important;
+    }
+
+    .table-service {
+        margin: 0 !important;
+    }
+
+        .table-service td {
+            padding: 0 !important;
+            margin-bottom: 1rem !important;
+        }
+
+    table.dataTable {
+        margin-top: 0 !important;
+    }
+
+    .pagination .page-item.previous .page-link {
+        display: none !important;
+    }
+
+    .pagination .page-item.next .page-link {
+        display: none !important;
+    }
+
+    .servcies-table__wrapper {
+        height: 63vh;
+    }
+
+        .servcies-table__wrapper table.dataTable thead tr {
+            display: none !important
+        }
+
+    .services-content__wrapper {
+        height: 70vh;
+    }
+
+</style>
+<!-- table -->
+<section id="content-datatable">
+    <div class="row">
+        <div class="col-3">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="b-s-16">Услуги</div>
+                        <div>
+                            @if (User.HasClaim(AccessKeyNames.ReferenceService, AccessKeyValues.Add))
+                            {
+                                <button data-btn-params='{"actionType":"@ActionType.Add"}' data-btn-type="add" data-for-table="@Model.TableName" type="button" class="btn btn-primary">
+                                    <i class="bi bi-plus"></i> Добавить
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <select id="selectOfficeFilter" class="form-select">@Html.Raw(ViewBag.OfficesProviders)</select>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="search-bar">
+                        <!-- input search -->
+                        <fieldset class="page-search-input input-group position-relative m-0">
+                            <input id="searchServices" type="search" class="form-control rounded-right search-services ps-2" placeholder="Поиск">
+                        </fieldset>
+                        <!--/ input search -->
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="table-responsive servcies-table__wrapper" id="services-table-wrapper">
+                        <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceService" class="table table-service table-no-border"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="card active-border" id="empty-table">
+                <div class="card-body">
+                    <div class="alert-custom" role="alert">
+                        <div class="b-s-16">Внимание</div>
+                        <div class="r-s-14">Выберите услугу</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card d-none" id="services-content__wrapper">
+                <div class="card-header border-0">
+                    <div id="menu-content-description" class="b-s-18"></div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-3">
+                            <partial name="Services/Details/_NavLeft" />
+                        </div>
+                        <div class="col-9 services-content__wrapper" id="navs-tabs-default"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts
+    {
+    <script>
+        const $table = $('#@(Model.TableName)'),
+            isCanAdd = true,
+            isCanEdit = true,
+            isCanRemove = true;
+
+        let $tableRowId = null;
+        let $tableActivities = null;
+        let tableBlancs = null;
+        let $tableCustomers = null;
+        let $tableDocuments = null;
+        let $tableFiles = null;
+        let $tableProcedures = null;
+        let $tableQualities = null;
+        let $tableServicesReason = null;
+        let $tableResults = null;
+        let $tableSmev = null;
+        let $tableStages = null;
+        let $tableTariffs = null;
+        let $tableServicesWayGet = null;
+        let $tableStagesRoles = null;
+        let $tableStagesChild = null;
+
+
+        const $updateInfo = () => {
+            $('[data-url-action]').first().click();
+        }
+
+        const showContentInfo = () => {
+            $("#empty-table").hide();
+            $("#services-content__wrapper").removeClass("d-none");
+        };
+        const hiddenContentInfo = () => {
+            $("#empty-table").show();
+            $("#services-content__wrapper").addClass("d-none");
+            $("#navs-tabs-default").empty();
+        };
+
+        $(document).ready(function () {
+            new PerfectScrollbar("#services-table-wrapper");
+            new PerfectScrollbar("#navs-tabs-default");
+
+            $table.DataTable({
+                sDom: "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-12'p>>",
+                processing: true,
+                serverSide: true,
+                filter: false,
+                ordering: false,
+                sorting: false,
+                pageLength: 10,
+                searchDelay: 1500,
+                ajax: {
+                    url: $table.data('action-table'),
+                    type: "POST",
+                    datatype: "json",
+                    data: function (data) {
+                        data['officeId'] = $('#selectOfficeFilter').val();
+                        data['search'] = $('#searchServices').val();
+                    }
+                },
+                initComplete: function () {
+
+                },
+                columns: [
+                    {
+                        name: 'services',
+                        orderable: false,
+                        render: function (data, type, row) {
+
+                            let contentBtn = "";
+                            if (isCanEdit === true) contentBtn += `<div class="col-4 my-1">` + EditBtn({ "id": row.id, "actionType": 1 }) + '</div>';
+                            if (isCanEdit === true) contentBtn += `<div class="col-4 my-1">` + CopyBtn({ "id": row.id }) + '</div>';
+                            if (isCanRemove === true) contentBtn += `<div class="col-4 my-1">` + DeleteBtn({ "id": row.id }) + '</div>';
+
+                            let service = row.serviceName.length > 170 ? row.serviceName.substring(0, 170) + ' ...' : row.serviceName;
+                            let isActiveRow = $tableRowId != null && $tableRowId === row.id;
+                            let content = `<div data-service-id="${row.id}" class="card cursor-pointer mb-3 ${isActiveRow === true ? "active-row" : ""}">
+                                                    <div class="card-body pb-0">
+                                               <div class="row">
+                                                    <div class="col-6">
+                                                        <span class="r-s-14">${row.mnemo}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12" data-service-name="${service}">
+                                                        <span class="b-s-14" data-bs-toggle="tooltip" title="${row.serviceName}">${service}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <span class="r-s-14">${row.officeName}</span>
+                                                    </div>
+                                                </div>
+                                               
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <span class="r-s-14">${row.sServicesTypeName}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <span class="r-s-14">${row.sServicesInteractionName}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row border-top-light">
+                                                    ${contentBtn}
+                                                </div>
+                                            </div>
+                                        </div>`;
+                            return content;
+                        }
+
+                    }
+                ]
+            }).on('click', '[data-service-id]', function (e) { serviceInfoView(e) });
+
+            $('#selectOfficeFilter').select2({
+                language: "ru",
+            }).on('change', function () {
+                $table.DataTable().ajax.reload();
+                return false;
+            });
+
+            $('#searchServices').on('input', function () {
+                if ($(this).val().length >= 4 || $(this).val().length == 0)
+                    $table.DataTable().ajax.reload();
+            });
+
+            function serviceInfoView(e) {
+                $('[data-service-id]').removeClass('active-row');
+                $(e.currentTarget).addClass('active-row');
+                activeRowsTableId();
+                showContentInfo();
+                let text = $(e.currentTarget).find('[data-service-name]').data('service-name');
+                $('#menu-content-description').html(text);
+                $('[data-url-action]').first().click();
+            };
+
+            $table.on("reload", () => {
+                $table.DataTable().ajax.reload(null, false);
+            });
+
+            $('[data-url-action]').click(function () {
+                $('[data-url-action]').removeClass('bg-light');
+                $('[data-url-action]').removeClass('r-a-16');
+                $(this).addClass('bg-light');
+                $(this).addClass('r-a-16');
+                var url = $(this).data('url-action');
+                let id = $tableRowId;
+                if (id === undefined) {
+                    hiddenContentInfo();
+                }
+                else {
+                    $.ajax({
+                        url: '/Reference/' + url,
+                        type: 'POST',
+                        data: { id: id },
+                        beforeSend: () => {
+                            $.pageBlock();
+                        },
+                        complete: () => {
+                            $.unblockUI();
+                        },
+                        success: function (content) {
+                            $('#navs-tabs-default').empty();
+                            $('#navs-tabs-default').html(content);
+                        }
+                    });
+                }
+            });
+
+            function activeRowsTableId() {
+                $tableRowId = $table.find('.active-row').data('service-id');
+            }
+
+            const EditBtn = (data) => {
+                const params = JSON.stringify(data);
+                return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="edit" data-bs-toggle="tooltip" title="Изменить" class="btn btn-sm btn-icon text-primary btn-outline-none">
+                                                    <i class="bi bi-pencil-square"></i>Изменить</a>`;
+            }
+
+            const DeleteBtn = (data) => {
+                const params = JSON.stringify(data);
+                return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="remove" data-bs-toggle="tooltip" title="Удалить" class="btn btn-sm btn-icon text-primary btn-outline-none">
+                                                    <i class="bi bi-trash"></i>Удалить</a>`;
+            }
+
+            const CopyBtn = (data) => {
+                const params = JSON.stringify(data);
+                return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="copy" data-action-copy="/Reference/ServiceСopy" data-bs-toggle="tooltip" title="Скопировать" class="btn btn-sm btn-icon text-primary btn-outline-none">
+                                                    <i class='bi bi-bookmarks'></i>Копировать</a>`;
+            }
+        });
+
+        $(document).on("click", "[data-service-remove-btn-type]", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            $parent = $(this).closest("table");
+            var params = $(this).data("btn-params");
+            var removeUrl = $parent.data("action-remove");
+            if (typeof removeUrl == "undefined") {
+                removeUrl = $(this).data("actionRemove");
+            };
+            Swal.fire({
+                title: 'Причина удаления записи',
+                input: 'textarea',
+                showCancelButton: true,
+                confirmButtonText: 'Удалить',
+                cancelButtonText: 'Отмена',
+                showLoaderOnConfirm: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary ms-2'
+                },
+                buttonsStyling: false,
+                returnInputValueOnDeny: true,
+                preConfirm: (comment) => {
+                    if (comment === '') {
+                        Swal.showValidationMessage(`Введите комменетарий`);
+                    } else {
+                        params.comment = comment;
+                        $.ajax({
+                            type: 'POST',
+                            url: removeUrl,
+                            data: params,
+                            async: false,
+                            beforeSend: () => {
+                                Swal.showLoading();
+                            },
+                            complete: () => {
+                                Swal.hideLoading();
+                            },
+                            success: (data) => {
+                                if ($parent.length > 0) {
+                                    $table.DataTable().ajax.reload(null, false);
+                                    $parent.trigger("reload");
+                                }
+                                else {
+                                    document.location.reload();
+                                }
+                            },
+                            error: (data, textStatus) => {
+                                $.notifi('error', 'Ошибка', data.responseText);
+                            }
+                        });
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((comment) => {
+
+            });
+        });
+
+        $(document).on("click", "[data-service-close-btn-type]", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            $parent = $(this).closest("table");
+            var params = $(this).data("btn-params");
+            var removeUrl = $parent.data("action-remove");
+            if (typeof removeUrl == "undefined") {
+                removeUrl = $(this).data("actionRemove");
+            };
+            Swal.fire({
+                title: 'Закрыть',
+                //input: 'textarea',
+                showCancelButton: true,
+                confirmButtonText: 'Да',
+                cancelButtonText: 'Отмена',
+                showLoaderOnConfirm: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary ms-2'
+                },
+                buttonsStyling: false,
+                returnInputValueOnDeny: true,
+                preConfirm: () => {
+                    $.ajax({
+                        type: 'POST',
+                        url: removeUrl,
+                        data: params,
+                        async: false,
+                        beforeSend: () => {
+                            Swal.showLoading();
+                        },
+                        complete: () => {
+                            Swal.hideLoading();
+                        },
+                        success: (data) => {
+                            if ($parent.length > 0) {
+                                $table.DataTable().ajax.reload(null, false);
+                                $parent.trigger("reload");
+                            }
+                            else {
+                                document.location.reload();
+                            }
+                        },
+                        error: (data, textStatus) => {
+                            $.notifi('error', 'Ошибка', data.responseText);
+                        }
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((comment) => {
+                //$.notifi('success', 'Готово', 'Запись успешно удалена');
+            });
+        });
+
+    </script>
+}

@@ -1,0 +1,1504 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.KBR.Federal.AssigningCancelingAddressModel
+@{
+    if (Model.AppliedDocumentList.Length == 0)
+        Model.AppliedDocumentList = new[] { new AisLogistics.App.Models.AdditionalForms.KBR.Federal.AssigningCancelingAddressModel.AppliedDocument() };
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="RegistrationNumber" class="form-label">
+                        Регистрационный номер
+                    </label>
+                    <input asp-for="RegistrationNumber" class="form-control" type="text">
+                </div>
+            </div>
+
+            <h5 class="my-2">Прошу в отношении объекта адресации:</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="AddressedObjectTypeId" id="AddressedObjectTypeId1" class="form-check-input" type="radio" value="1">
+                        <label for="AddressedObjectTypeId1" class="form-check-label">Земельный участок</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="AddressedObjectTypeId" id="AddressedObjectTypeId2" class="form-check-input" type="radio" value="2">
+                        <label for="AddressedObjectTypeId2" class="form-check-label">Сооружение</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="AddressedObjectTypeId" id="AddressedObjectTypeId3" class="form-check-input" type="radio" value="3">
+                        <label for="AddressedObjectTypeId3" class="form-check-label">Объект незавершенного строительства</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="AddressedObjectTypeId" id="AddressedObjectTypeId4" class="form-check-input" type="radio" value="4">
+                        <label for="AddressedObjectTypeId4" class="form-check-label">Здание</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="AddressedObjectTypeId" id="AddressedObjectTypeId5" class="form-check-input" type="radio" value="5">
+                        <label for="AddressedObjectTypeId5" class="form-check-label">Помещение</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12" checkBlock>
+                    <div class="form-check">
+                        <input asp-for="AddressApplicationTypeId" id="AddressApplicationTypeId1" class="form-check-input" type="radio" value="1">
+                        <label for="AddressApplicationTypeId1" class="form-check-label">Присвоить адрес</label>
+                    </div>
+                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                        <h6>В связи с:</h6>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div class="row mb-3">
+                                    <div class="col-12" checkBlock>
+                                        <div class="form-check">
+                                            <input asp-for="AssigningAddressReasonId" id="AssigningAddressReasonId1" class="form-check-input" type="radio" value="1">
+                                            <label for="AssigningAddressReasonId1" class="form-check-label">
+                                                Образованием земельного участка(ов) из земель, находящихся в государственной или муниципальной собственности
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                                        <div class="col-11 mb-2">
+                                            <label asp-for="LandPlotsAmount1" class="form-label">
+                                                Количество образуемых земельных участков
+                                            </label>
+                                            <input asp-for="LandPlotsAmount1" class="form-control" type="number">
+                                        </div>
+                                        <div class="col-11 mb-2">
+                                            <label asp-for="AdditionalInformation1" class="form-label">
+                                                Дополнительная информация
+                                            </label>
+                                            <input asp-for="AdditionalInformation1" class="form-control" type="number">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-12" checkBlock>
+                                        <div class="form-check">
+                                            <input asp-for="AssigningAddressReasonId" id="AssigningAddressReasonId2" class="form-check-input" type="radio" value="2">
+                                            <label for="AssigningAddressReasonId2" class="form-check-label">
+                                                Образованием земельного участка(ов) путем раздела земельного участка
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="LandPlotsAmount2" class="form-label">
+                                                    Количество образуемых земельных участков
+                                                </label>
+                                                <input asp-for="LandPlotsAmount2" class="form-control" type="number">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="CadastralNumber2" class="form-label">
+                                                    Кадастровый номер земельного участка, раздел которого осуществляется
+                                                </label>
+                                                <input asp-for="CadastralNumber2" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="Address2" class="form-label">
+                                                    Адрес земельного участка, раздел которого осуществляется
+                                                </label>
+                                                <input asp-for="Address2" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-12" checkBlock>
+                                        <div class="form-check">
+                                            <input asp-for="AssigningAddressReasonId" id="AssigningAddressReasonId3" class="form-check-input" type="radio" value="3">
+                                            <label for="AssigningAddressReasonId3" class="form-check-label">
+                                                Образованием земельного участка путем объединения земельных участков
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="LandPlotsAmount3" class="form-label">
+                                                    Количество объединяемых земельных участков
+                                                </label>
+                                                <input asp-for="LandPlotsAmount3" class="form-control" type="number">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="CadastralNumber3" class="form-label">
+                                                    Кадастровый номер объединяемого земельного участка
+                                                </label>
+                                                <input asp-for="CadastralNumber3" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="Address3" class="form-label">
+                                                    Адрес земельного участка, из которого осуществляется выдел
+                                                </label>
+                                                <input asp-for="Address3" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-12" checkBlock>
+                                        <div class="form-check">
+                                            <input asp-for="AssigningAddressReasonId" id="AssigningAddressReasonId4" class="form-check-input" type="radio" value="4">
+                                            <label for="AssigningAddressReasonId4" class="form-check-label">
+                                                Образованием земельного участка(ов) путем выдела из земельного участка
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="LandPlotsAmount4" class="form-label">
+                                                    Количество образуемых земельных участков (за исключением земельного участка, из которого осуществляется выдел)
+                                                </label>
+                                                <input asp-for="LandPlotsAmount4" class="form-control" type="number">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="CadastralNumber4" class="form-label">
+                                                    Кадастровый номер земельного участка, из которого осуществляется выдел
+                                                </label>
+                                                <input asp-for="CadastralNumber4" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="Address4" class="form-label">
+                                                    Адрес земельного участка, из которого осуществляется выдел
+                                                </label>
+                                                <input asp-for="Address4" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-12" checkBlock>
+                                        <div class="form-check">
+                                            <input asp-for="AssigningAddressReasonId" id="AssigningAddressReasonId5" class="form-check-input" type="radio" value="5">
+                                            <label for="AssigningAddressReasonId5" class="form-check-label">
+                                                Образованием земельного участка(ов) путем перераспределения земельных участков
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="LandPlotsAmount5" class="form-label">
+                                                    Количество образуемых земельных участков
+                                                </label>
+                                                <input asp-for="LandPlotsAmount5" class="form-control" type="number">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="LandPlotsAmount5" class="form-label">
+                                                    Количество земельных участков, которые перераспределяются
+                                                </label>
+                                                <input asp-for="LandPlotsRedistributedNumber" class="form-control" type="number">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="CadastralNumber5" class="form-label">
+                                                    Кадастровый номер земельного участка, который перераспределяется
+                                                </label>
+                                                <input asp-for="CadastralNumber5" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="Address5" class="form-label">
+                                                    Адрес земельного участка, который перераспределяется
+                                                </label>
+                                                <input asp-for="Address5" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-12" checkBlock>
+                                        <div class="form-check">
+                                            <input asp-for="AssigningAddressReasonId" id="AssigningAddressReasonId6" class="form-check-input" type="radio" value="6">
+                                            <label for="AssigningAddressReasonId6" class="form-check-label">
+                                                Строительством, реконструкцией здания, сооружения
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="ConstructionObjectName6" class="form-label">
+                                                    Наименование объекта строительства (реконструкции) в соответствии с проектной документацией
+                                                </label>
+                                                <input asp-for="ConstructionObjectName6" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="CadastralNumber6" class="form-label">
+                                                    Кадастровый номер земельного участка, на котором осуществляется строительство (реконструкция)
+                                                </label>
+                                                <input asp-for="CadastralNumber6" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="Address6" class="form-label">
+                                                    Адрес земельного участка, на котором осуществляется строительство (реконструкция)
+                                                </label>
+                                                <input asp-for="Address6" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-12" checkBlock>
+                                        <div class="form-check">
+                                            <input asp-for="AssigningAddressReasonId" id="AssigningAddressReasonId7" class="form-check-input" type="radio" value="7">
+                                            <label for="AssigningAddressReasonId7" class="form-check-label">
+                                                Подготовкой в отношении следующего объекта адресации документов, необходимых для осуществления государственного 
+                                                кадастрового учета указанного объекта адресации, в случае, если в соответствии с Градостроительным кодексом Российской 
+                                                Федерации, законодательством субъектов Российской Федерации о градостроительной деятельности для его строительства, 
+                                                реконструкции выдача разрешения на строительство не требуется
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="ConstructionObjectType" class="form-label">
+                                                    Тип здания, сооружения, объекта незавершенного строительства
+                                                </label>
+                                                <input asp-for="ConstructionObjectType" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="ConstructionObjectName7" class="form-label">
+                                                    Наименование объекта строительства (реконструкции) 
+                                                    (при наличии проектной документации указывается в соответствии с проектной документацией)
+                                                </label>
+                                                <input asp-for="ConstructionObjectName7" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="CadastralNumber7" class="form-label">
+                                                    Кадастровый номер земельного участка, на котором осуществляется строительство (реконструкция)
+                                                </label>
+                                                <input asp-for="CadastralNumber7" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="Address7" class="form-label">
+                                                    Адрес земельного участка, на котором осуществляется строительство (реконструкция)
+                                                </label>
+                                                <input asp-for="Address7" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-12" checkBlock>
+                                        <div class="form-check">
+                                            <input asp-for="AssigningAddressReasonId" id="AssigningAddressReasonId8" class="form-check-input" type="radio" value="8">
+                                            <label for="AssigningAddressReasonId8" class="form-check-label">
+                                                Переводом жилого помещения в нежилое помещение и нежилого помещения в жилое помещение
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="CadastralNumber8" class="form-label">
+                                                    Кадастровый номер помещения
+                                                </label>
+                                                <input asp-for="CadastralNumber8" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="Address8" class="form-label">
+                                                    Адрес помещения
+                                                </label>
+                                                <input asp-for="Address8" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-12" checkBlock>
+                                        <div class="form-check">
+                                            <input asp-for="AssigningAddressReasonId" id="AssigningAddressReasonId9" class="form-check-input" type="radio" value="9">
+                                            <label for="AssigningAddressReasonId9" class="form-check-label">
+                                                Образованием помещения(ий) в здании, сооружении путем раздела здания, сооружения
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                                        <div class="row">
+                                            <div class="form-check">
+                                                <input asp-for="PremiseFormationTypeId9" id="PremiseFormationTypeId91" class="form-check-input" type="radio" value="1">
+                                                <label for="PremiseFormationTypeId91" class="form-check-label">
+                                                    образование жилого помещения
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input asp-for="PremiseFormationTypeId9" id="PremiseFormationTypeId92" class="form-check-input" type="radio" value="2">
+                                                <label for="PremiseFormationTypeId92" class="form-check-label">
+                                                    образование нежилого помещения
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="PremiseAmount9" class="form-label">
+                                                    Количество образуемых помещений
+                                                </label>
+                                                <input asp-for="PremiseAmount9" class="form-control" type="number">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="CadastralNumber9" class="form-label">
+                                                    Кадастровый номер здания, сооружения
+                                                </label>
+                                                <input asp-for="CadastralNumber9" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="Address9" class="form-label">
+                                                    Адрес здания, сооружения
+                                                </label>
+                                                <input asp-for="Address9" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="AdditionalInformation9" class="form-label">
+                                                    Дополнительная информация
+                                                </label>
+                                                <input asp-for="AdditionalInformation9" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-12" checkBlock>
+                                        <div class="form-check">
+                                            <input asp-for="AssigningAddressReasonId" id="AssigningAddressReasonId10" class="form-check-input" type="radio" value="10">
+                                            <label for="AssigningAddressReasonId10" class="form-check-label">
+                                                Образованием помещения(ий) в здании, сооружении путем раздела помещения
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                                        <h6 class="my-2">Назначение помещения</h6>
+                                        <div class="row">
+                                            <div class="form-check">
+                                                <input asp-for="PremiseFormationTypeId10" id="PremiseFormationTypeId101" class="form-check-input" type="radio" value="1">
+                                                <label for="PremiseFormationTypeId101" class="form-check-label">
+                                                    жилое помещение
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input asp-for="PremiseFormationTypeId9" id="PremiseFormationTypeId102" class="form-check-input" type="radio" value="2">
+                                                <label for="PremiseFormationTypeId102" class="form-check-label">
+                                                    нежилое помещение
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="PremiseType" class="form-label">Вид помещения</label>
+                                                <input asp-for="PremiseType" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="PremiseAmount10" class="form-label">Количество помещений</label>
+                                                <input asp-for="PremiseAmount10" class="form-control" type="number">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="CadastralNumber10" class="form-label"> Кадастровый номер помещения, раздел которого осуществляется</label>
+                                                <input asp-for="CadastralNumber10" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="Address10" class="form-label">Адрес помещения, раздел которого осуществляется</label>
+                                                <input asp-for="Address10" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="AdditionalInformation10" class="form-label">
+                                                    Дополнительная информация
+                                                </label>
+                                                <input asp-for="AdditionalInformation10" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-12" checkBlock>
+                                        <div class="form-check">
+                                            <input asp-for="AssigningAddressReasonId" id="AssigningAddressReasonId11" class="form-check-input" type="radio" value="11">
+                                            <label for="AssigningAddressReasonId11" class="form-check-label">
+                                                Образованием помещения в здании, сооружении путем объединения помещений в здании, сооружении
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                                        <div class="row">
+                                            <div class="form-check">
+                                                <input asp-for="PremiseFormationTypeId11" id="PremiseFormationTypeId111" class="form-check-input" type="radio" value="1">
+                                                <label for="PremiseFormationTypeId111" class="form-check-label">
+                                                    образование жилого помещения
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input asp-for="PremiseFormationTypeId11" id="PremiseFormationTypeId112" class="form-check-input" type="radio" value="2">
+                                                <label for="PremiseFormationTypeId112" class="form-check-label">
+                                                    образование нежилого помещения
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="PremiseAmount11" class="form-label">
+                                                    Количество объединяемых помещений
+                                                </label>
+                                                <input asp-for="PremiseAmount11" class="form-control" type="number">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="CadastralNumber11" class="form-label">
+                                                    Кадастровый номер объединяемого помещения
+                                                </label>
+                                                <input asp-for="CadastralNumber11" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="Address11" class="form-label">
+                                                    Адрес объединяемого помещения
+                                                </label>
+                                                <input asp-for="Address11" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="AdditionalInformation11" class="form-label">
+                                                    Дополнительная информация
+                                                </label>
+                                                <input asp-for="AdditionalInformation11" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-12" checkBlock>
+                                        <div class="form-check">
+                                            <input asp-for="AssigningAddressReasonId" id="AssigningAddressReasonId12" class="form-check-input" type="radio" value="12">
+                                            <label for="AssigningAddressReasonId12" class="form-check-label">
+                                                Образованием помещения в здании, сооружении путем переустройства и (или) перепланировки мест общего пользования
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                                        <div class="row">
+                                            <div class="form-check">
+                                                <input asp-for="PremiseFormationTypeId12" id="PremiseFormationTypeId121" class="form-check-input" type="radio" value="1">
+                                                <label for="PremiseFormationTypeId121" class="form-check-label">
+                                                    образование жилого помещения
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input asp-for="PremiseFormationTypeId12" id="PremiseFormationTypeId122" class="form-check-input" type="radio" value="2">
+                                                <label for="PremiseFormationTypeId122" class="form-check-label">
+                                                    образование нежилого помещения
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="PremiseAmount12" class="form-label">
+                                                    Количество образуемых помещений
+                                                </label>
+                                                <input asp-for="PremiseAmount12" class="form-control" type="number">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="CadastralNumber12" class="form-label">
+                                                    Кадастровый номер здания, сооружения
+                                                </label>
+                                                <input asp-for="CadastralNumber12" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="Address12" class="form-label">
+                                                    Адрес здания, сооружения
+                                                </label>
+                                                <input asp-for="Address12" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 mb-2">
+                                                <label asp-for="AdditionalInformation12" class="form-label">
+                                                    Дополнительная информация
+                                                </label>
+                                                <input asp-for="AdditionalInformation12" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-check">
+                        <input asp-for="AddressApplicationTypeId" id="AddressApplicationTypeId2" class="form-check-input" type="radio" value="2">
+                        <label for="AddressApplicationTypeId2" class="form-check-label">Аннулировать адрес объекта регистрации</label>
+                    </div>
+                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="CountryName" class="form-label">
+                                    Наименование страны
+                                </label>
+                                <input asp-for="CountryName" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="SubjectRussianFederationName" class="form-label">Наименование субъекта Российской Федерации</label>
+                                <input asp-for="SubjectRussianFederationName" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="MunicipalityName" class="form-label">
+                                    Наименование муниципального района, городского округа или внутригородской территории 
+                                    (для городов федерального значения) в составе субъекта Российской Федерации
+                                </label>
+                                <input asp-for="MunicipalityName" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="SettlementName" class="form-label">Наименование поселения</label>
+                                <input asp-for="SettlementName" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="IntracityName" class="form-label">Наименование внутригородского района городского округа</label>
+                                <input asp-for="IntracityName" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="LocalityName" class="form-label">Наименование населенного пункта</label>
+                                <input asp-for="LocalityName" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="PlanningStructureElementName" class="form-label">Наименование элемента планировочной структуры</label>
+                                <input asp-for="PlanningStructureElementName" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="RoadNetworkElementName" class="form-label">Наименование элемента улично-дорожной сети</label>
+                                <input asp-for="RoadNetworkElementName" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="LandPlotNumber" class="form-label">Номер земельного участка</label>
+                                <input asp-for="LandPlotNumber" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="ConstructionObjectTypeAndNumber" class="form-label">
+                                    Тип и номер здания, сооружения или объекта незавершенного строительства
+                                </label>
+                                <input asp-for="ConstructionObjectTypeAndNumber" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="PremiseTypeAndNumber" class="form-label">
+                                    Тип и номер помещения, расположенного в здании или сооружении
+                                </label>
+                                <input asp-for="PremiseTypeAndNumber" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="PremiseFlatTypeAndNumber" class="form-label">
+                                    Тип и номер помещения в пределах квартиры (в отношении коммунальных квартир)
+                                </label>
+                                <input asp-for="PremiseFlatTypeAndNumber" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="AdditionalInfo" class="form-label">Дополнительная информация</label>
+                                <input asp-for="AdditionalInfo" class="form-control" type="text">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <h6 class="my-2">В связи с</h6>
+                                <div class="form-check">
+                                    <input asp-for="CancelingTypeId" id="CancelingTypeId1" class="form-check-input" type="radio" value="1">
+                                    <label for="CancelingTypeId1" class="form-check-label">
+                                        Прекращением существования объекта адресации
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="CancelingTypeId" id="CancelingTypeId2" class="form-check-input" type="radio" value="2">
+                                    <label for="CancelingTypeId2" class="form-check-label">
+                                        Отказом в осуществлении кадастрового учета объекта адресации по основаниям, указанным в пунктах 1 и 3 части 2 статьи
+                                        27 Федерального закона от 24 июля 2007 года № 221-ФЗ "О государственном кадастре недвижимости"
+                                        (Собрание законодательства Российской Федерации, 2007, № 31, ст. 4017; 2008, № 30, ст. 3597; 2009, № 52, ст. 6410; 2011,
+                                        № 1, ст. 47; № 49, ст. 7061; № 50, ст. 7365; 2012, № 31, ст. 4322; 2013, № 30, ст. 4083; официальный интернет-портал
+                                        правовой информации www.pravo.gov.ru, 23 декабря 2014 г.)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="CancelingTypeId" id="CancelingTypeId3" class="form-check-input" type="radio" value="3">
+                                    <label for="CancelingTypeId3" class="form-check-label">
+                                        Присвоением объекту адресации нового адреса
+                                    </label>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-11 mb-2">
+                                        <label asp-for="CancelingAdditionInformation" class="form-label">Дополнительная информация</label>
+                                        <input asp-for="CancelingAdditionInformation" class="form-control" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="my-2">Собственник объекта адресации</h5>
+            <div class="row mb-3">
+                <div class="col-12" checkBlock>
+                    <div class="form-check">
+                        <input asp-for="OwnerTypeId" id="OwnerTypeId1" class="form-check-input" type="radio" value="1">
+                        <label for="OwnerTypeId1" class="form-check-label">Физическое лицо</label>
+                    </div>
+                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerIndividualLastName" class="form-label">
+                                    Фамилия
+                                </label>
+                                <input asp-for="OwnerIndividualLastName" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerIndividualFirstName" class="form-label">
+                                    Имя
+                                </label>
+                                <input asp-for="OwnerIndividualFirstName" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerIndividualMiddleName" class="form-label">
+                                    Отчество
+                                </label>
+                                <input asp-for="OwnerIndividualMiddleName" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerIndividualInn" class="form-label">
+                                    ИНН
+                                </label>
+                                <input asp-for="OwnerIndividualInn" class="form-control" type="text">
+                            </div>
+                        </div>
+
+                        <h6 class="my-2">Документ, удостоверяющий личность</h6>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerIndividualDocumentType" class="form-label">Вид</label>
+                                <input asp-for="OwnerIndividualDocumentType" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerIndividualDocumentSeries" class="form-label">Серия</label>
+                                <input asp-for="OwnerIndividualDocumentSeries" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerIndividualDocumentNumber" class="form-label">Номер</label>
+                                <input asp-for="OwnerIndividualDocumentNumber" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4 ms-3 ps-4">
+                                <label asp-for="OwnerIndividualDocumentGivenDate" class="form-label">Дата выдачи</label>
+                                <input asp-for="OwnerIndividualDocumentGivenDate" class="form-control pickdate" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerIndividualDocumentGivenBy" class="form-label">Кем выдан</label>
+                                <input asp-for="OwnerIndividualDocumentGivenBy" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerIndividualAddress" class="form-label">Почтовый адрес</label>
+                                <input asp-for="OwnerIndividualAddress" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerIndividualPhone" class="form-label">Телефон для связи</label>
+                                <input asp-for="OwnerIndividualPhone" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerIndividualEMail" class="form-label">Адрес электронной почты</label>
+                                <input asp-for="OwnerIndividualEMail" class="form-control" type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-check">
+                        <input asp-for="OwnerTypeId" id="OwnerTypeId2" class="form-check-input" type="radio" value="2">
+                        <label for="OwnerTypeId2" class="form-check-label">
+                            Юридическое лицо лицо, в том числе орган государственной власти, иной государственный орган,
+                            орган местного самоуправления
+                        </label>
+                    </div>
+                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerLegalEntityFullName" class="form-label">Полное наименование</label>
+                                <input asp-for="OwnerLegalEntityFullName" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerLegalEntityInn" class="form-label">ИНН (для российского юридического лица)</label>
+                                <input asp-for="OwnerLegalEntityInn" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerLegalEntityKpp" class="form-label">КПП (для российского юридического лица)</label>
+                                <input asp-for="OwnerLegalEntityKpp" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerLegalEntityForeignCountry" class="form-label">Страна регистрации (инкорпорации) (для иностранного юридического лица)</label>
+                                <input asp-for="OwnerLegalEntityForeignCountry" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4 ms-3 ps-4">
+                                <label asp-for="OwnerLegalEntityForeignRegistrationDate" class="form-label">Дата регистрации (для иностранного юридического лица)и</label>
+                                <input asp-for="OwnerLegalEntityForeignRegistrationDate" class="form-control pickdate" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerLegalEntityForeignRegistrationNumber" class="form-label">Номер регистрации (для иностранного юридического лица)</label>
+                                <input asp-for="OwnerLegalEntityForeignRegistrationNumber" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerLegalEntityAddress" class="form-label">Почтовый адрес</label>
+                                <input asp-for="OwnerLegalEntityAddress" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerLegalEntityPhone" class="form-label">Телефон для связи</label>
+                                <input asp-for="OwnerLegalEntityPhone" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-11 mb-2">
+                                <label asp-for="OwnerLegalEntityEMail" class="form-label">Адрес электронной почты</label>
+                                <input asp-for="OwnerLegalEntityEMail" class="form-control" type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-check">
+                        <input asp-for="OwnerTypeId" id="OwnerTypeId3" class="form-check-input" type="radio" value="3">
+                        <label for="OwnerTypeId3" class="form-check-label">Вещное право на объект адресации</label>
+                    </div>
+                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                        <div class="form-check">
+                            <input asp-for="OwnerProprietaryTypeId" id="OwnerProprietaryTypeId1" class="form-check-input" type="radio" value="1">
+                            <label for="OwnerProprietaryTypeId1" class="form-check-label">право собственности</label>
+                        </div>
+                        <div class="form-check">
+                            <input asp-for="OwnerProprietaryTypeId" id="OwnerProprietaryTypeId2" class="form-check-input" type="radio" value="2">
+                            <label for="OwnerProprietaryTypeId2" class="form-check-label">право хозяйственного ведения имуществом на объект адресациии</label>
+                        </div>
+                        <div class="form-check">
+                            <input asp-for="OwnerProprietaryTypeId" id="OwnerProprietaryTypeId3" class="form-check-input" type="radio" value="3">
+                            <label for="OwnerProprietaryTypeId3" class="form-check-label">право оперативного управления имуществом на объект адресации</label>
+                        </div>
+                        <div class="form-check">
+                            <input asp-for="OwnerProprietaryTypeId" id="OwnerProprietaryTypeId4" class="form-check-input" type="radio" value="4">
+                            <label for="OwnerProprietaryTypeId4" class="form-check-label">право пожизненно наследуемого владения земельным участком</label>
+                        </div>
+                        <div class="form-check">
+                            <input asp-for="OwnerProprietaryTypeId" id="OwnerProprietaryTypeId5" class="form-check-input" type="radio" value="5">
+                            <label for="OwnerProprietaryTypeId5" class="form-check-label">право постоянного (бессрочного) пользования земельным участком</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="my-2">
+                Способ получения документов (в том числе решения о присвоении объекту адресации адреса или аннулирования его адреса, оригиналов ранее предоставленных
+                документов, решения об отказе в присвоении (аннулировании) объекту адресации адреса)
+            </h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="DocumentReceivingMethodId" id="DocumentReceivingMethodId1" class="form-check-input" type="radio" value="1">
+                        <label for="DocumentReceivingMethodId1" class="form-check-label">Лично</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="DocumentReceivingMethodId" id="DocumentReceivingMethodId2" class="form-check-input" type="radio" value="2">
+                        <label for="DocumentReceivingMethodId2" class="form-check-label">В многофункциональном центре</label>
+                    </div>
+                    <div class="col-12" checkBlock>
+                        <div class="form-check">
+                            <input asp-for="DocumentReceivingMethodId" id="DocumentReceivingMethodId3" class="form-check-input" type="radio" value="3">
+                            <label for="DocumentReceivingMethodId3" class="form-check-label">почтовым отправлением по адресу</label>
+                        </div>
+                        <div class="row mb-3 justify-content-end" checkBlockBody>
+                            <div class="row mb-3">
+                                <div class="col-11 mb-2">
+                                    <div class="row mb-3">
+                                        <div class="col-11 mb-2">
+                                            <input asp-for="DocumentReceivingByPostAddress" class="form-control" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="DocumentReceivingMethodId" id="DocumentReceivingMethodId4" class="form-check-input" type="radio" value="4">
+                        <label for="DocumentReceivingMethodId4" class="form-check-label">
+                            в личном кабинете единого портала государственных и муниципальных услуг, региональных порталов государственных и муниципальных услуг
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="DocumentReceivingMethodId" id="DocumentReceivingMethodId5" class="form-check-input" type="radio" value="5">
+                        <label for="DocumentReceivingMethodId5" class="form-check-label">
+                            в личном кабинете федеральной информационной адресной системы
+                        </label>
+                    </div>
+                    <div class="col-12" checkBlock>
+                        <div class="form-check">
+                            <input asp-for="DocumentReceivingMethodId" id="DocumentReceivingMethodId6" class="form-check-input" type="radio" value="6">
+                            <label for="DocumentReceivingMethodId6" class="form-check-label">
+                                на адрес электронной почты (для сообщения о получении заявления и документов)
+                            </label>
+                        </div>
+                        <div class="row mb-3 justify-content-end" checkBlockBody>
+                            <div class="row mb-3">
+                                <div class="col-11 mb-2">
+                                    <div class="row mb-3">
+                                        <div class="col-11 mb-2">
+                                            <input asp-for="DocumentReceivingByEMail" class="form-control" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="my-2">
+                Расписку в получении документа прошу:
+            </h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="ReceiptRecievingMethodId" id="ReceiptRecievingMethodId1" class="form-check-input" type="radio" value="1">
+                        <label for="ReceiptRecievingMethodId1" class="form-check-label">выдать лично</label>
+                    </div>
+                    <div class="col-12" checkBlock>
+                        <div class="form-check">
+                            <input asp-for="ReceiptRecievingMethodId" id="ReceiptRecievingMethodId2" class="form-check-input" type="radio" value="2">
+                            <label for="ReceiptRecievingMethodId2" class="form-check-label">направить почтовым отправлением по адресу</label>
+                        </div>
+                        <div class="row mb-3 justify-content-end" checkBlockBody>
+                            <div class="row mb-3">
+                                <div class="col-11 mb-2">
+                                    <div class="row mb-3">
+                                        <div class="col-11 mb-2">
+                                            <input asp-for="ReceiptReceivingByPostAddress" class="form-control" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="ReceiptRecievingMethodId" id="ReceiptRecievingMethodId3" class="form-check-input" type="radio" value="3">
+                        <label for="ReceiptRecievingMethodId3" class="form-check-label">не напрвлять</label>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="my-2">
+                Заявитель:
+            </h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="ApplicantTypeId" id="ApplicantTypeId1" class="form-check-input" type="radio" value="1">
+                        <label for="ApplicantTypeId1" class="form-check-label">
+                            собственник объекта адресации или лицо, обладающее иным вещевым правом на объект адресации
+                        </label>
+                    </div>
+                    <div class="col-12" checkBlock>
+                        <div class="form-check">
+                            <input asp-for="ApplicantTypeId" id="ApplicantTypeId2" class="form-check-input" type="radio" value="2">
+                            <label for="ApplicantTypeId2" class="form-check-label">
+                                представитель собственника объекта адресации или лица, обладающего иным вещевым правом на объект адресации
+                            </label>
+                        </div>
+                        <div class="row mb-3 justify-content-end" checkBlockBody>
+                            <div class="row mb-3">
+                                <div class="col-11 mb-2">
+                                    <div class="col-12" checkBlock>
+                                        <div class="form-check">
+                                            <input asp-for="ApplicantTypeId" id="ApplicantTypeId2" class="form-check-input" type="radio" value="2">
+                                            <label for="ApplicantTypeId2" class="form-check-label">
+                                                представитель собственника объекта адресации или лица, обладающего иным вещевым правом на объект адресации
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                                        <h5 class="my-2">физическое лицо</h5>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label asp-for="ApplicantIndividualLastName" class="form-label">фамилия</label>
+                                                <input asp-for="ApplicantIndividualLastName" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label asp-for="ApplicantIndividualFirstName" class="form-label">имя</label>
+                                                <input asp-for="ApplicantIndividualFirstName" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label asp-for="ApplicantIndividualMiddleName" class="form-label">отчество</label>
+                                                <input asp-for="ApplicantIndividualMiddleName" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label asp-for="ApplicantIndividualInn" class="form-label">ИНН</label>
+                                                <input asp-for="ApplicantIndividualInn" class="form-control" type="text">
+                                            </div>
+                                        </div>
+
+                                        <h6 class="my-2">
+                                            Документ, удостоверяющий личность
+                                        </h6>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label asp-for="ApplicantIndividualDocumentType" class="form-label">вид</label>
+                                                <input asp-for="ApplicantIndividualDocumentType" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label asp-for="ApplicantIndividualDocumentSeries" class="form-label">Серия</label>
+                                                <input asp-for="ApplicantIndividualDocumentSeries" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label asp-for="ApplicantIndividualDocumentNumber" class="form-label">Номер</label>
+                                                <input asp-for="ApplicantIndividualDocumentNumber" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label asp-for="ApplicantIndividualDocumentGivenDate" class="form-label">Дата выдачи</label>
+                                                <input asp-for="ApplicantIndividualDocumentGivenDate" class="form-control pickdate" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label asp-for="ApplicantIndividualDocumentGivenBy" class="form-label">Кем выдан</label>
+                                                <input asp-for="ApplicantIndividualDocumentGivenBy" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label asp-for="ApplicantIndividualAddress" class="form-label">Почтовый адрес</label>
+                                                <input asp-for="ApplicantIndividualAddress" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label asp-for="ApplicantIndividualPhone" class="form-label">Телефон для связи</label>
+                                                <input asp-for="ApplicantIndividualPhone" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label asp-for="ApplicantIndividualEMail" class="form-label">Адрес электронной почты </label>
+                                                <input asp-for="ApplicantIndividualEMail" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label asp-for="ApplicantIndividualRepresentativeDocumentInformation" class="form-label">
+                                                    Наименование и реквизиты документа, подтверждающего полномочия представителя
+                                                </label>
+                                                <input asp-for="ApplicantIndividualRepresentativeDocumentInformation" class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-11 mb-2">
+                                    <div class="col-12" checkBlock>
+                                        <div class="form-check">
+                                            <input asp-for="ApplicantTypeId" id="ApplicantTypeId2" class="form-check-input" type="radio" value="2">
+                                            <label for="ApplicantTypeId2" class="form-check-label">
+                                                представитель собственника объекта адресации или лица, обладающего иным вещевым правом на объект адресации
+                                            </label>
+                                        </div>
+
+                                        <div class="row mb-3 justify-content-end" checkBlockBody>
+                                            <div class="row mb-3">
+                                                <div class="col-11 mb-2">
+                                                    <div class="col-12" checkBlock>
+                                                        <div class="row mb-3 justify-content-end" checkBlockBody>
+                                                            <div class="form-check">
+                                                                <input asp-for="ApplicantSubTypeId" id="ApplicantSubTypeId1" class="form-check-input" type="radio" value="1">
+                                                                <label for="ApplicantSubTypeId1" class="form-check-label">физическое лицо</label>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantIndividualLastName" class="form-label">фамилия</label>
+                                                                    <input asp-for="ApplicantIndividualLastName" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantIndividualFirstName" class="form-label">имя</label>
+                                                                    <input asp-for="ApplicantIndividualFirstName" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantIndividualMiddleName" class="form-label">отчество</label>
+                                                                    <input asp-for="ApplicantIndividualMiddleName" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantIndividualInn" class="form-label">ИНН</label>
+                                                                    <input asp-for="ApplicantIndividualInn" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+
+                                                            <h6 class="my-2">
+                                                                Документ, удостоверяющий личность
+                                                            </h6>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantIndividualDocumentType" class="form-label">вид</label>
+                                                                    <input asp-for="ApplicantIndividualDocumentType" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantIndividualDocumentSeries" class="form-label">Серия</label>
+                                                                    <input asp-for="ApplicantIndividualDocumentSeries" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantIndividualDocumentNumber" class="form-label">Номер</label>
+                                                                    <input asp-for="ApplicantIndividualDocumentNumber" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantIndividualDocumentGivenDate" class="form-label">Дата выдачи</label>
+                                                                    <input asp-for="ApplicantIndividualDocumentGivenDate" class="form-control pickdate" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantIndividualDocumentGivenBy" class="form-label">Кем выдан</label>
+                                                                    <input asp-for="ApplicantIndividualDocumentGivenBy" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantIndividualAddress" class="form-label">Почтовый адрес</label>
+                                                                    <input asp-for="ApplicantIndividualAddress" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantIndividualPhone" class="form-label">Телефон для связи</label>
+                                                                    <input asp-for="ApplicantIndividualPhone" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantIndividualEMail" class="form-label">Адрес электронной почты </label>
+                                                                    <input asp-for="ApplicantIndividualEMail" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantIndividualRepresentativeDocumentInformation" class="form-label">
+                                                                        Наименование и реквизиты документа, подтверждающего полномочия представителя
+                                                                    </label>
+                                                                    <input asp-for="ApplicantIndividualRepresentativeDocumentInformation" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-12" checkBlock>
+                                                        <div class="form-check">
+                                                            <input asp-for="ApplicantSubTypeId" id="ApplicantSubTypeId2" class="form-check-input" type="radio" value="2">
+                                                            <label for="ApplicantSubTypeId2" class="form-check-label">юридическое лицо</label>
+                                                        </div>
+
+                                                        <div class="row mb-3 justify-content-end" checkBlockBody>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantLegalEntityFullName" class="form-label">Полное наименование</label>
+                                                                    <input asp-for="ApplicantLegalEntityFullName" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantLegalEntityKpp" class="form-label">
+                                                                        КПП (для российского юридического лица)
+                                                                    </label>
+                                                                    <input asp-for="ApplicantLegalEntityKpp" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantLegalEntityInn" class="form-label">
+                                                                        ИНН (для российского юридического лица)
+                                                                    </label>
+                                                                    <input asp-for="ApplicantLegalEntityInn" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantLegalEntityForeignCountry" class="form-label">
+                                                                        Страна регистрации (инкорпорации) (для иностранного юридического лица)
+                                                                    </label>
+                                                                    <input asp-for="ApplicantLegalEntityForeignCountry" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantLegalEntityForeignRegistrationDate" class="form-label">
+                                                                        Дата регистрации (для иностранного юридического лица)
+                                                                    </label>
+                                                                    <input asp-for="ApplicantLegalEntityForeignRegistrationDate" class="form-control pickdate" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantLegalEntityForeignRegistrationNumber" class="form-label">
+                                                                        Номер регистрации (для иностранного юридического лица)
+                                                                    </label>
+                                                                    <input asp-for="ApplicantLegalEntityForeignRegistrationNumber" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantLegalEntityAddress" class="form-label">Почтовый адрес</label>
+                                                                    <input asp-for="ApplicantLegalEntityAddress" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantLegalEntityPhone" class="form-label">Телефон для связи</label>
+                                                                    <input asp-for="ApplicantLegalEntityPhone" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantLegalEntityEMail" class="form-label">Адрес электронной почты</label>
+                                                                    <input asp-for="ApplicantLegalEntityEMail" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-12">
+                                                                    <label asp-for="ApplicantLegalEntityRepresentativeDocumentInformation" class="form-label">
+                                                                        Наименование и реквизиты документа, подтверждающего полномочия представителя
+                                                                    </label>
+                                                                    <input asp-for="ApplicantLegalEntityRepresentativeDocumentInformation" class="form-control" type="text">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <div id="appliedDocumentList" data-clone-list>
+            @for (var i = 0; i < Model.AppliedDocumentList.Length; i++)
+            {
+                <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                    <hr />
+                    <h6 class="my-2 title">Документ @(i + 1)</h6>
+                    <div class="row mb-1 align-items-center">
+                        <div class="col-6">
+                            <label class="form-label" asp-for="AppliedDocumentList[i].Name">Наименование</label>
+                            <input type="text" list="Docs" asp-for="AppliedDocumentList[i].Name" class="form-control">
+                        </div>
+                        <div class="col-2">
+                            <label class="form-label" asp-for="AppliedDocumentList[i].OriginalsAmount">Оригинал в кол-ве</label>
+                            <input type="number" min="0" asp-for="AppliedDocumentList[i].OriginalsAmount" class="form-control" />
+                        </div>
+                        <div class="col-2">
+                            <label class="form-label" asp-for="AppliedDocumentList[i].CopiesAmount">Копия в кол-ве</label>
+                            <input type="number" min="0" asp-for="AppliedDocumentList[i].CopiesAmount" class="form-control" />
+                        </div>
+                        <div class="col-1 mt-2">
+                            <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-2">
+                <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+            </div>
+        </div>
+        <hr />
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Документ 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-6">
+                <label class="form-label" asp-for="AppliedDocumentList[0].Name">Наименование</label>
+                <input type="text" class="form-control" asp-for="AppliedDocumentList[0].Name">
+            </div>
+            <div class="col-2">
+                <label asp-for="AppliedDocumentList[0].OriginalsAmount" class="form-label">Оригинал в кол-ве</label>
+                <input asp-for="AppliedDocumentList[0].OriginalsAmount" class="form-control" type="number">
+            </div>
+            <div class="col-2">
+                <label asp-for="AppliedDocumentList[0].CopiesAmount" class="form-label">Копия в кол-ве</label>
+                <input asp-for="AppliedDocumentList[0].CopiesAmount" class="form-control" type="number">
+            </div>
+            <div class="col-2 mt-4">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", { clearIncomplete: true, showMaskOnHover: false });
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        togleFields();
+    });
+
+    function togleFields() {
+        additionalForm.find('[checkBlock] input[type="radio"], [checkBlock] input[type="checkbox"]').each(function () {
+            let $block = $(this).closest('[checkBlock]');
+
+            if ($(this).is(':checked')) {
+                visibilityBlock($block.find('[checkBlockBody]'), false, false);
+            } else {
+                visibilityBlock($block.find('[checkBlockBody]'), true, true);
+            }
+        })
+    }
+
+    function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+        let $cloneList = additionalForm.find(`#${cloneListId}`);
+        let $original = originalBlock.find(`#${originalId}`);
+        let $cloneBlock = $original.clone(true);
+        let indexId = $cloneList.find('[data-clone]').length;
+        renameBlock($cloneBlock, indexId);
+        blockInit($cloneBlock);
+        $cloneList.append($cloneBlock);
+    }
+
+    function blockInit($block) {
+        visibilityBlock($block, false, false);
+
+        $block.find("input").each(function () {
+            $(this).val("");
+        });
+        $block.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+        });
+    }
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

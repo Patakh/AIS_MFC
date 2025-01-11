@@ -1,0 +1,393 @@
+﻿@using AisLogistics.App.ViewModels.Cases
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model AisLogistics.App.Models.DTO.Services.CaseNotificationsDto
+
+@{
+    int idx = 1;
+}
+
+<link rel="stylesheet" href="~/assets/css/case-details.css" asp-append-version="true" />
+
+<div class="case-notification">
+    <ul class="nav nav-tabs nav-justified" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active"
+               id="Phone-tab"
+               data-bs-toggle="tab"
+               data-bs-target="#Phone"
+               href="#"
+               role="tab"
+               aria-controls="Phone"
+               aria-selected="true">
+                Звонки
+               
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link"
+               id="SMS-tab"
+               data-bs-toggle="tab"
+               data-bs-target="#SMS"
+               href="#"
+               role="tab"
+               aria-controls="SMS"
+               aria-selected="false">
+                СМС
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content" data-bs-offset="0" tabindex="0">
+        <div id="Phone" class="tab-pane fade show active" role="tabpanel" aria-labelledby="Phone-tab">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Заявитель</th>
+                        <th>Дата</th>
+                        <th>Продол</th>
+                        <th>Сотрудник</th>
+                        @*<th>Статус</th>*@
+                        <th>
+                            <div class="dropdown">
+                                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                                    <i class='bi bi-telephone'></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    @if (Model.CaseApplicantPhoneDtos.Any())
+                                    {
+                                        @foreach (var request in Model.CaseApplicantPhoneDtos)
+                                        {
+                                            <li>
+                                                <div class="dropdown-item">
+                                                    <span class="align-middle">@request.ApplicantName</span>
+                                                    @if (@request.CustomerType == CustomerType.Applicant)
+                                                    {
+                                                        <span class="d-block">Заявитель</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="d-block">Представитель</span>
+                                                    }
+                                                    <span class="d-block align-middle">
+                                                        <a href="javascript:void(0);" class="align-middle" onclick="CallCustomerV3('@ViewBag.id','@request.Id','@request.Phone1')">@request.Phone1</a>
+                                                        <small>(основной)</small>
+                                                    </span>
+                                                    @if (request.Phone2 is not null)
+                                                    {
+                                                        <span class="d-block align-middle">
+                                                            <a href="javascript:void(0);" class="align-middle" onclick="CallCustomerV3('@ViewBag.id','@request.Id','@request.Phone2')">@request.Phone2</a><small>(дополнительный)</small>
+                                                        </span>
+                                                    }
+                                                </div>
+                                            </li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li>Нет данных</li>
+                                    }
+                                </ul>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @if (@Model.NotificationsDtos.Any(a=>a.Type==1))
+                    {
+                        @foreach (var request in Model.NotificationsDtos.Where(w=>w.Type==1))
+                        {
+                            <tr>
+                                <td>@(idx++)</td>
+                                <td>
+                                    @request.CustomerFio
+                                    <small>@request.CustomerPhone</small>
+                                </td>
+                                <td>@request.DateAdd</td>
+                                <td>@request.Period</td>
+                                <td>
+                                    @request.EmployeeAdd.Name
+                                    <small>@request.EmployeeAdd.Job</small>
+                                </td>
+                                @*<td>@request.Status</td>*@
+                                <td></td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7">
+                                <div class="alert alert-primary" role="alert">
+                                    <h6 class="alert-heading mb-1">Нет данных</h6>
+                                    <span>Оповещения отсутствуют</span>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div id="SMS" class="tab-pane fade p-0" role="tabpanel" aria-labelledby="SMS-tab">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Заявитель</th>
+                        <th>Дата</th>
+                        <th>Текст</th>
+                        <th>Сотрудник</th>
+                        @*<th>Статус</th>*@
+                        <th>
+
+                            <div class="dropdown">
+                                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                                    <i class='bi bi-chat-left-text'></i> 
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    @if (Model.CaseApplicantPhoneDtos.Any())
+                                    {
+                                        @foreach (var request in Model.CaseApplicantPhoneDtos)
+                                        {
+                                            <li>
+                                                <div class="dropdown-item">
+                                                    <span class="align-middle">@request.ApplicantName</span>
+                                                    @if (@request.CustomerType == CustomerType.Applicant)
+                                                    {
+                                                        <span class="d-block">Заявитель</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="d-block">Представитель</span>
+                                                    }
+                                                    <span class="d-block align-middle">
+                                                        <a href="javascript:void(0);" class="align-middle" onclick="SMSCustomer('@ViewBag.id','@request.ApplicantName','@request.Phone1')">@request.Phone1</a>
+                                                    <small>(основной)</small>
+                                                    </span>
+                                                    @if (request.Phone2 is not null)
+                                                    {
+                                                        <span class="d-block align-middle">
+                                                            <a href="javascript:void(0);" class="align-middle" onclick="SMSCustomer('@ViewBag.id','@request.ApplicantName','@request.Phone2')">@request.Phone2</a><small>(дополнительный)</small>
+                                                        </span>
+                                                    }
+                                                </div>
+                                            </li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li>Нет данных</li>
+                                    }
+                                </ul>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @if (@Model.NotificationsDtos.Any(a=>a.Type==2))
+                    {
+                        @foreach (var request in Model.NotificationsDtos.Where(w=>w.Type==2))
+                        {
+                            <tr>
+                                <td>@(idx++)</td>
+                                <td>
+                                    @request.CustomerFio
+                                    <small>@request.CustomerPhone</small>
+                                </td>
+                                <td>@request.DateAdd</td>
+                                <td>@request.TextMessage</td>
+                                <td>
+                                    @request.EmployeeAdd.Name
+                                    <div class="small">@request.EmployeeAdd.Job</div>
+                                </td>
+                                @*<td>@request.Status</td>*@
+                                <td></td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7">
+                                <div class="alert alert-primary" role="alert">
+                                    <h6 class="alert-heading mb-1">Нет данных</h6>
+                                    <span>Оповещения отсутствуют</span>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+@*@section Scripts
+    {*@
+  @*  <script src="~/assets/js/pages/case-details.js" asp-append-version="true"></script>*@
+    <script>
+        //var chatSidebarListWrapper = $(".chat-sidebar-list-wrapper"),
+        //    chatOverlay = $(".chat-overlay"),
+        //    chatContainer = $(".chat-container"),
+        //    chatSidebarProfileToggle = $(".chat-sidebar-profile-toggle"),
+        //    chatProfileToggle = $(".chat-profile-toggle"),
+        //    chatSidebarClose = $(".chat-sidebar-close"),
+        //    chatProfile = $(".chat-profile"),
+        //    chatUserProfile = $(".chat-user-profile"),
+        //    chatProfileClose = $(".chat-profile-close"),
+        //    chatSidebar = $(".chat-sidebar"),
+        //    chatArea = $(".chat-area"),
+        //    chatStart = $(".chat-start"),
+        //    chatSidebarToggle = $(".chat-sidebar-toggle"),
+        //    chatMessageSend = $(".chat-message-send"),
+        //    speechToText = $(".chat-message-1"),
+        //    sendingForm = $("#chatSendingForm"),
+        //    chatPickEmployees = {
+        //        el: $("#chatPickEmployees"),
+        //        selected: []
+        //    };
+
+        //const employeesPicker = {
+        //    set: (data) => {
+        //        chatPickEmployees.selected = data;
+        //        employeesPicker.toggleBadge();
+        //    },
+        //    get: () => {
+        //        return chatPickEmployees.selected;
+        //    },
+        //    toggleBadge: () => {
+        //        if (chatPickEmployees.selected.length > 0) {
+        //            chatPickEmployees.el.find(".badge").removeClass("d-none");
+        //        } else {
+        //            chatPickEmployees.el.find(".badge").addClass("d-none");
+        //        }
+        //    }
+        //}
+
+        //$(document).ready(function () {
+        //    "use strict";
+        //    // chat area perfect scrollbar initialization
+        //    if (chatContainer.length > 0) {
+        //        var chat_user_user = new PerfectScrollbar(".chat-container");
+        //        chatContainer.scrollTop($(".chat-container > .chat-content").height());
+        //    }
+
+        //    // menu toggle till medium screen
+        //    if ($(window).width() < 992) {
+        //        chatSidebarToggle.on("click",
+        //            function () {
+        //                chatSidebar.addClass("show");
+        //                chatOverlay.addClass("show");
+        //            });
+        //    }
+
+        //    // window resize
+        //    $(window).on("resize",
+        //        function () {
+        //            // remove show classes from overlay when resize, if size is > 992
+        //            if ($(window).width() > 992) {
+        //                if (chatOverlay.hasClass("show")) {
+        //                    chatOverlay.removeClass("show");
+        //                }
+        //            }
+        //            // menu toggle on resize till medium screen
+        //            if ($(window).width() < 992) {
+        //                chatSidebarToggle.on("click",
+        //                    function () {
+        //                        chatSidebar.addClass("show");
+        //                        chatOverlay.addClass("show");
+        //                    });
+        //            }
+        //            // disable on click overlay when resize from medium to large
+        //            if ($(window).width() > 992) {
+        //                chatSidebarToggle.on("click",
+        //                    function () {
+        //                        chatOverlay.removeClass("show");
+        //                    });
+        //            }
+        //        });
+        //});
+
+        //sendingForm.on("submit", () => {
+        //    if (chatPickEmployees.selected.length) {
+        //        chatPickEmployees.selected.forEach((item) => {
+        //            $("<input>").attr({ name: "employeesId", type: "hidden", value: item }).appendTo(sendingForm);
+        //        });
+        //    }
+        //    sendingForm.spinnerBtn("start");
+        //});
+
+        ////
+        //if (speechToText.length) {
+        //    // Speech To Text
+        //    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+        //    if (SpeechRecognition !== undefined && SpeechRecognition !== null) {
+        //        var recognition = new SpeechRecognition(),
+        //            listening = false;
+        //        speechToText.on('click',
+        //            function () {
+        //                var $this = $(this);
+        //                recognition.onspeechstart = function () {
+        //                    listening = true;
+        //                };
+        //                if (listening === false) {
+        //                    recognition.start();
+        //                }
+        //                recognition.onerror = function (event) {
+        //                    listening = false;
+        //                };
+        //                recognition.onresult = function (event) {
+        //                    $this.closest('.form-send-message').find('.message').val(event.results[0][0].transcript);
+        //                };
+        //                recognition.onspeechend = function (event) {
+        //                    listening = false;
+        //                    recognition.stop();
+        //                };
+        //            });
+        //    }
+        //}
+
+        function CallCustomerV3(id, customer_id, tel) {
+            $.ajax({
+                type: "GET",
+                url: "/Cases/CallPhoneV3",
+                data: { caseid: id, customerId: customer_id, phone: tel },
+                success: function (result) {
+                    if (typeof ws !== 'undefined') {
+                        ws.send(result);
+                    } else {
+                        var socket = new WebSocket("ws://localhost:8887");
+                        socket.onopen = function () {
+                            socket.send(result);
+                        };
+                        socket.onmessage = function (event) {
+                        }
+                    }
+                },
+                error: function (event) {
+                }
+            });
+        }
+
+    function SMSCustomer(id, customer_name, tel) {
+        let data = {};
+        data['CasesId'] = id;
+        data['CustomerName'] = customer_name;
+        data['CustomerPhone'] = tel;
+        $.ajax({
+            type: "Post",
+            url: "/Cases/CasesSMSAddModal",
+            data: {model: data},
+            success: function (content) {
+                $('#modalContainerOver').html(content).modal('show');
+            },
+            error: function (event) {
+            }
+        });
+    }
+
+    </script>
+@*}*@

@@ -1,0 +1,110 @@
+﻿@model _92_3_WithdrawalForeignResidenceModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">СВЕДЕНИИ О ЛИЦЕ, ПОДЛЕЖАЩЕМ СНЯТИЮ С РЕГИСТРАЦИИ ПО МЕСТУ ЖИТЕЛЬСТВА</h5>
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="FIO">ФИО</label>
+                    <input type="text" class="form-control" asp-for="FIO">
+                </div> 
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="BirthDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Citizenship">гражданство</label>
+                    <input type="text" class="form-control" asp-for="Citizenship">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ResidenceAddress">с регистрации по месту жительства по адресу</label>
+                    <input type="text" class="form-control" asp-for="ResidenceAddress">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FootingWithdrawal">Основание для снятия с регистрации по месту жительства</label>
+                    <textarea class="form-control" asp-for="FootingWithdrawal"></textarea>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="RightFootingWithdrawalDoc">Наименование и реквизиты документа, подтверждающего основание для снятия с регистрации по месту жительства</label>
+                    <textarea class="form-control" asp-for="RightFootingWithdrawalDoc"></textarea>
+                </div>
+            </div> 
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="RightDocLegal">Вид и реквизиты документа, подтверждающего полномочия представителя юридического лица</label>
+                    <textarea class="form-control" asp-for="RightDocLegal"></textarea>
+                </div>
+            </div> 
+        </div>
+    </div> 
+</div> 
+<script>
+    var additionalForm = $('#additional-data-content');
+    
+    $(function () {
+         
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+         
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+         
+    });
+ 
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

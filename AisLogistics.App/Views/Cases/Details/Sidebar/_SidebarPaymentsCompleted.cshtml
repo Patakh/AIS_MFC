@@ -1,0 +1,72 @@
+﻿@model ViewModelBuilder
+@{
+    var items = Model.Model as List<CaseServicePaymentsСompletedDto>;
+}
+
+<style>
+    .table-payments tr {
+        cursor: pointer;
+    }
+</style>
+
+<div class="case-scroll-area">
+    <div class="rounded-0">
+        <div class="mail-message-wrapper">
+            <div class="table-responsive mt-3">
+                <table class="table table-sm table-hover table-payments">
+                    <thead>
+                        <tr>
+                            <th>Способ платежа</th>
+                            <th>Сотрудник</th>
+                            <th>Плательщик</th>
+                            <th>Тип платежа</th>
+                            <th>Сумма</th>
+                            <th>Статус</th>
+                            <th>Дата</th>
+                            <th>Дата оплаты</th>
+                            <th class="text-end">
+                                <a asp-action="ServicePaymentsCreate" asp-route-id="@ViewBag.Id" data-bs-toggle="tooltip" title="Добавить" data-btn-type="modal">
+                                    <span class="action-icon favorite">
+                                        <i class="bi bi-plus bx-md"></i>
+                                    </span>
+                                </a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0 table-hover">
+                        @if (items.Any())
+                        {
+                            @foreach (var item in items)
+                            {
+                                <tr data-payments-id="@item.Id">
+                                    <td>@item.PaymentMethod</td>
+                                    <td>@item.EmployeeFio</td>
+                                    <td>@item.PayerFio</td>
+                                    <td>@item.TypePayment</td>
+                                    <td>@(item.Summa ?? decimal.Zero)</td>
+                                    <td>@item.Status</td>
+                                    <td>@item.DateAdd.ToString()</td>
+                                    <td>@(item.DatePayment.HasValue ? item.DatePayment.Value.ToString() : "-")</td>
+                                    <td class="text-end">
+                                      
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="9">
+                                    <div class="alert alert-primary" role="alert">
+                                        <h6 class="alert-heading mb-1">Нет данных</h6>
+                                        <span>Платежи отсутствуют</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

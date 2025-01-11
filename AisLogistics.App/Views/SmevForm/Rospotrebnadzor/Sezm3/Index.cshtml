@@ -1,0 +1,167 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new SendSezm3RequestData();
+}
+
+<style>
+    #smev_request td.is_selected {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-request-tabContent .tab-pane {
+        height: 550px;
+    }
+
+    #smev-data-form-content ul.address-list {
+        display: none;
+        width: 100%;
+        z-index: 1000;
+        position: absolute;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        background-clip: padding-box;
+    }
+
+        #smev-data-form-content ul.address-list li {
+            padding: 6px;
+        }
+
+            #smev-data-form-content ul.address-list li:hover {
+                color: white;
+                background-color: #5a8dee;
+                cursor: pointer
+            }
+</style>
+
+
+<div class="row g-3">
+    <div class="col-12 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Параметры запроса</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <label class="form-label" for="@request.IsPril">Передавать приложение в ответе</label>
+                <select class="form-select select2-nosearch" asp-for="@request.IsPril">
+                    <option value="true">Да</option>
+                    <option value="false" selected="selected">Нет</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-12 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Персональные данные заявителя</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center" id="flBlock">
+    <div class="col-8">
+        <div class="row mt-1">
+            <div class="col-12">
+                <label class="form-label">Заявители</label>
+                <select class="form-select select2-nosearch applicants">
+                    <option value="">Выберите заявителя</option>
+                    @for (int i = 0; i < applicants.Count; i++)
+                    {
+                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Inn">ИНН</label>
+                <input type="text" class="form-control inn" placeholder="ИНН" asp-for="@request.Inn" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Ogrn">ОГРН/ОГРН ИП</label>
+                <input type="text" class="form-control ogrn" placeholder="ОГРН/ОГРН ИП" asp-for="@request.Ogrn" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Number">Номер СЭЗ</label>
+                <input type="text" class="form-control" placeholder="Номер СЭЗ" asp-for="@request.Number" />
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.PartOfName">Часть названия фирмы-заявителя</label>
+                <input type="text" class="form-control" placeholder="Часть названия фирмы-заявителя" asp-for="@request.PartOfName" />
+            </div>
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.Serialnumb">Типографский номер бланка</label>
+                <input type="text" class="form-control" placeholder="Типографский номер бланка" asp-for="@request.Serialnumb" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ShowErrorInputs() {
+    }
+
+    var applicants = @Json.Serialize(applicants);
+
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                $(formContent).find('.required').each(function() {
+                    addValidation($(this));
+                });
+
+                let options = { clearIncomplete: true, showMaskOnHover: false };
+                $(formContent).find(".inn").inputmask("(9{10}|9{12})", options);
+                $(formContent).find(".ogrn").inputmask("(9{13}|9{15})", options);
+                $(formContent).find("[name$='Number']").inputmask("99.**.99.999.М.999999.99.99", options);
+                
+                $(formContent).find("select.select2-nosearch").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+
+                $('select.applicants').each(function() {
+                    $(this).on('change',
+                        function() {
+                            let id = $(this).val();
+                            let $block = $(formContent);
+                            $block.find('[type="text"]').each(function() {
+                                $(this).val('');
+                            });
+                            if (id) {
+                                $block.find('[name$="Inn"]').val(applicants[id].inn);
+                            }
+                        });
+                });
+            }
+        };
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+</script>

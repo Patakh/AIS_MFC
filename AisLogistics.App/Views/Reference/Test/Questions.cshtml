@@ -1,0 +1,141 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    ViewData["ActiveTabId"] = "questions";
+}
+
+<div class="row" id="content-test-questions">
+    <navtabs-top>
+        <nav-tab id="directions" target="@Url.Action("Directions", "Reference")">Направления</nav-tab>
+        <nav-tab id="questions" target="@Url.Action("Questions", "Reference")">Вопросы</nav-tab>
+    </navtabs-top>
+    <div class="row directory_names" id="navs-tabs-default">
+        <div class="col-12">
+            <div class="table-responsive mt-3">
+                <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceDocument" class="directory_names-items table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+    {
+    <script>
+        const $table = $('#@(Model.TableName)'),
+            isCanAdd = $table.is('[data-action-add]'),
+            isCanEdit = $table.is('[data-action-edit]'),
+            isCanRemove = $table.is('[data-action-remove]');
+
+        $(document).ready(function () {
+            $table.DataTable({
+                sDom: "<'row align-items-center'<'col-md-4'f><'col-sm-12 col-md-4'><'col mt-3 ms-auto text-end'<'#btnCreate'>>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                processing: true,
+                serverSide: true,
+                filter: true,
+                searching: true,
+                searchDelay: 1500,
+                ajax: {
+                    url: $table.data('action-table'),
+                    type: "POST",
+                    datatype: "json",
+                    dataSrc: function (json) {
+                        return json.data;
+                    }
+                },
+                initComplete: function () {
+                    
+                    $('#btnCreate').append(`<button data-btn-params='{"actionType":"@ActionType.Add"}' data-btn-type="add" data-for-table="@Model.TableName" type="button" class="btn btn-primary">
+                                                <i class="bi bi-plus"></i> Добавить
+                                            </button>`);
+
+                },
+                columnDefs: [
+                    {
+                        data: "id",
+                        targets: 0,
+                        title: '',
+                        visible: false,
+                        orderable: false
+                    },
+                    {
+                        targets: 1,
+                        title: "Наименование",
+                        orderable: false
+                    },
+                    {
+                        targets: 2,
+                        title: "Активность",
+                        orderable: false
+                    },
+                    {
+                        targets: 3,
+                        title: "Информация",
+                        orderable: false
+                    },
+                    {
+                        targets: -1,
+                        title: "Действия",
+                        data: "id",
+                        className: "text-center editor-edit",
+                        sorting: false,
+                        orderable: false
+                    }
+                ],
+                columns: [
+                    {},
+                    {
+                        data: "name",  
+                        render: function (data, type, row) {
+                            return `<div class="b-s-12">${data}</div>`;
+                        }
+                    },
+                    {
+                        data: "isActive",
+                        render: function (data, type, row) {
+                            return `<div class="text-center">${data === true ? '<i class="bi bi-check-circle text-success"></i>' : '<i class="bi bi-x-circle text-danger"></i>'}</div>`;
+                        }
+                    },
+                    {
+                        render: function (data, type, row) {
+                            return `<div class="fs-12">${row.employeesFioAdd}</div><small class="text-muted d-block">${row.dateAdd}</small>`;
+                        }
+                    },
+                    {
+                        render: function (data, type, row) {
+                            let content = "";
+                            if (isCanEdit === true)
+                                content += EditBtn({ "id": data, "actionType": 1 });
+                            //if (isCanRemove === true)
+                            //    content += DeleteBtn({ "id": data });
+                            return content;
+                        }
+                    }
+                ]
+            });
+            $table.on("reload", () => {
+                $table.DataTable().ajax.reload(null, false);
+            });
+            $table.on('draw.dt', function () {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl, {
+                        boundary: document.body
+                    });
+                });
+            });
+        });
+
+        const EditBtn = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="edit" data-bs-toggle="tooltip" title="Изменить" class="btn btn-sm btn-icon text-body">
+                                                <i class="bi bi-pencil-square"></i></a>`;
+        }
+        const DeleteBtn = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="remove" data-bs-toggle="tooltip" title="Удалить" class="btn btn-sm btn-icon text-danger">
+                                                <i class="bi bi-trash"></i></a>`;
+        }
+    </script>
+    }

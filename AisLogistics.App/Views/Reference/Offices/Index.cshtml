@@ -1,0 +1,207 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+}
+
+<style>
+    .search-applicant {
+        background: #FFFFFF !important;
+        border-radius: .25rem !important;
+        border: 1px solid #D0D5DD !important;
+    }
+
+    .table-officeType_wrapper {
+        height: 80vh;
+    }
+
+    .details-content-offices {
+        height: 100%;
+    }
+
+    .details-content_wrapper {
+        height: 70vh;
+    }
+
+    .table-left.dataTable {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+        .table-left.dataTable thead tr {
+            display: none !important
+        }
+
+        .table-left.dataTable tbody td {
+            padding: 0 !important;
+        }
+
+    .pagination .page-item.previous .page-link {
+        display: none !important;
+    }
+
+    .pagination .page-item.next .page-link {
+        display: none !important;
+    }
+
+    .light-style table.dataTable tbody > tr.selected {
+        background-color: #F9F9F9 !important
+    }
+
+        .light-style table.dataTable tbody > tr.selected > td > .card {
+            border-left: 3px solid #5a8dee !important;
+        }
+
+    .success, .danger, .warning {
+        padding: 4px 7px;
+        display: inline;
+        border-radius: 3px;
+        font-size: 12px;
+        white-space: nowrap
+    }
+
+    .details-content_wrapper table tr {
+        cursor: pointer
+    }
+
+</style>
+
+<!-- table -->
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-3">
+                    <div class="table-officeType_wrapper" id="datails-content-left">
+                        <div class="table-responsive">
+                            <table id="@Model.TableName" data-action-table="@Model.TableMethodAction" class="table table-left table-no-border mt-0"></table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-9">
+                    <div class="card active-border" id="details-content-empty">
+                        <div class="card-body">
+                            <div class="alert-custom" role="alert">
+                                <div class="b-s-16">Внимание</div>
+                                <div class="r-s-14">Выберите тип</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card details-content-offices d-none" id="details-content-right">
+                        <div class="card-header">
+                            <div class="b-s-18" id="card_title"></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 details-content_wrapper" id="details-content_info"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        const $table = $('#@(Model.TableName)');
+
+        let $tableOffices = null
+        let isCanAdd = null;
+        let isCanEdit = null;
+        let isCanRemove = null;
+        let EditBtn = null;
+        let DeleteBtn = null;
+
+        let officesTypeDetailsWrapperVisibility = {
+            show: () => {
+                $('#details-content-empty').hide();
+                $('#details-content-right').removeClass("d-none");
+                activeRowSelected();
+            },
+            hide: () => {
+                $('#details-content-empty').show();
+                $('#details-content-right').addClass("d-none");
+                $('#details-content_info').empty();
+                $('#card_title').empty();
+            }
+        };
+
+
+        function activeRowSelected() {
+            let selectedRow = $table.DataTable().rows({ selected: true }).data()[0];
+            if (selectedRow != null) {
+                let selectedId = selectedRow['id'];
+                let selectedName = selectedRow['name'];
+                $('#card_title').html(selectedName);
+                $.ajax({
+                    url: 'OfficesForType',
+                    type: 'POST',
+                    data: { type: selectedId },
+                    beforeSend: () => {
+                        $.pageBlock();
+                    },
+                    complete: () => {
+                        $.unblockUI();
+                    },
+                    success: function (content) {
+                        $('#details-content_info').empty();
+                        $('#details-content_info').html(content);
+                    }
+                });
+            }
+        }
+
+        $(document).ready(function () {
+
+            $table.DataTable({
+                sDom: "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-12'p>>",
+                processing: true,
+                serverSide: true,
+                ordering: false,
+                filter: true,
+                searchDelay: 1500,
+                select: {
+                    info: false
+                },
+                rowId: 'id',
+                ajax: {
+                    url: $table.data('action-table'),
+                    type: "POST",
+                    datatype: "json",
+                    data: function (data) {
+
+                    }
+                },
+                columns: [
+                    {
+                        title: '',
+                        name: 'officesType',
+                        render: function (data, type, row) {
+                            let content = `<div class="card cursor-pointer mb-3">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                            <div class="col"><span class="b-s-14">${row.name}</span></div>
+                                                        <div class="col-auto text-end">
+                                                            <span class="r-a-12">${row.count}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>`;
+                            return content;
+                        }
+                    },
+                ]
+            }).on('select', () => { officesTypeDetailsWrapperVisibility.show(); })
+              .on('deselect', () => { officesTypeDetailsWrapperVisibility.hide(); });;
+
+
+            new PerfectScrollbar("#datails-content-left");
+            new PerfectScrollbar("#details-content_info");
+
+
+            
+        });
+    </script>
+}

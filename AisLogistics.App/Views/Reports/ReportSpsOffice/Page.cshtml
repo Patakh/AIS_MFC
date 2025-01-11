@@ -1,0 +1,27 @@
+﻿@using AisLogistics.App.Models.Enums
+@using AisLogistics.App.Models.Reports
+@model string
+
+<form id="reportForm" asp-action="ReportData" asp-controller="Reports" method="get" role="form">
+    <div class="row">
+        <input type="hidden" name="id" value="@Model" />
+        <input type="hidden" name="method" value="@ReportsType.Sps" />
+        <input type="hidden" name="modelType" value="@typeof(ReportSpsOffice)" />
+        <div class="form-group col-3">
+            <label for="spsId" class="form-label">МФЦ</label>
+            <select id="spsId" name="spsId" class="form-select select2-search" disabled></select>
+        </div>
+        <div class="form-group col-3">
+            <label class="form-label" for="dateStart">Дата</label>
+            <div class="input-daterange input-group" id="date-range">
+                <input type="text" name="dateStart" id="report_date_start" class="form-control datepick" value="@DateTime.Now.AddDays(-1).ToShortDateString()">
+                <div class="input-group-append">
+                    <span class="input-group-text bg-primary h-100"><i class="bi bi-calendar3 text-white"></i></span>
+                </div>
+                <input type="text" name="dateStop" id="report_date_stop" class="form-control datepick" value="@DateTime.Now.AddDays(-1).ToShortDateString()">
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/assets/js/pages/reports.js" asp-append-version="true" type="text/javascript"></script>

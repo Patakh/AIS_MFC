@@ -1,0 +1,109 @@
+﻿@model ViewModelBuilder
+@{
+    var items = Model.Model as List<CaseServiceDocumentsResultsDto>;
+}
+ 
+<div class="case-app-details overflow-auto">
+    <div class="case-scroll-area ps">
+        <div class="mail-message-wrapper active" id="Results">
+            <div class="accordion" id="accordionWithIcon">
+                @if (items.Any())
+                {
+
+                    @foreach (var item in items)
+                    {
+
+                        <div class="accordion-item active border-bottom shadow-none rounded-0 pb-3 pt-3">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <div class="accordion-header mb-1 d-flex align-items-center">
+                                        <div type="button" class="accordion-button pb-0 pt-0 collapsed r-s-12" data-bs-toggle="collapse" data-bs-target="#doc_@item.Id" aria-expanded="false">
+                                            @item.DocumentName
+                                        </div>
+                                    </div>
+                                    <span class="align-items-center d-flex px-4">
+                                            @if (item.Result.HasValue && item.Result.Value)
+                                            {
+                                            <i class="bi bi-check-lg me-1 result-success"></i>
+                                            <span class="result-success">Положительный</span>
+                                            }else{
+                                            <i class="bi bi-x-lg me-1 result-danger"></i>
+                                            <span class="result-danger">Отрицательный</span>
+                                            }
+                                        <small class="r-l-12 ms-5">@item.Method</small>
+                                    </span>
+                                </div>
+                                <div class="col-sm-auto align-items-start justify-content-center me-3">
+                                    <a class="r-s-12 d-block mb-2" asp-action="ServiceDocumentResultAddModal" asp-route-id="@ViewBag.Id" asp-route-documentId="@item.Id" asp-route-fileAddType="Desktop" title="Загрузить" class="mb-2 d-block" data-btn-type="modal" role="button">
+                                        <i class="bi bi-upload me-1"></i>
+                                        Загрузить
+                                    </a>
+                                    <a class="r-s-12 d-block" asp-action="ServiceDocumentResultAddModal" asp-route-id="@ViewBag.Id" asp-route-documentId="@item.Id" asp-route-fileAddType="Scan" title="Сканировать" class="d-block" data-btn-type="modal" role="button">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none" class="me-1">
+                                            <path d="M12.6235 9.88777V13.3093H0.519531V9.88777H1.86442V11.9407H11.2786V9.88777H12.6235ZM0.519531 6.46627H12.6235V7.83487H0.519531V6.46627ZM12.6235 4.41338H11.2786V2.36048H1.86442V4.41338H0.519531V0.991882H12.6235V4.41338Z" fill="#B5B5B5" />
+                                        </svg>
+                                        Сканировать
+                                    </a>
+                                </div>
+                            </div>
+                            <div id="doc_@item.Id" class="accordion-collapse collapse">
+                                <div class="d-flex mt-3">
+                                    <div class="accordion-body d-flex flex-column py-0">
+                                        @if (item.Files.Any())
+                                        {
+                                            @foreach (var file in item.Files)
+                                            {
+                                                <div class="d-flex" data-action-remove="@Model.RemoveMethodAction">
+                                                    <a href="javascript:void(0);" class="btn btn-sm btn-icon d-flex me-3" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true"
+                                       title="<div>@file.EmployeeAdd.Name</div><div>@file.EmployeeAdd.Job</div><div>@(file.Size/1024) КБ</div><div>@file.DateAdd.ToShortDateString()</div>">
+                                                        <i class="bx bi-info-circle text-muted"></i>
+                                                    </a>
+                                                    @if (file.IsViewing)
+                                                    {
+                                                        <a asp-action="DownloadFileCase" asp-route-id="@file.Id" asp-route-type="@DocumentType.ServiceDocumentResult" class="text-muted me-3 viewing-file" data-bs-toggle="tooltip" title="Просмотр">
+                                                            <i class="bi bi-filetype-@(file.Extension.Substring(1)) me-1"></i>
+                                                            @($"{file.Name}{file.Extension}")
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a asp-action="DownloadFileCase" asp-route-id="@file.Id" asp-route-type="@DocumentType.ServiceDocumentResult" class="text-muted me-3" data-bs-toggle="tooltip" title="Скачать">
+                                                            <i class="bi bi-filetype-@(file.Extension.Substring(1)) me-1"></i>
+                                                            @($"{file.Name}{file.Extension}")
+                                                        </a>
+                                                    }
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="text-center text-muted small">Нет данных</div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- Detailed case Content ends -->
+<script>
+    $(function () {
+        const $dynamicGallery = document.getElementById('accordionWithIcon');
+        $dynamicGallery.addEventListener('lgBeforeOpen', (event) => {
+            $('[data-bs-toggle="tooltip"], .tooltip').tooltip("hide");
+        });
+        const dynamicGallery = lightGallery($dynamicGallery, {
+            selector: '.viewing-file'
+        });
+    });
+</script>

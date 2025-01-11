@@ -1,0 +1,108 @@
+﻿@model _10_UrbanPlanningPlanModel
+@{
+    IEnumerable<SelectListItem> landPlotLegalType = new List<SelectListItem>
+    {
+        new ("собственность", "собственность"),
+        new ("аренда", "аренда"),
+        new ("постоянное (бессрочное) пользование", "постоянное (бессрочное) пользование"),
+    };
+
+    IEnumerable<SelectListItem> response = new List<SelectListItem>
+    {
+        new ("вручить лично", "вручить лично"),
+        new ("направить по месту фактического проживания (месту нахождения) в форме документа на бумажном носителе", "направить по месту фактического проживания (месту нахождения) в форме документа на бумажном носителе"),
+    };
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="LandPlotAddress" class="form-label">адрес земельного участка</label>
+                    <input type="text" asp-for="LandPlotAddress" class="form-control">
+                </div>
+            </div> 
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="LandPlotLegalType" class="form-label">Вид права, на котором используется земельный участок  (собственность или аренда, постоянное (бессрочное) пользование и др.)</label>
+                    <select asp-items="@landPlotLegalType" class="form-select select2-nosearch" asp-for="LandPlotLegalType"></select>
+                </div>
+            </div>  
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="LandPlotRekrizits" class="form-label">реквизиты документа, удостоверяющего право, на котором заявитель использует земельный участок</label>
+                    <input type="text" asp-for="LandPlotRekrizits" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label asp-for="LandPlotArrea" class="form-label">Площадь земельного участка</label>
+                    <input type="text" asp-for="LandPlotArrea" class="form-control">
+                </div> 
+                <div class="col-6">
+                    <label asp-for="LandPlotKadastrNumber" class="form-label">Кадастровый номер земельного участка</label>
+                    <input type="text" asp-for="LandPlotKadastrNumber" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="Response" class="form-label">
+                        Результат предоставления  (вручить лично, направить по месту фактического проживания (месту нахождения) в форме документа на бумажном носителе)
+                    </label>
+                    <select asp-items="@response" class="form-select select2-nosearch" asp-for="Response"></select>
+                </div>
+            </div> 
+        </div>
+    </div> 
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content'); 
+
+    $(function () {
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+
+        });
+         
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+          
+    });
+      
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

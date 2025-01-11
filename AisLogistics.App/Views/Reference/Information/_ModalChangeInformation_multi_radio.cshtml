@@ -1,0 +1,270 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.InformationModelDto
+
+<form asp-controller="Reference" asp-action="InformationSave" id="sendingForm" method="post" role="form">
+    <div class="form-body pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="DateStart">Дата начала</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input type="text" asp-for="DateStart" value="@DateTime.Now.ToString("dd.MM.yyyy")" class="form-control datepicker" placeholder="ДД.ММ.ГГГГ">
+                    </div>
+                </div>
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="DateStop">Дата окончания</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input type="text" asp-for="DateStop" class="form-control datepicker" placeholder="ДД.ММ.ГГГГ">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SInformationTypeId">Тип</label>
+                    <select asp-for="SInformationTypeId" asp-items="@ViewBag.InformationTypes" class="form-control">
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="InformationTopic">Тема</label>
+                    <input asp-for="InformationTopic" class="form-control" placeholder="Тема">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="InformationText">Текст</label>
+                    <textarea asp-for="InformationText" class="form-control char-textarea" rows="3" placeholder="Текст"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label">Получатели</label>
+                    <select id="recievers" name="recievers" asp-items="@ViewBag.Offices" class="select2 form-select form-select-lg" multiple="multiple" data-allow-clear="true">
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+            <div class="col-12 mb-3">
+                <input type="hidden" id="fileName" name="fileName" value="" />
+                <div id="dropFrm" enctype="multipart/form-data" data-toggle="dropzone" class="dropzone needsclick">
+                    <div class="dz-message needsclick">
+                        Перетащите файл сюда или нажмите, чтобы загрузить
+                    </div>
+                    <div class="fallback">
+                        <input name="AddedFile" type="file" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    var formatResult = function(item)
+    {   
+        if (!item.id) 
+        {
+          return item.text;
+        }
+
+        //console.log(item)
+        var kvArr = item.id.split(':');
+
+        var title = item.element.parentElement.label;
+
+        var $item = $('<span></span>'); 
+
+        if (item.selected === true) {
+            $item.append(`<input type="radio" id="${kvArr[1]}btn" name="${kvArr[0]}" value="${kvArr[1]}" checked="checked"><label for="${kvArr[1]}btn" class="ms-1">${item.text}</label>`);
+        }
+        else { 
+            $item.append(`<input type="radio" id="${kvArr[1]}btn" name="${kvArr[0]}" value="${kvArr[1]}"><label for="${kvArr[1]}btn" class="ms-1">${item.text}</label>`);
+        }
+
+        return $item;
+    };
+
+    var formatSelection = function(data)
+    {
+        if (!data.id) 
+        {
+          return data.text;
+        }
+
+        var title = data.element.parentElement.label;
+
+        //new_data = $.grep($('#recievers').select2('data'), function (value) {
+        //    return value['id'] != id_to_remove;
+        //});
+        //$('#recievers').select2('data', new_data);
+
+        var $item = `${data.element.parentElement.label} (${data.text})`;
+
+        return $item;
+    };
+
+    function modelMatcher(params, data) {
+        data.parentText = data.parentText || "";
+
+        // Always return the object if there is nothing to compare
+        if ($.trim(params.term) === '') {
+            return data;
+        }
+
+        // Do a recursive check for options with children
+        //if (data.children && data.children.length > 0) {
+        //    // Clone the data object if there are children
+        //    // This is required as we modify the object to remove any non-matches
+        //    var match = $.extend(true, {}, data);
+
+        //    // Check each child of the option
+        //    for (var c = data.children.length - 1; c >= 0; c--) {
+        //        var child = data.children[c];
+        //        child.parentText += data.parentText + " " + data.text;
+
+        //        var matches = modelMatcher(params, child);
+
+        //        // If there wasn't a match, remove the object in the array
+        //        if (matches == null) {
+        //            match.children.splice(c, 1);
+        //        }
+        //    }
+
+        //    // If any children matched, return the new object
+        //    if (match.children.length > 0) {
+        //        return match;
+        //    }
+
+        //    // If there were no matching children, check just the plain object
+        //    return modelMatcher(params, match);
+        //}
+
+        // If the typed-in term matches the text of this term, or the text from any
+        // parent term, then it's a match.
+        var original = (data.parentText + ' ' + data.text).toUpperCase();
+        var term = params.term.toUpperCase();
+
+        // Check if the text contains the term
+        if (original.indexOf(term) > -1) {
+            return data;
+        }
+
+        // If it doesn't contain the term, don't return anything
+        return null;
+    }
+    
+
+    $(document).ready(function() {
+        $('#SInformationTypeId').select2({dropdownParent: $('#mainModal'), minimumResultsForSearch: -1});
+        
+        $('#recievers').select2(
+        { 
+             dropdownParent: $('#mainModal'),
+             templateResult: formatResult,
+             //escapeMarkup: function(markup) { return markup; },
+             matcher: modelMatcher,
+             templateSelection: formatSelection,
+             selectOnClose: true,
+        }).on("select2:select", function(e) { 
+            var data = e.params.data;
+            var kvArr = data.id.split(':');
+            var itemToRemove = `${kvArr[0]}:${kvArr[1] === 'all' ? 'active' : 'all'}`;
+            
+            //new_data = $.grep($('#recievers').select2('data'), function (value) {
+            //    return value['id'] != itemToRemove;
+            //});
+        
+            //console.log(new_data)
+        
+            var optionToRemove = $('#recievers option[value="'+ itemToRemove +'"]');
+            optionToRemove.prop('selected', false);
+            $('#recievers').trigger('change.select2');
+        
+        
+            //$('#recievers').val(null);
+            //$('#recievers').append(new_data);
+            //$('#recievers').select2('data', new_data);
+            //$('#recievers').select2({data: new_data});
+            //$('#recievers').trigger('change.select2');
+            //$('#recievers').trigger('change');
+        
+            //$('#recievers').val(itemToRemove).trigger('change');
+        });
+
+        var $dateinputs = $('.datepicker');
+        $dateinputs.datepicker({
+            language: "ru",
+            autoclose: true,
+            format: 'dd.mm.yyyy'
+        });
+        $dateinputs.inputmask("datetime", { inputFormat: "dd.mm.yyyy", "clearIncomplete": true, showMaskOnHover: false, insertmode: true });
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    InformationTopic: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    InformationText: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }) .on('core.form.valid', function() {
+            var $form = $("#sendingForm");
+            $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $table.DataTable().ajax.reload(null, false);
+                        $form.spinnerBtn("stop");
+                        $("#mainModal").modal('hide');
+                    }
+                });
+            return false;
+        });
+
+        var defOpts = { clearIncomplete: false, showMaskOnHover: false };
+        var defOptsCI = { clearIncomplete: true, showMaskOnHover: false };
+
+        $('#OfficeCountPopulation').inputmask("99999", defOpts);
+        $('#OfficePhoneNumber').inputmask("+7 (999) 999-99-99", defOptsCI);
+        $('#OfficeInn').inputmask("9999999999", defOpts);
+        $('#OfficeKpp').inputmask("999999999", defOpts);
+        $('#OfficeOgrn').inputmask("9999999999999", defOpts);
+        $('#OfficeOkato').inputmask("99999999999", defOpts); //11 символов
+        $('#OfficeOktmo').inputmask("99999999", defOpts); //8 символов
+
+        $('#OfficeEmail').inputmask("email", defOpts);
+        $('#OfficeEmailLogin').inputmask("email", defOpts);
+    });
+</script>

@@ -1,0 +1,53 @@
+﻿@using AisLogistics.DataLayer.Common.Dto.Reference
+@model CalendarDateModelDto
+@{
+}
+<form asp-controller="Reference" asp-action="CalendarSave" id="sendingForm" method="post" role="form">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="Start" />
+    <div class="form-body pt-1 pb-4">
+        <fieldset>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2>@Model.Start.ToString("d MMMM yyyy г.")</h2>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="DateType">Тип даты</label>
+                    <select asp-for="DateType" asp-items="Html.GetEnumSelectList<CalendarDateType>()" class="form-control"></select>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+<script>
+    $(function(){
+        $('#sendingForm select').select2({
+            dropdownParent: $("#mainModal"),
+            minimumResultsForSearch: -1
+        });
+        var $form = $("#sendingForm");
+        $form.on('submit', function()
+        {
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                dataType: 'json',
+                beforeSend: () => {
+                    $form.spinnerBtn("start");
+                },
+                complete: () => {
+                    $form.spinnerBtn("stop");
+                    //TODO refresh calendar
+                    $("#mainModal").modal('hide');
+                    $(document).trigger('refetch');
+                }
+            });
+
+            return false;
+        });
+    });
+</script>

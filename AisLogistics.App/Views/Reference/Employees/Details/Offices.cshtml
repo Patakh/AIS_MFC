@@ -1,0 +1,158 @@
+﻿@model ViewModelBuilder
+@{
+    string Id = ViewData["Id"]?.ToString() ?? string.Empty;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                @if (Model.IsVisibleDescription)
+                {
+                    <div class="b-s-14">@Model.ViewDescription</div>
+                }
+            </div>
+
+            <div class="col-6 pull-right">
+                @if (User.HasClaim(AccessKeyNames.ReferenceEmployee, AccessKeyValues.Add))
+                {
+                    <div class="col-auto text-md-end">
+                        <a href="javascript:void(0);" data-btn-params='{"actionType":"@ActionType.Add", "employeeId" : "@Id" }' data-btn-type="add" data-for-table="@Model.TableName" class="r-a-14">
+                            <i class="bi bi-plus"></i> Добавить
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive mt-3">
+                    <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceEmployee" class="directory_names-items table table-striped"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $tableEmployeeOfficesActivities = $('#@(Model.TableName)');
+
+    $(document).ready(function () {
+        let isCanAddOffices = $tableEmployeeOfficesActivities.is('[data-action-add]'),
+            isCanEditOffices = $tableEmployeeOfficesActivities.is('[data-action-edit]'),
+            isCanRemoveOffices = $tableEmployeeOfficesActivities.is('[data-action-remove]');
+
+        $tableEmployeeOfficesActivities.DataTable({
+            sDom: "<'row'<'col-sm-12 col-md-6 'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            processing: true,
+            searching: false,
+            serverSide: true,
+            filter: true,
+            searchDelay: 1500,
+            ajax: {
+                url: $tableEmployeeOfficesActivities.data('action-table'),
+                type: "POST",
+                datatype: "json",
+                dataSrc: function (json) {
+                    return json.data;
+                }
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    title: 'Активно',
+                    className: 'text-center',
+                    orderable: false
+                },
+                {
+                    targets: 2,
+                    title: 'Офис',
+                    orderable: false
+                },
+                {
+                    targets: 3,
+                    title: 'Дата начала',
+                    orderable: false
+                },
+                {
+                    targets: 4,
+                    title: 'Дата окончания',
+                    orderable: false
+                },
+                {
+                    targets: 5,
+                    title: 'Сотрудник',
+                    orderable: false
+                }
+            ],
+            columns: [
+                {},
+                {
+                    data: "isOfficesActive",
+                    render: function (data, type, row) {
+                        return `${data === true ? '<i class="bi bi-check-circle text-success"></i>' : '<i class="bi bi-x-circle text-danger"></i>'}`;
+                    }
+                },
+                { data: "officeName" },
+                { data: "dateStart" },
+                {
+                    data: "dateStop",
+                    render: function (data, type, row) {
+                        if (data != null) {
+                            return data;
+                        }
+                        else if (isCanRemoveOffices === true) {
+                            return CloseBtnOffices({ "id": row.id });
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                },
+                {
+                    data: "employeesFioAdd",
+                    render: function (data, type, row) {
+                        let content = `${data}<div class="m-s-12">${row.dateAdd}</div>`;
+                        if (row.isRemoveActive && isCanRemoveOffices === true) {
+                            content += DeleteBtnOffices({ "id": row.id, "isRemove": true })
+                        }
+
+                        return content;
+                    }
+                }
+            ]
+        });
+        $tableEmployeeOfficesActivities.on("reload", () => {
+            $tableEmployeeOfficesActivities.DataTable().ajax.reload(null, false);
+        });
+
+        $tableEmployeeOfficesActivities.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        const CloseBtnOffices = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-employee-close-btn-type class="">Закрыть</a>`;
+        }
+
+        const DeleteBtnOffices = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-employee-remove-btn-type class="text-danger">Удалить</a>`;
+        }
+    });
+</script>
+

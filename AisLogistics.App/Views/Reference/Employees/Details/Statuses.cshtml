@@ -1,0 +1,153 @@
+﻿@model ViewModelBuilder
+@{
+    string Id = ViewData["Id"]?.ToString() ?? string.Empty;
+    bool isRemove = User.HasClaim(AccessKeyNames.ReferenceEmployee, AccessKeyValues.Remove);
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                @if (Model.IsVisibleDescription)
+                {
+                    <div class="b-s-14">@Model.ViewDescription</div>
+                }
+            </div>
+
+            <div class="col-6 pull-right">
+                @if (User.HasClaim(AccessKeyNames.ReferenceEmployee, AccessKeyValues.Add))
+                {
+                    <div class="col-auto text-md-end">
+                        <a asp-controller="Reference" asp-action="EmployeeStatusChangeModal" asp-route-employeeId="@Id" asp-route-actionType="@ActionType.Add" data-btn-type="modal" class="r-a-14">
+                            <i class="bi bi-plus"></i> Добавить
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive mt-3">
+                    <table id="@Model.TableName" data-action-table="@Model.TableMethodAction" data-action-edit="@Model.EditMethodAction" data-action-remove="@Model.RemoveMethodAction" class="directory_names-items table table-striped"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $tableStatuses = $('#@(Model.TableName)');
+
+    $(document).ready(function () {
+       
+        let isCanAddStatuses = $tableStatuses.is('[data-action-add]'),
+            isCanEditStatuses = $tableStatuses.is('[data-action-edit]'),
+            isCanRemoveStatuses = $tableStatuses.is('[data-action-remove]');
+
+        $tableStatuses.DataTable({
+            sDom: "<'row'<'col-sm-12 col-md-6 'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            processing: true,
+            searching: false,
+            serverSide: true,
+            filter: true,
+            searchDelay: 1500,
+            ajax: {
+                url: $tableStatuses.data('action-table'),
+                type: "POST",
+                datatype: "json",
+                dataSrc: function (json) {
+                    return json.data;
+                }
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    title: 'Статус',
+                    orderable: false
+                },
+                {
+                    targets: 2,
+                    title: 'Дата начала',
+                    orderable: false
+                },
+                {
+                    targets: 3,
+                    title: 'Дата окончания',
+                    orderable: false
+                },
+                {
+                    targets: 4,
+                    title: 'Сотрудник',
+                    orderable: false
+                },
+                {
+                    targets: 5,
+                    title: 'Комментарий',
+                    orderable: false
+                },
+                    
+            ],
+            columns: [
+                {},
+                { data: "statusName" },
+                { data: "dateStart" },
+                {
+                    data: "dateStop",
+                    render: function (data, type, row) {
+                        if (data != null) {
+                            return data;
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                },
+                {
+                    data: "employeesFioAdd",
+                    render: function (data, type, row) {
+                        let content = `${data}<div class="m-s-12">${row.dateAdd}</div>`;
+                        if (row.isRemoveActive && '@isRemove' === 'True') {
+                            content += DeleteBtnStatuses({ "id": row.id, "isRemove": true })
+                        }
+
+                        return content;
+                    }
+                },
+                { data: "commentt" }
+                    
+            ]
+        });
+        $tableStatuses.on("reload", () => {
+            $tableStatuses.DataTable().ajax.reload(null, false);
+        });
+
+        $tableStatuses.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        const CloseBtnStatuses = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-employee-close-btn-type class="">Закрыть</a>`;
+        }
+
+        const DeleteBtnStatuses = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-employee-remove-btn-type class="text-danger">Удалить</a>`;
+        }
+    });
+</script>

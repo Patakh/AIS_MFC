@@ -1,0 +1,525 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var request = new MspCorpStatementsEgpuMfcLeasingQueryRequestData
+            {
+                IsRussiaProduct = false,
+                HaveExcisableGoods = false,
+            };
+}
+<style>
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+</style>
+
+
+<div class="row justify-content-center g-3">
+    <div class="col-12">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Данные заявителя</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-1">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-7">
+                <label class="form-label" asp-for="@request.LeasingApplicationType">Тип заявления</label>
+                <select class="form-select select2-nosearch" asp-for="@request.LeasingApplicationType">
+                    <option value="Application1">Получение информации о лизинговых продуктах</option>
+                    <option value="Application2">Обращение за получением льготной лизинговой поддержки</option>
+                </select>
+            </div>
+            <div class="col-5">
+                <label class="form-label" asp-for="@request.RegionCode">Регион проведения тренинга</label>
+                <select class="select2-search required" asp-for="@request.RegionCode"
+                        data-dictionary='{"dictionary":"RosReestrEgrnRegionsRf"}'>
+                </select>
+            </div>
+            <div class="col-6 mt-2">
+                <label class="form-label" asp-for="@request.ApplicationType">Тип заявителя</label>
+                <select class="form-select select2-nosearch" asp-for="@request.ApplicationType">
+                    <option value="PersonApplication">Физическое лицо</option>
+                    <option value="IpApplication">Индивидуальный предприниматель</option>
+                    <option value="LegalApplication">Юридическое лицо</option>
+                </select>
+            </div>
+            <div class="col-6 mt-2">
+                <label class="form-label" asp-for="@request.Inn">ИНН</label>
+                <input type="text" class="form-control required" placeholder="ИНН" asp-for="@request.Inn" />
+            </div>
+            <div class="col-12 mt-2">
+                <label class="form-label" asp-for="@request.ApplicantName" id="ApplicantName">ФИО</label>
+                <input type="text" class="form-control required" placeholder="ФИО" asp-for="@request.ApplicantName" />
+            </div>
+            <div class="col-12 mt-2" data-disabled id="Address">
+                <label class="form-label" asp-for="@request.Address">Адрес</label>
+                <input type="text" class="form-control required" placeholder="Адрес" asp-for="@request.Address" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center g-3">
+    <div class="col-12">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Соответствие заявителя профилю программы льготного лизинга</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-1">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-12 form-check form-switch">
+                <label class="form-check-label fs-5 b-s-16" asp-for="@request.RegPlaceRf">Место регистрации Заявителя – РФ</label>
+                <input class="form-check-input" type="checkbox" asp-for="@request.RegPlaceRf" value="false">
+            </div>
+            <div class="col-12 form-check form-switch mt-2">
+                <label class="form-check-label fs-5 b-s-16" asp-for="@request.RegPeriodOk">Срок регистрации – не менее 12 месяцев</label>
+                <input class="form-check-input" type="checkbox" asp-for="@request.RegPeriodOk" value="false">
+            </div>
+            <div class="col-12 form-check form-switch mt-2">
+                <label class="form-check-label fs-5 b-s-16" asp-for="@request.IncomeOk">Величина дохода за истекший календарный год не превышает 800 млн. руб</label>
+                <input class="form-check-input" type="checkbox" asp-for="@request.IncomeOk" value="false">
+            </div>
+            <div class="col-12 form-check form-switch mt-2">
+                <label class="form-check-label fs-5 b-s-16" asp-for="@request.AvgStaffNumOk">Среднесписочная численность сотрудников на момент подачи заявления не превышает 100 человек</label>
+                <input class="form-check-input" type="checkbox" asp-for="@request.AvgStaffNumOk" value="false">
+            </div>
+            <hr />
+            <div id="Leasing">
+                <div class="col-12 mt-2">
+                    <label class="form-label" asp-for="@request.LeasingSubjectType">Предмет лизинга</label>
+                    <select class="form-select select2-nosearch" asp-for="@request.LeasingSubjectType">
+                        <option value="InnovativeProduction">Оборудование для производства высокотехнологичной и (или) инновационной продукции/ выполнения высокотехнологичных и (или) инновационных работ</option>
+                        <option value="Industrial">Промышленное оборудование</option>
+                        <option value="Innovative">Высокотехнологичное или инновационное оборудование</option>
+                        <option value="Medical">Медицинское оборудование, используемое на территории моногородов и (или) ТОСЭР</option>
+                        <option value="Agriculture">Оборудование для целей производства, переработки с/х продукции</option>
+                        <option value="Tourism">Оборудование для осуществления деятельности в области физической культуры, туризма и гостиничного хозяйства</option>
+                        <option value="Rehabilitation">Вспомогательное оборудование педагогического и (или) реабилитационно-восстановительного назначения</option>
+                    </select>
+                </div>
+                <div class="col-12 form-check form-switch mt-2">
+                    <label class="form-check-label fs-5 b-s-16" for="request_IsRussiaProduct">Страна производства предмета лизинга Российская Федерация</label>
+                    <input class="form-check-input" type="checkbox" id="request_IsRussiaProduct" name="request.IsRussiaProduct">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row justify-content-center g-3" data-disabled id="Application2">
+    <div class="col-12">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Контактное лицо</div>
+        </div>
+    </div>
+
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.ContactPersonName">ФИО</label>
+                <input type="text" class="form-control" asp-for="@request.ContactPersonName" />
+            </div>
+            <div class="col-6 mt-2">
+                <label class="form-label" asp-for="@request.ContactPersonPosition">Должность</label>
+                <input type="text" class="form-control" asp-for="@request.ContactPersonPosition" />
+            </div>
+            <div class="col-3 mt-2">
+                <label class="form-label" asp-for="@request.Phone">Телефон</label>
+                <input type="text" class="form-control phone" placeholder="Телефон" asp-for="@request.Phone">
+            </div>
+            <div class="col-3 mt-2">
+                <label class="form-label" asp-for="@request.MobilePhone">Мобильный телефон</label>
+                <input type="text" class="form-control phone" placeholder="Мобильный телефон" asp-for="@request.MobilePhone">
+            </div>
+            <div class="col-6 mt-2">
+                <label class="form-label" asp-for="@request.ContactPersonPosition">Адрес web сайта</label>
+                <input type="text" class="form-control" asp-for="@request.ContactPersonPosition" />
+            </div>
+            <div class="col-6 mt-2">
+                <label class="form-label" asp-for="@request.Email">E-mail</label>
+                <input type="text" class="form-control email" placeholder="E-mail" asp-for="@request.Email">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Выручка</div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.LastYearEarnings">Размер годовой выручки за последний отчетный год (тыс. руб.)</label>
+                <input type="text" class="form-control" asp-for="@request.LastYearEarnings" />
+            </div>
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.ClearProfit">Чистая прибыль за последний отчетный год (тыс. руб.)</label>
+                <input type="text" class="form-control" asp-for="@request.ClearProfit" />
+            </div>
+            <div class="col-6 mt-2">
+                <label class="form-label" asp-for="@request.AllAssets">Валюта баланса (активы всего) на последнюю отчетную дату текущего года (тыс. руб.)</label>
+                <input type="text" class="form-control" asp-for="@request.AllAssets" />
+            </div>
+            <div class="col-6 mt-2">
+                <label class="form-label" asp-for="@request.CurrentYearEarnings">Размер выручки за актуальный отчетный период текущего года (с 1 января до последней отчетной даты) (тыс. руб.)</label>
+                <input type="text" class="form-control" asp-for="@request.CurrentYearEarnings" />
+            </div>
+            <div class="col-12 form-check form-switch mt-3">
+                <label class="form-check-label fs-5 b-s-16" for="request.HaveExcisableGoods">Имеются ли за 3 истекших календарных года и в течение текущего календарного года в структуре выручки (по основному виду деятельности и/или прочих доходов) доходы, связанные с производством и (или) реализацией подакцизных товаров, а также добычей и (или) реализацией полезных ископаемых, за исключением общераспространенных полезных ископаемых (в соответствии с региональным перечнем видов полезных ископаемых, относимых к общераспространенным)</label>
+                <input class="form-check-input" type="checkbox" name="request.HaveExcisableGoods" id="request_HaveExcisableGoods">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Лизинг</div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-12 mt-2">
+                <label class="form-label" asp-for="@request.LeasingSubjectName">Наименование предмета лизинга</label>
+                <input type="text" class="form-control" asp-for="@request.LeasingSubjectName" />
+            </div>
+            <div class="col-12 mt-2">
+                <label class="form-label" asp-for="@request.ProducingCountry">Страна производства предмета лизинга</label>
+                <input type="text" class="form-control" asp-for="@request.ProducingCountry" />
+            </div>
+            <div class="col-12 mt-2">
+                <label class="form-label" asp-for="@request.LeasingProvider">Поставщик предмета лизинга (наименование/ИНН)</label>
+                <input type="text" class="form-control" asp-for="@request.LeasingProvider" />
+            </div>
+            <div class="col-12 mt-2">
+                <label class="form-label" asp-for="@request.LeasingSubjectAmount">Количество единиц предмета лизинга</label>
+                <input type="number" value="0" min="0" class="form-control" asp-for="@request.LeasingSubjectAmount" />
+            </div>
+            <div class="col-6 mt-2">
+                <label class="form-label" asp-for="@request.PricePerUnit">Цена за единицу предмета лизинга (тыс. руб.)</label>
+                <input type="number" min="0" class="form-control" asp-for="@request.PricePerUnit" />
+            </div>
+            <div class="col-6 mt-2">
+                <label class="form-label" asp-for="@request.PrepaymentPercent">Размер аванса (в процентах от стоимости предмета лизинга, не менее 15%)</label>
+                <input type="number" value="0" min="0" class="form-control" asp-for="@request.PrepaymentPercent" />
+            </div>
+            <div class="col-4 mt-2">
+                <label class="form-label" asp-for="@request.PeriodMonthCount">Срок (в месяцах))</label>
+                <input type="number" min="0" class="form-control" asp-for="@request.PeriodMonthCount" />
+            </div>
+            <div class="col-4 mt-2">
+                <label class="form-label" asp-for="@request.PurchaseAgreementDate">Ожидаемые сроки заключения договора купли-продажи (месяц, год)</label>
+                <div class="input-group input-group-merge">
+                    <input asp-for="@request.PurchaseAgreementDate" type="text" class="form-control pickdate-short" placeholder="месяц, год" value="">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                </div>
+            </div>
+            <div class="col-4 mt-2">
+                <label class="form-label" asp-for="@request.AcceptanceReportDate">Ожидаемые сроки подписания акта приема-передачи предмета лизинга (месяц, год)</label>
+                <div class="input-group input-group-merge">
+                    <input asp-for="@request.AcceptanceReportDate" type="text" class="form-control pickdate-short" placeholder="месяц, год" value="">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                </div>
+            </div>
+            <div class="col-12 mt-2">
+                <label class="form-label" asp-for="@request.WithoutMfcSupport">Способ сопровождения процесса подписания лизинговой документации (по итогам решения Уполномоченного органа РЛК)я</label>
+                <select class="form-select select2-nosearch" asp-for="@request.WithoutMfcSupport">
+                    <option selected value="true">МФЦ</option>
+                    <option value="false">Cамостоятельно</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center g-3">
+    <div class="col-12 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Способ предоставления информации</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div class="row mb-2">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ReportingMethod">Вариант предоставления</label>
+                <select class="form-select select2-nosearch" asp-for="@request.ReportingMethod" data-dictionary='{"dictionary":"MspCorpReportingMethodTypes","default_value":"2"}'></select>
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ReportingMethodOtherTypeText">Введите email</label>
+                <input type="text" class="form-control required" asp-for="@request.ReportingMethodOtherTypeText" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center g-3">
+    <div class="col-12 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Способ информирования о готовности результата услуги</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3">
+    <div class="col-8">
+        <div class="row ">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.InformingMethodPhone">Номер телефона</label>
+                <input type="text" class="form-control phone" placeholder="Номер телефона" asp-for="@request.InformingMethodPhone">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.InformingMethodEmail">E-mail</label>
+                <input type="text" class="form-control email" placeholder="E-mail" asp-for="@request.InformingMethodEmail">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function ShowErrorInputs() {
+
+    }
+
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                let options = { clearIncomplete: true, showMaskOnHover: false };
+                $(formContent).find('.required').each(function() {
+                    addValidation($(this));
+                });
+
+                $(formContent).find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+
+                /* init datepicker */
+                $(formContent).find(".pickdate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                });
+
+                $(formContent).find(".pickdate-short").datepicker({
+                    format: "mm.yyyy",
+                    startView: "months",
+                    minViewMode: "months",
+                    language: "ru",
+                    autoclose: true
+                }).inputmask("99.9999", options);
+
+
+                /* init inputmask */
+                $(formContent).find('.phone').inputmask("9999999999", options);
+                $(formContent).find('.email').inputmask("email", options);
+
+                $(formContent).find("select.select2-nosearch").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+                $(formContent).find("select.select2-search").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal")
+                    });
+                });
+
+                function openItemForm(el) {
+
+                    if (el.value == 'true') {
+                        el.value = 'false';
+                        if (el.dataset.openitem != 'null') {
+                            document.querySelector(`#${el.dataset.openitem}`).classList.add('d-none')
+                            addDisabled(`${el.dataset.openitem}`, true)
+                        }
+                    }
+
+                    else {
+                        el.value = 'true';
+                        if (el.dataset.openitem != 'null') {
+                            document.querySelector(`#${el.dataset.openitem}`).classList.remove('d-none')
+                            addDisabled(`${el.dataset.openitem}`, false)
+                        }
+                    }
+                }
+
+                $(formContent).find('[name$="ReportingMethod"]').on('change',
+                    function() {
+                        let $mobile = $('#request_InformingMethodPhone');
+                        let $email = $('#request_InformingMethodEmail');
+                        let $coment = $('#request_ReportingMethodOtherTypeText');
+
+                        switch ($(this).val()) {
+                            case '1':
+                                $coment.prev().text('Введите email');
+                                visibilityBlock($coment.parent(), false, false);
+                                break;
+                            case '2':
+                                visibilityBlock($coment.parent(), true, true);
+                                break;
+                            case '3':
+                                $coment.prev().text('Введите комментарий');
+                                visibilityBlock($coment.parent(), false, false);
+                                break;
+
+                        };
+
+                    });
+                $(formContent).find('#request_IsSubscribe').on('change',
+                    function() {
+                        if ($(this).is(':checked')) {
+                            visibilityBlock($('#SubscriptionEndDate'), false, false);
+                        };
+                        if ($(this).is(':not(:checked)')) {
+                            visibilityBlock($('#SubscriptionEndDate'), true, true);
+                        };
+                    });
+
+               
+                $(formContent).find('#request_LeasingApplicationType').on('change',
+                    function() {
+                        switch ($(this).val()) {
+                            case 'Application1':
+                                visibilityBlock($('#Address'), true, true);
+                                visibilityBlock($('#Application2'), true, true);
+                                visibilityBlock($('#Leasing'), false, false);
+                                break;
+                            case 'Application2':
+                                visibilityBlock($('#Leasing'), true, true);
+                                visibilityBlock($('#Address'), false, false);
+                                visibilityBlock($('#Application2'), false, false);
+                                break;
+                        }
+                    });
+
+
+                $(formContent).find('[name$="Inn"]').inputmask('999999999999', options);
+                $(formContent).find('[name$="ApplicationType"]').on('change',
+                    function() {
+                        let options = { clearIncomplete: true, showMaskOnHover: false };
+                        let $inn = $(formContent).find('[name$="Inn"]');
+                        switch ($(this).val()) {
+                            case 'LegalApplication':
+                                $inn.inputmask('9999999999', options);
+                                $(formContent).find('#ApplicantName').text('Наименование ЮЛ');
+                                $(formContent).find('#request_ApplicantName').attr('placeholder','Наименование ЮЛ');
+                                break;
+                            default:
+                                $(formContent).find('#ApplicantName').text('ФИО');
+                                $(formContent).find('#request_ApplicantName').attr('placeholder','ФИО');
+                                $inn.inputmask('999999999999', options);
+                        }
+                    });
+            }
+        };
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').hide();
+                } else {
+                    $block.hide();
+                }
+                break;
+            case false:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').show();
+                } else {
+                    $block.show();
+                }
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        removeValidation($(this));
+                    }
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                    if ($(this).hasClass('required')) {
+                        addValidation($(this));
+                    }
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    (function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function() {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post(`/SmevBase/SmevGetDictionary`,
+                    {
+                        type: options.dictionary
+                    },
+                    function(dictionary) {
+                        fillSelect(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function() {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+            });
+    }
+
+</script>

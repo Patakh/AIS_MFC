@@ -1,0 +1,58 @@
+﻿@using AisLogistics.App.Models.Reports;
+@model AisLogistics.App.ViewModels.Reports.ReportViewResponseModel
+@{
+    var data = Model?.DataList?.Cast<ReestrSmevByEmployees>();
+    int i = 0;
+    int request = 0;
+    int response = 0;
+    int error = 0;
+}
+
+
+        @if(data!= null && data.Any())
+        {
+            <div class="table-responsive table-responsive-report">
+                <table class="table table-bordered" style="page-break-after: always;">
+                    <thead>
+                        <tr style="vertical-align: middle;">
+                            <th rowspan="2" style="padding: 5px; width: 35px;">№</th>
+                            <th rowspan="2" style="padding: 5px;">Сотрудник</th>
+                            <th colspan="3" style="padding: 5px; text-align: center;">Количество</th>
+                        </tr>
+                        <tr>
+                            <th style="padding: 5px; text-align:center; width: 80px;">Отправлено</th>
+                            <th style="padding: 5px; text-align:center; width: 80px;">Получено</th>
+                            <th style="padding: 5px; text-align:center; width: 80px;">Ошибки</th>
+                        </tr>
+                    </thead>
+                    <tbody class="r-s-12">
+                        @foreach (var item in data)
+                        {
+                            <tr>
+                                <td style="padding: 5px;" scope="row">@(++i)</td>
+                                <td style="padding: 5px;">@item.out_employee_name</td>
+                                <td style="padding: 5px;text-align:center;">@(item.out_request_count)</td>
+                                <td style="padding: 5px;text-align:center;">@(item.out_response_count)</td>
+                                <td style="padding: 5px;text-align:center;">@(item.out_error_count)</td>
+                            </tr>
+
+                            {
+                                request += item.out_request_count; response += item.out_response_count; error += item.out_error_count;
+                            }
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr class="b-s-12">
+                            <td colspan="2" style="padding: 5px; vertical-align: middle;">ИТОГО</td>
+                            <td style="padding: 5px;text-align:center;">@request</td>
+                            <td style="padding: 5px;text-align:center;">@response</td>
+                            <td style="padding: 5px;text-align:center;">@error</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        }
+        else
+        {
+            <span class="text-muted">Нет данных</span>
+        }

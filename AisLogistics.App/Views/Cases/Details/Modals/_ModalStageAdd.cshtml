@@ -1,0 +1,173 @@
+﻿@model StageAddDto
+@{
+    var services = new SelectList(Model.ServiceId);
+}
+
+<form asp-controller="Cases" asp-action="ServiceStageSave" id="sendingForm" method="post" role="form">
+    <div class="d-none">
+        <select asp-items="services" asp-for="ServiceId" class="select2 form-select d-none" multiple></select>
+    </div>
+    <fieldset>
+        <div class="row">
+            @if (Model.Stages.Any())
+            { 
+                <div class="col-12 mb-4">
+                   @* <input type="hidden" name="serviceId" value="@ViewBag.Id" />*@
+                    <label asp-for="OfficeId" class="form-label">Офис</label>
+                    <select asp-for="OfficeId" asp-items="@ViewBag.Offices " class="select2 form-select form-select-lg"></select>
+                </div>
+                <div class="col-12 mb-4">
+                    <label for="employeeId" class="form-label">Сотрудник</label>
+                    <select id="employeeId" name="employeeId" class="select2 form-select form-select-lg"></select>
+                </div>
+                <label class="form-label">Этапы</label>
+                @foreach (var item in Model.Stages)
+                {
+                    <div class="col-12 mb-md-0 mb-2">
+                        <div class="form-check custom-option custom-option-basic">
+                            <label class="form-check-label custom-option-content content-sm" for="stage_@item.Id">
+                                <input name="stageId" class="form-check-input" type="radio" value="@item.Id" id="stage_@item.Id" checked data-stageId />
+                                <span class="custom-option-header ms-2">
+                                    <span class="b-s-14">@item.Name</span>
+                                    <days count="item.Days ?? 0" class="text-body"></days>
+                                </span>
+                                <span class="custom-option-body ms-1">
+                                    @item.Comment
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12">
+                    <div class="alert alert-primary" role="alert">
+                        <h6 class="alert-heading mb-1">Нет этапов</h6>
+                        <span>Следующие возможные этапы отсутствуют</span>
+                    </div>
+                </div>
+            }
+        </div>
+    </fieldset>
+</form>
+
+<script>
+    $(function () {
+        $("#sendingForm .select2").select2({
+            dropdownParent: $("#mainModal")
+        });
+
+        $("#ServiceId").hide();
+
+        $("#OfficeId").on('change', function () {
+            $stageId = $('input[name=stageId]:checked').val();
+            $serviceId = $('#ServiceId').val();
+            var data = {};
+            let mass = [];
+            mass.push($serviceId);
+            data['serviceId'] = mass;
+            data['officeId'] = this.value;
+            data['stageId'] = $stageId;
+            $.ajax( {
+                type: "Post",
+                url: "/Cases/ServiceStageNextEmployess",
+                data: { request: data },
+                beforeSend: function () {
+                     $("#employeeId").empty();
+                     $('button[type="submit"]').attr('disabled', 'disabled');
+                },
+                success: function(data) {
+                    if(data!=null) {
+                        for (var i = 0; i < data.length; i++) {
+                            let selected = data[i].id === '@Model.EmployeeId';
+                            var opt = new Option(data[i].name, data[i].id, false, selected);
+                            $("#employeeId").append(opt);
+                        }
+                        $('button[type="submit"]').removeAttr('disabled');
+                    }
+                },
+                error: function() {
+                
+                }
+            } )
+        });
+
+        $("#OfficeId").change();
+
+        $("[data-stageId]").on('change', function () {
+            $stageId = $('input[name=stageId]:checked').val();
+            $serviceId = $('#ServiceId').val();
+            var data = {};
+            let mass = [];
+            mass.push($serviceId);
+            data['serviceId'] = mass;
+            data['officeId'] = $('#OfficeId').val();;
+            data['stageId'] = $stageId;
+            $.ajax({
+                type: "Post",
+                url: "/Cases/ServiceStageNextEmployess",
+                data: { request: data },
+                beforeSend: function () {
+                    $("#employeeId").empty();
+                    $('button[type="submit"]').attr('disabled', 'disabled');
+                },
+                success: function (data) {
+                    if (data != null) {
+                        for (var i = 0; i < data.length; i++) {
+                            let selected = data[i].id === '@Model.EmployeeId';
+                            var opt = new Option(data[i].name, data[i].id, false, selected);
+                            $("#employeeId").append(opt);
+                        }
+                        $('button[type="submit"]').removeAttr('disabled');
+                    }
+                },
+                error: function () {
+
+                }
+            })
+        });
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+        {
+            fields: {
+               'employeeId': {
+                    validators: {
+                        notEmpty: {
+                            message: '@MessageDescription.FieldIsRequired'
+                        }
+                    }
+               }
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                submitButton: new FormValidation.plugins.SubmitButton(),
+                bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                autoFocus: new FormValidation.plugins.AutoFocus()
+            }
+        }).on('core.form.valid', function() {
+            var $form = $("#sendingForm");
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                dataType: 'json',
+                beforeSend: () => {
+                    $form.spinnerBtn("start");
+                },
+                complete: () => {
+                    if (typeof $tableCases !== 'undefined') {
+                        console.log('stage', $tableCases);
+                        $tableCases.DataTable().ajax.reload(null, false);
+                        $form.spinnerBtn("stop");
+                        $("#mainModal").modal('hide');
+                    }
+                    else {
+                        document.location.reload();
+                    }
+                }
+            });
+            return false;
+        });
+    })
+</script>

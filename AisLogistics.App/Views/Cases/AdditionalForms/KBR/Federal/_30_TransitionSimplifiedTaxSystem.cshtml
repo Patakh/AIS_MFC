@@ -1,0 +1,210 @@
+﻿@model _30_TransitionSimplifiedTaxSystemModel
+@{
+    IEnumerable<SelectListItem> signTaxpayer = new List<SelectListItem>
+    {
+        new ("Организации и индивидуальные предприниматели, подающие уведомление одновременно с документами на государственную регистрацию", "1"),
+        new ("Вновь созданные организации и вновь зарегистрированные индивидуальные предприниматели, включая организации и индивидуальных предпринимателей, подающих уведомление одновременно с документами на государственную регистрацию, а также организации и индивидуальные предприниматели, которые престали быть налогоплательщиками ЕНДВ", "2"),
+        new ("Организации и индивидуальные предприниматели, подходящие с иных режимов налогообложения, за исключением налогоплательщиков ЕДНВ", "3"),
+    };
+
+    IEnumerable<SelectListItem> objectsTaxation = new List<SelectListItem>
+    {
+        new ("доходы", "1"),
+        new ("доходы, уменьшенные на величину расходов", "2")
+    };
+}
+
+<style>
+    .form-check {
+        margin-left: 10px;
+    }
+
+    .modal .form-check-input[type=radio] {
+        margin-right: 10px;
+    }
+</style>
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-sm-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="CodeFNS">Налоговый орган</label>
+                    <select class="form-select select2-search required" asp-for="CodeFNS"
+                            data-fns-dictionary='{"dictionary":"null", "default_value":"@(Model.CodeFNS  == null || string.IsNullOrEmpty(Model.CodeFNS) ?  "" : Model.CodeFNS)"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="SignTaxpayer">Признак налогоплательщика</label>
+                    <select asp-items="@signTaxpayer" class="form-select select2-nosearch" asp-for="SignTaxpayer"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="form-label" asp-for="Pass">переходит на упрощенную систему налогообложения </label>
+                <div class="col-sm-12">
+                    <div class="form-check mt-3 d-flex align-items-center">
+                        <input name="Pass" id="Pass1" class="form-check-input" type="radio" value="1" checked="@(Model.Pass == "1")">
+                        <div class="col-sm-auto mx-2">
+
+                            <label class="form-label" for="Pass1">с 1 января</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input asp-for="PassYear" type="text" class="form-control pickdate-short-year pe-0">
+                        </div>
+                    </div>
+                    <div class="form-check mt-3">
+                        <input name="Pass" id="Pass2" class="form-check-input" type="radio" value="2" checked="@(Model.Pass == "2")">
+                        <label class="form-label" for="Pass2">с даты постановки на налоговый учет</label>
+                    </div>
+                    <div class="form-check mt-3 d-flex align-items-center">
+                        <input name="Pass" id="Pass3" class="form-check-input" type="radio" value="3" checked="@(Model.Pass == "3")">
+                        <div class="col-sm-auto mx-2">
+                            <label class="form-label" for="Pass3">С начала месяца</label>
+                        </div>
+                        <div class="col-sm-2">
+                            <input asp-for="PassYearMonth" type="text" class="form-control pickdate-short">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="ObjectsTaxation">В качестве объекта налогообложение выбраны</label>
+                    <select asp-items="@objectsTaxation" class="form-select select2-nosearch" asp-for="ObjectsTaxation"></select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="YearNotification">Год подачи уведомления о переходе на упрощённую систему налогообложенияя</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="YearNotification" type="text" class="form-control pickdate-short-year">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="ReceivedIncome">Получено доходов за девять месяцев года подачи уведомления</label>
+                    <input type="number" asp-for="ReceivedIncome" class="form-control">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="ResidualValue">Остаточная стоимость основанных средств на 1 октября года подачи уведомления составляет</label>
+                    <input type="number" asp-for="ResidualValue" class="form-control">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var regionCode = @Json.Serialize(Options.Value.Region);
+    $(function () {
+
+        additionalForm.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"), для select модального окна
+                minimumResultsForSearch: Infinity
+            });
+        });
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+
+        additionalForm.find(".pickdate-short").datepicker({
+            format: "mm.yyyy",
+            startView: "months",
+            minViewMode: "months",
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.9999", options);
+
+        additionalForm.find(".pickdate-short-year").datepicker({
+            format: "yyyy",
+            startView: "years",
+            minViewMode: "years",
+            language: "ru",
+            autoclose: true
+        }).inputmask("9999", options);
+    });
+
+
+    (function getDictionariesfns() {
+        let dicts = new Set();
+        $('[data-fns-dictionary]').each(function () {
+            let $this = $(this);
+            let options = $this.data('fns-dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post('/SmevFns/GetFnsDepartments', null,
+                    function (dictionary) {
+                        
+                        if (dictionary.error) return;
+                        dictionary.sort((prev, next) => {
+                            if (next.code.startsWith(`${regionCode}`)) {
+                                return 1;
+                            } else return -1;
+                        });
+
+                        fillSelectFns(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelectFns(dictName, dictionary) {
+        $.each($(`[data-fns-dictionary*='"${dictName}"']`),
+            function () {
+                let $this = $(this);
+                let items = dictionary;
+
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Не выбрано', ''));
+                }
+                if ($this.is('[data-value-value]')) {
+                    items.forEach(function (item) {
+                        $this.append(new Option(item.name, item.name))
+                    });
+                } else {
+                    items.forEach(function (item) {
+                        $this.append(new Option(item.name, item.code))
+                    });
+                }
+
+                if ($this.data('fns-dictionary').default_value) {
+                    let defVal = $this.data('fns-dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                } else {
+                    $this.val('').trigger('update');
+                }
+            });
+    }
+
+</script>

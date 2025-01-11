@@ -1,0 +1,1616 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Regional.AccountingPersons1
+@{
+
+}
+
+<style>
+    input:required:invalid:not(:placeholder-shown) {
+        border-color: #ff5b5c;
+        box-shadow: 0 0 0.1875rem 0.0625rem rgb(57 218 138 / 18%);
+    }
+
+    input:required:valid:not(:placeholder-shown) {
+        border-color: #39da8a;
+        box-shadow: 0 0 0.1875rem 0.0625rem rgb(57 218 138 / 18%);
+    }
+</style>
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">1. Сведения о гражданине Российской Федерации (в соответствии с основным документом, удостоверяющим личность)</h5>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.F">Фамилия</label>
+                    <input type="text" asp-for="Applicant.F" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.I">Имя</label>
+                    <input type="text" asp-for="Applicant.I" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.O"> Отчество (при наличии)</label>
+                    <input type="text" asp-for="Applicant.O" class="form-control">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Applicant.BirthDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-8">
+                    <label class="form-label" asp-for="Applicant.AddressBirth">Место рождения</label>
+                    <input type="text" asp-for="Applicant.AddressBirth" class="form-control">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="d-block form-label">Пол</label>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" name="Applicant.Gender" id="Applicant_Gender1" value="1">
+                        <label class="form-check-label" for="Applicant_Gender1"><i class="bi bi-gender-male fs-6"></i> Мужской</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="Applicant.Gender" id="Applicant_Gender2" value="2">
+                        <label class="form-check-label" for="Applicant_Gender2"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">1.7. Сведения об основном документе, удостоверяющем личность (паспорт):</h6>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.DocSeries">Серия</label>
+                    <input type="text" class="form-control" asp-for="Applicant.DocSeries">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.DocNumber">Номер</label>
+                    <input type="text" class="form-control" asp-for="Applicant.DocNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.DocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Applicant.DocIssueDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="Applicant.DocIssuer">Кем выдан</label>
+                    <input type="text" class="form-control" asp-for="Applicant.DocIssuer">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Applicant.DocDevision">Код подразделения</label>
+                    <input type="text" class="form-control" asp-for="Applicant.DocDevision">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="Applicant.SNILS">СНИЛС (при наличии)</label>
+                    <input type="text" class="form-control" asp-for="Applicant.SNILS">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Applicant.INN">ИНН (при наличии)</label>
+                    <input type="text" class="form-control" asp-for="Applicant.INN">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Applicant.NameNaroda">Наименование коренного малочисленного народа</label>
+                    <input type="text" class="form-control" asp-for="Applicant.NameNaroda">
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">2. Сведения, подлежащие изменению</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Change_Info.NameNaroda_W"> Наименование коренного малочисленного народа</label>
+                    <input type="text" class="form-control" asp-for="Change_Info.NameNaroda_W">
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">2.2. Работа в организации, осуществляющей традиционную хозяйственную деятельность (при наличии)</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Change_Info.FullNameOrganization_W">Полное наименование организации</label>
+                    <input type="text" class="form-control" asp-for="Change_Info.FullNameOrganization_W">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="Change_Info.OGRN_W">ОГРН</label>
+                    <input type="text" class="form-control" asp-for="Change_Info.OGRN_W">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Change_Info.INN_W">ИНН</label>
+                    <input type="text" class="form-control" asp-for="Change_Info.INN_W">
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">2.3. Членство в общине коренных малочисленных народов (при наличии)</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Change_Info.FullNameOrganization_S">Полное наименование организации</label>
+                    <input type="text" class="form-control" asp-for="Change_Info.FullNameOrganization_S">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="Change_Info.OGRN_S">ОГРН</label>
+                    <input type="text" class="form-control" asp-for="Change_Info.OGRN_S">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Change_Info.INN_S">ИНН</label>
+                    <input type="text" class="form-control" asp-for="Change_Info.INN_S">
+                </div>
+            </div>
+            <h6 class="my-2">2.4. Сведения о ведении традиционного образа жизни и традиционной хозяйственной деятельности</h6>
+
+            <div class="row mb-3">
+                <div class="col-12 mt-3">
+                    <div class="form-check align-items-center">
+                        <input class="form-check-input" type="checkbox" asp-for="Change_Info.Is_2_4_1">
+                        <label class="form-label form-check-label" asp-for="Change_Info.Is_2_4_1">
+                            2.4.1. Веду традиционный образ жизни и традиционную хозяйственную деятельность:
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12 mt-3">
+                    <div class="form-check align-items-center">
+                        <input class="form-check-input" type="checkbox" asp-for="Change_Info.Is_2_4_2">
+                        <label class="form-label form-check-label" asp-for="Change_Info.Is_2_4_2">
+                            2.4.2. Традиционная хозяйственной деятельности является подсобной по отношению к основному виду деятельности:
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">2.4.3. Осуществляемый вид (виды) традиционной хозяйственной деятельности:</h6>
+            <div class="row mb-3">
+                <div class="col-12 mt-3">
+                    <div class="form-check align-items-center">
+                        <input class="form-check-input" type="checkbox" asp-for="Change_Info.Is_2_4_3_1">
+                        <label class="form-label form-check-label" asp-for="Change_Info.Is_2_4_3_1">
+                            2.4.3.1. Животноводство, в том числе кочевое (оленеводство, коневодство, яководство, овцеводство).
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12 mt-3">
+                    <div class="form-check align-items-center">
+                        <input class="form-check-input" type="checkbox" asp-for="Change_Info.Is_2_4_3_2">
+                        <label class="form-label form-check-label" asp-for="Change_Info.Is_2_4_3_2">
+                            2.4.3.2. Переработка продукции животноводства, включая сбор, заготовку и выделку шкур, шерсти, волоса, окостенелых рогов, копыт, пантов, костей, эндокринных желез, мяса, субпродуктов.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12 mt-3">
+                    <div class="form-check align-items-center">
+                        <input class="form-check-input" type="checkbox" asp-for="Change_Info.Is_2_4_3_3">
+                        <label class="form-label form-check-label" asp-for="Change_Info.Is_2_4_3_3">
+                            2.4.3.3. Собаководство (разведение оленегонных, ездовых и охотничьих собак).
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12 mt-3">
+                    <div class="form-check align-items-center">
+                        <input class="form-check-input" type="checkbox" asp-for="Change_Info.Is_2_4_3_4">
+                        <label class="form-label form-check-label" asp-for="Change_Info.Is_2_4_3_4">
+                            2.4.3.4. Разведение зверей, переработка и реализация продукции звероводства.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12 mt-3">
+                    <div class="form-check align-items-center">
+                        <input class="form-check-input" type="checkbox" asp-for="Change_Info.Is_2_4_3_5">
+                        <label class="form-label form-check-label" asp-for="Change_Info.Is_2_4_3_5">
+                            2.4.3.5. Бортничество, пчеловодство.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12 mt-3">
+                    <div class="form-check align-items-center">
+                        <input class="form-check-input" type="checkbox" asp-for="Change_Info.Is_2_4_3_6">
+                        <label class="form-label form-check-label" asp-for="Change_Info.Is_2_4_3_6">
+                            2.4.3.6. Рыболовство (в том числе морской зверобойный промысел) и реализация водных биологических ресурсов.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12 mt-3">
+                    <div class="form-check align-items-center">
+                        <input class="form-check-input" type="checkbox" asp-for="Change_Info.Is_2_4_3_7">
+                        <label class="form-label form-check-label" asp-for="Change_Info.Is_2_4_3_7">
+                            2.4.3.7. Промысловая охота, переработка и реализация охотничьей продукции.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12 mt-3">
+                    <div class="form-check align-items-center">
+                        <input class="form-check-input" type="checkbox" asp-for="Change_Info.Is_2_4_3_8">
+                        <label class="form-label form-check-label" asp-for="Change_Info.Is_2_4_3_8">
+                            2.4.3.8. Земледелие (огородничество), а также разведение и переработка ценных в лекарственном отношении растений.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12 mt-3">
+                    <div class="form-check align-items-center">
+                        <input class="form-check-input" type="checkbox" asp-for="Change_Info.Is_2_4_3_9">
+                        <label class="form-label form-check-label" asp-for="Change_Info.Is_2_4_3_9">
+                            2.4.3.9. Заготовка древесины и недревесных лесных ресурсов для собственных нужд.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12 mt-3">
+                    <div class="form-check align-items-center">
+                        <input class="form-check-input" type="checkbox" asp-for="Change_Info.Is_2_4_3_10">
+                        <label class="form-label form-check-label" asp-for="Change_Info.Is_2_4_3_10">
+                            2.4.3.10. Собирательство (заготовка, переработка и реализация пищевых лесных ресурсов, сбор лекарственных растений).
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12 mt-3">
+                    <div class="form-check align-items-center">
+                        <input class="form-check-input" type="checkbox" asp-for="Change_Info.Is_2_4_3_11">
+                        <label class="form-label form-check-label" asp-for="Change_Info.Is_2_4_3_11">
+                            2.4.3.11. Добыча и переработка общераспространенных полезных ископаемых для собственных нужд.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12 mt-3">
+                    <div class="form-check align-items-center">
+                        <input class="form-check-input" type="checkbox" asp-for="Change_Info.Is_2_4_3_12">
+                        <label class="form-label form-check-label" asp-for="Change_Info.Is_2_4_3_12">
+                            2.4.3.12. Художественные промыслы и народные ремесла (кузнечное и железоделательное ремесло, изготовление утвари, инвентаря, лодок, нарт, иных традиционных средств передвижения, музыкальных инструментов, берестяных изделий, чучел промысловых зверей и птиц, сувениров из меха оленей и промысловых зверей и птиц, иных материалов, плетение из трав и иных растений, вязание сетей, резьба по кости, резьба по дереву, пошив национальной одежды и другие виды промыслов и ремесел, связанные с обработкой меха, кожи, кости и других материалов).
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12 mt-3">
+                    <div class="form-check align-items-center">
+                        <input class="form-check-input" type="checkbox" asp-for="Change_Info.Is_2_4_3_13">
+                        <label class="form-label form-check-label" asp-for="Change_Info.Is_2_4_3_13">
+                            2.4.3.13. Строительство национальных традиционных жилищ и других построек, необходимых для осуществления традиционных видов хозяйственной деятельности.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">1.4. Сведения о лице, имеющем право без доверенности действовать от имени общины коренных малочисленных народов Россиской Федерации, членом которой является гражданин, в отношении которого представлены документы</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Legal.Job">Должность</label>
+                    <input type="text" asp-for="Legal.Job" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Legal.FullName">Полное наименование организации</label>
+                    <input type="text" asp-for="Legal.FullName" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="Legal.OGRN">ОГРН</label>
+                    <input type="text" class="form-control" asp-for="Legal.OGRN">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Legal.INN">ИНН</label>
+                    <input type="text" class="form-control" asp-for="Legal.INN">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Legal.F">Фамилия</label>
+                    <input type="text" asp-for="Legal.F" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Legal.I">Имя</label>
+                    <input type="text" asp-for="Legal.I" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Legal.O"> Отчество (при наличии)</label>
+                    <input type="text" asp-for="Legal.O" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">4.6. Сведения об основном документе, удостоверяющем личность (паспорт):</h6>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Legal.DocSeries">Серия</label>
+                    <input type="text" class="form-control" asp-for="Legal.DocSeries">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Legal.DocNumber">Номер</label>
+                    <input type="text" class="form-control" asp-for="Legal.DocNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Legal.DocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Legal.DocIssueDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="Legal.DocIssuer">Кем выдан</label>
+                    <input type="text" class="form-control" asp-for="Legal.DocIssuer">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Legal.DocDevision">Код подразделения</label>
+                    <input type="text" class="form-control" asp-for="Legal.DocDevision">
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2 text-center">СВЕДЕНИЯ о члене семьи гражданина Российской Федерации, относящегося к коренным малочисленным народам Российской Федерации</h5>
+            <div id="FamilyDocument" data-clone-list>
+                @for (var i = 0; i < Model.FamilyList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Член семьи @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="FamilyList[i].DegreeKinship">Степень родства</label>
+                                        <select class="select2-nosearch" asp-for="FamilyList[i].DegreeKinship">
+                                            <option value="заявитель">заявитель</option>
+                                            <option value="супруг(а)">супруг(а)</option>
+                                            <option value="сын">сын</option>
+                                            <option value="дочь">дочь</option>
+                                            <option value="мать">мать</option>
+                                            <option value="отец">отец</option>
+                                            <option value="брат">брат</option>
+                                            <option value="сестра">сестра</option>
+                                            <option value="иной родственник">иной родственник</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].F">Фамилия</label>
+                                        <input type="text" asp-for="FamilyList[i].F" class="form-control">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].I">Имя</label>
+                                        <input type="text" asp-for="FamilyList[i].I" class="form-control">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].O"> Отчество (при наличии)</label>
+                                        <input type="text" asp-for="FamilyList[i].O" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].BirthDate">Дата рождения</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="FamilyList[i].BirthDate" type="text"
+                                               class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <label class="form-label" asp-for="FamilyList[i].AddressBirth">Место рождения</label>
+                                        <input type="text" asp-for="FamilyList[i].AddressBirth" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-4">
+                                        <p class="d-block form-label">Пол</p>
+                                        <div class="form-check form-check-inline mt-2">
+                                            <input class="form-check-input" type="radio" name="FamilyList[@i].Gender" id="FamilyList_@(i)_GenderOne" value="1" checked="checked">
+                                            <label class="form-check-label" for="FamilyList_@(i)_GenderOne"><i class="bi bi-gender-male fs-6"></i> Мужской</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="FamilyList[@i].Gender" id="FamilyList_@(i)_GenderTwo" value="2">
+                                            <label class="form-check-label" for="FamilyList_@(i)_GenderTwo"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <h6 class="my-2">1.8. Сведения об основном документе, удостоверяющем личность (паспорт) (при наличии)</h6>
+                                <div class="row mb-3">
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].DocSeries">Серия</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].DocSeries">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].DocNumber">Номер</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].DocNumber">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].DocIssueDate">Дата выдачи</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="FamilyList[i].DocIssueDate" type="text" class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-9">
+                                        <label class="form-label" asp-for="FamilyList[i].DocIssuer">Кем выдан</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].DocIssuer">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="FamilyList[i].DocDevision">Код подразделения</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].DocDevision">
+                                    </div>
+                                </div>
+                                <hr />
+                                <h6 class="my-2">1.12. Свидетельство о рождении (при отсутствии основного документа, удостоверяющего личность)</h6>
+                                <div class="row mb-3">
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].BirthDocSeries">Серия</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].BirthDocSeries">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].BirthDocNumber">Номер</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].BirthDocNumber">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].BirthDocIssueDate">Дата выдачи</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="FamilyList[i].BirthDocIssueDate" type="text" class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="FamilyList[i].BirthDocIssuer">Кем выдан</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].BirthDocIssuer">
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-3">
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="FamilyList[i].SNILS">СНИЛС (при наличии)</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].SNILS">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="FamilyList[i].INN">ИНН (при наличии)</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].INN">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="FamilyList[i].NameNaroda">Наименование коренного малочисленного народа</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].NameNaroda">
+                                    </div>
+                                </div>
+                                <hr />
+                                <h6 class="my-2">2.1. Адрес регистрации по месту жительства в Российской Федерации</h6>
+                                <div class="row mb-3">
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].AdressLivePostalCode">Почтовый индекс</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].AdressLivePostalCode">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].AdressLiveRegion">Субъект Российской Федерации</label>
+                                        <select class="select2-search" asp-for="FamilyList[i].AdressLiveRegion">
+                                            <option value="">Не выбрано</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].AdressLiveRaion">Район</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].AdressLiveRaion">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].AdressLiveNP">Населенный пункт</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].AdressLiveNP">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].AdressLiveStreet">Улица</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].AdressLiveStreet">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].AdressLiveHouseNumber">Номер дома</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].AdressLiveHouseNumber">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="FamilyList[i].AdressLiveKorpuseNumber">Номер корпуса</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].AdressLiveKorpuseNumber">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="FamilyList[i].AdressLiveFlatNumber">Номер квартиры</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].AdressLiveFlatNumber">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check align-items-center">
+                                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[i].AdressLiveIsKhz">
+                                            <label class="form-label form-check-label" asp-for="FamilyList[i].AdressLiveIsKhz">
+                                                Является адресом местной администрации поселения в муниципальном районе, в границах которого проходят маршруты кочевий
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <h6 class="my-2">2.2. Адрес регистрации по месту пребывания в Российской Федерации (при наличии)</h6>
+                                <div class="row mb-3">
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].AdressRegistrationPostalCode">Почтовый индекс</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].AdressRegistrationPostalCode">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].AdressRegistrationRegion">Субъект Российской Федерации</label>
+                                        <select class="select2-search" asp-for="FamilyList[i].AdressRegistrationRegion">
+                                            <option value="">Не выбрано</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].AdressRegistrationRaion">Район</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].AdressRegistrationRaion">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].AdressRegistrationNP">Населенный пункт</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].AdressRegistrationNP">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].AdressRegistrationStreet">Улица</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].AdressRegistrationStreet">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyList[i].AdressRegistrationHouseNumber">Номер дома</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].AdressRegistrationHouseNumber">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="FamilyList[i].AdressRegistrationKorpuseNumber">Номер корпуса</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].AdressRegistrationKorpuseNumber">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="FamilyList[i].AdressRegistrationFlatNumber">Номер квартиры</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].AdressRegistrationFlatNumber">
+                                    </div>
+                                </div>
+                                <h6 class="my-2">3. Сведения о ведении традиционного образа жизни и традиционной хозяйственной деятельности</h6>
+
+                                <div class="row mb-3">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check align-items-center">
+                                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[i].Is_A">
+                                            <label class="form-label form-check-label" asp-for="FamilyList[i].Is_A">
+                                                3.1. Веду традиционный образ жизни и традиционную хозяйственную деятельность:
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-3">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check align-items-center">
+                                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[i].Is_B">
+                                            <label class="form-label form-check-label" asp-for="FamilyList[i].Is_B">
+                                                3.2. Традиционная хозяйственной деятельности является подсобной по отношению к основному виду деятельности:
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <h6 class="my-2">3.3. Осуществляемый вид (виды) традиционной хозяйственной деятельности:</h6>
+                                <div class="row mb-3">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check align-items-center">
+                                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[i].Is_C">
+                                            <label class="form-label form-check-label" asp-for="FamilyList[i].Is_C">
+                                                3.3.1. Животноводство, в том числе кочевое (оленеводство, коневодство, яководство, овцеводство).
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-3">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check align-items-center">
+                                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[i].Is_D">
+                                            <label class="form-label form-check-label" asp-for="FamilyList[i].Is_D">
+                                                3.3.2. Переработка продукции животноводства, включая сбор, заготовку и выделку шкур, шерсти, волоса, окостенелых рогов, копыт, пантов, костей, эндокринных желез, мяса, субпродуктов.
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-3">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check align-items-center">
+                                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[i].Is_E">
+                                            <label class="form-label form-check-label" asp-for="FamilyList[i].Is_E">
+                                                3.3.3. Собаководство (разведение оленегонных, ездовых и охотничьих собак).
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-3">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check align-items-center">
+                                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[i].Is_F">
+                                            <label class="form-label form-check-label" asp-for="FamilyList[i].Is_F">
+                                                3.3.4. Разведение зверей, переработка и реализация продукции звероводства.
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-3">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check align-items-center">
+                                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[i].Is_G">
+                                            <label class="form-label form-check-label" asp-for="FamilyList[i].Is_G">
+                                                3.3.5. Бортничество, пчеловодство.
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-3">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check align-items-center">
+                                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[i].Is_H">
+                                            <label class="form-label form-check-label" asp-for="FamilyList[i].Is_H">
+                                                3.3.6. Рыболовство (в том числе морской зверобойный промысел) и реализация водных биологических ресурсов.
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-3">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check align-items-center">
+                                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[i].Is_I">
+                                            <label class="form-label form-check-label" asp-for="FamilyList[i].Is_I">
+                                                3.3.7. Промысловая охота, переработка и реализация охотничьей продукции.
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-3">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check align-items-center">
+                                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[i].Is_J">
+                                            <label class="form-label form-check-label" asp-for="FamilyList[i].Is_J">
+                                                3.3.8. Земледелие (огородничество), а также разведение и переработка ценных в лекарственном отношении растений.
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-3">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check align-items-center">
+                                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[i].Is_K">
+                                            <label class="form-label form-check-label" asp-for="FamilyList[i].Is_K">
+                                                3.3.9. Заготовка древесины и недревесных лесных ресурсов для собственных нужд.
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-3">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check align-items-center">
+                                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[i].Is_L">
+                                            <label class="form-label form-check-label" asp-for="FamilyList[i].Is_L">
+                                                3.3.10. Собирательство (заготовка, переработка и реализация пищевых лесных ресурсов, сбор лекарственных растений).
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-3">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check align-items-center">
+                                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[i].Is_M">
+                                            <label class="form-label form-check-label" asp-for="FamilyList[i].Is_M">
+                                                3.3.11. Добыча и переработка общераспространенных полезных ископаемых для собственных нужд.
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-3">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check align-items-center">
+                                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[i].Is_N">
+                                            <label class="form-label form-check-label" asp-for="FamilyList[i].Is_N">
+                                                3.3.12. Художественные промыслы и народные ремесла (кузнечное и железоделательное ремесло, изготовление утвари, инвентаря, лодок, нарт, иных традиционных средств передвижения, музыкальных инструментов, берестяных изделий, чучел промысловых зверей и птиц, сувениров из меха оленей и промысловых зверей и птиц, иных материалов, плетение из трав и иных растений, вязание сетей, резьба по кости, резьба по дереву, пошив национальной одежды и другие виды промыслов и ремесел, связанные с обработкой меха, кожи, кости и других материалов).
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row mb-3">
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check align-items-center">
+                                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[i].Is_O">
+                                            <label class="form-label form-check-label" asp-for="FamilyList[i].Is_O">
+                                                3.3.13. Строительство национальных традиционных жилищ и других построек, необходимых для осуществления традиционных видов хозяйственной деятельности.
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <h6 class="my-2">3.4. Работа в организации, осуществляющей традиционную хозяйственную деятельность (при наличии)</h6>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="FamilyList[i].FullNameOrganization_W">Полное наименование организации</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].FullNameOrganization_W">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="FamilyList[i].OGRN_W">ОГРН</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].OGRN_W">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="FamilyList[i].INN_W">ИНН</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].INN_W">
+                                    </div>
+                                </div>
+                                <hr />
+                                <h6 class="my-2">3.5. Членство в общине коренных малочисленных народов (при наличии)</h6>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="FamilyList[i].FullNameOrganization_S">Полное наименование организации</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].FullNameOrganization_S">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="FamilyList[i].OGRN_S">ОГРН</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].OGRN_S">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="FamilyList[i].INN_S">ИНН</label>
+                                        <input type="text" class="form-control" asp-for="FamilyList[i].INN_S">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger content-center " onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addFamilyDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2 text-center">Приложенные документы</h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedDocumentList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Документ @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3 align-items-end">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].Name">Наименование</label>
+                                        <input type="text" list="Docs" asp-for="AppliedDocumentList[i].Name" class="form-control">
+                                        <datalist id="Docs">
+                                            <option value="Документ удостоверяющий личность">Документ удостоверяющий личность</option>
+                                            <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                            <option value="Свидетельство о заключении брака">Свидетельство о заключении брака</option>
+                                            <option value="Свидетельство о расторжении брака">Свидетельство о расторжении брака</option>
+                                            <option value="Свидетельство об установлении отцовства">Свидетельство об установлении отцовства</option>
+                                            <option value="Расчётный счёт">Расчётный счёт</option>
+                                            <option value="Сберкнижка">Сберкнижка</option>
+                                            <option value="Трудовая книжка">Трудовая книжка</option>
+                                            <option value="Свидетельство о регистрации по месту жительства/пребывания">Свидетельство о регистрации по месту жительства/пребывания</option>
+                                            <option value="Удостоверение">Удостоверение</option>
+                                            <option value="Справка МСЭ">Справка МСЭ</option>
+                                        </datalist>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].Count">Количество экземпляров</label>
+                                        <input type="number" min="1" class="form-control" asp-for="AppliedDocumentList[i].Count">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].CountList">Количество листов в одном экземпляре</label>
+                                        <input type="number" min="1" class="form-control" asp-for="AppliedDocumentList[i].CountList">
+                                    </div>
+
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].Digital">на электронных носителях</label>
+                                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[i].Digital">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="FamilyList" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Член семьи 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="FamilyList[0].DegreeKinship">Степень родства</label>
+                        <select class="select2-nosearch" asp-for="FamilyList[0].DegreeKinship">
+                            <option value="заявитель">заявитель</option>
+                            <option value="супруг(а)">супруг(а)</option>
+                            <option value="сын">сын</option>
+                            <option value="дочь">дочь</option>
+                            <option value="мать">мать</option>
+                            <option value="отец">отец</option>
+                            <option value="брат">брат</option>
+                            <option value="сестра">сестра</option>
+                            <option value="иной родственник">иной родственник</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].F">Фамилия</label>
+                        <input type="text" asp-for="FamilyList[0].F" class="form-control">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].I">Имя</label>
+                        <input type="text" asp-for="FamilyList[0].I" class="form-control">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].O"> Отчество (при наличии)</label>
+                        <input type="text" asp-for="FamilyList[0].O" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].BirthDate">Дата рождения</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="FamilyList[0].BirthDate" type="text" class="form-control pickdate">
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <label class="form-label" asp-for="FamilyList[0].AddressBirth">Место рождения</label>
+                        <input type="text" asp-for="FamilyList[0].AddressBirth" class="form-control">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <p class="d-block form-label">Пол</p>
+                        <div class="form-check form-check-inline mt-2">
+                            <input class="form-check-input" type="radio" name="FamilyList[0].Gender" id="FamilyList_0_GenderOne" value="1" checked="checked">
+                            <label class="form-check-label" for="FamilyList_0_GenderOne"><i class="bi bi-gender-male fs-6"></i> Мужской</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="FamilyList[0].Gender" id="FamilyList_0_GenderTwo" value="2">
+                            <label class="form-check-label" for="FamilyList_0_GenderTwo"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <h6 class="my-2">1.8. Сведения об основном документе, удостоверяющем личность (паспорт) (при наличии)</h6>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].DocSeries">Серия</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].DocSeries">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].DocNumber">Номер</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].DocNumber">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].DocIssueDate">Дата выдачи</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="FamilyList[0].DocIssueDate" type="text" class="form-control pickdate">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-9">
+                        <label class="form-label" asp-for="FamilyList[0].DocIssuer">Кем выдан</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].DocIssuer">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="FamilyList[0].DocDevision">Код подразделения</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].DocDevision">
+                    </div>
+                </div>
+                <hr />
+                <h6 class="my-2">1.12. Свидетельство о рождении (при отсутствии основного документа, удостоверяющего личность)</h6>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].BirthDocSeries">Серия</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].BirthDocSeries">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].BirthDocNumber">Номер</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].BirthDocNumber">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].BirthDocIssueDate">Дата выдачи</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="FamilyList[0].BirthDocIssueDate" type="text" class="form-control pickdate">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="FamilyList[0].BirthDocIssuer">Кем выдан</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].BirthDocIssuer">
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-3">
+                    <div class="col-3">
+                        <label class="form-label" asp-for="FamilyList[0].SNILS">СНИЛС (при наличии)</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].SNILS">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="FamilyList[0].INN">ИНН (при наличии)</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].INN">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="FamilyList[0].NameNaroda">Наименование коренного малочисленного народа</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].NameNaroda">
+                    </div>
+                </div>
+                <hr />
+                <h6 class="my-2">2.1. Адрес регистрации по месту жительства в Российской Федерации</h6>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].AdressLivePostalCode">Почтовый индекс</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].AdressLivePostalCode">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].AdressLiveRegion">Субъект Российской Федерации</label>
+                        <select class="select2-search" asp-for="FamilyList[0].AdressLiveRegion">
+                            <option value="">Не выбрано</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].AdressLiveRaion">Район</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].AdressLiveRaion">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].AdressLiveNP">Населенный пункт</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].AdressLiveNP">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].AdressLiveStreet">Улица</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].AdressLiveStreet">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].AdressLiveHouseNumber">Номер дома</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].AdressLiveHouseNumber">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-3">
+                        <label class="form-label" asp-for="FamilyList[0].AdressLiveKorpuseNumber">Номер корпуса</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].AdressLiveKorpuseNumber">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="FamilyList[0].AdressLiveFlatNumber">Номер квартиры</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].AdressLiveFlatNumber">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12 mt-3">
+                        <div class="form-check align-items-center">
+                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[0].AdressLiveIsKhz">
+                            <label class="form-label form-check-label" asp-for="FamilyList[0].AdressLiveIsKhz">
+                                Является адресом местной администрации поселения в муниципальном районе, в границах которого проходят маршруты кочевий
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <h6 class="my-2">2.2. Адрес регистрации по месту пребывания в Российской Федерации (при наличии)</h6>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].AdressRegistrationPostalCode">Почтовый индекс</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].AdressRegistrationPostalCode">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].AdressRegistrationRegion">Субъект Российской Федерации</label>
+                        <select class="select2-search" asp-for="FamilyList[0].AdressRegistrationRegion">
+                            <option value="">Не выбрано</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].AdressRegistrationRaion">Район</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].AdressRegistrationRaion">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].AdressRegistrationNP">Населенный пункт</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].AdressRegistrationNP">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].AdressRegistrationStreet">Улица</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].AdressRegistrationStreet">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyList[0].AdressRegistrationHouseNumber">Номер дома</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].AdressRegistrationHouseNumber">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-3">
+                        <label class="form-label" asp-for="FamilyList[0].AdressRegistrationKorpuseNumber">Номер корпуса</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].AdressRegistrationKorpuseNumber">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="FamilyList[0].AdressRegistrationFlatNumber">Номер квартиры</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].AdressRegistrationFlatNumber">
+                    </div>
+                </div>
+                <h6 class="my-2">3. Сведения о ведении традиционного образа жизни и традиционной хозяйственной деятельности</h6>
+
+                <div class="row mb-3">
+                    <div class="col-12 mt-3">
+                        <div class="form-check align-items-center">
+                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[0].Is_A">
+                            <label class="form-label form-check-label" asp-for="FamilyList[0].Is_A">
+                                3.1. Веду традиционный образ жизни и традиционную хозяйственную деятельность:
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-3">
+                    <div class="col-12 mt-3">
+                        <div class="form-check align-items-center">
+                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[0].Is_B">
+                            <label class="form-label form-check-label" asp-for="FamilyList[0].Is_B">
+                                3.2. Традиционная хозяйственной деятельности является подсобной по отношению к основному виду деятельности:
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <h6 class="my-2">3.3. Осуществляемый вид (виды) традиционной хозяйственной деятельности:</h6>
+                <div class="row mb-3">
+                    <div class="col-12 mt-3">
+                        <div class="form-check align-items-center">
+                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[0].Is_C">
+                            <label class="form-label form-check-label" asp-for="FamilyList[0].Is_C">
+                                3.3.1. Животноводство, в том числе кочевое (оленеводство, коневодство, яководство, овцеводство).
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-3">
+                    <div class="col-12 mt-3">
+                        <div class="form-check align-items-center">
+                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[0].Is_D">
+                            <label class="form-label form-check-label" asp-for="FamilyList[0].Is_D">
+                                3.3.2. Переработка продукции животноводства, включая сбор, заготовку и выделку шкур, шерсти, волоса, окостенелых рогов, копыт, пантов, костей, эндокринных желез, мяса, субпродуктов.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-3">
+                    <div class="col-12 mt-3">
+                        <div class="form-check align-items-center">
+                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[0].Is_E">
+                            <label class="form-label form-check-label" asp-for="FamilyList[0].Is_E">
+                                3.3.3. Собаководство (разведение оленегонных, ездовых и охотничьих собак).
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-3">
+                    <div class="col-12 mt-3">
+                        <div class="form-check align-items-center">
+                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[0].Is_F">
+                            <label class="form-label form-check-label" asp-for="FamilyList[0].Is_F">
+                                3.3.4. Разведение зверей, переработка и реализация продукции звероводства.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-3">
+                    <div class="col-12 mt-3">
+                        <div class="form-check align-items-center">
+                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[0].Is_G">
+                            <label class="form-label form-check-label" asp-for="FamilyList[0].Is_G">
+                                3.3.5. Бортничество, пчеловодство.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-3">
+                    <div class="col-12 mt-3">
+                        <div class="form-check align-items-center">
+                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[0].Is_H">
+                            <label class="form-label form-check-label" asp-for="FamilyList[0].Is_H">
+                                3.3.6. Рыболовство (в том числе морской зверобойный промысел) и реализация водных биологических ресурсов.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-3">
+                    <div class="col-12 mt-3">
+                        <div class="form-check align-items-center">
+                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[0].Is_I">
+                            <label class="form-label form-check-label" asp-for="FamilyList[0].Is_I">
+                                3.3.7. Промысловая охота, переработка и реализация охотничьей продукции.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-3">
+                    <div class="col-12 mt-3">
+                        <div class="form-check align-items-center">
+                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[0].Is_J">
+                            <label class="form-label form-check-label" asp-for="FamilyList[0].Is_J">
+                                3.3.8. Земледелие (огородничество), а также разведение и переработка ценных в лекарственном отношении растений.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-3">
+                    <div class="col-12 mt-3">
+                        <div class="form-check align-items-center">
+                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[0].Is_K">
+                            <label class="form-label form-check-label" asp-for="FamilyList[0].Is_K">
+                                3.3.9. Заготовка древесины и недревесных лесных ресурсов для собственных нужд.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-3">
+                    <div class="col-12 mt-3">
+                        <div class="form-check align-items-center">
+                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[0].Is_L">
+                            <label class="form-label form-check-label" asp-for="FamilyList[0].Is_L">
+                                3.3.10. Собирательство (заготовка, переработка и реализация пищевых лесных ресурсов, сбор лекарственных растений).
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-3">
+                    <div class="col-12 mt-3">
+                        <div class="form-check align-items-center">
+                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[0].Is_M">
+                            <label class="form-label form-check-label" asp-for="FamilyList[0].Is_M">
+                                3.3.11. Добыча и переработка общераспространенных полезных ископаемых для собственных нужд.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-3">
+                    <div class="col-12 mt-3">
+                        <div class="form-check align-items-center">
+                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[0].Is_N">
+                            <label class="form-label form-check-label" asp-for="FamilyList[0].Is_N">
+                                3.3.12. Художественные промыслы и народные ремесла (кузнечное и железоделательное ремесло, изготовление утвари, инвентаря, лодок, нарт, иных традиционных средств передвижения, музыкальных инструментов, берестяных изделий, чучел промысловых зверей и птиц, сувениров из меха оленей и промысловых зверей и птиц, иных материалов, плетение из трав и иных растений, вязание сетей, резьба по кости, резьба по дереву, пошив национальной одежды и другие виды промыслов и ремесел, связанные с обработкой меха, кожи, кости и других материалов).
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-3">
+                    <div class="col-12 mt-3">
+                        <div class="form-check align-items-center">
+                            <input class="form-check-input" type="checkbox" asp-for="FamilyList[0].Is_O">
+                            <label class="form-label form-check-label" asp-for="FamilyList[0].Is_O">
+                                3.3.13. Строительство национальных традиционных жилищ и других построек, необходимых для осуществления традиционных видов хозяйственной деятельности.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <h6 class="my-2">3.4. Работа в организации, осуществляющей традиционную хозяйственную деятельность (при наличии)</h6>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="FamilyList[0].FullNameOrganization_W">Полное наименование организации</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].FullNameOrganization_W">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-3">
+                        <label class="form-label" asp-for="FamilyList[0].OGRN_W">ОГРН</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].OGRN_W">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="FamilyList[0].INN_W">ИНН</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].INN_W">
+                    </div>
+                </div>
+                <hr />
+                <h6 class="my-2">3.5. Членство в общине коренных малочисленных народов (при наличии)</h6>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="FamilyList[0].FullNameOrganization_S">Полное наименование организации</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].FullNameOrganization_S">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-3">
+                        <label class="form-label" asp-for="FamilyList[0].OGRN_S">ОГРН</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].OGRN_S">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="FamilyList[0].INN_S">ИНН</label>
+                        <input type="text" class="form-control" asp-for="FamilyList[0].INN_S">
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger content-center" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Документ 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3 align-items-end">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].Name">Наименование</label>
+                        <input type="text" list="DocsOriginal" asp-for="AppliedDocumentList[0].Name" class="form-control">
+                        <datalist id="DocsOriginal">
+                            <option value="Документ удостоверяющий личность">Документ удостоверяющий личность</option>
+                            <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                            <option value="Свидетельство о заключении брака">Свидетельство о заключении брака</option>
+                            <option value="Свидетельство о расторжении брака">Свидетельство о расторжении брака</option>
+                            <option value="Свидетельство об установлении отцовства">Свидетельство об установлении отцовства</option>
+                            <option value="Расчётный счёт">Расчётный счёт</option>
+                            <option value="Сберкнижка">Сберкнижка</option>
+                            <option value="Трудовая книжка">Трудовая книжка</option>
+                            <option value="Свидетельство о регистрации по месту жительства/пребывания">Свидетельство о регистрации по месту жительства/пребывания</option>
+                            <option value="Удостоверение">Удостоверение</option>
+                            <option value="Справка МСЭ">Справка МСЭ</option>
+                        </datalist>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].Count">Количество экземпляров</label>
+                        <input type="number" min="1" class="form-control" asp-for="AppliedDocumentList[0].Count">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].CountList">Количество листов в одном экземпляре</label>
+                        <input type="number" min="1" class="form-control" asp-for="AppliedDocumentList[0].CountList">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].Digital">на электронных носителях</label>
+                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[0].Digital">
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+    var btnNext = $('.btn-next');
+
+    var applicant = {
+        f: $("#Applicant_F"),
+        i: $("#Applicant_I"),
+        o: $("#Applicant_O"),
+        birthDate: $("#Applicant_BirthDate"),
+        birthPlace: $("#Applicant_AddressBirth"),
+        SNILS: $("#Applicant_SNILS"),
+        INN: $("#Applicant_INN"),
+        docSeries: $("#Applicant_DocSeries"),
+        docNumber: $("#Applicant_DocNumber"),
+        docIssueDate: $("#Applicant_DocIssueDate"),
+        docIssuer: $("#Applicant_DocIssuer"),
+        docDevision: $("#Applicant_DocDevision"),
+    };
+
+    $(function () {
+
+        if (btnNext.length > 0) {
+            btnNext.on('click', function appContent() {
+                applicant.f.val($("#customer_LastName").val());
+                applicant.i.val($("#customer_FirstName").val());
+                applicant.o.val($("#customer_SecondName").val());
+                applicant.birthDate.val($("#customer_DocumentBirthDate").val());
+                applicant.birthPlace.val($("#customer_DocumentBirthPlace").val());
+                applicant.INN.val($("#customer_CustomerInn").val());
+                applicant.SNILS.val($("#customer_CustomerSnils").val());
+                applicant.docSeries.val($("#customer_DocumentSerial").val());
+                applicant.docNumber.val($("#customer_DocumentNumber").val());
+                applicant.docIssueDate.val($("#customer_DocumentIssueDate").val());
+                applicant.docIssuer.val($("#customer_DocumentIssueBody").val());
+                applicant.docDevision.val($("#customer_DocumentCode").val());
+                switch ($('[name="customer.CustomerGender"]').val()) {
+                    case '1':
+                        $('#Applicant_Gender1').prop('checked', true);
+                        break;
+                    case '2':
+                        $('#Applicant_Gender2').prop('checked', true);
+                        break;
+                }
+            });
+        };
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+         
+        $.post(`/SmevBase/SmevGetDictionary`,
+            {
+                type: 'FnsRegionCodes'
+            },
+            function (dictionary) {
+                dictionary.dictionary.forEach(function (item) {
+                    $('[name$="Region"]').append(new Option(item.value, item.key));
+                });
+            });
+
+        additionalForm.find('#addFamilyDocument').on('click', () => addForm('FamilyDocument', 'FamilyList'));
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('[id$="_DocSeries"]').inputmask("9999", options);
+        additionalForm.find('[id$="_DocNumber"]').inputmask("999999", options);
+        additionalForm.find('[id$="INN"]').inputmask("9{12}", options);
+        additionalForm.find('[id$="OGRN"]').inputmask("9{13}", options);
+        additionalForm.find('[id$="INN_S"]').inputmask("9{10}", options);
+        additionalForm.find('[id$="OGRN_S"]').inputmask("9{13}", options);
+        additionalForm.find('[id$="INN_W"]').inputmask("9{12}", options);
+        additionalForm.find('[id$="OGRN_W"]').inputmask("9{13}", options);
+        additionalForm.find('[id$="_DocDevision"]').inputmask("999-999", options);
+        additionalForm.find('[id$="BirthDocSeries"]').inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+        additionalForm.find('[id$="SNILS"]').inputmask("999-999-999 99", options);
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.find("select").each(function () {
+                $(this).select2('destroy');
+            });
+            $cloneList.append($cloneBlock);
+            select2Init($cloneList);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input[type='text']").each(function () {
+                $(this).val("");
+            });
+
+        }
+    });
+
+    function select2Init($block) {
+
+        $.post(`/SmevBase/SmevGetDictionary`,
+            {
+                type: 'FnsRegionCodes'
+            },
+            function (dictionary) {
+                dictionary.dictionary.forEach(function (item) {
+                    $block.find('[name$="Region"]').append(new Option(item.value, item.key));
+                });
+            });
+        $block.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity
+            });
+        });
+
+        $block.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", { clearIncomplete: true, showMaskOnHover: false });
+
+        $block.find("select.select2-search").each(function () {
+            $(this).select2({
+            });
+        });
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        $block.find('[id$="_DocSeries"]').inputmask("9999", options);
+        $block.find('[id$="_DocNumber"]').inputmask("999999", options);
+        $block.find('[id$="INN"]').inputmask("9{12}", options);
+        $block.find('[id$="OGRN"]').inputmask("9{13}", options);
+        $block.find('[id$="INN_S"]').inputmask("9{10}", options);
+        $block.find('[id$="OGRN_S"]').inputmask("9{13}", options);
+        $block.find('[id$="INN_W"]').inputmask("9{12}", options);
+        $block.find('[id$="OGRN_W"]').inputmask("9{13}", options);
+        $block.find('[id$="_DocDevision"]').inputmask("999-999", options);
+        $block.find('[id$="BirthDocSeries"]').inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+        $block.find('[id$="SNILS"]').inputmask("999-999-999 99", options);
+    }
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

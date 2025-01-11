@@ -1,0 +1,62 @@
+﻿@using AisLogistics.App.ViewModels.Cases
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<CaseAuditDto>
+@{
+    var auditIcons = new[] { "bx-paper-plane", "bx-user" };
+}
+@*<link rel="stylesheet" href="~/assets/css/case-details.css" asp-append-version="true" />*@
+
+
+
+ <div class="">
+        @if (Model.Any())
+        {
+            <div class="offset-2 col-xl-8">
+                <ul class="timeline timeline-dashed mt-4">
+                    @foreach (var item in Model.OrderByDescending(o=>o.DateAdd))
+                    {
+                        <li class="timeline-item timeline-item-primary mb-4">
+                            <span class="timeline-indicator timeline-indicator-primary">
+                                <i class="bx @auditIcons[(int)item.Changed?.AuditType!]"></i>
+                            </span>
+                            <div class="timeline-event">
+                                <div class="timeline-header">
+                                    <h6 class="mb-0">@item.Changed?.Description</h6>
+                                    <small class="text-muted">@item.DateAdd.ToLongDateString() @item.DateAdd.ToShortTimeString()</small>
+                                </div>
+                                <hr class="my-2" />
+                                <div class="d-flex justify-content-between flex-wrap gap-2">
+                                    <div class="d-flex flex-wrap">
+                                        <div class="avatar avatar-sm me-2">
+                                            <span class="avatar-initial rounded-circle">@item.Employee.NameBadge</span>
+                                        </div>
+                                        <div>
+                                            <p class="mb-n2 small">@item.Employee.Name</p>
+                                            <small class="text-muted">@item.Employee.Job</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-primary" role="alert">
+                <h6 class="alert-heading mb-1">Нет данных</h6>
+                <span>Действия отсутствуют</span>
+            </div>
+        }
+</div>
+
+
+
+@section Scripts
+    {
+    <script src="~/assets/js/pages/case-details.js" asp-append-version="true"></script>
+    <script>
+
+    </script>
+}

@@ -1,0 +1,276 @@
+﻿@model _34_ComprehensiveServiceModel
+@{
+
+    IEnumerable<SelectListItem> methodInformingList = new List<SelectListItem>
+    {
+        new("По телефону", ""),
+        new("По электронной почте", "1"),
+        new("В ходе личного обращения", "2"),
+    };
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="OtherInfo">Адрес отправки документа прошедший процедуру подтверждения</label>
+                    <input asp-for="OtherInfo" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="MethodInforming">Способ информирования</label>
+                    <select class="select2" asp-items="@methodInformingList" asp-for="MethodInforming"></select>
+                </div>
+            </div>
+            <h5 class="my-2">Услуги</h5>
+            <div id="ServiceList" data-clone-list>
+                @for (var i = 0; i < Model.ServiceList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <h6 class="my-2 title">Услуга @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-9">
+                                <label class="form-label" asp-for="ServiceList[i].Name">Наименование</label>
+                                <input type="text" class="form-control" asp-for="ServiceList[i].Name">
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="ServiceList[i].Sequence">Последовательность</label>
+                                <input type="text" class="form-control" asp-for="ServiceList[i].Sequence">
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addService"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">Приложенные документы</h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedDocumentList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <h6 class="my-2 title">Документ @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3 align-items-end">
+                                    <div class="col-11 w-100">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].Name">Наименование</label>
+                                        <input type="text" class="form-control" asp-for="AppliedDocumentList[i].Name">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].OriginalCount">Количество оригиналов</label>
+                                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[i].OriginalCount">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].OriginalList">Количество листов</label>
+                                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[i].OriginalList">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].CopyCount">Количество копий</label>
+                                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[i].CopyCount">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].CopyList">Количество листов</label>
+                                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[i].CopyList">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <br />
+        <h6 class="my-2 title">Документ 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-11">
+                <div class="row mb-1 align-items-end">
+                    <div class="col-11 w-100">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].Name">Наименование</label>
+                        <input type="text" class="form-control" asp-for="AppliedDocumentList[0].Name">
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-3">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].OriginalCount">Количество оригиналов</label>
+                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[0].OriginalCount">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].OriginalList">Количество листов</label>
+                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[0].OriginalList">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].CopyCount">Количество копий</label>
+                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[0].CopyCount">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].CopyList">Количество листов</label>
+                        <input type="number" min="0" class="form-control" asp-for="AppliedDocumentList[0].CopyList">
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="g-3" id="Service" data-id="" data-original>
+        <br />
+        <h6 class="my-2 title">Услуга 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-9">
+                <label class="form-label" asp-for="ServiceList[0].Name">Наименование</label>
+                <input type="text" class="form-control" asp-for="ServiceList[0].Name">
+            </div>
+            <div class="col-2">
+                <label class="form-label" asp-for="ServiceList[0].Sequence">Последовательность</label>
+                <input type="text" class="form-control" asp-for="ServiceList[0].Sequence">
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+        additionalForm.find('#addService').on('click', () => addForm('ServiceList', 'Service'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.append($cloneBlock);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input").each(function () {
+                $(this).val("");
+            });
+            $block.find('select.select2-nosearch').each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity,
+                })
+            });
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

@@ -1,0 +1,271 @@
+﻿@model CaseServicesDocumentResultsAddModalDto
+@{
+}
+<div>
+    <input type="hidden" name="serviceId" form="sendingForm" value="@ViewBag.Id" />
+    <input type="hidden" name="fileAddType" form="sendingForm" value="@Model.FileAddType" />
+    <fieldset>
+        @switch (Model.FileAddType)
+        {
+            case DocumentFileAddType.Desktop:
+                <div>
+                    <form enctype="multipart/form-data" data-toggle="dropzone" class="dropzone needsclick" id="sendingForm" method="post" role="form">
+                        <div class="dz-message needsclick r-s-18 text-center">
+                            Перетащите файлы сюда или нажмите, чтобы загрузить
+                        </div>
+                        <div class="fallback">
+                            <input name="file" type="file" />
+                        </div>
+                    </form>
+                </div>
+                break;
+            case DocumentFileAddType.Scan:
+                <div>
+                    <form asp-action="ServiceDocumentResultSave" asp-controller="Cases" asp-route-documentId="@Model.DocumentId" enctype="multipart/form-data" data-toggle="scan" class="dropzone dz-clickable" style="cursor: auto;" id="sendingForm" method="post" role="form">
+                        <div id="scan-content" class="row justify-content-center">
+                            <div class="col-sm-6 col-xl-4">
+                                <a href="#" id="startScan" class="align-middle d-block d-table-cell h-px-350 text-center w-px-250">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 54 54" fill="none">
+                                        <path d="M54 39V54H0V39H6V48H48V39H54ZM0 24H54V30H0V24ZM54 15H48V6H6V15H0V0H54V15Z" fill="url(#paint0_linear_257_3900)" />
+                                        <defs>
+                                            <linearGradient id="paint0_linear_257_3900" x1="5.1" y1="8.4" x2="66" y2="62.4" gradientUnits="userSpaceOnUse">
+                                                <stop offset="0" stop-color="#077EFA" />
+                                                <stop offset="1" stop-color="#077EFA" stop-opacity="0" />
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <p class="r-s-18 text-center mt-3">Начать сканирование</p>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                break;
+            case DocumentFileAddType.Archive:
+                break;
+            default:
+                <div class="col-12">
+                    <div class="alert alert-danger" role="alert">
+                        <h6 class="alert-heading mb-1">Что-то пошло не так!</h6>
+                        <span> </span>
+                    </div>
+                </div>
+                break;
+        }
+    </fieldset>
+</div>
+
+<script>
+    $(function () {
+
+        const dropzoneForm = $('form[data-toggle="dropzone"]');
+        const scanForm = $('form[data-toggle="scan"]');
+
+        if (dropzoneForm.length) {
+            const previewTemplate = `<div class="dz-preview dz-file-preview"><div class="dz-details"><div class="dz-thumbnail"><img data-dz-thumbnail><span class="dz-nopreview">Просмотр недоступен</span><div class="dz-success-mark"></div><div class="dz-error-mark"></div><div class="dz-error-message"><span data-dz-errormessage></span></div><div class="progress"><div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-dz-uploadprogress></div></div></div><div class="dz-filename" data-dz-name></div><div class="dz-size" data-dz-size></div></div></div>`;
+            $("#mainModal #documentId").select2({ dropdownParent: $("#mainModal") });
+            const dropzoneMulti = new Dropzone('#sendingForm', {
+                url: "/Cases/ServiceDocumentResultSave",
+                init: function () {
+                    this.on("sending", function (file, xhr, formData) {
+                        formData.append("documentId", '@Model.DocumentId');
+                    });
+                },
+                previewTemplate: previewTemplate,
+                parallelUploads: 1,
+                maxFilesize: 15,
+                addRemoveLinks: true,
+                dictRemoveFile: "Удалить",
+                dictCancelUpload: "Отменить",
+                removedfile: function (file) {
+                    $.ajax({
+                        url: "/Cases/ServiceDocumentResultRemove",
+                        type: 'Post',
+                        data: { id: file.upload.uuid },
+                        //success: (content) => file.previewElement.remove(),
+                        complete: () => sidebar.results.reload()
+                    });
+                    var _ref;
+                    return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+                },
+                success: function (file, response) {
+                    $("#mainModal #documentId").prop('disabled', true);
+                    if (response.responseStatus.isSuccess) {
+                        file.upload.uuid = response.id;
+                        sidebar.results.reload()
+                        return file.previewElement.classList.add("dz-success");
+                    } else {
+                        return $(file.previewElement).addClass("dz-error").find('.dz-error-message').text(response.responseStatus.message);
+                    }
+                },
+                error: function (file, message) {
+                    return $(file.previewElement).addClass("dz-error").find('.dz-error-message').text(message.Message);
+                }
+            });
+        }
+
+        if (scanForm.length) {
+            $("#mainModal #startScan").on("click", () => {
+                scanner.scan(displayImagesOnPage,
+                    {
+                        //"use_asprise_dialog": false,
+                        "output_settings": [
+                            {
+                                "type": "return-base64-thumbnail",
+                                "format": "jpg",
+                                "thumbnail_height": 200
+                            },
+                            {
+                                "type": "return-base64",
+                                "format": "jpg"
+                            }
+                        ],
+                        "i18n": {
+                            "lang": "ru"
+                        }
+                    }
+                );
+            });
+
+            $("#sendingForm").submit(function (e) {
+                e.preventDefault();
+                var $form = $(this),
+                    formAction = $form.attr("action"),
+                    formDataToUpload = new FormData(this);
+                $('[data-scan-item]').each(function () {
+                    var ImageURL = $(this).find('[name="imgCollection"]').attr('src');
+                    var block = ImageURL.split(";");
+                    var contentType = block[0].split(":")[1];
+                    var realData = block[1].split(",")[1];
+                    var blob = b64toBlob(realData, contentType);
+                    formDataToUpload.append("files", blob, `${$(this).find('[name="imgNameCollection"]').val()}.jpg`);
+                });
+                $.ajax({
+                    method: 'POST',
+                    processData: false,
+                    contentType: false,
+                    url: formAction,
+                    data: formDataToUpload,
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        sidebar.document.reload();
+                        $form.spinnerBtn("stop");
+                    },
+                    success: function (data) {
+                        $("#mainModal").modal('hide');
+                    }
+                });
+                return false;
+            });
+
+            /** Processes the scan result */
+            function displayImagesOnPage(successful, mesg, response) {
+                if (!successful) {
+                    console.error('Failed: ' + mesg);
+                    //startScanButton.stop();
+                    return;
+                }
+                if (successful && mesg != null && mesg.toLowerCase().indexOf('user cancel') >= 0) {
+                    console.info('User cancelled');
+                    //startScanButton.stop();
+                    return;
+                }
+                var scannedImages = scanner.getScannedImages(response, true, false); // returns an array of ScannedImage
+                for (var i = 0; (scannedImages instanceof Array) && i < scannedImages.length; i++) {
+                    var scannedImage = scannedImages[i];
+                    processScannedImage(scannedImage);
+                }
+                //startScanButton.stop();
+            }
+
+            /** Images scanned so far. */
+            var imagesScanned = [];
+
+            /** Processes a ScannedImage */
+            function processScannedImage(scannedImage) {
+                //if (!$('#scan-content img').length) $('#scan-content').empty();
+                $('#scan-content').append($('<div>',
+                    {
+                        class: 'col-sm-6 col-xl-4',
+                        append: $('<div>',
+                            {
+                                class: 'gal-box',
+                                'data-scan-item': '',
+                                append: [
+                                    $('<a>',
+                                        {
+                                            class: 'image-popup',
+                                            title: 'Изображение',
+                                            href: scannedImage.src,
+                                            append: $('<img>',
+                                                {
+                                                    class: 'img-fluid',
+                                                    name: 'imgCollection',
+                                                    src: scannedImage.src
+                                                })
+                                        }), $('<div>',
+                                            {
+                                                class: 'gall-info',
+                                                append: $('<input>',
+                                                    {
+                                                        type: 'text',
+                                                        class: 'form-control-sm form-control',
+                                                        name: 'imgNameCollection',
+                                                        value: 'Изображение',
+                                                        on: {
+                                                            change: (e) => {
+                                                                $(e.target).closest('[data-scan-item]').children('a').attr('title', e.target.value);
+                                                            }
+                                                        }
+                                                    })
+                                            })
+                                ],
+                            })
+                    }));
+                $('.image-popup').magnificPopup({
+                    type: 'image',
+                    closeOnContentClick: false,
+                    closeBtnInside: false,
+                    mainClass: 'mfp-with-zoom mfp-img-mobile',
+                    image: {
+                        verticalFit: true,
+                        titleSrc: function (item) {
+                            return item.el.attr('title');
+                        }
+                    },
+                    gallery: {
+                        enabled: true
+                    },
+                    zoom: {
+                        enabled: true,
+                        duration: 300, // don't foget to change the duration also in CSS
+                        easing: 'ease-in-out',
+                        opener: function (element) {
+                            return element.find('img');
+                        }
+                    }
+                });
+            }
+
+            function b64toBlob(b64Data, contentType, sliceSize) {
+                contentType = contentType || '';
+                sliceSize = sliceSize || 512;
+                var byteCharacters = atob(b64Data);
+                var byteArrays = [];
+                for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                    var slice = byteCharacters.slice(offset, offset + sliceSize);
+                    var byteNumbers = new Array(slice.length);
+                    for (var i = 0; i < slice.length; i++) {
+                        byteNumbers[i] = slice.charCodeAt(i);
+                    }
+                    var byteArray = new Uint8Array(byteNumbers);
+                    byteArrays.push(byteArray);
+                }
+                var blob = new Blob(byteArrays, { type: contentType });
+                return blob;
+            }
+        }
+    });
+</script>

@@ -1,0 +1,189 @@
+﻿@model _24_FnsKnd1150122Model
+@{
+    IEnumerable<SelectListItem> vehicleTypeList = new List<SelectListItem> {
+        new ("не выбрано", ""),
+        new ("автомобиль легковой", "01"),
+        new ("автомобиль грузовой", "02"),
+        new ("автобус", "03"),
+        new ("мотоцикл", "04"),
+        new ("мотороллер", "05"),
+        new ("снегоход", "06"),
+        new ("трактор", "07"),
+        new ("мотосани", "08"),
+        new ("вертолет", "09"),
+        new ("самолет", "10"),
+        new ("теплоход", "11"),
+        new ("яхта", "12"),
+        new ("катер", "13"),
+        new ("гидроцикл", "14"),
+        new ("моторная лодка", "15"),
+        new ("иное", "16"),
+    };
+
+    IEnumerable<SelectListItem> methodInforming = new List<SelectListItem>
+    {
+        new ("лично в налоговом органе , через который подано настоящее заявление", "1"),
+        new ("по почте по имеющемуся у налогового органа адресу налогоплательщика", "2"),
+        new ("по телекоммуникационным каналам связи через оператора электронного документооборота", "3"),
+        new ("в многофункциональном центре предоставления государственных и муниципальных услуг (далее — МФЦ), через который подано настоящее заявление, для чего выражаю согласие на передачу мне документов, составляющих налоговую тайну, на бумажном носителе через МФЦ", "4"),
+    };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-sm-8 mx-auto">
+            <h6 class="my-2 title">Транспортное средство</h6>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="CodeFNS">Налоговый орган</label>
+                    <select class="form-select select2-search required" asp-for="CodeFNS"
+                            data-fns-dictionary='{"dictionary":"null", "default_value":"@(Model.CodeFNS  == null || string.IsNullOrEmpty(Model.CodeFNS) ?  "" : Model.CodeFNS)"}'>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="MethodInforming">Способ информирования</label>
+                    <select class="select2-nosearch" asp-items="@methodInforming" asp-for="MethodInforming"></select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="Vehicle.Type">Вид транспортного средства</label>
+                    <select class="select2-nosearch" asp-items="@vehicleTypeList" asp-for="Vehicle.Type"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <label class="form-label" asp-for="Vehicle.Model">Марка (модель)</label>
+                    <input type="text" class="form-control" asp-for="Vehicle.Model">
+                </div>
+                <div class="col-sm-6">
+                    <label class="form-label" asp-for="Vehicle.RegSign">Государственный регистрационный знак (номер)</label>
+                    <input type="text" class="form-control" asp-for="Vehicle.RegSign">
+                </div>
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="Vehicle.DestructionDate">Дата принудительного изъятия транспортного средства</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Vehicle.DestructionDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <h6 class="my-2">Сведения о документе, подтверждающем принудительное изъятие транспортного средства, влекущее прекращение права собственности.</h6>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="Vehicle.DestructionConfirmDocName">Полное наименование документа</label>
+                    <input type="text" class="form-control" asp-for="Vehicle.DestructionConfirmDocName">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="Vehicle.DestructionConfirmDocIssuer">Полное наименование органа (организации, лица), выдавшего документ</label>
+                    <input type="text" class="form-control" asp-for="Vehicle.DestructionConfirmDocIssuer">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-8">
+                    <label class="form-label" asp-for="Vehicle.DestructionConfirmDocNumber">Номер документа</label>
+                    <input type="text" class="form-control" asp-for="Vehicle.DestructionConfirmDocNumber">
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" asp-for="Vehicle.DestructionConfirmDocDate">Дата составления документа</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Vehicle.DestructionConfirmDocDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var regionCode = @Json.Serialize(Options.Value.Region);
+    $(function () {
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+
+        });
+        $(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+    });
+
+    (function getDictionariesfns() {
+        let dicts = new Set();
+        $('[data-fns-dictionary]').each(function () {
+            let $this = $(this);
+            let options = $this.data('fns-dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post('/SmevFns/GetFnsDepartments', null,
+                    function (dictionary) {
+                        
+                        if (dictionary.error) return;
+                        dictionary.sort((prev, next) => {
+                            if (next.code.startsWith(`${regionCode}`)) {
+                                return 1;
+                            } else return -1;
+                        });
+
+                        fillSelectFns(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelectFns(dictName, dictionary) {
+        $.each($(`[data-fns-dictionary*='"${dictName}"']`),
+            function () {
+                let $this = $(this);
+                let items = dictionary;
+
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Не выбрано', ''));
+                }
+                if ($this.is('[data-value-value]')) {
+                    items.forEach(function (item) {
+                        $this.append(new Option(item.name, item.name))
+                    });
+                } else {
+                    items.forEach(function (item) {
+                        $this.append(new Option(item.name, item.code))
+                    });
+                }
+
+                if ($this.data('fns-dictionary').default_value) {
+                    let defVal = $this.data('fns-dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                } else {
+                    $this.val('').trigger('update');
+                }
+            });
+    }
+     
+</script>

@@ -1,0 +1,364 @@
+﻿@using AisLogistics.App.ViewModels.Cases
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    var responseData = Model.Model as SearchCasesResponseData;
+    //var filterselect = new string[] { "По умолчанию", "по дате возрастания", "по дате убывания" };
+    //var statusselect = new string[] { "Просрочено", "Отправлено", "Ошибка", "Получен ответ", "Неизвестно" };
+
+    var smevStatusList = new List<SelectListItem>
+    {
+        new("Просрочено", "0"),
+        new("Отправлено", "1"),
+        new("Ошибка", "2"),
+        new("Получен ответ", "3"),
+        new("Неизвестно", "4"),
+    };
+    //var filterSelectOptions = string.Join("", filterselect.Select((s, i) => $"<option value=\"{i}\">{s}</option>"));
+    //var statusSelectOptions = string.Join("", statusselect.Select((s, i) => $"<option value=\"{i}\">{s}</option>"));
+    //var isView = (bool)ViewBag.CasesAllView;
+}
+
+<link rel="stylesheet" href="~/assets/css/css-reestr.css" asp-append-version="true" />
+
+<section class="search-bar-wrapper">
+    <!-- Search Bar -->
+    <form id="services-search-form" class="mb-3">
+        <div class="row">
+            <div class="col-3">
+                <select class="form-select select select2-search" asp-for="@responseData.ReceptionOfficeId" asp-items="@responseData.OfficesReceptionCustomerList" form="services-search-form">
+
+                </select>
+            </div>
+            <div class="col-7">
+                <div class="search-bar">
+                    <!-- input search -->
+                    <fieldset class="page-search-input input-group position-relative m-0">
+                        <input type="search" asp-for="@responseData.Query" class="form-control rounded-right ps-2" placeholder="Поиск" data-query>
+                    </fieldset>
+                    <!--/ input search -->
+                </div>
+            </div>
+            <div class="col-2">
+                <button type="button" class="btn btn-primary btn-icon"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseAdvancedSearch">
+                    <i class="bi bi-funnel"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="row search-menu pt-2">
+            <div class="col-12">
+                <!-- search menu tab -->
+                <div id="accordionFilter">
+                    <div class="mb-2 collapse" id="collapseAdvancedSearch" data-parent="#accordionFilter">
+                        <div class="card collapse-icon accordion-icon-rotate">
+                            <div class="card-header">
+                                <h4 class="card-title mb-0">Расширенный поиск</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-3">
+                                        <label asp-for="@responseData.SmevServices" class="form-label">Сервис</label>
+                                        <select class="form-select select select2-search" asp-for="@responseData.SmevServices" asp-items="@responseData.SmevServicesList" form="services-search-form">
+                                           
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <label asp-for="@responseData.SmevRequest" class="form-label">Запрос</label>
+                                        <select class="form-select select select2-search" asp-for="@responseData.SmevRequest" asp-items="@responseData.SmevRequestList" form="services-search-form">
+                                         
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <label asp-for="@responseData.SmevStatusId" class="form-label">Статус</label>
+                                        <select class="form-select select select2-search" asp-for="@responseData.SmevStatusId" asp-items="@smevStatusList" form="services-search-form">
+                                            <option value="" selected>ВСЕ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="@responseData.EmployeeAdd">Исполнитель</label>
+                                        <input type="search" asp-for="@responseData.EmployeeAdd" class="form-control" placeholder="ФИО" data-query>
+                                    </div>
+                                    <div class="col-1">
+                                        <label asp-for="@responseData.PeriodId" class="form-label">Тип периода</label>
+                                        <select class="form-select select select2-nosearch" asp-for="@responseData.PeriodId" form="services-search-form">
+                                            <option value="" selected>Выбор</option>
+                                            <option value="1">Сегодня</option>
+                                            <option value="2">Неделя</option>
+                                            <option value="3">Месяц</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-3 wrapper">
+                                        <label for="date_range" class="form-label">Период</label>
+                                        <div class="input-group input-daterange" id="date_range">
+                                            <input type="text" asp-for="@responseData.DateStart" placeholder="@DateTime.Today.ToShortDateString()" class="form-control" form="services-search-form" data-range>
+                                            <span class="input-group-text">по</span>
+                                            <input type="text" asp-for="@responseData.DateStop" placeholder="@DateTime.Today.ToShortDateString()" class="form-control" form="services-search-form" data-range>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 d-none">
+                                        <div class="form-check mt-4 pt-2">
+                                            <input class="form-check-input" type="checkbox" id="responseData_IsFavorite" name="responseData.IsFavorite" value="true" form="services-search-form" />
+                                            <label class="form-check-label" for="responseData_IsFavorite">Избранные</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--/ search menu tab -->
+            </div>
+        </div>
+    </form>
+    <!-- Search Bar end -->
+    <!-- seach result section -->
+    <div class="card">
+        <div class="card-body">
+            <!-- datatable start -->
+            <div class="table-responsive">
+                <table id="@Model.TableName" data-action-table="@Model.TableMethodAction" class="directory_names-items table table-fs"></table>
+            </div>
+            <!-- datatable ends -->
+        </div>
+    </div>
+</section>
+
+@section Scripts
+    {
+    <script>
+        const $tableCases = $("#@(Model.TableName)")
+        period = $("#responseData_PeriodId"),
+
+            $(document).ready(function () {
+
+                $('select.select2-search').select2({});
+
+                $('select.select2-nosearch').select2({
+                    minimumResultsForSearch: Infinity
+                });
+
+                $('select.select2-tags').select2({
+                    tags: true
+                });
+
+                $(".input-daterange").datepicker({
+                    todayHighlight: true,
+                    format: 'dd.mm.yyyy',
+                    language: "ru"
+                });
+
+                period.change(function () {
+                    if ($(this).val() == '') {
+                        $('#date_range').parents('.wrapper').show();
+                    }
+                    else {
+                        $('#date_range').parents('.wrapper').hide();
+                    }
+                });
+
+                $('#services-search-form select').change(function () {
+                    $tableCases.DataTable().ajax.reload();
+                    return false;
+                });
+
+                $('#services-search-form [data-range]').on('changeDate', function () {
+                    $tableCases.DataTable().ajax.reload();
+                    return false;
+                });
+
+                $('#services-search-form [data-query]').on('change', function () {
+                    console.log(11111);
+                    if ($(this).val().length >= 4 || $(this).val().length == 0)
+                        $tableCases.DataTable().ajax.reload();
+                });
+
+                $('#services-search-form [data-query]').on('search', function () {
+                    console.log(11111);
+                    if ($(this).val().length >= 4 || $(this).val().length == 0)
+                        $tableCases.DataTable().ajax.reload();
+                });
+
+                $('#services-search-form').submit(function () {
+                    $tableCases.DataTable().ajax.reload();
+                    return false;
+                });
+
+                $tableCases.DataTable({
+                    sDom: "<'row'<'col-sm-12'tr>>" +
+                          "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                    processing: true,
+                    serverSide: true,
+                    ordering: false,
+                    filter: false,
+                    searchDelay: 1500,
+                    ajax: {
+                        url: $tableCases.data('action-table'),
+                        type: "POST",
+                        datatype: "json",
+                        data: function (data) {
+                            let form = document.querySelector('#services-search-form');
+                            var formData = new FormData(form);
+                            for (var pair of formData.entries()) {
+                                let name = pair[0].split('.')[1];
+                                if (pair[1]) data[name] = pair[1];
+                            }
+                        }
+                    },
+                    initComplete: function () {
+                    },
+                    columns: [
+                        {
+                            title: `Дата запроса`,
+                            className: "case-dateAdd-column",
+                            name: 'dateAdd',
+                            render: function (data, type, row) {
+                                let content = `<div>${row.dateCreate}</div>`;
+                                content += `<div>${row.employeeAdd.name}</div>`;
+                                content += `<div class="r-l-12">${row.employeeAdd.job}</div>`
+                                return content;
+                            }
+                        }, 
+                        {
+                            title: `Заявитель`,
+                            name: 'customer',
+                            className: "case-number-column",
+                            render: function (data, type, row) {
+                                let str = row.service.name.length > 90 ? row.service.name.slice(0, 90) + "..." : row.service.name;
+                                let colorDay = row.service.serivesStage.days < 0 ? "danger" : row.service.serivesStage.days <= 3 ? "warning" : "success";
+                                let colorStage = switchStage(row.service.serivesStage.stage.name);
+                                let content = '';
+                                content += `<div class="d-flex justify-content-between">
+                                                <a href="javascript:void(0);" data-case-id="${row.caseId}" data-smev-id="${row.id}">${row.caseId}</a>
+                                                <div>
+                                                    ${row.service.serivesStage.days === null ? '' : `<div class= "${colorDay} mx-1">${row.service.serivesStage.days}</div>`}
+                                                    <span class="${colorStage} mx-1">${row.service.serivesStage.stage.name}</span>
+                                                    <a href="javascript:void(0);" data-stage-add="${row.service.id}" title="Добавить Этап" class="mx-1"><i class="bi bi-plus-square"></i></a>
+                                                </div>
+                                            </div>`;
+                                content += `<div class="b-s-14">${row.applicant.name}</div>`;
+                                content += `<small class="" title="${row.service.name}">${str}</small>`;
+                                return content;
+                            }
+                        }, 
+                        {
+                            title: `Запрос`,
+                            name: 'officesId',
+                            render: function (data, type, row) {
+                                let str = row.smevService.length > 90 ? row.smevService.slice(0, 90) + "..." : row.smevService;
+                                let content = `<div title="${row.smevService}">${str}</div>`;
+                                content += `<div class="r-l-12">${row.provider}</small>`;
+                                return content;
+                            }
+                        },
+                        {
+                            title: `Статус`,
+                            className: "case-dateAdd-column",
+                            name: 'statusId',
+                            render: function (data, type, row) {
+                                let colorStatus = "";
+                                let statusName = "";
+                                switch (row.status) {
+                                    case 0:
+                                        colorStatus = "danger";
+                                        statusName = `Просрочено`;
+                                        break;
+                                    case 1:
+                                        colorStatus = "warning";
+                                        statusName = `Отправлено`;
+                                        break;
+                                    case 2:
+                                        colorStatus = "danger";
+                                        statusName = `Ошибка`;
+                                        break;
+                                    case 3:
+                                        colorStatus = "success";
+                                        statusName = `Получен ответ`;
+                                        break;
+                                    case 4:
+                                        colorStatus = "warning";
+                                        statusName = `Неизвестно`;
+                                        break;
+                                };
+                                return `<div class="${colorStatus} text-white">${statusName}</div> <div class="r-l-12">${row.comment != null ? row.comment : ''}</div>`;
+                            }
+                        },
+                        {
+                            title: `Дата ответа`,
+                            className: "case-dateAdd-column",
+                            name: 'dateResponce',
+                            render: function (data, type, row) {
+                                let content = '';
+                                content += `<div class="b-s-14">${row.dateResponseFact != null ? row.dateResponseFact : '-'}</div>`
+                                content += `<div class="r-l-14">срок: ${row.dateResponseReg}</div>`
+                                return content;
+                            }
+                        }
+                    ]
+                }).on('click', 'tbody tr', function (e) {
+                    ViewSmev(e);
+                }).on('click', '[data-case-id]', function (e) {
+                    OpenCase(e);
+                }).on('click', '[data-stage-add]', function (e) { e.stopPropagation(); CaseAddStage($(e.currentTarget).data('stage-add')) });
+
+                function ViewSmev(e) {
+                    let th = e.currentTarget;
+                    let td = $(th).find('td.case-number-column a');
+                    let id = $(td).data('smev-id');
+                    $.ajax({
+                        url: '/SmevBase/GetSmevDetailsModal',
+                        type: 'POST',
+                        data: { id: id },
+                        beforeSend: () => {
+                            $.pageBlock();
+                        },
+                        complete: () => {
+                            $.unblockUI();
+                        },
+                        success: function (content) {
+                            $('#mainModal').html(content).modal('show');
+                        },
+                        error: function (event) {
+                            //toastr['error'](event.responseText, 'Ошибка', {
+                            //    closeButton: true,
+                            //    tapToDismiss: false,
+                            //    rtl: false
+                            //});
+                        }
+
+                    });
+                }
+
+                function OpenCase(e) {
+                    e.stopPropagation();
+                    var val = $(e.currentTarget).text();
+                    window.open(`/Cases/Details?id=${val}`, "_blank");
+                }
+
+                function CaseAddStage(mass) {
+                    $.ajax({
+                        url: '/Cases/ServicesStageAddModal',
+                        type: 'POST',
+                        data: { id: mass },
+                        beforeSend: () => {
+                            $.pageBlock();
+                        },
+                        complete: () => {
+                            $.unblockUI();
+                        },
+                        success: function (content) {
+                            $('#mainModal').html(content).modal('show');
+                        }
+                    });
+                };
+
+            });
+    </script>
+}
+

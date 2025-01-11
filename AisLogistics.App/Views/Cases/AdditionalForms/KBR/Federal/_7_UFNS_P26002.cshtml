@@ -1,0 +1,88 @@
+﻿@model _7_UFNS_P26002Model
+@{
+    IEnumerable<SelectListItem> placeAppeal = new List<SelectListItem>
+    {
+        new ("в регистрирующий орган", "1"),
+        new ("в многофункциональный центр", "2"),
+    };
+
+    IEnumerable<SelectListItem> witness = new List<SelectListItem>
+    {
+        new ("нотариус", "1"),
+        new ("лицо, замещающее временно отсутствующего нотариуса", "2"),
+        new ("должностное лицо, уполномоченное на совершение нотариального действия", "3"),
+    };
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h6 class="my-2">Сведения о крестьянском (фермерском) хозяйстве, содержащиеся в Едином государственном реестре индивидуальных предпринимателей</h6>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="OGRNIP">ОГРНИП</label>
+                    <input type="text" class="form-control" asp-for="OGRNIP">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Email">Эл. почта для отправки документов</label>
+                    <input type="text" class="form-control" asp-for="Email">
+                </div>
+                <div class="col-12 mt-3">
+                    <div class="form-check align-items-center">
+                        <input class="form-check-input" type="checkbox" asp-for="IssuePaper">
+                        <label class="form-label form-check-label" asp-for="IssuePaper">
+                            выдать на бумажном носителе
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="PlaceAppeal">Место предоставления заявление заявителем</label>
+                    <select asp-items="@placeAppeal" class="form-select select2-nosearch" asp-for="PlaceAppeal"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Witness">Засвидетельствовавшее лицо подлинность подписи заявителя в нотариальном порядке</label>
+                    <select asp-items="@witness" class="form-select select2-nosearch" asp-for="Witness"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="WitnessINN">ИНН засвидетельствовавшего лица</label>
+                    <input type="text" class="form-control" asp-for="WitnessINN">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () {
+
+        additionalForm.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"), для select модального окна
+                minimumResultsForSearch: Infinity
+            });
+        });
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find("#OGRNIP").inputmask("9{15}", options);
+        additionalForm.find("#WitnessINN").inputmask("9{12}", options);
+    });
+</script>

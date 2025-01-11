@@ -1,0 +1,219 @@
+﻿@using AisLogistics.DataLayer.Entities.Models
+@model DServicesCustomersLegal
+@{
+    var customerLegal = Model;
+}
+<form asp-controller="Cases" asp-action="ServiceCustomerLegalSave" id="sendingForm" method="post" role="form">
+    <input asp-for="@customerLegal.Id" type="hidden" />
+    <fieldset>
+        <!-- Документ, удостоверяющий личность -->
+        <div class="row g-3">
+            <div class="col-11 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Данные организации</div>
+                </div>
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-11 mx-auto">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@customerLegal.SServicesCustomerTypeId">Тип юридического лица</label>
+                        <select type="text" class="form-select select2" asp-for="@customerLegal.SServicesCustomerTypeId">
+                            <option value="1915424" selected="selected">Юридические лица, являющиеся коммерческими организациями</option>
+                            <option value="1915666">Юридические лица, являющиеся некоммерческими организациями</option>
+                            <option value="1915767">Организации без прав юридического лица, индивидуальные предприниматели</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@customerLegal.CustomerName">Наименование организации или ИП</label>
+                        <input type="text" class="form-control" placeholder="Организации или ИП" asp-for="@customerLegal.CustomerName">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@customerLegal.CustomerAddress">Адрес регистрации</label>
+                        <input type="text" class="form-control" placeholder="Адрес регистрации" asp-for="@customerLegal.CustomerAddress">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@customerLegal.CustomerInn">ИНН</label>
+                        <input type="text" class="form-control" placeholder="ИНН" asp-for="@customerLegal.CustomerInn">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@customerLegal.CustomerKpp">КПП</label>
+                        <input type="text" class="form-control" placeholder="КПП" asp-for="@customerLegal.CustomerKpp" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@customerLegal.CustomerOgrn">ОГРН</label>
+                        <input type="text" class="form-control" placeholder="ОГРН" asp-for="@customerLegal.CustomerOgrn" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@customerLegal.CustomerOkato">ОКАТО</label>
+                        <input type="text" class="form-control" placeholder="ОКАТО" asp-for="@customerLegal.CustomerOkato">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@customerLegal.CustomerOktmo">ОКТМО</label>
+                        <input type="text" class="form-control" placeholder="ОКТМО" asp-for="@customerLegal.CustomerOktmo" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Руководитель -->
+        <div class="row g-3">
+            <div class="col-11 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Персональные данные руководителя</div>
+                </div>
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-11 mx-auto">
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@customerLegal.HeadLastName">Фамилия</label>
+                        <input type="text" class="form-control" placeholder="Фамилия" asp-for="@customerLegal.HeadLastName" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@customerLegal.HeadFirstName">Имя</label>
+                        <input type="text" class="form-control" placeholder="Имя" asp-for="@customerLegal.HeadFirstName">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@customerLegal.HeadSecondName">Отчество</label>
+                        <input type="text" class="form-control" placeholder="Отчество" asp-for="@customerLegal.HeadSecondName">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-8">
+                        <label class="form-label" asp-for="@customerLegal.HeadPosition">Должность</label>
+                        <input type="text" class="form-control" placeholder="Должность" asp-for="@customerLegal.HeadPosition" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Контакты -->
+        <div class="row g-3">
+            <div class="col-11 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Контакты</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-11 mx-auto">
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@customerLegal.CustomerPhone1">Телефон</label>
+                    <input type="text" class="form-control" placeholder="Телефон" asp-for="@customerLegal.CustomerPhone1" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@customerLegal.CustomerPhone2">Доп.телефон</label>
+                    <input type="text" class="form-control" placeholder="Доп.телефон" asp-for="@customerLegal.CustomerPhone2">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@customerLegal.CustomerEmail">Электронная почта</label>
+                    <input type="text" class="form-control" placeholder="Электронная почта" asp-for="@customerLegal.CustomerEmail">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<script>
+    $(function () {
+        const customerLegal = {
+            name: $("#customerLegal_CustomerName"),
+            address: $("#customerLegal_CustomerAddress"),
+            inn: $("#customerLegal_CustomerInn"),
+            kpp: $("#customerLegal_CustomerKpp"),
+            ogrn: $("#customerLegal_CustomerOgrn"),
+            okato: $("#customerLegal_CustomerOkato"),
+            oktmo: $("#customerLegal_CustomerOktmo"),
+            firstName: $("#customerLegal_HeadFirstName"),
+            lastName: $("#customerLegal_HeadLastName"),
+            secondName: $("#customerLegal_HeadSecondName"),
+            position: $("#customerLegal_HeadPosition"),
+            phone1: $("#customerLegal_CustomerPhone1"),
+            phone2: $("#customerLegal_CustomerPhone2")
+        };
+
+        $("#mainModal .select2").select2({
+            dropdownParent: $("#mainModal"),
+            minimumResultsForSearch: -1
+        });
+        window.Helpers.initCustomOptionCheck();
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    'customerLegal.CustomerInn': {
+                        validators: {
+                            notEmpty: {}
+                        }
+                    },
+                    'customerLegal.CustomerName': {
+                        validators: {
+                            notEmpty: {}
+                        }
+                    },
+                    'customerLegal.CustomerAddress': {
+                        validators: {
+                            notEmpty: {}
+                        }
+                    }
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                },
+                init: instance => {
+                    instance.on('plugins.message.placed', function (e) {
+                        //* Move the error message out of the `input-group` element
+                        if (e.element.parentElement.classList.contains('input-group')) {
+                            e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
+                        }
+                    });
+                }
+            }).on('core.form.valid', function() {
+                var $form = $("#sendingForm");
+                $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    success: () => {
+                        if ($("#customerName").length > 0) {
+                            let text = $("#customerLegal_CustomerName").val();
+                            $("#customerName").text(text);
+                        }
+                        else {
+                            document.location.reload();
+                        }
+                    },
+                    complete: () => {
+                        $form.spinnerBtn("stop");
+                        $("#mainModal").modal('hide');
+                    }
+                });
+                return false;
+        });
+      
+
+        /*inputmask*/
+        customerLegal.phone1.inputmask("+7(999) 999-99-99", { clearIncomplete: true, showMaskOnHover: false });
+        customerLegal.phone2.inputmask("+7(999) 999-99-99", { clearIncomplete: true, showMaskOnHover: false });
+        customerLegal.kpp.inputmask("999999999", { clearIncomplete: true, showMaskOnHover: false });
+        customerLegal.ogrn.inputmask("9999999999999", { clearIncomplete: true, showMaskOnHover: false });
+    })
+</script>

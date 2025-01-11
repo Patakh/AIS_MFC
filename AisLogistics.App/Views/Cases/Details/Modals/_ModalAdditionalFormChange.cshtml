@@ -1,0 +1,299 @@
+﻿@model (Guid ServiceId, string FormPath)
+
+<link rel="stylesheet" href="~/assets/css/case-create.css" asp-append-version="true" />
+<form asp-controller="Cases" asp-action="AdditionalFormSave" asp-route-id="@Model.ServiceId" id="sendingForm" data-form-path="@Model.FormPath" method="post" role="form"></form>
+
+<script>
+    $(function () {
+        const additionalForms = {
+            load: () => {
+                $('[data-bs-toggle="tooltip"], .tooltip').tooltip("hide");
+                let containerId = $("#sendingForm"),
+                    url = containerId.data("form-path"),
+                    id = "@Model.ServiceId";
+                if (!url) {
+                    additionalForms.initEmptyForm();
+                    return;
+                }
+                $.ajax({
+                    url: `/Cases/${url}`,
+                    data: { id: id },
+                    type: 'GET',
+                    success: (data) => {
+                        containerId.html(data);
+                        additionalForms.initValidation();
+                    }
+                });
+            },
+            save: () => {
+                $.ajax({
+                    url: '/Cases/AdditionalFormSave',
+                    type: 'POST',
+                    data: { 
+                        id: "@Model.ServiceId",
+                        data: JSON.stringify($("#sendingForm").serializeToJSON())
+                    },
+                    beforeSend: () => {
+                        $("#sendingForm").spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $("#sendingForm").spinnerBtn("stop");
+                    },
+                    success: () => {
+                        $("#mainModal").modal('hide');
+                    }
+                });
+                return false;
+            },
+            clear: () => {
+                additionalForms.removeValidation();
+                if (typeof additionalFormValidation === "function")
+                    additionalFormValidation = null;
+            },
+            initValidation: () => {
+                let form = document.querySelector('#sendingForm');
+                let formValidation = FormValidation.formValidation(form, {
+                    locale: 'ru_RU',
+                    localization: FormValidation.locales.ru_RU,
+                    plugins: {
+                        trigger: new FormValidation.plugins.Trigger(),
+                        bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                        autoFocus: new FormValidation.plugins.AutoFocus(),
+                        submitButton: new FormValidation.plugins.SubmitButton()
+                    },
+                    init: instance => {
+                        instance.on('plugins.message.placed', function (e) {
+                            //* Move the error message out of the `input-group` element
+                            if (e.element.parentElement.classList.contains('input-group')) {
+                                e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
+                            }
+                        });
+                    }
+                }).on('core.form.valid', () => { additionalForms.save(); });
+                if (typeof additionalFormValidation !== "function") return;
+                let rules = additionalFormValidation();
+                rules.forEach(obj => {
+                    Object.entries(obj).forEach(([key, value]) => {
+                        formValidation.addField(key, value);
+                    });
+                });
+            },
+            removeValidation: () => {
+                if (typeof additionalFormValidation !== "function") return;
+                let rules = additionalFormValidation();
+                //rules.forEach(obj => {
+                //    Object.entries(obj).forEach(([key]) => {
+                //        FormValidation2.removeField(key);
+                //    });
+                //});
+            },
+            initEmptyForm: () => {
+                $("#sendingForm").html('<p class="h3 mt-5 pt-5 text-center"><i class="bi bi-card-list bx-lg d-block pb-2"></i>У данной услуги отсутствуют дополнительные данные</p>');
+            }
+        }
+        additionalForms.load();
+
+       
+     });
+
+     
+    function Select2Build() {
+        $('select.select2-search').select2({
+            dropdownParent: $("#mainModal")
+        });
+        $('select.select2-nosearch').select2({
+            dropdownParent: $("#mainModal"),
+        minimumResultsForSearch: Infinity
+        });
+        $('select.select2-tags').select2({
+         dropdownParent: $("#mainModal"),
+         tags: true
+        });
+    }
+
+    function findCustomerByDocumentAdditional(ser,num) {
+        let dataform;
+        $.ajax({
+                url: '/Cases/FindCustomerByDocumentDataJson',
+                type: 'POST',
+                async: false,
+                data: {
+                    serial: ser,
+                    number: num
+                },
+                success: function (data) {
+                    dataform = data;
+                },
+                error: () => {
+                    dataform = null;
+                }
+        }); 
+        return dataform;
+    };
+
+    function GetAddressGar(searchAddress, $addressBlock, addressMap) {
+        $.ajax({
+            url: '/SmevBase/GarSearchAddressExtended',
+            type: 'POST',
+            data: {
+                SearchText: searchAddress
+            },
+            beforeSend: function () {
+                $addressBlock.empty();
+                addressMap.clear();
+            },
+            success: function (data) {
+                if (data.result != null && data.result.length > 0) {
+                    $addressBlock.empty();
+                    addressMap.clear();
+                    $addressBlock.append('<lh><small>Выберите вариант или продолжите ввод</small></lh>')
+                    data.result.forEach((item, index) => {
+                        $addressBlock.append(`<li data-index='${index}'>${createAddressText(item)}</li>`);
+                        addressMap.set(`${index}`, item);
+                    });
+                    $addressBlock.show();
+                }
+            }
+        });
+    }
+
+    function createAddressText(adr) {
+        let elements = [];
+
+        if (adr.region) {
+            elements.push(`${adr.region.shortName} ${adr.region.value}`);
+        }
+        if (adr.area) {
+            elements.push(`${adr.area.shortName} ${adr.area.value}`);
+        }
+        if (adr.city) {
+            elements.push(`${adr.city.shortName} ${adr.city.value}`);
+        }
+        if (adr.cityAndRuralSettlements) {
+            elements.push(`${adr.cityAndRuralSettlements.shortName} ${adr.cityAndRuralSettlements.value}`);
+        }
+        if (adr.intracityDistrict) {
+            elements.push(`${adr.intracityDistrict.shortName} ${adr.intracityDistrict.value}`);
+        }
+        if (adr.settlement) {
+            elements.push(`${adr.settlement.shortName} ${adr.settlement.value}`);
+        }
+        if (adr.street) {
+            elements.push(`${adr.street.shortName} ${adr.street.value}`);
+        }
+        if (adr.house) {
+            if (adr.house.houseNum) elements.push(`д ${adr.house.houseNum}`);
+            if (adr.house.buildNum) elements.push(`корп ${adr.house.buildNum}`);
+            if (adr.house.structNum) elements.push(`стр ${adr.house.structNum}`);
+        }
+        if (adr.room) {
+            elements.push(`кв ${adr.room.flatNumber}`);
+        }
+
+        return elements.join(', ');
+    }
+
+   function getDictionariesDataBase() {
+            let dicts = new Set();
+            $('[data-dictionary-database]').each(function() {
+                let $this = $(this);
+                let options = $this.data('dictionary-database');
+                if (!dicts.has(options.dictionary)) {
+                    dicts.add(options.dictionary);
+                    $.get(`/Cases/DataBaseGetDictionary`,
+                        {
+                            type: options.dictionary
+                        },
+                        function(dictionary) {
+                            if (dictionary.error) return;
+                            fillDataBaseSelect(options.dictionary, dictionary);
+                        });
+                }
+            });
+   };
+
+    function fillDataBaseSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary-database*='"${dictName}"']`), function() {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Не выбрано', ''));
+                }
+                if ($this.is('[data-value-value]')) {
+                    items.forEach(function(item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.forEach(function(item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if ($this.data('dictionary-database').default_value) {
+                    let defVal = $this.data('dictionary-database').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                } else {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                }
+        });
+    }
+
+
+    function getDictionaries(isAsync = true) {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function() {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.ajax({
+                    url: '/SmevBase/SmevGetDictionary',
+                    type: 'POST',
+                    async: isAsync,
+                    data: { type: options.dictionary },
+                    success: function (dictionary) {
+                        fillSelect(options.dictionary, dictionary);
+                    }
+                });
+            }
+        });
+    };
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`), function() {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Не выбрано', ''));
+                }
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if ($this.data('dictionary').default_value) {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                } else {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                }
+        });
+    }
+
+   
+</script>

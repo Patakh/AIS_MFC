@@ -1,0 +1,379 @@
+﻿@model _69_ForCareapartmentBuildingModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Categories">Льготное основание</label>
+                    <select class="select2-nosearch" asp-for="Categories">
+                        <option value="гражданин, достигший возраста 70 лет">гражданин, достигший возраста 70 лет</option>
+                        <option value="гражданин, достигший возраста 80 лет">гражданин, достигший возраста 80 лет</option>
+                    </select>
+                </div>
+            </div>
+            <h5 class="my-2">Информация о членах семьи (для согласия на обработку ПД)</h5>
+            <div id="FamilyMembersList" data-clone-list>
+                @for (var i = 0; i < Model.FamilyMembersList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Член семьи @(i + 1)</h6>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3">
+                                    <div class="col-9">
+                                        <label asp-for="FamilyMembersList[i].FIO" class="form-label">ФИО</label>
+                                        <input type="text" asp-for="FamilyMembersList[i].FIO" class="form-control">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="FamilyMembersList[i].BirthDate">Дата рождения</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="FamilyMembersList[i].BirthDate" type="text"
+                                                   class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label asp-for="FamilyMembersList[i].Adres" class="form-label">Адрес</label>
+                                        <input type="text" asp-for="FamilyMembersList[i].Adres" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label asp-for="FamilyMembersList[i].Phone" class="form-label">Телефон</label>
+                                        <input type="text" asp-for="FamilyMembersList[i].Phone" class="form-control">
+                                    </div>
+                                </div>
+                                <h6 class="my-2">Документ, удостоверяющий личность</h6>
+                                <div class="row mb-3">
+                                    <div class="col-4">
+                                        <label asp-for="FamilyMembersList[i].Series" class="form-label">Серия</label>
+                                        <input type="text" asp-for="FamilyMembersList[i].Series" class="form-control">
+                                    </div>
+                                    <div class="col-4">
+                                        <label asp-for="FamilyMembersList[i].Number" class="form-label">Номер</label>
+                                        <input type="text" asp-for="FamilyMembersList[i].Number" class="form-control">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="FamilyMembersList[i].IssueDate">дата выдачи</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="FamilyMembersList[i].IssueDate" type="text"
+                                                   class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label asp-for="FamilyMembersList[i].IssueBody" class="form-label">кем выдано</label>
+                                        <input type="text" asp-for="FamilyMembersList[i].IssueBody" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label asp-for="FamilyMembersList[i].FIORespensive" class="form-label">ФИО представителя (при наличии)</label>
+                                        <input type="text" asp-for="FamilyMembersList[i].FIORespensive" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1 mt-4">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addFamilyMembers"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+
+            <h5 class="my-2">Приложенные документы</h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedDocumentList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Документ @(i + 1)</h6>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-9">
+                                <label asp-for="AppliedDocumentList[i].Name" class="form-label">Наименование</label>
+                                <input type="text" list="Docs" asp-for="AppliedDocumentList[i].Name" class="form-control">
+                                <datalist id="Docs">
+                                    <option value="Документ удостоверяющий личность">Документ удостоверяющий личность</option>
+                                    <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                    <option value="Свидетельство о заключении брака">Свидетельство о заключении брака</option>
+                                    <option value="Свидетельство о расторжении брака">Свидетельство о расторжении брака</option>
+                                    <option value="Свидетельство об установлении отцовства">Свидетельство об установлении отцовства</option>
+                                    <option value="Расчётный счёт">Расчётный счёт</option>
+                                    <option value="Сберкнижка">Сберкнижка</option>
+                                    <option value="Трудовая книжка">Трудовая книжка</option>
+                                    <option value="Свидетельство о регистрации по месту жительства/пребывания">Свидетельство о регистрации по месту жительства/пребывания</option>
+                                    <option value="Удостоверение">Удостоверение</option>
+                                    <option value="Справка МСЭ">Справка МСЭ</option>
+                                    <option value="Ветеран труда РА">Ветеран труда РА</option>
+                                </datalist>
+                            </div>
+                            <div class="col-2">
+                                <label asp-for="AppliedDocumentList[i].NumdberCopies" class="form-label">Количество эк.</label>
+                                <input type="number" asp-for="AppliedDocumentList[i].NumdberCopies" class="form-control">
+                            </div>
+                            <div class="col-1  mt-4">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+</div>
+<div id="originalBlock">
+    <div class="g-3" id="FamilyMembers" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Член семьи 0</h6>
+        <div class="row mb-3 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3">
+                    <div class="col-9">
+                        <label asp-for="FamilyMembersList[0].FIO" class="form-label">ФИО</label>
+                        <input type="text" asp-for="FamilyMembersList[0].FIO" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="FamilyMembersList[0].BirthDate">Дата рождения</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="FamilyMembersList[0].BirthDate" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label asp-for="FamilyMembersList[0].Adres" class="form-label">Адрес</label>
+                        <input type="text" asp-for="FamilyMembersList[0].Adres" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label asp-for="FamilyMembersList[0].Phone" class="form-label">Телефон</label>
+                        <input type="text" asp-for="FamilyMembersList[0].Phone" class="form-control">
+                    </div>
+                </div>
+                <h6 class="my-2">Документ, удостоверяющий личность</h6>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label asp-for="FamilyMembersList[0].Series" class="form-label">Серия</label>
+                        <input type="text" asp-for="FamilyMembersList[0].Series" class="form-control">
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="FamilyMembersList[0].Number" class="form-label">Номер</label>
+                        <input type="text" asp-for="FamilyMembersList[0].Number" class="form-control">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="FamilyMembersList[0].IssueDate">дата выдачи</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="FamilyMembersList[0].IssueDate" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="FamilyMembersList[0].IssueBody" class="form-label">кем выдано</label>
+                        <input type="text" asp-for="FamilyMembersList[0].IssueBody" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label asp-for="FamilyMembersList[0].FIORespensive" class="form-label">ФИО представителя (при наличии)</label>
+                        <input type="text" asp-for="FamilyMembersList[0].FIORespensive" class="form-control">
+                    </div>
+                </div>
+            </div> 
+            <div class="col-1 mt-4">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Документ 0</h6>
+        <div class="row mb-3 align-items-center">
+            <div class="col-9">
+                <label asp-for="AppliedDocumentList[0].Name" class="form-label">Наименование</label>
+                <input type="text" list="Docs" asp-for="AppliedDocumentList[0].Name" class="form-control">
+                <datalist id="Docs">
+                    <option value="Документ удостоверяющий личность">Документ удостоверяющий личность</option>
+                    <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                    <option value="Свидетельство о заключении брака">Свидетельство о заключении брака</option>
+                    <option value="Свидетельство о расторжении брака">Свидетельство о расторжении брака</option>
+                    <option value="Свидетельство об установлении отцовства">Свидетельство об установлении отцовства</option>
+                    <option value="Расчётный счёт">Расчётный счёт</option>
+                    <option value="Сберкнижка">Сберкнижка</option>
+                    <option value="Трудовая книжка">Трудовая книжка</option>
+                    <option value="Свидетельство о регистрации по месту жительства/пребывания">Свидетельство о регистрации по месту жительства/пребывания</option>
+                    <option value="Удостоверение">Удостоверение</option>
+                    <option value="Справка МСЭ">Справка МСЭ</option>
+                    <option value="Ветеран труда РА">Ветеран труда РА</option>
+                </datalist>
+            </div>
+            <div class="col-2">
+                <label asp-for="AppliedDocumentList[0].NumdberCopies" class="form-label">Количество эк.</label>
+                <input type="number" asp-for="AppliedDocumentList[0].NumdberCopies" class="form-control">
+            </div>
+            <div class="col-1 mt-4">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+        additionalForm.find('#addFamilyMembers').on('click', () => addForm('FamilyMembersList', 'FamilyMembers'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.append($cloneBlock);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input").each(function () {
+                $(this).val("");
+            });
+
+            let options = { clearIncomplete: true, showMaskOnHover: false };
+
+            $block.find(".pickdate").datepicker({
+                language: "ru",
+                autoclose: true
+            }).inputmask("99.99.9999", options);
+
+            $block.find('select.select2-nosearch').each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity,
+                })
+            });
+
+            $block.find("select.select2-search").each(function () {
+                $(this).select2({
+                    //dropdownParent: $("#mainModal"),
+                });
+            });
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

@@ -1,0 +1,433 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+}
+
+<style>
+    .search-employees {
+        background: #FFFFFF !important;
+        border-radius: .25rem !important;
+        border: 1px solid #D0D5DD !important;
+    }
+
+    .active-row {
+        border-left: 3px solid #5a8dee !important;
+    }
+
+    .table-employee {
+        margin: 0 !important;
+    }
+
+        .table-employee td {
+            padding: 0 !important;
+            margin-bottom: 1rem !important;
+        }
+
+    table.dataTable {
+        margin-top: 0 !important;
+    }
+
+   
+
+    .pagination .page-item.previous .page-link {
+        display: none !important;
+    }
+
+    .pagination .page-item.next .page-link {
+        display: none !important;
+    }
+
+    .employees-table__wrapper {
+        height: 63vh;
+    }
+
+        .employees-table__wrapper table.dataTable thead tr {
+            display: none !important
+        }
+
+    .employees-content__wrapper {
+        height: 72vh;
+    }
+    .badge-employee {
+        font-weight: 500 !important;
+    }
+</style>
+<!-- table -->
+<section id="content-datatable">
+    <div class="row">
+        <div class="col-3">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="b-s-16">Сотрудники</div>
+                        <div>
+                            @if (User.HasClaim(AccessKeyNames.ReferenceEmployee, AccessKeyValues.Add))
+                            {
+                                <button data-btn-params='{"actionType":"@ActionType.Add"}' data-btn-type="add" data-for-table="@Model.TableName" type="button" class="btn btn-primary">
+                                    <i class="bi bi-plus"></i> Добавить
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <select id="selectOfficeFilter" class="form-select">@Html.Raw(ViewBag.Offices)</select>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="search-bar">
+                        <!-- input search -->
+                        <fieldset class="page-search-input input-group position-relative m-0">
+                            <input id="searchEmployees" type="search" class="form-control rounded-right search-employees ps-2" placeholder="Поиск">
+                        </fieldset>
+                        <!--/ input search -->
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="table-responsive employees-table__wrapper" id="employees-table-wrapper">
+                        <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceEmployee" class="table table-employee table-no-border"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="card active-border" id="empty-table">
+                <div class="card-body">
+                    <div class="alert-custom" role="alert">
+                        <div class="b-s-16">Внимание</div>
+                        <div class="r-s-14">Выберите сотрудника</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card d-none" id="employees-content__wrapper">
+                <div class="card-header border-0">
+                    <div id="menu-content-description" class="b-s-18"></div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-3">
+                            <partial name="Employees/Details/_NavLeft"/>
+                        </div>
+                        <div class="col-9 employees-content__wrapper" id="navs-tabs-default"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--/ table -->
+@section Scripts
+    {
+    <script>
+        const $table = $('#@(Model.TableName)'),
+            isCanAdd = true,
+            isCanEdit = true,
+            isCanRemove = true;
+
+        const showContentInfo = () => {
+            $("#empty-table").hide();
+            $("#employees-content__wrapper").removeClass("d-none");
+        };
+        const hiddenContentInfo = () => {
+            $("#empty-table").show();
+            $("#employees-content__wrapper").addClass("d-none");
+            $("#navs-tabs-default").empty();
+        };
+
+        const $updateInfo = () => {
+            $('[data-url-action]').first().click();
+        }
+
+        let $tableRowId = null;
+        let $tableActivities = null;
+        let $tableAuthDetails = null;
+        let $tableExecutionRoles = null;
+        let $tableExecutions = null;
+        let $tableHistory = null;
+        let $tableJobs = null;
+        let $tableEmployeeOfficesActivities = null;
+        let $tableStatuses = null;
+        let $tableTest = null;
+
+        $(document).ready(function () {
+            new PerfectScrollbar("#employees-table-wrapper");
+            new PerfectScrollbar("#navs-tabs-default");
+
+            $table.DataTable({
+                sDom: "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-12'p>>",
+                processing: true,
+                serverSide: true,
+                filter: false,
+                ordering: false,
+                sorting: false,
+                pageLength: 10,
+                searchDelay: 1500,
+                ajax: {
+                    url: $table.data('action-table'),
+                    type: "POST",
+                    datatype: "json",
+                    data: function (data) {
+                        data['officeId'] = $('#selectOfficeFilter').val();
+                        data['search'] = $('#searchEmployees').val();
+                    }
+                },
+                initComplete: function () {
+
+                },
+                columns: [
+                    {
+                        name: 'employees',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            let colorStatus = "";
+                            switch (row.employeeStatusInfo.sEmployeesStatusId) {
+                                case 0:
+                                    colorStatus = "bg-success";
+                                    break;
+                                case 1:
+                                    colorStatus = "bg-danger";
+                                    break;
+                                case 2:
+                                    colorStatus = "bg-danger";
+                                    break;
+                                case 3:
+                                    colorStatus = "bg-warning";
+                                    break;
+                                case 4:
+                                    colorStatus = "bg-warning";
+                                    break;
+                                case 5:
+                                    colorStatus = "bg-warning";
+                                    break;
+                                case 6:
+                                    colorStatus = "bg-secondary";
+                                    break;
+                                case 7:
+                                    colorStatus = "bg-secondary";
+                                    break;
+                            };
+                            let isActiveRow = $tableRowId != null && $tableRowId === row.sEmployeesId;
+                            let content = `<div data-employee-id="${row.sEmployeesId}" class="card cursor-pointer mb-3 ${isActiveRow === true ? "active-row" : ""}">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <span class="badge badge-employee ${colorStatus}" data-emloyee-status>${row.employeeStatusInfo.statusName}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                     <div class="col-12" data-employee-name="${row.employeeName}">
+                                                        <span class="b-s-16">${row.employeeName}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <span class="r-l-14">${row.employeeOfficeInfo.officeName}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <span class="r-l-14">${row.employeeOfficeInfo.jobPositionName}</span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <span class="badge badge-employee ${row.isActive === true ? 'bg-success' : 'bg-danger'}" data-emloyee-active>Активность</span>
+                                                        <span class="badge badge-employee ${row.isExecution === true ? 'bg-success' : 'bg-danger'}" data-emloyee-execution>Исполнение</span>
+                                                    </div>
+                                                </div>
+                                             </div>
+                                            </div>`;
+                            return content;
+                        }
+
+                    }
+                ]
+            }).on('click', '[data-employee-id]', function (e) { employeeInfoView(e) });
+
+            $table.on("reload", () => {
+                $table.DataTable().ajax.reload(null, false);
+            });
+
+            $('#selectOfficeFilter').select2({
+                language: "ru",
+            }).on('change', function () {
+                $table.DataTable().ajax.reload();
+                return false;
+            });
+
+            $('#searchEmployees').on('input', function () {
+                if ($(this).val().length >= 4 || $(this).val().length == 0)
+                    $table.DataTable().ajax.reload();
+            });
+
+            function employeeInfoView(e) {
+                $('[data-employee-id]').removeClass('active-row');
+                $(e.currentTarget).addClass('active-row');
+                showContentInfo();
+                activeRowsTableId();
+                let text = $(e.currentTarget).find('[data-employee-name]').data('employee-name');
+                $('#menu-content-description').html(text);
+                $('[data-url-action]').first().click();
+            };
+
+            function activeRowsTableId() {
+                $tableRowId = $table.find('.active-row').data('employee-id');
+            }
+
+            $('[data-url-action]').click(function () {
+                $('[data-url-action]').removeClass('bg-light');
+                $('[data-url-action]').removeClass('r-a-16');
+                $(this).addClass('bg-light');
+                $(this).addClass('r-a-16');
+                var url = $(this).data('url-action');
+                let id = $tableRowId;
+                if (id === undefined) {
+                    hiddenContentInfo();
+                }
+                else {
+                    $.ajax({
+                        url: '/Reference/' + url,
+                        type: 'POST',
+                        data: { id: id },
+                        beforeSend: () => {
+                            $.pageBlock();
+                        },
+                        complete: () => {
+                            $.unblockUI();
+                        },
+                        success: function (content) {
+                            $('#navs-tabs-default').empty();
+                            $('#navs-tabs-default').html(content);
+                        }
+                    });
+                }
+            }); 
+        });
+
+        $(document).on("click", "[data-employee-remove-btn-type]", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            $parent = $(this).closest("table");
+            var params = $(this).data("btn-params");
+            var removeUrl = $parent.data("action-remove");
+            if (typeof removeUrl == "undefined") {
+                removeUrl = $(this).data("actionRemove");
+            };
+            Swal.fire({
+                title: 'Причина удаления записи',
+                input: 'textarea',
+                showCancelButton: true,
+                confirmButtonText: 'Удалить',
+                cancelButtonText: 'Отмена',
+                showLoaderOnConfirm: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary ms-2'
+                },
+                buttonsStyling: false,
+                returnInputValueOnDeny: true,
+                preConfirm: (comment) => {
+                    if (comment === '') {
+                        Swal.showValidationMessage(`Введите комменетарий`);
+                    } else {
+                        params.comment = comment;
+                        $.ajax({
+                            type: 'POST',
+                            url: removeUrl,
+                            data: params,
+                            async: false,
+                            beforeSend: () => {
+                                Swal.showLoading();
+                            },
+                            complete: () => {
+                                Swal.hideLoading();
+                            },
+                            success: (data) => {
+                                if ($parent.length>0) {
+                                    $table.DataTable().ajax.reload(null, false);
+                                    $parent.trigger("reload");
+                                }
+                                else {
+                                    document.location.reload();
+                                }
+                            },
+                            error: (data, textStatus) => {
+                                $.notifi('error', 'Ошибка', data.responseText);
+                            }
+                        });
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((comment) => {
+
+            });
+        });
+
+        $(document).on("click", "[data-employee-close-btn-type]", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            $parent = $(this).closest("table");
+            var params = $(this).data("btn-params");
+            var removeUrl = $parent.data("action-remove");
+            if (typeof removeUrl == "undefined") {
+                removeUrl = $(this).data("actionRemove");
+            };
+            Swal.fire({
+                title: 'Закрыть',
+                //input: 'textarea',
+                showCancelButton: true,
+                confirmButtonText: 'Да',
+                cancelButtonText: 'Отмена',
+                showLoaderOnConfirm: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary ms-2'
+                },
+                buttonsStyling: false,
+                returnInputValueOnDeny: true,
+                preConfirm: () => {
+                    $.ajax({
+                        type: 'POST',
+                        url: removeUrl,
+                        data: params,
+                        async: false,
+                        beforeSend: () => {
+                            Swal.showLoading();
+                        },
+                        complete: () => {
+                            Swal.hideLoading();
+                        },
+                        success: (data) => {
+                            if ($parent.length > 0) {
+                                $table.DataTable().ajax.reload(null, false);
+                                $parent.trigger("reload");
+                            }
+                            else {
+                                document.location.reload();
+                            }
+                        },
+                        error: (data, textStatus) => {
+                            $.notifi('error', 'Ошибка', data.responseText);
+                        }
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((comment) => {
+                //$.notifi('success', 'Готово', 'Запись успешно удалена');
+            });
+        });
+
+    </script>
+}

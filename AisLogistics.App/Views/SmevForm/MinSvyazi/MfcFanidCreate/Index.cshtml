@@ -1,0 +1,321 @@
+﻿@using SmevRouter
+
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new MfcFanidCreateRequestData();
+}
+
+<style>
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-request-tabContent .tab-pane {
+        height: 550px;
+    }
+</style>
+ 
+<div class="row justify-content-center" id="smev_request">
+    <div class="col-10">
+        <ul class="nav nav-tabs nav-justified tabs-line mb-3" id="smev-request-tablist" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#smev-request-tab1" type="button">Данные запроса</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="smev-request-tabContent">
+            <div class="tab-pane fade show active" id="smev-request-tab1" role="tabpanel">
+                <div class="row g-3">
+                    <div class="col-12 mx-auto">
+                        <div class="divider text-start">
+                            <div class="divider-text fs-5 b-s-16">Персональные данные заявителя</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center" data-person>
+                    <div class="col-10">
+                        <div class="row mb-1">
+                            <div class="col-12">
+                                <label class="form-label">Заявители</label>
+                                <select class="form-select select2-nosearch applicants">
+                                    <option value="">Выберите заявителя</option>
+                                    @for (int i = 0; i < applicants.Count; i++)
+                                    {
+                                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Fio.LastName">Фамилия</label>
+                                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Fio.LastName" />
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Fio.FirstName">Имя</label>
+                                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Fio.FirstName">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Fio.SecondName">Отчество</label>
+                                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Fio.SecondName">
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-4">
+                                <label class="d-block form-label mb-3">Пол</label>
+                                <div class="form-check form-check-inline mx-0">
+                                    <input class="form-check-input" type="radio" asp-for="@request.Gender" id="smevModel_Gender1" value="Male" checked="checked">
+                                    <label class="form-check-label" for="smevModel_Gender1"><i class="bi bi-gender-male fs-6"></i>Мужской</label>
+                                </div>
+                                <div class="form-check form-check-inline mx-0">
+                                    <input class="form-check-input" type="radio" asp-for="@request.Gender" id="smevModel_Gender2" value="Female">
+                                    <label class="form-check-label" for="smevModel_Gender2"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.BirthDate">Дата Рождения</label>
+                                <div class="input-group input-group-merge">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-calendar3"></i>
+                                    </span>
+                                    <input type="text" class="form-control pickdate" placeholder="Дата рождения"
+                                           asp-for="@request.BirthDate" value="">
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.CitizenshipCode">Гражданство</label>
+                                <select class="select2-search required" asp-for="@request.CitizenshipCode"
+                                        data-dictionary='{"dictionary":"EsiaCitizenshipTypes"}'>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.DocType">Документ, удостоверяющий личность</label>
+                                <select class="select2-nosearch" asp-for="@request.DocType">
+                                    <option value="RfPassport">Паспорт гражданина РФ</option>
+                                    <option value="FIdDoc">Паспорт иностранного гражданина</option>
+                                    <option value="RfBrthCert">Свидетельство о рождении ребенка</option>
+                                    <option value="Trc">Временное удостоверение личности лица без гражданства в РФ</option>
+                                    <option value="RsdncPermit">Вид на жительства лица без гражданства</option>
+                                    <option value="RfgCert">Удостоверение беженца</option>
+                                    <option value="CertRegImm">Свидетельство о рассмотрении ходатайства о признании беженцем на территории РФ по существу</option>
+                                    <option value="Rrf">Свидетельство о предоставлении временного убежища на территории РФ</option>
+                                    <option value="Per">Свидетельство на временное проживание лица без гражданства</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.DocSeries">Серия</label>
+                                <input class="form-control" placeholder="Серия" asp-for="@request.DocSeries">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.DocNumber">Номер</label>
+                                <input class="form-control required" placeholder="Номер" asp-for="@request.DocNumber">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.DocIssueDate">Дата выдачи </label>
+                                <div class="input-group input-group-merge">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-calendar3"></i>
+                                    </span>
+                                    <input type="text" class="form-control pickdate" placeholder="Дата выдачи "
+                                           asp-for="@request.DocIssueDate" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.DocSeries">Кем выдан</label>
+                                <input class="form-control required" placeholder="Кем выдан" asp-for="@request.DocSeries">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-12 form-check">
+                                <input class="form-check-input" type="checkbox" asp-for="@request.IsRussianDoc">
+                                <label class="form-check-label" asp-for="@request.IsRussianDoc">Страна выдачи документа</label>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.AttorneyLetter">Номер доверенности</label>
+                                <input class="form-control required" placeholder="Номер доверенности" asp-for="@request.AttorneyLetter">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Mobile">Номер телефона</label>
+                                <input class="form-control" placeholder="Номер телефона" asp-for="@request.Mobile">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Email">Email</label>
+                                <input class="form-control" placeholder="Email" asp-for="@request.Email">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-12 form-check">
+                                <input class="form-check-input" type="checkbox" asp-for="@request.IsChild">
+                                <label class="form-check-label" asp-for="@request.IsChild">Тип персоны - ребенок</label>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-12 form-check">
+                                <input class="form-check-input" type="checkbox" asp-for="@request.PersonDataTransferAgreement">
+                                <label class="form-check-label" asp-for="@request.PersonDataTransferAgreement">Признак доверенного фото</label>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.ParentPersonId">Идентификатор персоны родителя</label>
+                                <input class="form-control " placeholder="Идентификатор персоны родителя" asp-for="@request.ParentPersonId">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.ParentPersonId">OID оператора, который выполнял запрос. ИС МФЦ запрашивает его в ЕСИА</label>
+                                <input class="form-control required" placeholder="Идентификатор персоны родителя" asp-for="@request.ParentPersonId">
+                            </div>
+                        </div> 
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var applicants = @Json.Serialize(applicants);
+    var formContent = document.getElementById("smev-data-form-content");
+    var documentId;
+    var smevForm = {
+        init: () => {
+            fileUploadInit($(formContent));
+            getDictionaries();
+            $('#smev_request').find('[type="text"]').each(function () {
+                $(this).val('');
+            });
+
+            $('#smev_request').find('.required').each(function () {
+                addValidation($(this));
+            });
+
+            $('#smev_request').find("select.select2-nosearch").each(function () {
+                $(this).select2({
+                    dropdownParent: $("#mainModal"),
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $('#smev_request').find("select.select2-search").each(function () {
+                $(this).select2({
+                    dropdownParent: $("#mainModal")
+                });
+            });
+
+            $(formContent).find('.snils').inputmask("999-999-999 99", {
+                clearIncomplete: true,
+                showMaskOnHover: false
+            });
+        }
+    }
+
+    function ShowErrorInputs() {
+    }
+
+    $('select.applicants').each(function () {
+        $(this).on('change',
+            function () {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]').each(function () {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$="LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$="FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$="SecondName"]').val(applicants[id].secondName);
+                    $block.find('[name$="Snils"]').val(applicants[id].snils);
+
+                    switch (applicants[id].gender) {
+                        case 1:
+                            $block.find('[id$="Gender1"]').prop('checked', true);
+                            break;
+                        case 2:
+                            $block.find('[id$="Gender2"]').prop('checked', true);
+                            break;
+                    }
+                }
+            });
+    });
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+    function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function () {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post(`/SmevBase/SmevGetDictionary`,
+                    {
+                        type: options.dictionary
+                    },
+                    function (dictionary) {
+                        fillSelect(options.dictionary, dictionary);
+                    });
+            }
+        });
+    };
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function () {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Выберите тип', ''));
+                }
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+
+                // Костыль
+                if (items.defaultKey == '400') {
+                    $this.val('').trigger('update');
+                }
+            });
+    }
+</script>

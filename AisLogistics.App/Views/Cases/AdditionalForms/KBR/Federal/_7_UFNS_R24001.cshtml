@@ -1,0 +1,624 @@
+﻿@model _7_UFNS_R24001Model
+@{
+    IEnumerable<SelectListItem> applicationReasonTypeId = new List<SelectListItem>
+    {
+        new ("изменение сведений об индивидуальном предпринимателе", "1"),
+        new ("исправление ошибок, допущенных в ранее представленном заявлении", "2"),
+    };
+
+    IEnumerable<SelectListItem> legalEntityReorganizationStatusAccessTypeId = new List<SelectListItem>
+    {
+        new ("внести сведения/изменить сведения", "1"),
+        new ("исключить сведения", "2"),
+    };
+
+    IEnumerable<SelectListItem> farmHoldingHeadChangeTypeId = new List<SelectListItem>
+    {
+        new ("внести сведения", "1"),
+        new ("исключить сведения", "2"),
+    };
+
+    IEnumerable<SelectListItem> citizenshipType = new List<SelectListItem>
+    {
+        new ("гражданин Российской Федерации", "1"),
+        new ("иностранный гражданин", "2"),
+        new ("лицо без гражданства", "3"),
+    };
+
+    IEnumerable<SelectListItem> applicationProvidedTypeId = new List<SelectListItem>
+    {
+        new ("в регистрирующий орган", "1"),
+        new ("в многофункциональный центр", "2"),
+    };
+
+    IEnumerable<SelectListItem> rightDocumentType = new List<SelectListItem>
+    {
+        new ("вид на жительство", "1"),
+        new ("разрешение на временное проживание", "2"),
+    };
+
+    IEnumerable<SelectListItem> rightDocumentValidityPeriod = new List<SelectListItem>
+    {
+        new ("бессрочно", "1"),
+        new ("срочно", "2"),
+    };
+
+    IEnumerable<SelectListItem> personAuthenticatedSignatureTypeId = new List<SelectListItem>
+    {
+        new ("нотариус", "1"),
+        new ("лицо, замещающее временно отсутствующего нотариуса", "2"),
+        new ("должностное лицо, уполномоченное на совершение нотариального действия", "2"),
+    };
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-sm-8 mx-auto">
+            <h5 class="my-2">
+                Сведения об индивидуальном предпринимателе, содержащиеся в Едином государственном
+                реестре индивидуальных предпринимателей
+            </h5>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label asp-for="OGRNIP" class="form-label">ОГРНИП</label>
+                    <input asp-for="OGRNIP" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm">
+                    <label asp-for="LastNameIP" class="form-label">Фамилия</label>
+                    <input asp-for="LastNameIP" class="form-control" type="text">
+                </div>
+                <div class="col-sm">
+                    <label asp-for="FirstNameIP" class="form-label">Имя</label>
+                    <input asp-for="FirstNameIP" class="form-control" type="text">
+                </div>
+                <div class="col-sm">
+                    <label asp-for="SecondNameIP" class="form-label">Отчество</label>
+                    <input asp-for="SecondNameIP" class="form-control" type="text">
+                </div>
+                <div class="col-sm-12 text-warning">
+                    На русском языке
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm">
+                    <label asp-for="LastNameLatIP" class="form-label">Фамилия</label>
+                    <input asp-for="LastNameLatIP" class="form-control" type="text">
+                </div>
+                <div class="col-sm">
+                    <label asp-for="FirstNameLatIP" class="form-label">Имя</label>
+                    <input asp-for="FirstNameLatIP" class="form-control" type="text">
+                </div>
+                <div class="col-sm">
+                    <label asp-for="SecondNameLatIP" class="form-label">Отчество</label>
+                    <input asp-for="SecondNameLatIP" class="form-control" type="text">
+                </div>
+                <div class="col-sm-12 text-warning">
+                    С использованием букв латинского алфавита
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-3">
+                    <label class="form-label" asp-for="BirthsDateIP">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="BirthsDateIP" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <label asp-for="BirthsPlaceIP" class="form-label">Место рождения</label>
+                    <input asp-for="BirthsPlaceIP" class="form-control" type="text">
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">
+                Сведения о документе, удостоверяющем личность
+            </h6>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="IdentityDocumentIP!.Type">Вид документа</label>
+                    <select asp-items="@SelectListViewModel.DocumentTypeListBase" class="form-select select2-nosearch" asp-for="IdentityDocumentIP!.Type"></select>
+                </div>
+            </div> 
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <label asp-for="IdentityDocumentIP!.Series" class="form-label">Серия</label>
+                    <input asp-for="IdentityDocumentIP!.Series" class="form-control" type="text">
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="IdentityDocumentIP!.Number" class="form-label">Номер</label>
+                    <input asp-for="IdentityDocumentIP!.Number" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="IdentityDocumentIP!.IssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="IdentityDocumentIP!.IssueDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <label asp-for="IdentityDocumentIP!.Issuer" class="form-label">кем выдан</label>
+                    <input asp-for="IdentityDocumentIP!.Issuer" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-4">
+                    <label asp-for="IdentityDocumentIP!.IssuerCode" class="form-label">код подразделения</label>
+                    <input asp-for="IdentityDocumentIP!.IssuerCode" class="form-control" type="text">
+                </div>
+            </div>
+            <br />
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="CitizenshipType">Гражданство</label>
+                    <select asp-items="@citizenshipType" class="form-select select2-nosearch" asp-for="CitizenshipType"></select>
+                </div>
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="CitizenshipCode">Страна гражданства иностранного гражданина</label>
+                    <select class="select2-search" asp-for="CitizenshipCode"
+                            data-dictionary='{"dictionary":"OksmCodes", "default_value":"@(string.IsNullOrEmpty(Model.CitizenshipCode) ?  "643" : Model.CitizenshipCode)"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="ApplicationReasonTypeId">Причина представления заявления</label>
+                    <select asp-items="@applicationReasonTypeId" class="form-select select2-nosearch" asp-for="ApplicationReasonTypeId"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="EMailChangeTypeId">Адрес электронной почты индивидуального предпринимателя</label>
+                    <select asp-items="@applicationReasonTypeId" class="form-select select2-nosearch" asp-for="EMailChangeTypeId"></select>
+                </div>
+                <div class="col-sm-12">
+                    <label asp-for="FarmHoldingHeadChangeEmaill" class="form-label">адрес электронной почты</label>
+                    <input asp-for="FarmHoldingHeadChangeEmaill" class="form-control" type="text">
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">
+                Сведения о документе, подтверждающем право
+                иностранного гражданина или лица без гражданства
+                временно или постоянно проживать на территории Российской Федерации
+            </h6>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="RightDocument!.Type">Вид документа</label>
+                    <select asp-items="@rightDocumentType" class="form-select select2-nosearch" asp-for="RightDocument!.Type"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label asp-for="RightDocument!.Number" class="form-label">номер документа</label>
+                    <input asp-for="RightDocument!.Number" class="form-control" type="text">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="RightDocument!.IssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="RightDocument!.IssueDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <label asp-for="RightDocument!.Issuer" class="form-label">кем выдан</label>
+                    <input asp-for="RightDocument!.Issuer" class="form-control" type="text">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-8">
+                    <label class="form-label" asp-for="RightDocument!.ValidityPeriod">Срок действия</label>
+                    <select asp-items="@rightDocumentValidityPeriod" class="form-select select2-nosearch" asp-for="RightDocument!.ValidityPeriod"></select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="RightDocument!.IssueDate">До</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="RightDocument!.IssueDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+             
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="FarmHoldingHeadChangeTypeId">
+                        Индивидуальный предприниматель является главой крестьянского (фермерского) хозяйства в соответствии со статьей 23
+                        Гражданского кодекса Российской Федерации
+                    </label>
+                    <select asp-items="@farmHoldingHeadChangeTypeId" class="form-select select2-nosearch" asp-for="FarmHoldingHeadChangeTypeId"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="ProductionFacilityOwnerChangeTypeId">
+                        Сведения о том, что индивидуальному предпринимателю принадлежит производственный объект, указанный в пункте 1 статьи
+                        56.1 Федерального закона от 10.01.2002 № 7-ФЗ «Об охране окружающей среды», отчуждение которого возможно при наличии заключения
+                        уполномоченного Правительством Российской Федерации федерального органа исполнительной власти о финансовой обеспеченности
+                        индивидуального предпринимателя или уведомления о сделке, предусмотренных законодательством в области охраны окружающей среды
+                    </label>
+                    <select asp-items="@farmHoldingHeadChangeTypeId" class="form-select select2-nosearch" asp-for="ProductionFacilityOwnerChangeTypeId"></select>
+                </div>
+            </div><br />
+            <h6 class="my-2">Сведения, подлежащие внесению в Единый государственный реестр индивидуальных предпринимателей</h6>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label asp-for="MainActivityCodeIncluded" class="form-label">Код основного вида деятельности</label>
+                    <input asp-for="MainActivityCodeIncluded" class="form-control code2dot" type="text">
+                </div>
+            </div>
+            <h6 class="my-2">Коды дополнительных видов деятельности</h6>
+            <div id="additionalCodesIncludedList" data-clone-list>
+                @for (int i = 0; i < Model.AdditionalActivityCodesIncludedList?.Length; i++)
+                {
+                    string n = i < 9 ? "0" + (i + 1) : (i + 1).ToString();
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col">
+                                <label class="form-label title" asp-for="AdditionalActivityCodesIncludedList[i]!.Code1">Код @(n)</label>
+                                <input type="text" class="form-control code2dot" asp-for="AdditionalActivityCodesIncludedList[i]!.Code1">
+                            </div>
+                            <div class="col">
+                                <label class="form-label title" asp-for="AdditionalActivityCodesIncludedList[i]!.Code2">Код @(n)</label>
+                                <input type="text" class="form-control code2dot" asp-for="AdditionalActivityCodesIncludedList[i]!.Code2">
+                            </div>
+                            <div class="col">
+                                <label class="form-label title" asp-for="AdditionalActivityCodesIncludedList[i]!.Code3">Код @(n)</label>
+                                <input type="text" class="form-control code2dot" asp-for="AdditionalActivityCodesIncludedList[i]!.Code3">
+                            </div>
+                            <div class="col">
+                                <label class="form-label title" asp-for="AdditionalActivityCodesIncludedList[i]!.Code4">Код @(n)</label>
+                                <input type="text" class="form-control code2dot" asp-for="AdditionalActivityCodesIncludedList[i]!.Code4">
+                            </div>
+                            <div class="col-sm-auto mt-4">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-sm-2 mt-2">
+                    <button type="button" class="btn btn-primary" id="addAdditionalCodeIncluded"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">2.	Сведения, подлежащие исключению из Единого государственного реестра индивидуальных предпринимателей</h6>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label asp-for="MainActivityCodeExcluded" class="form-label">Код основного вида деятельности</label>
+                    <input asp-for="MainActivityCodeExcluded" class="form-control code2dot" type="text">
+                </div>
+            </div>
+            <h6 class="my-2 ">Коды дополнительных видов деятельности</h6>
+            <div id="additionalCodesExcludedList" data-clone-list>
+                @for (int i = 0; i < Model.AdditionalActivityCodesExcludedList?.Length; i++)
+                {
+                    string n = i < 9 ? "0" + (i + 1) : (i + 1).ToString();
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col">
+                                <label class="form-label title" asp-for="AdditionalActivityCodesExcludedList[i]!.Code1">Код @(n)</label>
+                                <input type="text" class="form-control code2dot" asp-for="AdditionalActivityCodesExcludedList[i]!.Code1">
+                            </div>
+                            <div class="col">
+                                <label class="form-label title" asp-for="AdditionalActivityCodesExcludedList[i]!.Code2">Код @(n)</label>
+                                <input type="text" class="form-control code2dot" asp-for="AdditionalActivityCodesExcludedList[i]!.Code2">
+                            </div>
+                            <div class="col">
+                                <label class="form-label title" asp-for="AdditionalActivityCodesExcludedList[i]!.Code3">Код @(n)</label>
+                                <input type="text" class="form-control code2dot" asp-for="AdditionalActivityCodesExcludedList[i]!.Code3">
+                            </div>
+                            <div class="col">
+                                <label class="form-label title" asp-for="AdditionalActivityCodesExcludedList[i]!.Code4">Код @(n)</label>
+                                <input type="text" class="form-control code2dot" asp-for="AdditionalActivityCodesExcludedList[i]!.Code4">
+                            </div>
+                            <div class="col-sm-auto mt-4">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-sm-2 mt-2">
+                    <button type="button" class="btn btn-primary" id="addAdditionalCodeExcluded"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <br />
+            <h5 class="my-2">
+                Документы, связанные с предоставлением государственной услуги по государственной регистрации индивидуального предпринимателя
+            </h5>
+            <div class="row mb-3">
+                <div class="col-sm-12" checkBlock>
+                    <div class="form-check">
+                        <input asp-for="DocumentSendingTypeId" id="DocumentSendingTypeId1" class="form-check-input" type="radio" value="2" checked="@(Model.DocumentSendingTypeId == "2")">
+                        <label for="DocumentSendingTypeId1" class="form-check-label">
+                            направить по электронной почте
+                        </label>
+                    </div>
+                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                        <div class="col-sm-11 mb-2">
+                            <input type="text" class="form-control" asp-for="DocumentSendingEmail">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-check">
+                        <input asp-for="DocumentSendingTypeId" id="DocumentSendingTypeId2" class="form-check-input" type="radio" value="1" checked="@(Model.DocumentSendingTypeId == "1")">
+                        <label for="DocumentSendingTypeId2" class="form-check-label">выдать на бумажном носителе</label>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="ApplicationProvidedTypeId">Заявление представлено непосредственно заявителем</label>
+                    <select asp-items="@applicationProvidedTypeId" class="form-select select2-nosearch" asp-for="ApplicationProvidedTypeId"></select>
+                </div>
+            </div>
+            <br />
+            <h5 class="my-2">Сведения о лице, засвидетельствовавшим подлинность подписи заявителя в нотариальном порядке</h5>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="PersonAuthenticatedSignatureTypeId">Лицом, засвидетельствовавшим подлинность подписи заявителя, является</label>
+                    <select asp-items="@personAuthenticatedSignatureTypeId" class="form-select select2-nosearch" asp-for="PersonAuthenticatedSignatureTypeId"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="additionalActivityCodeIncluded" data-id="" data-original>
+        <div class="row mb-1 align-items-center">
+            <div class="col">
+                <label class="form-label title" asp-for="AdditionalActivityCodesIncludedList[0]!.Code1">Код 0</label>
+                <input type="text" class="form-control code2dot" asp-for="AdditionalActivityCodesIncludedList[0]!.Code1">
+            </div>
+            <div class="col">
+                <label class="form-label title" asp-for="AdditionalActivityCodesIncludedList[0]!.Code2">Код 0</label>
+                <input type="text" class="form-control code2dot" asp-for="AdditionalActivityCodesIncludedList[0]!.Code2">
+            </div>
+            <div class="col">
+                <label class="form-label title" asp-for="AdditionalActivityCodesIncludedList[0]!.Code3">Код 0</label>
+                <input type="text" class="form-control code2dot" asp-for="AdditionalActivityCodesIncludedList[0]!.Code3">
+            </div>
+            <div class="col">
+                <label class="form-label title" asp-for="AdditionalActivityCodesIncludedList[0]!.Code4">Код 0</label>
+                <input type="text" class="form-control code2dot" asp-for="AdditionalActivityCodesIncludedList[0]!.Code4">
+            </div>
+            <div class="col-sm-auto mt-4">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+        <hr />
+    </div>
+
+    <div class="g-3" id="additionalActivityCodeExcluded" data-id="" data-original>
+        <div class="row mb-1 align-items-center">
+            <div class="col">
+                <label class="form-label title" asp-for="AdditionalActivityCodesExcludedList[0]!.Code1">Код 0</label>
+                <input type="text" class="form-control code2dot" asp-for="AdditionalActivityCodesExcludedList[0]!.Code1">
+            </div>
+            <div class="col">
+                <label class="form-label title" asp-for="AdditionalActivityCodesExcludedList[0]!.Code2">Код 0</label>
+                <input type="text" class="form-control code2dot" asp-for="AdditionalActivityCodesExcludedList[0]!.Code2">
+            </div>
+            <div class="col">
+                <label class="form-label title" asp-for="AdditionalActivityCodesExcludedList[0]!.Code3">Код 0</label>
+                <input type="text" class="form-control code2dot" asp-for="AdditionalActivityCodesExcludedList[0]!.Code3">
+            </div>
+            <div class="col">
+                <label class="form-label title" asp-for="AdditionalActivityCodesExcludedList[0]!.Code4">Код 0</label>
+                <input type="text" class="form-control code2dot" asp-for="AdditionalActivityCodesExcludedList[0]!.Code4">
+            </div>
+            <div class="col-sm-auto mt-4">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+        <hr />
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+        additionalForm.find('[type="radio"], input[type="checkbox"]').on('click', function () {
+            togleFields();
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        (function getDictionaries() {
+            let dicts = new Set();
+            $('[data-dictionary]').each(function () {
+                let $this = $(this);
+                let options = $this.data('dictionary');
+                if (!dicts.has(options.dictionary)) {
+                    dicts.add(options.dictionary);
+                    $.post(`/SmevBase/SmevGetDictionary`,
+                        {
+                            type: options.dictionary
+                        },
+                        function (dictionary) {
+                            if (dictionary.error) return;
+                            fillSelect(options.dictionary, dictionary);
+                        });
+                }
+            });
+        }());
+
+        function fillSelect(dictName, dictionary) {
+            $.each($(`[data-dictionary*='"${dictName}"']`),
+                function () {
+                    let $this = $(this);
+                    let items = dictionary;
+                    $this.empty();
+                    if (!$this.hasClass('required')) {
+                        $this.append(new Option('Не выбрано', ''));
+                    }
+                    if ($this.is('[data-value-value]')) {
+                        items.dictionary.forEach(function (item) {
+                            $this.append(new Option(item.value, item.value));
+                        });
+                    } else {
+                        items.dictionary.forEach(function (item) {
+                            $this.append(new Option(item.value, item.key));
+                        });
+                    }
+
+                    if ($this.data('dictionary').default_value) {
+                        let defVal = $this.data('dictionary').default_value;
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    } else {
+                        $this.val('').trigger('update');
+                    }
+                });
+        }
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        additionalForm.find(".code2dot")
+            .inputmask("99.99.99", options);
+
+        additionalForm.find('[name$="IssuerCode"]')
+            .inputmask("999-999", options);
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        additionalForm.find('#addAdditionalCodeIncluded').on('click', () => addForm('additionalCodesIncludedList', 'additionalActivityCodeIncluded'));
+        additionalForm.find('#addAdditionalCodeExcluded').on('click', () => addForm('additionalCodesExcludedList', 'additionalActivityCodeExcluded'));
+
+        togleFields();
+    })
+
+    function togleFields() {
+        additionalForm.find('[checkBlock] input[type="radio"], [checkBlock] input[type="checkbox"]').each(function () {
+            let $block = $(this).closest('[checkBlock]');
+
+            if ($(this).is(':checked')) {
+                visibilityBlock($block.find('[checkBlockBody]'), false, false);
+            } else {
+                visibilityBlock($block.find('[checkBlockBody]'), true, true);
+            }
+        })
+    }
+
+    function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+        let $cloneList = additionalForm.find(`#${cloneListId}`);
+        let $original = originalBlock.find(`#${originalId}`);
+        let $cloneBlock = $original.clone(true);
+        let indexId = $cloneList.find('[data-clone]').length;
+        renameBlock($cloneBlock, indexId);
+        blockInit($cloneBlock);
+        $cloneList.append($cloneBlock);
+    }
+
+    function blockInit($block) {
+        visibilityBlock($block, false, false);
+
+        $block.find("input").each(function () {
+            $(this).val("");
+        });
+        $block.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+        });
+
+        $block.find(".code2dot")
+            .inputmask("99.99.99", { clearIncomplete: true, showMaskOnHover: false });
+
+    }
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+
+            $cloneBlock.find('.title').each(function () {
+                $(this).text($(this).text().replace(/\d+/, indexId < 9 ? '0' + (indexId + 1) : indexId + 1));
+            });
+
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+     
+</script>

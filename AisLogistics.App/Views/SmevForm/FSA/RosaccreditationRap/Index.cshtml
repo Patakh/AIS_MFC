@@ -1,0 +1,77 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new FsaRosaccreditationRapRequestData();
+}
+
+<div class="row justify-content-center mt-3">
+    <div class="col-10">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Детали запроса</div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center mt-3">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <label class="form-label" asp-for="@request.RapType">Тип запрашиваемого аттестата</label>
+                <select class="form-select select2-nosearch" asp-for="@request.RapType">
+                    <option value="Rap" selected>Реестр аккредитованных лиц</option>
+                    <option value="RapUn">Реестр аккредитованных лиц в области обеспечения единства измерений</option>
+                </select>
+            </div>            
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Number">Номер</label>
+                <input type="text" class="form-control required" placeholder="Номер" asp-for="@request.Number" />
+            </div>
+        </div>
+        <div class="row mt-3">            
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.AccreditedName">Наименование аккредитованного лица</label>
+                <input type="text" class="form-control" placeholder="Наименование аккредитованного лица" asp-for="@request.AccreditedName">
+            </div>            
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.ApplicantName">Наименование заявителя</label>
+                <input type="text" class="form-control" placeholder="Наименование заявителя" asp-for="@request.ApplicantName">
+            </div>            
+        </div>
+    </div>
+</div>
+
+<script>
+    function ShowErrorInputs() {
+    }
+
+    var applicants = @Json.Serialize(applicants);
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                $(formContent).find('.required').each(function() {
+                    addValidation($(this));
+                });
+
+                $(formContent).find("select.select2-nosearch").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+            }
+        };
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }    
+</script>

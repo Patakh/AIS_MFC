@@ -1,0 +1,209 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new GetInnSingularRequestData();
+}
+<style>
+    #smev-data-form-content span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+</style>
+
+<div class="container m-0 p-0" id="smev_request" data-person>
+    <div class="row mb-1">
+        <div class="col-12">
+            <label class="form-label">Заявители</label>
+            <select class="form-select select2-nosearch applicants">
+                <option value="">Выберите заявителя</option>
+                @for (int i = 0; i < applicants.Count; i++)
+                {
+                    <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row justify-content-center g-3">
+        <div class="col-10">
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Fio.LastName">Фамилия</label>
+                    <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Fio.LastName"/>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Fio.FirstName">Имя</label>
+                    <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Fio.FirstName"/>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Fio.SecondName">Отчество</label>
+                    <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Fio.SecondName"/>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="@request.BirthDate" type="text" class="form-control pickadate required" placeholder="Дата рождения"/>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <label class="form-label" asp-for="@request.BirthPlace">Место рождения</label>
+                    <input type="text" class="form-control" placeholder="Место рождения" asp-for="@request.BirthPlace"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center g-3">
+        <div class="col-11">
+            <div class="divider text-start">
+                <div class="divider-text b-s-16">Документ, удостоверяющий личность</div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center g-3">
+        <div class="col-10">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="@request.DocumentType">Тип документа</label>
+                    <select class="form-select select2-search" asp-for="@request.DocumentType" data-dictionary='{"dictionary":"FnsDocTypes", "default_value":"03"}'></select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.DocumentSeriesNumber">Серия/Номер документа</label>
+                    <input type="text" class="form-control required" placeholder="Серия/Номер документа" asp-for="@request.DocumentSeriesNumber"/>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.DocumentDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="@request.DocumentDate" type="text" class="form-control pickadate required" placeholder="Дата выдачи"/>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.DocumentIssuerCode">Код подразделения</label>
+                    <input type="text" class="form-control issuer-code" placeholder="Код подразделения" asp-for="@request.DocumentIssuerCode"/>
+                </div>
+                <div class="col-12">
+                    <label class="form-label" asp-for="@request.DocumentIssuer">Кем выдан документ</label>
+                    <input type="text" class="form-control" placeholder="Кем выдан документ" asp-for="@request.DocumentIssuer"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var applicants = @Json.Serialize(applicants);
+    var formContent = document.getElementById("smev-data-form-content");
+    var smevForm = {
+        init: () => {
+            $(formContent).find('[data-disabled]').each(function() {
+                visibilityBlock($(this), true);
+            });
+
+            $(formContent).find('[type="text"]').each(function () {
+                $(this).val('');
+            });
+
+            select2Init($(formContent));
+
+            var maskOptions = { clearIncomplete: true, showMaskOnHover: false };
+
+            /* init inputmask */
+            $(formContent).find(".pickadate").val('').inputmask("99.99.9999", maskOptions);
+            $(formContent).find('.snils').inputmask("999-999-999 99", maskOptions);
+            $(formContent).find('.issuer-code').inputmask("999-999", maskOptions);
+
+            getDictionaries();
+            $(formContent).find('.applicants').val('0').trigger('change');
+        }
+    };
+
+    function ShowErrorInputs() {
+        for (let item of document.querySelectorAll('#smev_request input')) {
+            if (item.getAttribute('disabled') == null && item.classList.contains('required') && item.value == '') {
+                break;
+            }
+        }
+    }
+
+    function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function () {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.ajax({
+                    url: '/SmevBase/SmevGetDictionary',
+                    type: 'POST',
+                    async: false,
+                    data: { type: options.dictionary },
+                    success: function (dictionary) {
+                        region = dictionary.defaultKey;
+                        fillSelect(options.dictionary, dictionary);
+                    }
+                });
+            }
+        });
+    };
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function () {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Не выбран', ''));
+                }
+
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+            }
+        );
+    }
+
+    $('select.applicants').each(function () {
+        $(this).on('change',
+            function () {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]').each(function () {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('button').text(`${applicants[id].lastName} ${applicants[id].firstName} ${applicants[id].secondName}`);
+                    $block.find('[name$="LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$="FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$="SecondName"]').val(applicants[id].secondName);
+                    $block.find('[name$="Snils"]').val(applicants[id].snils);
+                    $block.find('[name$="BirthPlace"]').val(applicants[id].birthPlace);
+                    $block.find('[name$="BirthDate"]').val(applicants[id].birthDate ? new Date(applicants[id].birthDate).toLocaleDateString() : '');
+            
+                    $block.find('[name$="DocumentType"]').val(applicants[id].documentTypeCode.padStart(2, '0')).trigger('change');
+                    $block.find('[name$="DocumentSeriesNumber"]').val(`${applicants[id].documentSerial} ${applicants[id].documentNumber}`);
+                    $block.find('[name$="DocumentDate"]').val(applicants[id].documentIssueDate ? new Date(applicants[id].documentIssueDate).toLocaleDateString() : '');
+                    $block.find('[name$="DocumentIssuer"]').val(applicants[id].documentIssueBody);
+                    $block.find('[name$="DocumentIssuerCode"]').val(applicants[id].documentCode);
+                }
+            });
+    });
+</script>

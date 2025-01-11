@@ -1,0 +1,346 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new VoteOrderAnnulRequestData
+            {
+                Applicant = new VoteOrderAnnulApplicantType
+                {
+                    Fio = new FioType()
+                }
+            };
+}
+<style>
+
+    #smev-data-form-content span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content .accordion-button {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content #listService .select2-selection.select2-selection--single {
+        height: auto !important;
+    }
+
+    #smev-data-form-content #listService .select2-selection__rendered {
+        white-space: normal !important;
+    }
+
+    #smev-data-form-content ul.address-list {
+        display: none;
+        width: 100%;
+        z-index: 1000;
+        position: absolute;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        background-clip: padding-box;
+    }
+
+        #smev-data-form-content ul.address-list li {
+            padding: 6px;
+        }
+
+            #smev-data-form-content ul.address-list li:hover {
+                color: white;
+                background-color: #5a8dee;
+                cursor: pointer
+            }
+</style>
+<div class="row justify-content-center" id="smev_request">
+    <div class="col-9">
+        <div class="row  mb-3">
+            <div class="col-12 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Детали запроса</div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center">
+            <div class="col-5">
+                <label class="form-label" asp-for="@request.VoteRegionCode">Субьект РФ, на котором избиратель был включен в список для голосования</label>
+                <select class="form-select select2-search" asp-for="@request.VoteRegionCode"
+                        data-dictionary='{"dictionary":"RosReestrEgrnRegionsRf"}'>
+                </select>
+            </div>
+            <div class="col-3 mt-3">
+                <label class="form-label" asp-for="@request.VoteDate">Дата голосования</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.VoteDate" type="text" class="form-control pickdate required" placeholder="Дата голосования" value="">
+                </div>
+            </div>
+            <div class="col-4 mt-3">
+                <label class="form-label" asp-for="@request.VoteLevel">Уровень выборов</label>
+                <select class="select2-nosearch" asp-for="@request.VoteLevel">
+                    <option value="Federal">Федеральный</option>
+                    <option value="Regional">Региональный</option>
+                </select>
+            </div>
+        </div>
+        <div class="row justify-content-center g-3">
+            <div class="col-12">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Персональные данные </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-1 justify-content-center">
+            <div class="col-6">
+                <label class="form-label">Заявители</label>
+                <select class="form-select select2-nosearch applicants">
+                    <option value="">Выберите заявителя</option>
+                    @for (int i = 0; i < applicants.Count; i++)
+                    {
+                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName @applicants[i].BirthDate.ToString()?.Remove(10,8)</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row mb-1 justify-content-center">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Applicant.Fio.LastName">Фамилия</label>
+                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Applicant.Fio.LastName" />
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Applicant.Fio.FirstName">Имя</label>
+                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Applicant.Fio.FirstName">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Applicant.Fio.SecondName">Отчество</label>
+                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Applicant.Fio.SecondName">
+            </div>
+            <div class="col-3">
+
+                <label class="form-label" asp-for="@request.Applicant.BirthDate">Дата рождения</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar3"></i>
+                    </span>
+                    <input type="text" class="form-control pickdate" placeholder="Дата рождения"
+                           asp-for="@request.Applicant.BirthDate" value="">
+                </div>
+            </div>
+        </div>
+        <div class="row  mb-3">
+            <div class="col-12 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Документ, идентифицирующий личность</div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center">
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.Applicant.DocType">Тип документа</label>
+                <select class="select2-nosearch" asp-for="@request.Applicant.DocType">
+                    <option value="PassportRf">Паспорт гражданина РФ</option>
+                    <option value="TempDoc">Временный документ</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center" id="rekvizitDoc">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Applicant.PassSeries">Серия</label>
+                <input class="form-control required" placeholder="Серия" asp-for="@request.Applicant.PassSeries">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Applicant.PassNumber">Номер</label>
+                <input class="form-control required" placeholder="Номер" asp-for="@request.Applicant.PassNumber" type="text">
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center" id="tempDocNumber" data-disabled>
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.Applicant.TempDocNum">Номер временного документа</label>
+                <input class="form-control required" placeholder="Номер временного документа" asp-for="@request.Applicant.TempDocNum" type="text">
+            </div>
+        </div>
+        <div class="row justify-content-center g-3">
+            <div class="col-8">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Контактные данные</div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3 justify-content-center">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Applicant.Phone">Номер телефона</label>
+                <input type="text" class="form-control phone required" placeholder="Номер телефона" asp-for="@request.Applicant.Phone">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var applicants = @Json.Serialize(applicants);
+    function ShowErrorInputs() { };
+    getDictionaries();
+
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                $(formContent).find('.required').each(function() {
+                    addValidation($(this));
+                });
+
+                $(formContent).find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                let options = { clearIncomplete: true, showMaskOnHover: false };
+                $(formContent).find('.phone').inputmask("9{10}", options);
+                $(formContent).find('.email').inputmask("email", options);
+                $(formContent).find('[name$="PassSeries"]').inputmask("9{4}", options);
+                $(formContent).find('[name$="PassNumber"]').inputmask("9{6}", options);
+                $(formContent).find('[name$="TempDocNum"]').inputmask("9{6}", options);
+                $(formContent).find(".pickdate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                });
+                $(formContent).find(".pickdate").inputmask("99.99.9999", options);
+                $(formContent).find("select.select2-nosearch").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+                $(formContent).find("select.select2-search").each(function() {
+                    $(this).select2({
+                        //dropdownParent: $("#mainModal"),
+                    });
+                });
+                $(formContent).find('[name$="DocType"]').on('change',
+                    function() {
+
+                        switch ($(this).val()) {
+                            case 'PassportRf':
+                                visibilityBlock($(formContent).find('#rekvizitDoc'), false, false);
+                                visibilityBlock($(formContent).find('#tempDocNumber'), true, true);
+                                break;
+                            case 'TempDoc':
+                                visibilityBlock($(formContent).find('#rekvizitDoc'), true, true);
+                                visibilityBlock($(formContent).find('#tempDocNumber'), false, false);
+                                break;
+                        }
+                    });
+            }
+        };
+    $('.applicants').on('change',
+        function() {
+            let id = $(this).val();
+            let $block = $(formContent);
+            let options = { clearIncomplete: true, showMaskOnHover: false };
+            let $series = $(formContent).find('[name$="PassSeries"]');
+            let $number = $(formContent).find('[name$="PassNumber"]');
+            if (id) {
+                $block.find('[name$="LastName"]').val(applicants[id].lastName);
+                $block.find('[name$="FirstName"]').val(applicants[id].firstName);
+                $block.find('[name$="SecondName"]').val(applicants[id].secondName);
+                $block.find('[name$="PassSeries"]').val(applicants[id].documentSerial);
+                $block.find('[name$="PassNumber"]').val(applicants[id].documentNumber);
+                $block.find('[name$="BirthDate"]').val(applicants[id].birthDate? new Date(applicants[id].birthDate).toLocaleDateString() : '');
+                $block.find('[name$="Phone"]').val(applicants[id].phone);
+            }
+        });
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').hide();
+                } else {
+                    $block.hide();
+                }
+                break;
+            case false:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').show();
+                } else {
+                    $block.removeClass('d-none')
+                    $block.show();
+                }
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        removeValidation($(this));
+                    }
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                    if ($(this).hasClass('required')) {
+                        addValidation($(this));
+                    }
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function() {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.ajax({
+                    url: '/SmevBase/SmevGetDictionary',
+                    type: 'POST',
+                    async: false,
+                    data: { type: options.dictionary },
+                    success: function(dictionary) {
+                        fillSelect(options.dictionary, dictionary);
+                    }
+                });
+            }
+        });
+    };
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function() {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Не выбран', ''));
+                }
+
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+            }
+        );
+
+    }
+</script>

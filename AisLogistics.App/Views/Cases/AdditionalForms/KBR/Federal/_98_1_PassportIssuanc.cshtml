@@ -1,0 +1,479 @@
+﻿@using AisLogistics.App.ViewModels.SelectListViewModel
+@model _98_1_PassportIssuancModel
+ 
+@{ 
+    IEnumerable<SelectListItem> Adress = new List<SelectListItem> {
+        new ("Пребывания","1"),
+        new ("Обращения","2"),
+    };
+
+    IEnumerable<SelectListItem> Please = new List<SelectListItem> {
+        new ("Выдать паспорт","1"),
+        new ("Заменить паспорт","2"),
+    };
+
+    IEnumerable<SelectListItem> Core = new List<SelectListItem> {
+        new ("Не выбрано",""),
+        new ("Замена паспорта при ошибке, внесение исправлений", "При ошибке, внесение исправлений"),
+        new ("Замена паспорта при порче", "При порче паспорта"),
+        new ("Получение паспорта впервые с достижением 14 лет", "В связи с достижением 14 лет"),
+        new ("Прием документов при замене паспорта в связи достижением 20 лет" , "В связи достижением 20 лет"),
+        new ("Прием документов при замене паспорта в связи достижением 45 лет", "В связи достижением 45 лет"),
+        new ("Прием документов при замене паспорта в связи со сменой фамилии", "В связи со сменой фамилии"),
+        new ("Прием документов при утрате (хищении) ранее выданного паспорта", "При утрате (хищении) ранее выданного паспорта"),
+    };
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h6 class="my-2">Заявитель</h6>
+            <div class="row mb-3">
+                <input asp-for="Gender" type="hidden">
+                <div class="col-8" id="men">
+                    <label class="form-label" asp-for="Fameli">Семейное положение </label>
+                    <select class="form-select select2-nosearch" asp-for="Fameli">
+                        <option value="Женат">Женат</option>
+                        <option value="Не женат">Не женат</option>
+                        <option value="Разведён">Разведён</option>
+                        <option value="Вдовец">Вдовец</option>
+                    </select>
+                </div>
+                <div class="col-8" id="whumen">
+                    <label class="form-label" asp-for="Fameli">Семейное положение </label>
+                    <select class="form-select select2-nosearch" asp-for="Fameli">
+                        <option value="Замужем">Замужем</option>
+                        <option value="Не замужем">Не замужем</option>
+                        <option value="Разведена">Разведена</option>
+                        <option value="Вдова">Вдова</option>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="FameliDate">Дата заключения брака(расторжения)брака</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="FameliDate" type="text" class="form-control pickdate" placeholder="Дата заключения брака (расторжения) брака">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="OrganBraka">Наименование органа государственной регистрации заключения брака </label>
+                    <input asp-for="OrganBraka" type="text" class="form-control" placeholder="Наименование органа государственной регистрации заключения брака">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label class="form-label" id="wifi" asp-for="Wife"></label>
+                    <input asp-for="Wife" id="wifiplace" type="text" class="form-control" placeholder="ФИО супруги (-а)">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="WifeDateBirth">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="WifeDateBirth" type="text" class="form-control pickdate" placeholder="Дата рождения">
+                    </div>
+                </div>
+            </div>
+
+            <br />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FioFather">ФИО отца </label>
+                    <input asp-for="FioFather" type="text" class="form-control" placeholder="ФИО отца">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FioMother">ФИО матери </label>
+                    <input asp-for="FioMother" type="text" class="form-control" placeholder="ФИО матери">
+                </div>
+            </div> 
+            <br /> 
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="Place">Место</label>
+                    <select asp-items="@Adress" class="form-select select2-nosearch" asp-for="Place"></select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="AddressPlace.Region">Регион</label>
+                    <input type="text" asp-for="AddressPlace.Region" class="form-control" placeholder="Регион" data-addressprev-clean>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="AddressPlace.District">Город/Район</label>
+                    <input type="text" asp-for="AddressPlace.District" class="form-control" placeholder="Район" data-addressprev-clean>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="AddressPlace.Locality">село</label>
+                    <input type="text" asp-for="AddressPlace.Locality" class="form-control" placeholder="Село" data-addressprev-clean>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="AddressPlace.Street">Улица</label>
+                    <input type="text" asp-for="AddressPlace.Street" class="form-control" placeholder="Улица" data-addressprev-clean>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="AddressPlace.House">Дом</label>
+                    <input type="text" asp-for="AddressPlace.House" class="form-control" placeholder="Дом" data-addressprev-clean>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="AddressPlace.Housing">Корпус</label>
+                    <input type="text" asp-for="AddressPlace.Housing" class="form-control" placeholder="Корпус" data-addressprev-clean>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="AddressPlace.Building">Строение</label>
+                    <input type="text" asp-for="AddressPlace.Building" class="form-control" placeholder="Строение" data-addressprev-clean>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="AddressPlace.Flat">Квартира</label>
+                    <input type="text" asp-for="AddressPlace.Flat" class="form-control" placeholder="Квартира" data-addressprev-clean>
+                </div>
+            </div>
+            <br />
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="Phone">Телефон</label>
+                    <input type="text" asp-for="Phone" class="form-control" placeholder="Телефон">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="Email">Email</label>
+                    <input type="text" asp-for="Email" class="form-control" placeholder="Email">
+                </div>
+            </div>
+            <br />
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="d-block form-label">ранее состоял(а) в ином гражданстве</label>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="LastGrajdan" value="1" checked="checked">
+                        <label class="form-check-label" asp-for="LastGrajdan">Да</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="LastGrajdan" value="2">
+                        <label class="form-check-label" asp-for="LastGrajdan">Нет</label>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <label class="form-label" asp-for="LastGrajdanContry">иное гражданство</label>
+                    <input type="text" asp-for="LastGrajdanContry" class="form-control" placeholder="Иное гражданство">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ReasonGrajdanRF">Основание приобретения гражданства РФ</label>
+                    <input type="text" asp-for="ReasonGrajdanRF" class="form-control" placeholder="Основание приобретения гражданства РФ">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" id="please" asp-for="Please">Просьба</label>
+                    <select asp-items="@Please" class="form-select select2-nosearch" asp-for="Please">
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="DataFillings">Дата заполнения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="DataFillings" type="text" class="form-control pickdate" placeholder="Дата заполнения">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="d-block form-label">выдать временное удостоверение личности</label>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="TimeGrajdan" value="1" checked="checked">
+                        <label class="form-check-label" asp-for="TimeGrajdan">Да</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="TimeGrajdan" value="2">
+                        <label class="form-check-label" asp-for="TimeGrajdan">Нет</label>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <label class="form-label" asp-for="Core"> </label>
+                    <select class="form-select select2-nosearch" asp-for="Core" asp-items="@Core">
+                    </select>
+                </div>
+            </div>
+
+            <hr />
+            <br />
+            <h6 class="my-2">Предъявленный документ (в том числе сведения об утраченном (похищенном) паспорте)</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="RipTypeDoc">Тип документа</label>
+                    <select class="form-select select2-nosearch required" asp-for="RipTypeDoc" asp-items="@SelectListViewModel.DocumentTypeList"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="RipDocSeries">Серия</label>
+                    <input type="text" class="form-control" placeholder="Серия" asp-for="RipDocSeries">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="RipDocNumber">Номер</label>
+                    <input type="text" class="form-control" placeholder="Номер" asp-for="RipDocNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="RipDocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="RipDocIssueDate" type="text" class="form-control pickdate" placeholder="Дата выдачи">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="RipDocIssuer">Кем выдан</label>
+                    <input type="text" class="form-control" placeholder="Кем выдан" asp-for="RipDocIssuer">
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">Переменил(а) ФИО и другие анкетные данные с</h6>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="ApLastName">Фамилия</label>
+                    <input type="text" asp-for="ApLastName" class="form-control" placeholder="Фамилия">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ApFirstName">Имя</label>
+                    <input type="text" asp-for="ApFirstName" class="form-control" placeholder="Имя">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ApSecondName">Отчество</label>
+                    <input type="text" asp-for="ApSecondName" class="form-control" placeholder="Отчество">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ApBirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="ApBirthDate" type="text" class="form-control pickdate" placeholder="Дата рождения">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="d-block form-label">Пол</label>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="ApGender" value="1" checked="checked">
+                        <label class="form-check-label" asp-for="ApGender"><i class="bi bi-gender-male fs-6"></i> Мужской</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="ApGender" value="2">
+                        <label class="form-check-label" asp-for="ApGender"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                    </div>
+                </div>
+
+                <div class="col-8">
+                    <label class="form-label" asp-for="ApAddressBirth">Место рождения(по существующему административно-территориальному делению) </label>
+                    <input asp-for="ApAddressBirth" type="text" class="form-control" placeholder="Место рождения">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="RecvizitDoc">Реквизиты документа, послужившего основанием для замены паспорта</label>
+                    <input asp-for="RecvizitDoc" type="text" class="form-control" placeholder="Реквизиты документа, послужившего основанием для замены паспорта">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="RezultSreach">Результаты проверок</label>
+                    <input asp-for="RezultSreach" type="text" class="form-control" placeholder="Результаты проверок">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="Rezult">Принятое решение</label>
+                    <input asp-for="Rezult" type="text" class="form-control" placeholder="Принятое решение">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="RezultDate">Дата</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="RezultDate" type="text" class="form-control pickdate" placeholder="Дата">
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <br />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FioGeneral">ФИО начальника подразделения по вопросам миграции</label>
+                    <input asp-for="FioGeneral" type="text" class="form-control" placeholder="ФИО начальника подразделения по вопросам миграции">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Reqvest">Поступил запрос из (наименование подразделения)</label>
+                    <input asp-for="Reqvest" type="text" class="form-control" placeholder="наименование подразделения">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ReasonReqvest">в связи с</label>
+                    <input asp-for="ReasonReqvest" type="text" class="form-control" placeholder="в связи с">
+                </div>
+            </div>
+            <hr />
+            <br />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Reaspone">Поступило сообщение из (наименование подразделения по вопросам миграции)</label>
+                    <input asp-for="Reaspone" type="text" class="form-control" placeholder="наименование подразделения по вопросам миграции">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ReasonReaspone">об уничтожении в связи с </label>
+                    <input asp-for="ReasonReaspone" type="text" class="form-control" placeholder="об уничтожении в связи с ">
+                </div>
+            </div>
+            <hr />
+            <br />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="NameRipPasport">Паспорт уничтожен по акту (наименование подразделения по вопросам миграции, уничтожившего паспорт) </label>
+                    <input asp-for="NameRipPasport" type="text" class="form-control" placeholder="наименование подразделения по вопросам миграции, уничтожившего паспорт">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label class="form-label" asp-for="CodeRipPasport">Код подразделения</label>
+                    <input asp-for="CodeRipPasport" type="text" class="form-control" placeholder="Код подразделения">
+                </div>
+                <div class="col">
+                    <label class="form-label" asp-for="ActNumberRipPasport">Акт номер</label>
+                    <input asp-for="ActNumberRipPasport" type="text" class="form-control" placeholder="Акт номер">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="DateRipPasport">Дата</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="DateRipPasport" type="text" class="form-control pickdate" placeholder="Дата">
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <br />
+            <div class="row mb-3">
+                <label class="form-label" asp-for="DopInfo">Другие сведения</label>
+                <textarea class="form-control" asp-for="DopInfo"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var btnNext = $('.btn-next'); 
+
+    $(function () {
+        btnNext.on('click', function appContent() {
+
+            $('#Gender').val($('#customer_CustomerGender1').val());
+
+            if ($('#customer_CustomerGender1').is(':checked')) {
+                $('#wifi').text('ФИО супруги');
+                $('#wifiplace').attr('placeholder', 'ФИО супруги')
+                visibilityBlock($('#whumen'), true, true);
+                visibilityBlock($('#men'), false, false);
+            };
+
+            if ($('#customer_CustomerGender2').is(':checked')) {
+                $('#wifi').text('ФИО супруга');
+                $('#wifiplace').attr('placeholder', 'ФИО супруга');
+                visibilityBlock($('#whumen'), false, false);
+                visibilityBlock($('#men'), true, true);
+            };
+
+            $('#Core').val($('#service-procedure-table tr.selected').text().trim()).trigger('change');
+        });
+
+        if ($('#Gender').val() == '1') {
+            $('#wifi').text('ФИО супруги');
+            $('#wifiplace').attr('placeholder', 'ФИО супруги')
+            visibilityBlock($('#whumen'), true, true);
+            visibilityBlock($('#men'), false, false); 
+        };
+
+        if ($('#Gender') == '2') {
+            $('#wifi').text('ФИО супруга');
+            $('#wifiplace').attr('placeholder', 'ФИО супруга');
+            visibilityBlock($('#whumen'), false, false);
+            visibilityBlock($('#men'), true, true);
+        };
+           
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+       
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function () {
+                $(this).select2({
+                });
+            });
+        }
+
+    });
+     
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>
+

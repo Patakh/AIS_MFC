@@ -1,0 +1,1295 @@
+﻿@using SmevRouter
+@using System.Linq.Expressions
+@using AisLogistics.App.Models.AdditionalForms.Municipal
+@using Sentry
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new GetRosReestrEgrnSubjectInfoRequestData
+    {
+          Declarant = new EgrnDeclarant
+                {
+                    Person = new EgrnInfoPersonData
+                    {
+                        ApplicantFio = new FioType(),
+                        ContactInfo = new EgrnContactInfo()
+                    }
+                },
+        Owners = new[]
+            {
+                new EgrnOwner{
+                    Person = new EgrnPerson{
+                        Fio = new FioType(),
+                        ContactInfo = new EgrnContactInfo(),
+                        Citizenship = new EgrnCitizenship()
+                    },
+                    Organization =new EgrnOrganization
+                    {
+                        NativeOrgParams =new EgrnNativeOrgParams(),
+                        ContactInfo = new EgrnContactInfo()
+                    },
+                    RfSubject = new EgrnRfSubject{
+                        ContactInfo = new EgrnContactInfo()
+                    }
+                }
+            }
+    };
+}
+
+<style>
+
+    #smev-data-form-content span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-request-tabContent .tab-pane {
+        height: 550px;
+    }
+
+    #smev-data-form-content div.lg-container {
+        position: relative;
+        z-index: 9999;
+    }
+
+    #smev-data-form-content .accordion-button {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content #listService {
+        font-size: 16px;
+    }
+
+        #smev-data-form-content #listService .select2-selection.select2-selection--single {
+            height: auto !important;
+        }
+
+        #smev-data-form-content #listService .select2-selection__rendered {
+            white-space: normal !important;
+        }
+
+    #smev-data-form-content ul.address-list {
+        width: 100%;
+        z-index: 1000;
+        position: absolute;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        background-clip: padding-box;
+    }
+option{
+
+}
+        #smev-data-form-content ul.address-list li {
+            padding: 6px;
+        }
+
+            #smev-data-form-content ul.address-list li:hover {
+                color: white;
+                background-color: #5a8dee;
+                cursor: pointer
+            }      
+</style>
+
+<div id="smev_request">
+<div class="row g-3">
+    <div class="col-10 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Данные заявителя</div>
+        </div>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-8 mx-auto">
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.RegionCode">Регион направления запроса</label>
+                <select class="form-control select2-search" asp-for="@request.RegionCode"
+                        data-dictionary='{"dictionary":"RosReestrEgrnRegionsRf"}'>
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.Declarant.DeclarantKind">Категория подателей заявления</label>
+                <select class="form-control select2-search required" asp-for="@request.Declarant.DeclarantKind"
+                        data-dictionary='{"dictionary":"RosReestrEgrnDeclarantKindReg"}'>
+                </select>
+            </div>
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.Declarant.ContragentType">Тип заявителя</label>
+                <select class="form-control select2-nosearch" asp-for="@request.Declarant.ContragentType">
+                    <option value="Person" selected>Физическое лицо</option>
+                    <option value="Organization">Российское юридическое лицо</option>
+                    <option value="OrganizationIn">Иностранное юридическое лицо</option>
+                    <option value="PreviligedPerson">Уполномоченное лицо: нотариус, судебный пристав-исполнитель и прочие</option>
+                    <option value="Other">ФОИВ, РОИВ, ОМСУ</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div data-person id="PersonCustomer">
+    <div class="row g-3">
+        <div class="col-12 mx-auto">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Данные физического лица</div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <label class="form-label">Заявители</label>
+            <select class="form-select select2-nosearch applicants">
+                <option value="">Выберите заявителя</option>
+                @for (int i = 0; i < applicants.Count; i++)
+                {
+                    <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Declarant.Person.ApplicantFio.LastName">Фамилия</label>
+                    <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Declarant.Person.ApplicantFio.LastName"/>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Declarant.Person.ApplicantFio.FirstName">Имя</label>
+                    <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Declarant.Person.ApplicantFio.FirstName">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Declarant.Person.ApplicantFio.SecondName">Отчество</label>
+                    <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Declarant.Person.ApplicantFio.SecondName">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Declarant.Person.ApplicantSnils">СНИЛС</label>
+                    <input type="text" class="form-control snils required" placeholder="СНИЛС" asp-for="@request.Declarant.Person.ApplicantSnils" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Declarant.Person.ApplicantDocumentCode">Документ, удостоверяющий личность</label>
+                    <select class="form-control select2-search required" asp-for="@request.Declarant.Person.ApplicantDocumentCode"
+                            data-dictionary='{"dictionary":"RosReestrEgrnIdentityDocuments"}'>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Declarant.Person.ApplicantDocumentSeries">Серия</label>
+                    <input type="text" class="form-control" placeholder="Серия" asp-for="@request.Declarant.Person.ApplicantDocumentSeries" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Declarant.Person.ApplicantDocumentNumber">Номер</label>
+                    <input type="text" class="form-control required" placeholder="Номер" asp-for="@request.Declarant.Person.ApplicantDocumentNumber" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Declarant.Person.ContactInfo.EMail">E-mail</label>
+                    <div class="input-group">
+                        <span class="input-group-text">@@</span>
+                        <input type="text" class="form-control" placeholder="E-mail" asp-for="@request.Declarant.Person.ContactInfo.EMail" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Declarant.Person.ContactInfo.PhoneNumber">Номер телефона</label>
+                    <input type="text" class="form-control required" placeholder="Номер телефона" asp-for="@request.Declarant.Person.ContactInfo.PhoneNumber" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="OrganizationCustomer" data-disabled>
+    <div class="row g-3">
+        <div class="col-12 mx-auto">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Данные российского юридического лица</div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.NativeOrgParams.Inn">ИНН</label>
+                    <input type="text" class="form-control required" placeholder="ИНН" asp-for="@request.Declarant.Organization.NativeOrgParams.Inn" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.NativeOrgParams.Ogrn">ОГРН</label>
+                    <input type="text" class="form-control required" placeholder="ОГРН" asp-for="@request.Declarant.Organization.NativeOrgParams.Ogrn" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.NativeOrgParams.RegDate">Дата регистрации</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="@request.Declarant.Organization.NativeOrgParams.RegDate" type="text" class="form-control pickadate required" placeholder="Дата регистрации" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.Name">Наименование</label>
+                    <input type="text" class="form-control required" placeholder="Наименование" asp-for="@request.Declarant.Organization.Name" />
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.Kpp">КПП</label>
+                    <input type="text" class="form-control required" placeholder="КПП" asp-for="@request.Declarant.Organization.Kpp" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.ContactInfo.EMail">E-mail</label>
+                    <div class="input-group">
+                        <span class="input-group-text">@@</span>
+                        <input type="text" class="form-control" placeholder="E-mail" asp-for="@request.Declarant.Organization.ContactInfo.EMail" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.ContactInfo.PhoneNumber">Мобильный номер</label>
+                    <input type="text" class="form-control required" placeholder="Номер телефона" asp-for="@request.Declarant.Organization.ContactInfo.PhoneNumber" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="OrganizationInCustomer" data-disabled>
+    <div class="row g-3">
+        <div class="col-10 mx-auto">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Данные иностранного юридического лица</div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.ForeignOrgParams.CountryCode">Код страны регистрации</label>
+                    <input type="text" class="form-control required" placeholder="Код страны регистрации" asp-for="@request.Declarant.Organization.ForeignOrgParams.CountryCode" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.ForeignOrgParams.Kio">КИО</label>
+                    <input type="text" class="form-control required" placeholder="КИО" asp-for="@request.Declarant.Organization.ForeignOrgParams.Kio" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.ForeignOrgParams.RegDate">Дата регистрации</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="@request.Declarant.Organization.ForeignOrgParams.RegDate" type="text" class="form-control pickadate required" placeholder="Дата регистрации" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.ForeignOrgParams.RegNumber">Номер регистрации</label>
+                    <input type="text" class="form-control required" placeholder="Номер регистрации" asp-for="@request.Declarant.Organization.ForeignOrgParams.RegNumber" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.Name">Наименование</label>
+                    <input type="text" class="form-control required" placeholder="Наименование" asp-for="@request.Declarant.Organization.Name" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.Kpp">КПП</label>
+                    <input type="text" class="form-control" placeholder="КПП" asp-for="@request.Declarant.Organization.Kpp" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.ContactInfo.EMail">E-mail</label>
+                    <div class="input-group">
+                        <span class="input-group-text">@@</span>
+                        <input type="text" class="form-control" placeholder="E-mail" asp-for="@request.Declarant.Organization.ContactInfo.EMail" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.ContactInfo.PhoneNumber">Номер телефона</label>
+                    <input type="text" class="form-control required" placeholder="Мобильный номер" asp-for="@request.Declarant.Organization.ContactInfo.PhoneNumber" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div data-person id="PreviligedPersonCustomer" data-disabled>
+    <div class="row g-3">
+        <div class="col-10 mx-auto">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Уполномоченное лицо: нотариус, судебный пристав-исполнитель и прочие</div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <label class="form-label">Заявители</label>
+            <select class="form-select select2-nosearch applicants">
+                <option value="">Выберите заявителя</option>
+                @for (int i = 0; i < applicants.Count; i++)
+                {
+                    <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Declarant.PreviligedPerson.ApplicantFio.LastName">Фамилия</label>
+                    <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Declarant.Person.ApplicantFio.LastName" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Declarant.PreviligedPerson.ApplicantFio.FirstName">Имя</label>
+                    <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Declarant.PreviligedPerson.ApplicantFio.FirstName">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Declarant.PreviligedPerson.ApplicantFio.SecondName">Отчество</label>
+                    <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Declarant.PreviligedPerson.ApplicantFio.SecondName">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Declarant.PreviligedPerson.ApplicantSnils">СНИЛС</label>
+                    <input type="text" class="form-control snils required" placeholder="СНИЛС" asp-for="@request.Declarant.PreviligedPerson.ApplicantSnils"/>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Declarant.PreviligedPerson.ApplicantDocumentCode">Документ, удостоверяющий личность</label>
+                    <select class="form-control select2-search required" asp-for="@request.Declarant.PreviligedPerson.ApplicantDocumentCode"
+                            data-dictionary='{"dictionary":"RosReestrEgrnIdentityDocuments"}'>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Declarant.PreviligedPerson.ApplicantDocumentSeries">Серия</label>
+                    <input type="text" class="form-control" placeholder="Серия" asp-for="@request.Declarant.PreviligedPerson.ApplicantDocumentSeries" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Declarant.PreviligedPerson.ApplicantDocumentNumber">Номер</label>
+                    <input type="text" class="form-control required" placeholder="Номер" asp-for="@request.Declarant.PreviligedPerson.ApplicantDocumentNumber" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Declarant.PreviligedPerson.ContactInfo.EMail">E-mail</label>
+                    <div class="input-group">
+                        <span class="input-group-text">@@</span>
+                        <input type="text" class="form-control" placeholder="E-mail" asp-for="@request.Declarant.PreviligedPerson.ContactInfo.EMail" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Declarant.PreviligedPerson.ContactInfo.PhoneNumber">Номер телефона</label>
+                    <input type="text" class="form-control required" placeholder="Номер телефона" asp-for="@request.Declarant.PreviligedPerson.ContactInfo.PhoneNumber" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="OtherCustomer" data-disabled>
+    <div class="row g-3">
+        <div class="col-10 mx-auto">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">ФОИВ, РОИВ, ОМСУ</div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="@request.Declarant.Other.Name">Наименование организации</label>
+                    <input type="text" class="form-control required" placeholder="Наименование организации" asp-for="@request.Declarant.Other.Name" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Declarant.Other.Inn">ИНН</label>
+                    <input type="text" class="form-control required" placeholder="ИНН" asp-for="@request.Declarant.Other.Inn" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.Kpp">КПП</label>
+                    <input type="text" class="form-control required" placeholder="КПП" asp-for="@request.Declarant.Organization.Kpp" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Declarant.Organization.NativeOrgParams.Ogrn">ОГРН</label>
+                    <input type="text" class="form-control required" placeholder="ОГРН" asp-for="@request.Declarant.Other.Ogrn" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Declarant.Other.RegDate">Дата регистрации</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="@request.Declarant.Other.RegDate" type="text" class="form-control pickadate required" placeholder="Дата регистрации" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Declarant.Other.ContactInfo.EMail">E-mail</label>
+                    <div class="input-group">
+                        <span class="input-group-text">@@</span>
+                        <input type="text" class="form-control" placeholder="E-mail" asp-for="@request.Declarant.Other.ContactInfo.EMail" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Declarant.Other.ContactInfo.PhoneNumber">Номер телефона</label>
+                    <input type="text" class="form-control required" placeholder="Мобильный номер" asp-for="@request.Declarant.Other.ContactInfo.PhoneNumber" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<div class="row mb-3 mt-5 justify-content-center">
+    <div class="col-12 form-check form-switch">
+        <label class="form-check-label fs-6 b-s-16" for="Declarant">Данные представителя</label>
+        <input type="checkbox" class="form-check-input" id="Declarant"/>
+    </div>
+</div>
+<hr/>*@
+<div class="row g-3">
+    <div class="col-10 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Запрашиваемые сведения</div>
+        </div>
+    </div>
+</div>
+<div class="col-8 mx-auto">
+<div class="row mb-3">
+    <div class="col-12">
+        <label class="form-label" asp-for="@request.ExtractDataActionType">Вид кадастровой выписки</label>
+        <select class="form-control select2-nosearch required" asp-for="@request.ExtractDataActionType" >
+            <option value="Incapacity" selected>Запрос на предоставление выписки из ЕГРН о признании правообладателя недееспособным или ограниченно дееспособным</option>
+            <option value="Subject">Выписка из ЕГРН о правах отдельного лица на имевшиеся/имеющиеся у него объекты недвижимости</option>
+        </select>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-12 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Правообладатель</div>
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-12">
+        <label class="form-label" asp-for="@request.Owners[0].OwnerType">Тип заявителя</label>
+        <select class="form-control select2-nosearch" asp-for="@request.Owners[0].OwnerType">
+            <option value="Person" selected="">Физическое лицо</option>
+            <option value="Organization">Российское юридическое лицо</option>
+            <option value="OrganizationIn">Иностранное юридическое лицо</option>
+            <option value="RfSubject">Субъект РФ</option>
+            <option value="Country">РФ или иное государство</option>
+        </select>
+    </div>
+</div>
+<div data-person id="PersonOwner">
+    <div class="row g-3">
+        <div class="col-12 mx-auto">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Данные физического лица</div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-12 mx-auto">
+            <label class="form-label">Заявители</label>
+            <select class="form-select select2-nosearch applicants">
+                <option value="">Выберите заявителя</option>
+                @for (int i = 0; i < applicants.Count; i++)
+                {
+                    <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-12 mx-auto">
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Owners[0].Person.Fio.LastName">Фамилия</label>
+                    <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Owners[0].Person.Fio.LastName"/>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Owners[0].Person.Fio.FirstName">Имя</label>
+                    <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Owners[0].Person.Fio.FirstName">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Owners[0].Person.Fio.SecondName">Отчество</label>
+                    <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Owners[0].Person.Fio.SecondName">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Owners[0].Person.Gender">Пол</label>
+                    <select class="form-control select2-search required" asp-for="@request.Owners[0].Person.Gender">
+                        <option value="Male">Мужчина</option>
+                        <option value="Female">Женщина</option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Owners[0].Person.Snils">СНИЛС</label>
+                    <input type="text" class="form-control snils required" placeholder="СНИЛС" asp-for="@request.Owners[0].Person.Snils" />
+                </div>
+                <div class="col-9">
+                    <label class="form-label" asp-for="@request.Owners[0].Person.BirthPlace">Место рождения</label>
+                    <input type="text" class="form-control " placeholder="Место рождения" asp-for="@request.Owners[0].Person.BirthPlace" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Owners[0].Person.BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="@request.Owners[0].Person.BirthDate" type="text" class="form-control pickadate required" placeholder="Дата рождения" value="">
+                    </div>
+                </div>
+                <div class="col-3 form-check form-switch mt-4">
+                    <label class="form-check-label fs-6 b-s-16" for="request_Owners_0_Person_Citizenship_WithoutCitizenship">Без гражданства</label>
+                    <input type="checkbox" class="form-check-input" id="request_Owners_0_Person_Citizenship_WithoutCitizenship" name="@request.Owners[0].Person.Citizenship.WithoutCitizenship"/>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Owners[0].Person.Citizenship.CountryCode">Гражданство</label>
+                    <select class="form-control select2-search required" asp-for="@request.Owners[0].Person.Citizenship.CountryCode"
+                            data-dictionary='{"dictionary":"OksmCodes"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Owners[0].Person.DocCode">Документ, удостоверяющий личность</label>
+                    <select class="form-control select2-search required" asp-for="@request.Owners[0].Person.DocCode"
+                            data-dictionary='{"dictionary":"RosReestrEgrnIdentityDocuments"}'>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Owners[0].Person.DocSeries">Серия</label>
+                    <input type="text" class="form-control" placeholder="Серия" asp-for="@request.Owners[0].Person.DocSeries" />
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Owners[0].Person.DocNumber">Номер</label>
+                    <input type="text" class="form-control required" placeholder="Номер" asp-for="@request.Owners[0].Person.DocNumber" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4 form-check form-switch mt-4">
+                    <label class="form-check-label fs-6 b-s-16" for="request_Owners_0_BenefitCategoryCode">Я отношусь к льготной категории</label>
+                    <input type="checkbox" class="form-check-input" id="request_Owners_0_BenefitCategoryCode" name="@request.Owners[0].BenefitCategoryCode"/>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Owners[0].Person.ContactInfo.EMail">E-mail</label>
+                    <div class="input-group">
+                        <span class="input-group-text">@@</span>
+                        <input type="text" class="form-control" placeholder="E-mail" asp-for="@request.Owners[0].Person.ContactInfo.EMail"/>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Owners[0].Person.ContactInfo.PhoneNumber">Номер телефона</label>
+                    <input type="text" class="form-control required" placeholder="Номер телефона" asp-for="@request.Owners[0].Person.ContactInfo.PhoneNumber"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+
+<div id="OrganizationOwner" data-disabled>
+    <div class="row g-3">
+        <div class="col-12 mx-auto">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Данные российского юридического лица</div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-12 mx-auto">
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Owners[0].Organization.NativeOrgParams.Inn">ИНН</label>
+                    <input type="text" class="form-control required" placeholder="ИНН" asp-for="@request.Owners[0].Organization.NativeOrgParams.Inn" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Owners[0].Organization.NativeOrgParams.Ogrn">ОГРН</label>
+                    <input type="text" class="form-control required" placeholder="ОГРН" asp-for="@request.Owners[0].Organization.NativeOrgParams.Ogrn" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Owners[0].Organization.NativeOrgParams.RegDate">Дата регистрации</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="@request.Owners[0].Organization.NativeOrgParams.RegDate" type="text" class="form-control pickadate required" placeholder="Дата регистрации" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Owners[0].Organization.Name">Наименование</label>
+                    <input type="text" class="form-control required" placeholder="Наименование" asp-for="@request.Declarant.Organization.Name" />
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Owners[0].Organization.Kpp">КПП</label>
+                    <input type="text" class="form-control required" placeholder="КПП" asp-for="@request.Declarant.Organization.Kpp" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Owners[0].Organization.ContactInfo.EMail">E-mail</label>
+                    <div class="input-group">
+                        <span class="input-group-text">@@</span>
+                        <input type="text" class="form-control" placeholder="E-mail" asp-for="@request.Declarant.Organization.ContactInfo.EMail" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Owners[0].Organization.ContactInfo.PhoneNumber">Мобильный номер</label>
+                    <input type="text" class="form-control required" placeholder="Номер телефона" asp-for="@request.Declarant.Organization.ContactInfo.PhoneNumber" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="OrganizationInOwner" data-disabled>
+    <div class="row g-3">
+        <div class="col-12 mx-auto">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Данные иностранного юридического лица</div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-12 mx-auto">
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Owners[0].Organization.ForeignOrgParams.CountryCode">Код страны регистрации</label>
+                    <input type="text" class="form-control required" placeholder="Код страны регистрации" asp-for="@request.Owners[0].Organization.ForeignOrgParams.CountryCode" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Owners[0].Organization.ForeignOrgParams.Kio">КИО</label>
+                    <input type="text" class="form-control required" placeholder="КИО" asp-for="@request.Owners[0].Organization.ForeignOrgParams.Kio" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Owners[0].Organization.ForeignOrgParams.RegDate">Дата регистрации</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="@request.Owners[0].Organization.ForeignOrgParams.RegDate" type="text" class="form-control pickadate required" placeholder="Дата регистрации" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Owners[0].Organization.ForeignOrgParams.RegNumber">Номер регистрации</label>
+                    <input type="text" class="form-control required" placeholder="Номер регистрации" asp-for="@request.Owners[0].Organization.ForeignOrgParams.RegNumber" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Owners[0].Organization.Name">Наименование</label>
+                    <input type="text" class="form-control required" placeholder="Наименование" asp-for="@request.Owners[0].Organization.Name" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Owners[0].Organization.Kpp">КПП</label>
+                    <input type="text" class="form-control" placeholder="КПП" asp-for="@request.Owners[0].Organization.Kpp" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Owners[0].Organization.ContactInfo.EMail">E-mail</label>
+                    <div class="input-group">
+                        <span class="input-group-text">@@</span>
+                        <input type="text" class="form-control" placeholder="E-mail" asp-for="@request.Owners[0].Organization.ContactInfo.EMail" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Owners[0].Organization.ContactInfo.PhoneNumber">Номер телефона</label>
+                    <input type="text" class="form-control required" placeholder="Мобильный номер" asp-for="@request.Owners[0].Organization.ContactInfo.PhoneNumber" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div data-person id="RfSubjectOwner" data-disabled>
+    <div class="row g-3">
+        <div class="col-12 mx-auto">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Субъект РФ</div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-12 mx-auto">
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Owners[0].RfSubject.RfSubjectCode">Регион направления запроса</label>
+                    <select class="form-control select2-search required" asp-for="@request.Owners[0].RfSubject.RfSubjectCode"
+                            data-dictionary='{"dictionary":"RosReestrEgrnRegionsRf"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Owners[0].RfSubject.ContactInfo.EMail">E-mail</label>
+                    <div class="input-group">
+                        <span class="input-group-text">@@</span>
+                        <input type="text" class="form-control" placeholder="E-mail" asp-for="@request.Owners[0].RfSubject.ContactInfo.EMail"/>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.Owners[0].RfSubject.ContactInfo.PhoneNumber">Номер телефона</label>
+                    <input type="text" class="form-control required" placeholder="Номер телефона" asp-for="@request.Owners[0].RfSubject.ContactInfo.PhoneNumber"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="CountryOwner" data-disabled>
+    <div class="row g-3">
+        <div class="col-12 mx-auto">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">РФ или иное государство</div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-12 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="@request.Owners[0].Country.CountryCode">Страна</label>
+                    <select class="form-control select2-search required" asp-for="@request.Owners[0].Country.CountryCode"
+                            data-dictionary='{"dictionary":"RosReestrEgrnRegionsRf"}'>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.Owners[0].Country.ContactInfo.EMail">E-mail</label>
+                <div class="input-group">
+                    <span class="input-group-text">@@</span>
+                    <input type="text" class="form-control" placeholder="E-mail" asp-for="@request.Owners[0].Country.ContactInfo.EMail" />
+                </div>
+            </div>
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.Owners[0].Country.ContactInfo.PhoneNumber">Номер телефона</label>
+                <input type="text" class="form-control required" placeholder="Мобильный номер" asp-for="@request.Owners[0].Country.ContactInfo.PhoneNumber" />
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div id="Subject" class="mx-auto" data-disabled>
+    <div class="row justify-content-center mb-3">
+        <div class="col-8">
+            <div class="row">
+                <div class="col-12 form-check form-switch">
+                    <label class="form-check-label fs-6 b-s-16" for="UptodateData">Только актуальные на дату предоставления сведения о зарегистрированных правах</label>
+                    <input type="checkbox" class="form-check-input" id="UptodateData" name="@request.UptodateData"/>
+                </div>
+              @*<div class="col-12 form-check form-switch">
+                    <label class="form-check-label fs-6 b-s-16" for="AllObjectsCheckbox">Все объекты</label>
+                    <input type="checkbox" class="form-check-input" checked="checked" id="AllObjectsCheckbox"/>
+                </div>*@
+                <div class="col-12 form-check form-switch">
+                    <label class="form-check-label fs-6 b-s-16" for="ThroughoutTheRF">По всей Российской Федерации</label>
+                    <input type="checkbox" class="form-check-input" checked="checked" id="ThroughoutTheRF"/>
+                </div>
+            </div>@*
+            <div class="row mt-3 mb-3 mx-auto" data-disabled id="Object">
+                <div class="row g-3">
+                    <div class="col-10 mx-auto">
+                        <div class="divider text-start">
+                            <div class="divider-text fs-5 b-s-16">Сведения об объектах недвижимости</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div id="RealtyList" data-clone-list>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-4">
+                        <button type="button" class="btn btn-primary" id="addRealty">Добавить +</button>
+                    </div>
+                </div>
+            </div>*@
+            <div class="row mt-4" data-disabled id="Regions">
+                <div class="col-12">
+                    <label class="form-label" asp-for="@request.Regions">Субьекты Российской Федерации</label>
+                    <select class="form-control select2-search" asp-for="@request.Regions"
+                            data-dictionary='{"dictionary":"RosReestrEgrnRegionsRf"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4  mt-4">
+                    <select class="form-control select2-nosearch required" asp-for="@request.DatePeriodType">
+                        <option value="Date">Дата</option>
+                        <option value="DateStart">С даты</option>
+                        <option value="DateEnd">На дату</option>
+                        <option value="Interval">С даты по дату</option>
+                    </select>
+                </div>
+                <div class="col-4" id="Date">
+                    <label class="form-label" asp-for="@request.OnDate">Дата</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="@request.OnDate" type="text" class="form-control pickadate required" placeholder="Дата" value="">
+                    </div>
+                </div>
+                <div class="col-4" id="DateStart" data-disabled>
+                    <label class="form-label" asp-for="@request.DateStart">С даты</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="@request.DateStart" type="text" class="form-control pickadate required" placeholder="С даты" value="">
+                    </div>
+                </div>
+                <div class="col-4" id="DateEnd" data-disabled>
+                    <label class="form-label" asp-for="@request.DateEnd">На дату</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="@request.DateEnd" type="text" class="form-control pickadate required" placeholder="На дату" value="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-10 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Способ предоставление ответа</div>
+        </div>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-8 mx-auto" id="Email">
+        <div class="row mb-3">
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.Email">E-mail</label>
+                <div class="input-group">
+                    <span class="input-group-text">@@</span>
+                    <input type="text" class="form-control required" placeholder="E-mail" asp-for="@request.Email"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-10 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Примечания</div>
+        </div>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-8 mx-auto">
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.SpecialistNote">Отметка специалиста принявшего заявление</label>
+                <input type="text" class="form-control" placeholder="Отметка специалиста принявшего заявление" asp-for="@request.SpecialistNote" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="RealtyClone" data-original>
+        <hr />
+        <div class="row mb-1 justify-content-center">
+            <h6 class="fs-6 b-s-16 title">Форма 0</h6>
+            <div class="col-10">
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.RealtyTypes[0].Type">Вид обьекта недвижимости</label>
+                        <select class="form-select select2-nosearch" realtyTypes asp-for="@request.RealtyTypes[0].Type">
+                            <option value="Parcel">Земельный участок</option>
+                            <option value="Building">Здание</option>
+                            <option value="Room">Помещение</option>
+                            <option value="Other">Другие виды обьектов недвижимости</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2" id="ParcelRealty">
+                    <div class="col-6">
+                        <label class="form-label" asp-for="@request.RealtyTypes[0].Parcel.Category">Категория земель</label>
+                        <select class="form-control select2-search required" asp-for="@request.RealtyTypes[0].Parcel.Category"
+                                data-dictionary='{"dictionary":"RosreestrEgrnLandCategory"}'>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="@request.RealtyTypes[0].Parcel.UsageType">Вид разрешенного использования</label>
+                        <select class="form-control select2-search required" asp-for="@request.RealtyTypes[0].Parcel.UsageType"
+                                data-dictionary='{"dictionary":"RosReestrEgrnUsageType"}'>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2" id="BuildingRealty" data-disabled>
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.RealtyTypes[0].BuildingPurpose">Назначение здания</label>
+                        <select class="form-control select2-search required" asp-for="@request.RealtyTypes[0].BuildingPurpose"
+                                data-dictionary='{"dictionary":"RosReestrEgrnObjectPurpose"}'>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2" id="RoomRealty" data-disabled>
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.RealtyTypes[0].Room">Тип обьекта недвижимости</label>
+                        <select class="form-control select2-search required" asp-for="@request.RealtyTypes[0].Room">
+                            <option value="IsNondomestic" selected="">Нежилое помещение</option>
+                            <option value="IsFlat" >Квартира</option>
+                            <option value="IsRoom" >Комната</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2" id="OtherlRealty" data-disabled>
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.RealtyTypes[0].Other.OtherObjectPurpose">Назначения обьекта недвижимости</label>
+                        <select class="form-control select2-search required" asp-for="@request.RealtyTypes[0].Other.OtherObjectPurpose"
+                                data-dictionary='{"dictionary":"RosReestrEgrnObjectPurpose"}'>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash bx-sm"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+
+<script>
+    function ShowErrorInputs() {
+    }
+
+    var applicants = @Json.Serialize(applicants);
+    var $formContent = $("#smev_request");
+    var $originalBlock = $('#originalBlock');
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                $(formContent).find('input.required').each(function() {
+                                         addValidation($(this));
+                                     });
+                $originalBlock.find('[data-original]').each(function(_, item) {
+                                renameBlock($(item), 100, true);
+                                visibilityBlock($(item), true, true);
+                
+                            });
+                
+                 $(formContent).find('[data-disabled]').each(function () {
+                     visibilityBlock($(this), true, true);
+                 });                 
+        $('#addRealty').on('click', () => addForm('RealtyList', 'RealtyClone'));
+                getDictionaries();
+                $('#smev_request').find('[name$="ExtractDataActionType"]').trigger('change');
+
+                /* init select2 */
+                $(formContent).find("select.select2-nosearch").each(function () {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+                $(formContent).find("select.select2-search").each(function () {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal")
+                    });
+                });
+
+                var maskOptions = { clearIncomplete: true, showMaskOnHover: false };
+                $(formContent).find('.snils').inputmask("999-999-999 99", maskOptions);
+                $(formContent).find('[name$="PhoneNumber"]').inputmask("\+9{1,14}", maskOptions);
+
+                /* init inputmask */
+                $(formContent).find(".pickadate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                }).inputmask("99.99.9999", maskOptions);
+
+                $(formContent).find(".cadastral-number").inputmask("99:99:9{1,7}:9{1,10}", maskOptions);
+            }
+        };
+    $(formContent).find('[name$="ContragentType"]').on('change',function(){
+        let contragentType=$(this).val();
+       $(formContent).find('[id$="Customer"]').each(function(){
+            if($(this).attr('id').replace('Customer','')==contragentType){
+                visibilityBlock($(this),false,false);
+            }else{
+                visibilityBlock($(this),true,true);
+            }
+        })
+    });
+    $(formContent).find('[realtyTypes]').on('change',function(){
+        let realtyTypes=$(this).val();
+        let $block = $(this).closest('[data-original]');
+       $block.find('[id$="Realty"]').each(function(){
+            if($(this).attr('id').replace('Realty','')==realtyTypes){
+                visibilityBlock($(this),false,false);
+            }else{
+                visibilityBlock($(this),true,true);
+            }
+        })
+    });
+    $(formContent).find('[name$="DatePeriodType"').on('change',function(){
+    switch($(this).val())
+    {
+    case 'Date':
+    visibilityBlock($('#Date'),false,false);
+    visibilityBlock($('#DateEnd'),true,true);
+    visibilityBlock($('#DateStart'),true,true);
+    break;
+    case 'DateEnd':
+    visibilityBlock($('#Date'),true,true);
+    visibilityBlock($('#DateEnd'),false,false);
+    visibilityBlock($('#DateStart'),true,true);
+    break;
+    case 'DateStart':
+    visibilityBlock($('#Date'),true,true);
+    visibilityBlock($('#DateEnd'),true,true);
+    visibilityBlock($('#DateStart'),false,false);
+    break;
+    case 'Interval':
+    visibilityBlock($('#Date'),true,true);
+    visibilityBlock($('#DateEnd'),false,false);
+    visibilityBlock($('#DateStart'),false,false);
+    break;
+    }
+    });
+    $(formContent).find('[name$="OwnerType"]').on('change',function(){
+        let ownerType=$(this).val();
+       $(formContent).find('[id$="Owner"]').each(function(){
+            if($(this).attr('id').replace('Owner','')==ownerType){
+                visibilityBlock($(this),false,false);
+            }else{
+                visibilityBlock($(this),true,true);
+            }
+        })
+    })
+    $(formContent).find('[name$="ExtractDataActionType"]').on('change',function(){
+     
+            if($(this).val()=='Subject'){
+                visibilityBlock($('#Subject'),false,false);
+            }else{
+                visibilityBlock($('#Subject'),true,true);
+            }
+    })
+    $(formContent).find('[name$="ReceiveResultType"]').on('change',function(){
+     
+            if($(this).val()=='Email'){
+                visibilityBlock($('#Email'),false,false);
+            }else{
+                visibilityBlock($('#Email'),true,true);
+            }
+    })
+    $(formContent).find('#request_Owners_0_Person_Citizenship_WithoutCitizenship').on('change',function(){
+        if($(this).is(':checked')){
+            visibilityBlock($(this).parent().next(),true,true);
+        }
+        if($(this).is(':not(:checked)')){
+            visibilityBlock($(this).parent().next(),false,false);
+        }
+    })
+    $(formContent).find('#AllObjectsCheckbox').on('change',function(){
+        if($(this).is(':checked')){
+            visibilityBlock($(formContent).find('#Object'),true,true);
+        }
+        if($(this).is(':not(:checked)')){
+            visibilityBlock($(formContent).find('#Object'),false,false);
+        }
+    })
+    $(formContent).find('#ThroughoutTheRF').on('change',function(){
+        if($(this).is(':checked')){
+            visibilityBlock($(formContent).find('#Regions'),true,true);
+        }
+        if($(this).is(':not(:checked)')){
+            visibilityBlock($(formContent).find('#Regions'),false,false);
+        }
+    })
+  function addValidation($el) {
+          SmevDataFormValidation.addField($el.attr('name'),
+              {
+                  validators: {
+                      notEmpty: {}
+                  }
+              });
+          SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+          $el.addClass('required');
+      }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+    
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `clone${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+
+        }
+
+        let $adrBlock = $cloneBlock.find('[data-address]');
+        if ($adrBlock.length > 0) {
+            $adrBlock.attr('data-address', $adrBlock.attr('data-address').replace(/\d+/, indexId));
+        }
+
+        $cloneBlock.find('input, select').each(function() {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function() {
+            if ($(this).is('[for]')) {
+                $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('span').each(function() {
+            if ($(this).is('[id]')) {
+                $(this).attr('id', $(this).attr('id').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('select').each(function() {
+            if ($(this).is('[id]')) {
+                $(this).attr('id', $(this).attr('id').replace(/\d+/, indexId));
+            }
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+            $(this).removeAttr('data-select2-id');
+        });
+    }
+
+    function renameParentBlock(cloneBlock, indexId) {
+        cloneBlock.id = `${cloneBlock.id}${indexId}`;
+        cloneBlock.querySelector('span').innerText = cloneBlock.querySelector('span').innerText.replace(/\d+/, 1 + indexId);
+
+        cloneBlock.querySelectorAll('input').forEach(item => {
+            item.id = item.id.replace(/ParentDataBlock\d+/, `ParentDataBlock${indexId}`);
+            item.name = item.name.replace(/ParentDataBlock\[\d+\]/, `ParentDataBlock[${indexId}]`);
+        });
+        cloneBlock.querySelectorAll('label').forEach(item => {
+            item.getAttribute('for') ? item.setAttribute('for', item.getAttribute('for').replace(/ParentDataBlock\d+/, `ParentDataBlock${indexId}`)) : void 0;
+        });
+        cloneBlock.querySelectorAll('select').forEach(item => {
+            item.id ? item.id = item.id.replace(/ParentDataBlock\d+/, `ParentDataBlock${indexId}`) : void 0;
+            item.name ? item.name = item.name.replace(/ParentDataBlock\[\d+\]/, `ParentDataBlock[${indexId}]`) : void 0;
+            item.hasAttribute('data-select2-id') ? item.removeAttribute('data-select2-id') : void 0;
+        });
+        return cloneBlock;
+    }
+   
+    function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+        let $cloneList = $(formContent).find(`#${cloneListId}`);
+        Select2Destroy($cloneList);
+        let $original = $originalBlock.find(`#${originalId}`);
+        let $cloneBlock = $original.clone(true);
+        let indexId = $cloneList.find('[data-clone]').length;
+        renameBlock($cloneBlock, indexId);
+        blockInit($cloneBlock);
+        $cloneList.append($cloneBlock);
+        select2Init($cloneList);
+    }
+
+    function blockInit($block) {
+        visibilityBlock($block, false, false);
+        const options = { clearIncomplete: true, showMaskOnHover: false };
+
+        $block.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        $block.find('[name$="Snils"]').inputmask("999-999-999 99", options);
+        $block.find('[name$="ContactPhones"]').inputmask("+7(999) 999-99-99", options);
+    }
+
+
+    function blockRemove(el, cloneListId) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        Select2Destroy($cloneList);
+        $cloneList.find('[data-clone]').each(function(index, item) {
+            renameBlock($(item), index);
+        });
+        select2Init($cloneList);
+    }
+
+    function select2Init($block) {
+        $block.find("select.select2-nosearch").each(function() {
+            $(this).select2({
+                dropdownParent: $("#mainModal"),
+                minimumResultsForSearch: Infinity
+            });
+        });
+
+        $block.find("select.select2-search").each(function() {
+            $(this).select2({
+                dropdownParent: $("#mainModal")
+            });
+        });
+    }
+
+    function Select2Destroy($block) {
+        $block.find('select').each((_, el) => {
+            if (el.parentNode.querySelector('span')) {
+                $(el).select2('destroy');
+                el.hasAttribute('data-select2-id') ? el.removeAttribute('data-select2-id') : void 0;
+                el.querySelectorAll('option').forEach(itemOption => itemOption.hasAttribute('data-select2-id') ? itemOption.removeAttribute('data-select2-id') : void 0)
+                if (el.parentNode.querySelector('span')) el.parentNode.querySelector('span').remove();
+            }
+        });
+    }
+
+    $('select.applicants').each(function() {
+            $(this).on('change',
+                function() {
+                    let id = $(this).val();
+                    let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]').each(function () {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$=".LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$=".FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$=".SecondName"]').val(applicants[id].secondName);                    
+                    $block.find('[name$=".BirthPlace"]').val(applicants[id].birthPlace);                    
+let birthDate = new Date(applicants[id].birthDate);
+                    $block.find('[name$=".BirthDate"]').val(new Date(birthDate).toLocaleDateString());
+                    $block.find('[name$="Snils"]').val(applicants[id].snils);                    
+
+                    switch (applicants[id].gender) {
+                                            case 1:
+                                                $block.find('[id$="Gender"]').html(`
+                                                    <option value="Male">Мужчина</option>
+                                                    <option value="Female">Женщина</option>`);
+                                                break;
+                                            case 2:
+                                                $block.find('[id$="Gender"]').html(`
+                                                <option value="Female">Женщина</option>
+                                                <option value="Male">Мужчина</option>`);
+                                                break;
+                                        }
+                    
+                    $block.find('[name$="PhoneNumber"]').val(applicants[id].phone);
+                    $block.find('[name$="EMail"]').val(applicants[id].email);
+                    $block.find('[name$="Email"]').val(applicants[id].email);
+
+                    $block.find('[name$="Series"]').val(applicants[id].documentSerial.replace(' ', ''));
+                    $block.find('[name$="Number"]').val(applicants[id].documentNumber);                    
+                }
+    })
+    });
+    
+</script>

@@ -1,0 +1,112 @@
+﻿@model _14_FnsKnd1150038Model
+@{
+    IEnumerable<SelectListItem> methodInforming = new List<SelectListItem>
+    {
+        new ("в налоговом органе, в который представлено настоящее заявление", "1"),
+        new ("по почте по имеющемуся у налогового органа адресу места жительства (места пребывания) налогоплательщика — физического лица, подав шего уведомление, или по предоставленному налоговому органу адресу для направления по почте документов, которые используются налоговыми органами при реализации своих полномочий в отношениях, регули руемых законодательством о налогах и сборах", "2"),
+    };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-sm-8 mx-auto">
+            <h6 class="my-2 title">Транспортное средство</h6>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="CodeFNS">Налоговый орган</label>
+                    <select class="form-select select2-search required" asp-for="CodeFNS"
+                            data-fns-dictionary='{"dictionary":"null", "default_value":"@(Model.CodeFNS  == null || string.IsNullOrEmpty(Model.CodeFNS) ?  "" : Model.CodeFNS)"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="MethodInforming">Способ информирования</label>
+                    <select class="select2-nosearch" asp-items="@methodInforming" asp-for="MethodInforming"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="KadastrNumber">Кадастровый номер земельного участка</label>
+                    <input type="text" class="form-control" asp-for="KadastrNumber">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var regionCode = @Json.Serialize(Options.Value.Region);
+    $(function () {
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+
+        });
+    });
+
+    (function getDictionariesfns() {
+        let dicts = new Set();
+        $('[data-fns-dictionary]').each(function () {
+            let $this = $(this);
+            let options = $this.data('fns-dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post('/SmevFns/GetFnsDepartments', null,
+                    function (dictionary) {
+                        
+                        if (dictionary.error) return;
+                        dictionary.sort((prev, next) => {
+                            if (next.code.startsWith(`${regionCode}`)) {
+                                return 1;
+                            } else return -1;
+                        });
+
+                        fillSelectFns(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelectFns(dictName, dictionary) {
+        $.each($(`[data-fns-dictionary*='"${dictName}"']`),
+            function () {
+                let $this = $(this);
+                let items = dictionary;
+
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Не выбрано', ''));
+                }
+                if ($this.is('[data-value-value]')) {
+                    items.forEach(function (item) {
+                        $this.append(new Option(item.name, item.name))
+                    });
+                } else {
+                    items.forEach(function (item) {
+                        $this.append(new Option(item.name, item.code))
+                    });
+                }
+
+                if ($this.data('fns-dictionary').default_value) {
+                    let defVal = $this.data('fns-dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                } else {
+                    $this.val('').trigger('update');
+                }
+            });
+    }
+
+</script>

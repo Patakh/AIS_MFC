@@ -1,0 +1,43 @@
+﻿@using AisLogistics.App.Models.Enums
+@model ViewModelBuilder
+@{
+    var items = Model.Model as List<CaseServiceBlank>;
+}
+
+@if (items.Any())
+{
+    <div class="table-responsive mt-3">
+        <table class="table table-sm">
+            <tbody class="table-border-bottom-1">
+                @foreach (var item in items)
+                {
+                    <tr>
+                        <td>
+                            <div class="d-flex justify-content-between">
+                                <a asp-action="DownloadBlank" asp-controller="Cases" asp-route-id="@item.Id" asp-route-serviceId="@item.ServiceId" target="_blank" class="m-a-12">
+                                    <i class="bi bi-filetype-@item.Expansion.Substring(1) me-2"></i>
+                                    <span class="my-auto" title="@item.Name@item.Expansion">@($"{(item.Name.Length> 30 ? item.Name.Remove(30)+"..." : item.Name)}{item.Expansion}")</span>
+                                </a>
+                                @if (@item.Expansion.Substring(1) == "frx")
+                                {
+                                    <a asp-action="DownloadBlank" asp-controller="Cases" asp-route-id="@item.Id" asp-route-serviceId="@item.ServiceId" asp-route-typeDownloadBlank="@BlankActionType.Word" target="_blank" title="скачать бланк">
+                                        <i class="bi bi-file-arrow-down"></i>
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="col-12 text-center m-l-16 mt-4">
+        Нет бланков
+    </div>
+}
+<script>
+    
+</script>

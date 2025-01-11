@@ -1,0 +1,138 @@
+﻿@model ViewModelBuilder
+@{
+    string Id = ViewData["Id"]?.ToString() ?? string.Empty;
+    var aspUserId = Model.Model;
+}
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                @if (Model.IsVisibleDescription)
+                {
+                    <div class="b-s-14">@Model.ViewDescription</div>
+                }
+            </div>
+
+            <div class="col-6 pull-right">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive mt-3">
+                    <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceEmployee" class="directory_names-items table table-striped"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        
+
+
+<script>
+    $(function(){
+
+        $(document).on("change", "input:checkbox.role-switch", function (e) {
+            var params = $(this).data("btn-params");
+            params.selected = $(this).is(':checked');
+
+            var $parent = $('#@Model.TableName');
+            var url = $parent.data("action-edit");
+
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: params,
+                async: false,
+                success: function(){
+                    $parent.trigger("reload");
+                },
+                error: (data, textStatus) => {
+                }
+            });
+        });
+    });
+
+
+    $tableAuthDetails = $('#@(Model.TableName)');
+
+    $(document).ready(function() {
+       
+        let isCanAddAuthDetails = $tableAuthDetails.is('[data-action-add]'),
+            isCanEditAuthDetails = $tableAuthDetails.is('[data-action-edit]'),
+            isCanRemoveAuthDetails = $tableAuthDetails.is('[data-action-remove]');
+
+        $tableAuthDetails.DataTable({
+            sDom: "<'row'<'col-sm-12 col-md-6 'f><'col-sm-12 col-md-6'l>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            processing: true,
+            searching: false,
+            paging: false,
+            serverSide: true,
+            filter: true,
+            bInfo: false,
+            searchDelay: 1500,
+            ajax: {
+                url: $tableAuthDetails.data('action-table'),
+                type: "POST",
+                datatype: "json",
+                dataSrc: function(json) {
+                    return json.data;
+                }
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    title: 'Наименование',
+                    orderable: false
+                },
+                {
+                    targets: -1,
+                    title: 'Действия',
+                    data: "id",
+                    className: 'text-center editor-edit',
+                    sorting: false,
+                    orderable: false
+                }
+            ],
+            columns: [
+                { },
+                { 
+                    data: "roleName"
+                },
+                {
+                    render: function(data, type, row) {
+                        return CheckSwitchAuthDetails({ "userId" : "@aspUserId", "roleId" : data, "selected": row.isUserInRole });
+                    }
+                }
+            ]
+        });
+        $tableAuthDetails.on("reload", () => {
+            $tableAuthDetails.DataTable().ajax.reload(null, false);
+        });
+
+        $tableAuthDetails.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        var CheckSwitchAuthDetails = function (data) {
+            var params = JSON.stringify(data);
+            return `<input data-btn-params='${params}' class="role-switch form-check-input" type="checkbox" data-bs-toggle="tooltip" title="Изменить" ${data.selected === true ? 'checked' : ''}>`;
+        }
+    });
+</script>
+

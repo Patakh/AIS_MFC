@@ -1,0 +1,319 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.GuardianshipModel
+@{
+    IEnumerable<SelectListItem> municipalDistrictsList = new List<SelectListItem>
+        {
+            new("Администрация городского округа «город Каспийск»", "Администрация городского округа «город Каспийск»"),
+            new("Администрация муниципального района «Гумбетовский район»",
+                "Администрация муниципального района «Гумбетовский район»"),
+            new("Администрация муниципального образования «Карабудахкентский район»",
+                "Администрация муниципального образования «Карабудахкентский район»"),
+            new("Администрация муниципального образования «Новолакский район»",
+                "Администрация муниципального образования «Новолакский район»"),
+            new("Администрация муниципального образования «город Хасавюрт»",
+                "Администрация муниципального образования «город Хасавюрт»"),
+            new("Администрация муниципального района «Ботлихский район»",
+                "Администрация муниципального района «Ботлихский район»"),
+            new("Администрация муниципального образования «Шамильский район»",
+                "Администрация муниципального образования «Шамильский район»"),
+            new("Администрация муниципального образования «Хивский район»",
+                "Администрация муниципального образования «Хивский район»"),
+            new("Администрация муниципального образования «Тарумовский район»",
+                "Администрация муниципального образования «Тарумовский район»"),
+            new("Администрация муниципального образования «город Кизилюрт»",
+                "Администрация муниципального образования «город Кизилюрт»"),
+            new("Администрация  муниципального образования «Акушинский район»",
+                "Администрация  муниципального образования «Акушинский район»"),
+            new("Администрация муниципального образования «Ногайский район»",
+                "Администрация муниципального образования «Ногайский район»"),
+            new("Администрация муниципального образования «Буйнакский район»",
+                "Администрация муниципального образования «Буйнакский район»"),
+            new("Администрация муниципального района «Бабаюртовский район»",
+                "Администрация муниципального района «Бабаюртовский район»"),
+            new("Администрация муниципального района «Сергокалинский район»",
+                "Администрация муниципального района «Сергокалинский район»"),
+            new("Администрация городского округа «город  Дербент»", "Администрация городского округа «город  Дербент»"),
+            new("Администрация городского округа «город Буйнакск»", "Администрация городского округа «город Буйнакск»"),
+            new("Администрация городского округа «город Избербаш»", "Администрация городского округа «город Избербаш»"),
+            new("Администрация муниципального образования «Рутульский район»",
+                "Администрация муниципального образования «Рутульский район»"),
+            new("Администрация муниципального района «Кулинский район»",
+                "Администрация муниципального района «Кулинский район»"),
+            new("Администрация муниципального образования «Гергебильский район»",
+                "Администрация муниципального образования «Гергебильский район»"),
+            new("Администрация муниципального района «Левашинский район»",
+                "Администрация муниципального района «Левашинский район»"),
+            new("Администрация муниципального образования «Агульский район»",
+                "Администрация муниципального образования «Агульский район»"),
+            new("Администрация муниципального района «Лакский район»",
+                "Администрация муниципального района «Лакский район»"),
+            new("Администрация муниципального образования «Ахвахский район»",
+                "Администрация муниципального образования «Ахвахский район»"),
+            new("Администрация муниципального образования «Дахадаевский район»",
+                "Администрация муниципального образования «Дахадаевский район»"),
+            new("Администрация муниципального района «Казбековский район»",
+                "Администрация муниципального района «Казбековский район»"),
+            new("Администрация муниципального района «Кизлярский район»",
+                "Администрация муниципального района «Кизлярский район»"),
+            new("Администрация муниципального района «Кумторкалинский район»",
+                "Администрация муниципального района «Кумторкалинский район»"),
+            new("Администрация г. Махачкала", "Администрация г. Махачкала"),
+            new("Администрация муниципального образования «Докузпаринский район»",
+                "Администрация муниципального образования «Докузпаринский район»"),
+            new("Администрация муниципального образования «Курахский район»",
+                "Администрация муниципального образования «Курахский район»"),
+            new("Администрация городского округа «город Дагестанские Огни»",
+                "Администрация городского округа «город Дагестанские Огни»"),
+            new("Администрация муниципального района «Каякентский район»",
+                "Администрация муниципального района «Каякентский район»"),
+            new("Администрация муниципального района «Ахтынский район»",
+                "Администрация муниципального района «Ахтынский район»"),
+            new("Администрация муниципального образования «Чародинский район»",
+                "Администрация муниципального образования «Чародинский район»"),
+            new("Администрация муниципального района «Табасаранский район»",
+                "Администрация муниципального района «Табасаранский район»"),
+            new("Администрация муниципального района «Магарамкентский район»",
+                "Администрация муниципального района «Магарамкентский район»"),
+            new("Администрация муниципального образования «Цунтинский район»",
+                "Администрация муниципального образования «Цунтинский район»"),
+            new("Администрация муниципального образования «Тляратинский район»",
+                "Администрация муниципального образования «Тляратинский район»"),
+            new("Администрация муниципального образования «Бежтинский участок»",
+                "Администрация муниципального образования «Бежтинский участок»"),
+            new("Администрация муниципального района «Дербентский район»",
+                "Администрация муниципального района «Дербентский район»"),
+            new("Администрация муниципального образования «Гунибский район»",
+                "Администрация муниципального образования «Гунибский район»"),
+            new("Администрация муниципального образования «Хунзахский район»",
+                "Администрация муниципального образования «Хунзахский район»"),
+            new("Администрация муниципального района «Цумадинский район»",
+                "Администрация муниципального района «Цумадинский район»"),
+            new("Администрация муниципального образования «Унцукульский район»",
+                "Администрация муниципального образования «Унцукульский район»"),
+            new("Администрация муниципального образования «Кайтагский район»",
+                "Администрация муниципального образования «Кайтагский район»"),
+            new("Администрация городского округа «город Южно-Сухокумск»",
+                "Администрация городского округа «город Южно-Сухокумск»"),
+            new("Администрация городского округа «город Кизляр»", "Администрация городского округа «город Кизляр»"),
+            new("Администрация муниципального образования «Хасавюртовский район»",
+                "Администрация муниципального образования «Хасавюртовский район»"),
+            new("Администрация муниципального района «Сулейман - Стальский район»",
+                "Администрация муниципального района «Сулейман - Стальский район»"),
+            new("Администрация муниципального района «Кизилюртовский район»",
+                "Администрация муниципального района «Кизилюртовский район»")
+        };
+}
+
+<div id="additional-data-content">
+<div class="row g-3">
+    <div class="col-10 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Дополнительные данные</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-8 mx-auto">
+        @* <h3>Адресат</h3>*@
+        <div class="row mb-3">
+            <div class="col-6">
+                <label class="form-label" asp-for="MunicipalDistricts">Муниципальный район</label>
+                <select asp-items="@municipalDistrictsList" asp-for="MunicipalDistricts" class="form-control"></select>
+            </div>
+            <div class="col-6">
+                <label class="form-label" asp-for="HeadRegion">Глава района</label>
+                <input type="text" asp-for="HeadRegion" class="form-control" placeholder="Глава района">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="form-label" asp-for="GuardianshipType">Варианты</label>
+            <div class="col-12">
+                <div class="form-check">
+                    <input asp-for="GuardianshipType" id="GuardianshipType1" class="form-check-input" type="radio" value="1" checked="">
+                    <label for="GuardianshipType1" class="form-check-label">Прошу выдать мне заключение о возможности быть опекуном(попечителем)</label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="GuardianshipType" id="GuardianshipType2" class="form-check-input" type="radio" value="2">
+                    <label for="GuardianshipType2" class="form-check-label">Прошу выдать мне заключение о возможности быть приемным родителем</label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="GuardianshipType" id="GuardianshipType3" class="form-check-input" type="radio" value="3">
+                    <label for="GuardianshipType3" class="form-check-label">Прошу передать мне под опеку (попечительство)</label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="GuardianshipType" id="GuardianshipType4" class="form-check-input" type="radio" value="4">
+                    <label for="GuardianshipType4" class="form-check-label">Прошу передать мне под опеку (попечительство) на возмездной основе</label>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                <input type="text" asp-for="FosterChildren" class="form-control" placeholder="ФИО, дата рождения">
+            </div>
+        </div>
+
+        <h5 class="my-2">Дополнительные сведения об опекуне(попечителе)</h5>
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="Skills">Навыки</label>
+                <textarea asp-for="Skills" rows="3" class="form-control" placeholder="Дополнительно могу сообщить о себе следующее: (указывается наличие у гражданина необходимых знаний и навыков в воспитании детей, в том числе информация о наличии документов об образовании, о профессиональной деятельности, о прохождении программ подготовки кандидатов в опекуны или попечители и т.д.) "></textarea>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="PlaceOfWork">Место работы</label>
+                <textarea asp-for="PlaceOfWork" rows="4" class="form-control" placeholder="Необходимо описать характер работы: постоянная/временная, производство/офис/ другое, связана ли с длительными командировками или нет, режим работы и удалённость от дома. Если заявитель пенсионер, то указывается вид пенсионного обеспечения, имеющиеся льготы. Если заявитель не работает, то указываются причины: «временно, в связи с…» /домохозяйка и т.п., а также источник существования"></textarea>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="MoreDetails">Дополнительные сведения</label>
+                <textarea asp-for="MoreDetails" rows="2" class="form-control" placeholder="Указывается всё, что заявитель посчитает нужным для аргументации успешности выполнения им роли опекуна: образование, награды, общественная работа, наличие поддержки родственниками и т.п."></textarea>
+            </div>
+        </div>
+
+        <h5 class="my-2">Подопечный(опекаемый)</h5>
+        <div class="row mb-3">
+            <div class="col-9">
+                <label class="form-label" asp-for="Fosterling.Name">ФИО</label>
+                <input type="text" asp-for="Fosterling.Name" class="form-control" placeholder="ФИО">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="Fosterling.BirthDate">Дата рождения</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="Fosterling.BirthDate" type="text" class="form-control datepicker" placeholder="Дата рождения">
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-6">
+                <label class="form-label" asp-for="Fosterling.ResidentialAddress">Адрес проживания</label>
+                <input type="text" class="form-control" placeholder="Адрес проживания" asp-for="Fosterling.ResidentialAddress">
+            </div>
+            <div class="col-6">
+                <label class="form-label" asp-for="Fosterling.RegistrationAddress">Адрес регистрации</label>
+                <input type="text" class="form-control" placeholder="Адрес регистрации" asp-for="Fosterling.RegistrationAddress">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-3">
+                <label class="form-label" asp-for="Fosterling.DocumentSeries">Серия документа</label>
+                <input type="text" asp-for="Fosterling.DocumentSeries" class="form-control" placeholder="Серия">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="Fosterling.DocumentNumber">Номер документа</label>
+                <input type="text" asp-for="Fosterling.DocumentNumber" class="form-control" placeholder="Номер">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="Fosterling.IssueDate">Дата выдачи</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="Fosterling.IssueDate" type="text" class="form-control datepicker" placeholder="Дата выдачи">
+                </div>
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="Fosterling.IssuedBy">Кем выдан</label>
+                <input type="text" class="form-control" placeholder="Кем выдан" asp-for="Fosterling.IssuedBy">
+            </div>
+        </div>
+
+        <h5 class="my-2">Супруг(га)</h5>
+        <div class="row mb-3">
+            <div class="col-9">
+                <label class="form-label" asp-for="Spouse.Name">ФИО</label>
+                <input type="text" asp-for="Spouse.Name" class="form-control" placeholder="ФИО">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="Spouse.BirthDate">Дата рождения</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="Spouse.BirthDate" type="text" class="form-control datepicker" placeholder="Дата рождения">
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-6">
+                <label class="form-label" asp-for="Spouse.ResidentialAddress">Адрес проживания</label>
+                <input type="text" class="form-control" placeholder="Адрес проживания" asp-for="Spouse.ResidentialAddress">
+            </div>
+            <div class="col-6">
+                <label class="form-label" asp-for="Spouse.RegistrationAddress">Адрес регистрации</label>
+                <input type="text" class="form-control" placeholder="Адрес регистрации" asp-for="Spouse.RegistrationAddress">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-3">
+                <label class="form-label" asp-for="Spouse.DocumentSeries">Серия документа</label>
+                <input type="text" asp-for="Spouse.DocumentSeries" class="form-control" placeholder="Серия">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="Spouse.DocumentNumber">Номер документа</label>
+                <input type="text" asp-for="Spouse.DocumentNumber" class="form-control" placeholder="Номер">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="Spouse.IssueDate">Дата выдачи</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="Spouse.IssueDate" type="text" class="form-control datepicker" placeholder="Дата выдачи">
+                </div>
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="Spouse.IssuedBy">Кем выдан</label>
+                <input type="text" class="form-control" placeholder="Кем выдан" asp-for="Spouse.IssuedBy">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="Spouse.PlaceOfWork">Место работы</label>
+                <input type="text" class="form-control" placeholder="Место работы" asp-for="Spouse.PlaceOfWork">
+            </div>
+        </div>
+
+        <h5 class="my-2">Заключение о возможности быть опекуном(попечителем)</h5>
+        <div class="row mb-3">
+            <div class="col-6">
+                <label class="form-label" asp-for="Conclusion.Name">Наименование органа</label>
+                <input type="text" asp-for="Conclusion.Name" class="form-control" placeholder="Наименование органа">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="Conclusion.Number">Номер</label>
+                <input type="text" asp-for="Conclusion.Number" class="form-control" placeholder="Номер">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="Conclusion.Date">Дата заключения</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="Conclusion.Date" type="text" class="form-control datepicker" placeholder="Дата заключения">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var additionalFormValidation = function () {
+        return [
+            {
+                "HeadRegion": {
+                    validators: {
+                        notEmpty: {}
+                    }
+                }
+            }];
+    };
+    $(function () {
+        const additionalFormFields = {
+            municipalDistricts: $("#MunicipalDistricts"),
+            fosterChildren: $("#FosterChildren"),
+            datepicker: $("#additional-data-content .datepicker")
+        };
+        additionalFormFields.municipalDistricts.select2({ language: "ru" });
+        additionalFormFields.datepicker.datepicker({
+            language: "ru",
+            autoclose: true
+        });
+    });
+</script>

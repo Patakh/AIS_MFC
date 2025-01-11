@@ -1,0 +1,131 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.ServiceDocumentResultModelDto
+@{
+    //var docResults = new[] 
+    //{ 
+    //    new SelectListItem { Text = "Положительный", Value = "1" }, 
+    //    new SelectListItem { Text = "Отрицательный", Value = "0" } 
+    //};
+}
+
+<form asp-controller="Reference" asp-action="ServiceDocumentResultSave" id="sendingForm" method="post" role="form">
+    <div class="form-body pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.SServicesId)
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SServicesProcedureId">Процедура</label>
+                    <select asp-for="SServicesProcedureId" asp-items="@ViewBag.Procedure" class="form-control">
+                        <option selected value="">Общий</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SDocumentsId">Документ</label>
+                    <select asp-for="SDocumentsId" asp-items="@ViewBag.Documents" class="form-control">
+                        <option disabled selected value="">Не задано</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="DocumentResult">Результат</label>
+                    <select asp-for="DocumentResult" class="form-control">
+                        <option value="true">Положительный</option>
+                        <option value="false">Отрициательный</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="DocumentMethod">Способ получения</label>
+                    <input type="text" asp-for="DocumentMethod" class="form-control" placeholder="Способ получения">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="DocumentPeriodProvider">Срок хранения в ОИВ</label>
+                    <input type="text" asp-for="DocumentPeriodProvider" class="form-control" placeholder="Срок хранения в ОИВ">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="DocumentPeriodMfc">Срок хранения в МФЦ</label>
+                    <input type="text" asp-for="DocumentPeriodMfc" class="form-control" placeholder="Срок хранения в МФЦ">
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    $(function(){
+        $('#SDocumentsId').select2({ dropdownParent: $('#mainModal') });
+        $('#DocumentResult').select2({ dropdownParent: $('#mainModal'), minimumResultsForSearch: -1 });
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    SDocumentsId: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            },
+                        }
+                    },
+                    DocumentMethod: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            },
+                        }
+                    },
+                    DocumentPeriodProvider: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            },
+                        }
+                    },
+                    DocumentPeriodMfc: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            },
+                        }
+                    },
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }) .on('core.form.valid', function() {
+            var $form = $("#sendingForm");
+            $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $table.DataTable().ajax.reload(null, false);
+                        $tableResults.DataTable().ajax.reload(null, false);
+                        $form.spinnerBtn("stop");
+                        $("#mainModal").modal('hide');
+                    }
+                });
+            return false;
+        });
+    });
+</script>

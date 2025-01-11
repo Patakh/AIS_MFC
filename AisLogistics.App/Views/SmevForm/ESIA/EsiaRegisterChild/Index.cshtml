@@ -1,0 +1,366 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new GetEsiaRegisterChildRequestData()
+            {
+                ChildFio = new FioType(),
+                ChildInsurancePolice = new EsiaInsurancePoliceData(),
+                ChildBirthCert = new EsiaBirthCertData()
+            };
+}
+<style>
+    #smev-data-form-content span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content #smev-request-tabContent .tab-pane {
+        height: 550px;
+    }
+
+    #smev-data-form-content tr.is_active {
+        color: #39da8a;
+    }
+
+    #smev-data-form-content div.lg-container {
+        position: relative;
+        z-index: 9999;
+    }
+
+    #smev-data-form-content .accordion-button {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content #listService {
+        font-size: 16px;
+    }
+
+        #smev-data-form-content #listService .select2-selection.select2-selection--single {
+            height: auto !important;
+        }
+
+        #smev-data-form-content #listService .select2-selection__rendered {
+            white-space: normal !important;
+        }
+
+    #smev-data-form-content ul.address-list {
+        display: none;
+        width: 100%;
+        z-index: 1000;
+        position: absolute;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        background-clip: padding-box;
+    }
+
+        #smev-data-form-content ul.address-list li {
+            padding: 6px;
+        }
+
+            #smev-data-form-content ul.address-list li:hover {
+                color: white;
+                background-color: #5a8dee;
+                cursor: pointer
+            }
+</style>
+<div class="row justify-content-center g-3">
+    <div class="col-11">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Детали запроса</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-2">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-7">
+                <label class="form-label" asp-for="@request.AccountOid">Идентификатор учетной записи заявителя (родителя)</label>
+                <input type="text" class="form-control required" placeholder="ID" asp-for="@request.AccountOid">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center g-3">
+    <div class="col-10">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Персональные данные ребенка</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3">
+    <div class="col-8">
+        <div class="row mb-1">
+            <div class="col-12">
+                <select class="form-select select2-nosearch applicants">
+                    <option value="">Выберите ребенка</option>
+                    @for (int i = 0; i < applicants.Count; i++)
+                    {
+                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName @applicants[i].BirthDate.ToString()?.Remove(10, 8)</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ChildFio.LastName">Фамилия</label>
+                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.ChildFio.LastName" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ChildFio.FirstName">Имя</label>
+                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.ChildFio.FirstName">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ChildFio.SecondName">Отчество</label>
+                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.ChildFio.SecondName">
+            </div>
+        </div>
+        <div class="row mb-1 justify-content-center">
+            <div class="col-3">
+                <label class="d-block form-label">Пол</label>
+                <div class="form-check form-check-inline mx-0">
+                    <input class="form-check-input" type="radio" asp-for="@request.ChildGender" id="smevModel0_Gender1" value="0" checked="checked">
+                    <label class="form-check-label" for="smevModel0_Gender1"><i class="bi bi-gender-male fs-6"></i>Мужской</label>
+                </div>
+                <div class="form-check form-check-inline mx-0">
+                    <input class="form-check-input" type="radio" asp-for="@request.ChildGender" id="smevModel0_Gender2" value="1">
+                    <label class="form-check-label" for="smevModel0_Gender2"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                </div>
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ChildSnils">СНИЛС</label>
+                <input type="text" class="form-control snils required" placeholder="СНИЛС" asp-for="@request.ChildSnils" />
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ChildInn">ИНН</label>
+                <input type="text" class="form-control required" placeholder="ИНН" asp-for="@request.ChildInn" />
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ChildBirthDate">Дата рождения</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.ChildBirthDate" type="text" class="form-control pickdate required" placeholder="Дата" value="">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Свидетельство о рождении</div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mb-1">
+            <div class="col-9">
+                <label class="form-label" asp-for="@request.ChildBirthCert.DocType">Вид</label>
+                <select class="form-select select2-nosearch required" asp-for="@request.ChildBirthCert.DocType">
+                    <option value="RfBrthCert">Свидетельсво о рождении РФ</option>
+                    <option value="FIdBrthCert">Свидетельсво о рождении иностранного государства</option>
+                    <option value="OldBrthCert">Свидетельсво о рождении СССР</option>
+                </select>
+            </div>
+        </div>
+        <div class="row justify-content-center mb-1">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ChildBirthCert.DocSeries">Серия</label>
+                <input type="text" class="form-control required" placeholder="Серия" asp-for="@request.ChildBirthCert.DocSeries">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ChildBirthCert.DocNumber">Номер</label>
+                <input type="text" class="form-control required" placeholder="Номер" asp-for="@request.ChildBirthCert.DocNumber">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ChildBirthCert.DocDate">Дата выдачи</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.ChildBirthCert.DocDate" type="text" class="form-control pickdate required" placeholder="Дата" value="">
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3 justify-content-center">
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.ChildBirthCert.Issuer">Кем выдан</label>
+                <input type="text" class="form-control required" placeholder="Кем выдан" asp-for="@request.ChildBirthCert.Issuer">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ChildBirthCert.ParentsCount">Количество родителей</label>
+                <input type="number" min="0" max="2" value="2" class="form-control" asp-for="@request.ChildBirthCert.ParentsCount">
+            </div>
+        </div>
+        <div class="row justify-content-center g-3" data-block>
+            <div class="col-12 form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="checkChildInsurancePolice">
+                <label class="form-check-label fs-5 b-s-16" for="checkChildInsurancePolice">Страховой полис</label>
+            </div>
+            <div class="row justify-content-center mb-1" data-disabled>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.ChildInsurancePolice.ExpiryDate">Дата окончания действия</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="@request.ChildInsurancePolice.ExpiryDate" type="text" class="form-control pickdate" placeholder="Дата" value="">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.ChildInsurancePolice.Number">Номер</label>
+                    <input type="text" class="form-control required" placeholder="Номер" asp-for="@request.ChildInsurancePolice.Number">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Актовая запись о рождении</div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mb-1">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ChildBirthCert.ActNo">Номер</label>
+                <input type="text" class="form-control required" placeholder="Номер" asp-for="@request.ChildBirthCert.ActNo">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ChildBirthCert.ActDate">Дата составления</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.ChildBirthCert.ActDate" type="text" class="form-control pickdate required" placeholder="Дата" value="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var applicants = @Json.Serialize(applicants);
+    function ShowErrorInputs() {
+    }
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                $(formContent).find('.required').each(function () {
+                    addValidation($(this));
+                });
+
+                $(formContent).find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                let options = { clearIncomplete: true, showMaskOnHover: false };
+                /* init datepicker */
+                $(formContent).find(".pickdate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                }).inputmask("99.99.9999", options);
+
+                /* init inputmask */
+                $(formContent).find(".snils").inputmask("9{3}-9{3}-9{3} 9{2}", options);
+                $(formContent).find('[name$="DocSeries"]').inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                $(formContent).find('[name$="DocNumber"]').inputmask("9{6}", options);
+                $(formContent).find('[name$="ChildInn"]').inputmask("9{12}", options);
+                $(formContent).find("select.select2-nosearch").each(function () {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+                function addValidation($el) {
+                    SmevDataFormValidation.addField($el.attr('name'),
+                        {
+                            validators: {
+                                notEmpty: {}
+                            }
+                        });
+                    SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+                    $el.addClass('required');
+                }
+                function removeValidation($el) {
+                    if ($el.attr('name') in SmevDataFormValidation.fields) {
+                        SmevDataFormValidation.removeField($el.attr('name'));
+                    }
+                }
+            }
+        };
+
+
+    /*
+     var childBirthCert = {
+          docSeries: $(formContent).find('#request_ChildBirthCert_DocSeries"]'),
+          docNumber: $(formContent).find('#request_ChildBirthCert_DocNumber"]'),
+          docDate: $(formContent).find('#request_ChildBirthCert_DocDate"]'),
+          issuer: $(formContent).find('#request_ChildBirthCert_Issuer"]'),
+      }
+
+    $(formContent).find('[name$="ChildBirthCert.DocType"]').on('change', function (){
+
+
+
+        switch ($(this).val()) {
+        case 'RfBrthCert':
+
+        break;
+                default:
+
+        break;
+        }
+
+    })*/
+
+    $('.applicants').on('change',
+        function () {
+            let id = $(this).val();
+            let $block = $(formContent);
+            let options = { clearIncomplete: true, showMaskOnHover: false };
+            let $series = $(formContent).find('[name$="DocSeries"]');
+            let $number = $(formContent).find('[name$="DocNumber"]');
+            $block.find('[type="text"]:not([name$="AccountOid"])').each(function () {
+                $(this).val('');
+            });
+            if (id) {
+                $block.find('[name$="LastName"]').val(applicants[id].lastName);
+                $block.find('[name$="FirstName"]').val(applicants[id].firstName);
+                $block.find('[name$="SecondName"]').val(applicants[id].secondName);
+                $block.find('[name$="DocSeries"]').val(applicants[id].documentSerial);
+                $block.find('[name$="DocNumber"]').val(applicants[id].documentNumber);
+                $block.find('[name$="BirthDate"]').val(applicants[id].birthDate ? new Date(applicants[id].birthDate).toLocaleDateString() : '');
+                $block.find('[name$="Snils"]').val(applicants[id].snils);
+                $block.find('[name$="DocDate"]').val(applicants[id].documentIssueDate ? new Date(applicants[id].documentIssueDate).toLocaleDateString() : '');
+                $block.find('[name$="Issuer"]').val(applicants[id].documentIssueBody);
+                $block.find('[name$="ChildInn"]').val(applicants[id].inn);
+
+
+                switch (applicants[id].gender) {
+                    case 1:
+                        $block.find('[id$="Gender1"]').prop('checked', true);
+                        break;
+                    case 2:
+                        $block.find('[id$="Gender2"]').prop('checked', true);
+                        break;
+                }
+            }
+        });
+
+    $(formContent).find('[name$="DocType"]').on('change',
+        function () {
+            let options = { clearIncomplete: true, showMaskOnHover: false };
+            let $series = $(formContent).find('[name$="DocSeries"]');
+            let $number = $(formContent).find('[name$="DocNumber"]');
+            switch ($(this).val()) {
+                case 'RfBrthCert':
+                    $series.inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                    $number.inputmask("9{6}", options);
+                    break;
+                case 'FIdBrthCert':
+                case 'OldBrthCert':
+                    $series.inputmask('', options);
+                    $number.inputmask('', options);
+                    break;
+            }
+        });
+
+    $('#checkChildInsurancePolice').on('change', function () {
+        visibilityBlock($(this).closest('[data-block]').find('[data-disabled]'), !$(this).prop('checked'), !$(this).prop('checked'));
+    });
+
+    $(formContent).find('.applicants').val('0').trigger('change');
+</script>

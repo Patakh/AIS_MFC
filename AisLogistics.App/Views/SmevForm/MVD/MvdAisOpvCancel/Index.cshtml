@@ -1,0 +1,50 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var request = new MvdAisOpvCancelRequestData();
+}
+<div class="row justify-content-center g-3">
+    <div class="col-10">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Детали запроса</div>
+        </div>
+    </div>
+</div>
+<div class="row g-3 justify-content-center">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.RegistrationNumber">Регистрационный номер анкеты</label>
+                <input type="text" class="form-control required" asp-for="@request.RegistrationNumber"/>
+            </div>
+            <div class="col-12 mt-2">
+                <label class="form-label" asp-for="@request.NotificationText">Текст информационного уведомления</label>
+                <input type="text" class="form-control required" asp-for="@request.NotificationText"/>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function ShowErrorInputs() {
+    }
+    var formContent = document.getElementById("smev-data-form-content");
+    var smevForm = {
+        init: () => {
+             $(formContent).find('.required').each(function() {
+                addValidation($(this));
+            });
+            $(formContent).find('[name$="RegistrationNumber"]').inputmask("9{25}", { clearIncomplete: true, showMaskOnHover: false } );
+        }
+    };
+     function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+</script>

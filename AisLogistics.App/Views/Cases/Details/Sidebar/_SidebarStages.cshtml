@@ -1,0 +1,80 @@
+﻿@model ViewModelBuilder
+@{
+    var items = Model.Model as List<CaseServiceStageDto>;
+}
+
+
+<style>
+    #caseStages .head-stage {
+        border-bottom: 2px solid #077EFA;
+    }
+
+    #caseStages .item__stage {
+        border-bottom: 1px solid #BEBEBE;
+        display: flex;
+        padding-block: 0.47rem;
+    }
+
+    #caseStages .head-stage .col {
+        padding-bottom: 0.5rem !important;
+    }
+
+    #caseStages .items__stage {
+        max-height: 14rem;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .text-success {
+        color: #1CB92B !important;
+    }
+
+</style>
+@if (items.Any())
+{
+
+    <div class="col">
+        <div class="d-block mt-2 head-stage">
+            <div class="row">
+                <div class="col-3 m-s-12">Этап</div>
+                <div class="col-6 m-s-12">Сотрудник</div>
+                <div class="col-3 m-s-12">Дата</div>
+            </div>
+        </div>
+        <div class="items__stage scroller d-block">
+            @foreach (var item in items)
+            {
+                <div class="row item__stage">
+                    <div class="col-3">
+                        <div class="text-success fs-12">@item.Name</div>
+                        <div class="r-l-12"><days count="item.Days ?? 0" data-bs-toggle="tooltip" title="Дней на этапе"></days></div>
+                    </div>
+                    <div class="col-6">
+                        <div class="r-s-12">@item.EmployeeCurrent.Name</div>
+                        <div class="r-l-12">@item.EmployeeCurrent.Job</div>
+                    </div>
+                    <div class="col-3">
+                        <div class="r-s-12" data-bs-toggle="tooltip" title="Дата начала этапа">@item.DateAdd.ToShortDateString()</div>
+                        @if (item.DateFact.HasValue)
+                        {
+                            <div class="r-s-12" data-bs-toggle="tooltip" title="Фактическая дата окончания этапа">
+                                @(item.DateFact?.ToShortDateString() ?? "-")
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="r-s-12" data-bs-toggle="tooltip" title="Регламентная дата окончания этапа">
+                                @(item.DateReg?.ToShortDateString() ?? "-")
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="r-l-12 text-center mt-2">Этапы отсутствуют</div>
+}
+

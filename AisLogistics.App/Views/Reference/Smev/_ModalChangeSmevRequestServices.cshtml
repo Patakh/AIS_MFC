@@ -1,0 +1,106 @@
+﻿@model List<AisLogistics.App.Models.DTO.References.SmevReferenceServiceDto>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Наименование</th>
+            <th>
+                <a href="javascript:void(0);" data-add-service title="Добавить">
+                    <span class="action-icon favorite">
+                        <i class="bi bi-plus bx-md"></i>
+                    </span>
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.ServiceName
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" class="btn btn-icon text-danger" data-remove-service="@item.Id"><i class="bi bi-trash"></i></a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="2">
+                    <div class="alert alert-primary" role="alert">
+                        <h6 class="alert-heading mb-1">Нет данных</h6>
+                        <span>Услуги отсутствуют</span>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $('[data-add-service]').on('click', function () {
+        $.ajax({
+            url: '/Reference/SmevRequestServiceAddModal',
+            type: 'POST',
+            data: { id: '@ViewBag.Id' },
+            beforeSend: () => {
+                $.pageBlock();
+            },
+            complete: () => {
+                $.unblockUI();
+            },
+            success: function (content) {
+                $('#modalContainerOver').html(content).modal('show');
+            }
+        });
+    });
+
+    $('[data-remove-service]').on('click', function () {
+
+        let id = $(this).data("removeService");
+
+
+        Swal.fire({
+            title: 'Подтвердите удаление записи',
+            showCancelButton: true,
+            confirmButtonText: 'Удалить',
+            cancelButtonText: 'Отмена',
+            showLoaderOnConfirm: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            customClass: {
+                confirmButton: 'btn btn-danger',
+                cancelButton: 'btn btn-secondary ms-2'
+            },
+            buttonsStyling: false,
+            returnInputValueOnDeny: true,
+            preConfirm: () => {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Reference/SmevRequestServiceDelete',
+                    data: { id: id },
+                    async: false,
+                    beforeSend: () => {
+                        Swal.showLoading();
+                    },
+                    complete: () => {
+                        Swal.hideLoading();
+                    },
+                    success: (data) => {
+                        document.location.reload();
+                    },
+                    error: (data, textStatus) => {
+                       
+                    }
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        })
+    });
+
+</script>

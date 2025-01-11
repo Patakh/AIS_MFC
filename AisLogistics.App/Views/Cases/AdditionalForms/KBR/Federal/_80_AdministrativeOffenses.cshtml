@@ -1,0 +1,233 @@
+﻿@model _80_AdministrativeOffensesModel
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h4 class="text-center mb-3">
+                <a href="https://гибдд.рф/check/fines" target="_blank">
+                    Проверка штрафов ГИБДД
+                </a>
+            </h4>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="GosZnak">Государственный регистрационный знак</label>
+                    <input type="text" asp-for="GosZnak" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" asp-for="IsViolations">
+                        <label class="form-check-label" asp-for="IsViolations">
+                            Имеются нарушения
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div id="Violations">
+                <h5 class="my-2">Информация о нарушениях</h5>
+                <div id="appliedDocumentList" data-clone-list>
+                    @for (var i = 0; i < Model.ViolationsList.Length; i++)
+                    {
+                        <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                            <hr />
+                            <h6 class="my-2 title">Нарушение @(i + 1)</h6>
+                            <div class="row mb-1 align-items-center">
+                                <div class="col-11">
+                                    <div class="row mb-1">
+                                        <div class="col-12">
+                                            <label class="form-label" asp-for="ViolationsList[i].Date">Дата нарушения</label>
+                                            <div class="input-group input-group-merge">
+                                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                                <input asp-for="ViolationsList[i].Date" type="text" class="form-control pickdate">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label" asp-for="ViolationsList[i].Article">статья</label>
+                                            <input type="text" asp-for="ViolationsList[i].Article" class="form-control">
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label" asp-for="ViolationsList[i].Divisions">подразделения</label>
+                                            <input type="text" asp-for="ViolationsList[i].Divisions" class="form-control">
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label" asp-for="ViolationsList[i].Summ">Сумма</label>
+                                            <input type="number" asp-for="ViolationsList[i].Summ" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1 mt-4">
+                                    <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-2">
+                        <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                    </div>
+                </div>
+                <hr />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Нарушение 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-11">
+                <div class="row mb-1">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="ViolationsList[0].Date">Дата нарушения</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                            <input asp-for="ViolationsList[0].Date" type="text" class="form-control pickdate">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" asp-for="ViolationsList[0].Article">статья</label>
+                        <input type="text" asp-for="ViolationsList[0].Article" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" asp-for="ViolationsList[0].Divisions">подразделения</label>
+                        <input type="text" asp-for="ViolationsList[0].Divisions" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" asp-for="ViolationsList[0].Summ">Сумма</label>
+                        <input type="number" asp-for="ViolationsList[0].Summ" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="col-1 mt-4">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock'); 
+    $(function () {
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        let options = {
+            clearIncomplete: true,
+            showMaskOnHover: false
+        };
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        $('#IsViolations').on('change', () => toggleViolations());
+        toggleViolations();
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.append($cloneBlock);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input").each(function () {
+                $(this).val("");
+            });
+
+            $block.find('select.select2-nosearch').each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity,
+                })
+            });
+
+            let options = {
+                clearIncomplete: true,
+                showMaskOnHover: false
+            };
+
+            $block.find(".pickdate").datepicker({
+                language: "ru",
+                autoclose: true
+            }).inputmask("99.99.9999", options);
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled, sliding = 0) {
+        switch (hide) {
+            case true:
+                $block.slideUp(sliding);
+                break;
+            case false:
+                $block.slideDown(sliding);
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    function toggleViolations() {
+        let visible = $('#IsViolations').is(':checked');
+        visibilityBlock($('#Violations'), !visible, !visible, 400)
+    }
+</script>

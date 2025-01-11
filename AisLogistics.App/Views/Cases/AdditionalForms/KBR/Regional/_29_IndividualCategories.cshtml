@@ -1,0 +1,258 @@
+﻿@model _29_IndividualCategoriesModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Categories">по категории</label>
+                    <select class="select2-search" asp-for="Categories">
+                        <option value="труженик тыла">труженик  тыла</option>
+                        <option value="ветеран труда">ветеран труда</option>
+                        <option value="ветеран военной службы">ветеран военной службы</option>
+                        <option value="реабилитированный">реабилитированный</option>
+                        <option value="сельский специалист учреждений здравоохранения">сельский специалист учреждений здравоохранения</option>
+                        <option value="социального обслуживания населения">социального обслуживания населения</option>
+                        <option value="культуры">культуры</option>
+                        <option value="государственной ветеринарной службы">государственной ветеринарной службы</option>
+                        <option value="физической культуры и спорта">физической культуры и спорта</option>
+                        <option value="специалист-пенсионер">специалист-пенсионер</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="PaymentMethod">Способ выплаты</label>
+                    <select class="select2-nosearch" asp-for="PaymentMethod">
+                        <option value="Почтовое отделение">Почтовое отделение</option>
+                        <optgroup label="Кредитная организация">
+                            <option value="ПАО «Сбербанк России»">ПАО «Сбербанк России»</option>
+                            <option value="АО «Россельхозбанк»">АО «Россельхозбанк»</option>
+                            <option value="ВТБ (ПАО)">ВТБ (ПАО)</option>
+                            <option value="ФО «Альфа-банк»">ФО «Альфа-банк»</option>
+                            <option value="ФО «Тинькофф Банк»">ФО «Тинькофф Банк»</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="col-4" personalAccount>
+                    <label class="form-label" asp-for="PersonalAccount">Лицевой счет</label>
+                    <input type="text" asp-for="PersonalAccount" pattern="[0-9]{20,}" class="form-control">
+                </div>
+                <div class="col-4" postOffice>
+                    <label class="form-label" asp-for="PostOffice">почтовое отделение</label>
+                    <input type="text" asp-for="PostOffice" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Notify">Уведомить о результате</label>
+                    <select class="select2-search" asp-for="Notify">
+                        <option value="почтовый адрес">почтовый адрес</option>
+                        <option value="электронный адрес">электронный адрес</option>
+                        <option value="портал">портал</option>
+                    </select>
+                </div>
+            </div>
+            <h5 class="my-2">Приложенные документы</h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedDocumentList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Документ @(i + 1)</h6>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-11">
+                                <input type="text" list="Docs" asp-for="AppliedDocumentList[i].Name" class="form-control">
+                                <datalist id="Docs">
+                                    <option value="Документ удостоверяющий личность">Документ удостоверяющий личность</option>
+                                    <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                    <option value="Свидетельство о заключении брака">Свидетельство о заключении брака</option>
+                                    <option value="Свидетельство о расторжении брака">Свидетельство о расторжении брака</option>
+                                    <option value="Свидетельство об установлении отцовства">Свидетельство об установлении отцовства</option>
+                                    <option value="Расчётный счёт">Расчётный счёт</option>
+                                    <option value="Сберкнижка">Сберкнижка</option>
+                                    <option value="Трудовая книжка">Трудовая книжка</option>
+                                    <option value="Свидетельство о регистрации по месту жительства/пребывания">Свидетельство о регистрации по месту жительства/пребывания</option>
+                                    <option value="Удостоверение">Удостоверение</option>
+                                    <option value="Справка МСЭ">Справка МСЭ</option>
+                                    <option value="Ветеран труда РА">Ветеран труда РА</option>
+                                </datalist>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+</div>
+<div id="originalBlock">
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Документ 0</h6>
+        <div class="row mb-3 align-items-center">
+            <div class="col-11">
+                <input type="text" list="Docs" asp-for="AppliedDocumentList[0].Name" class="form-control">
+                <datalist id="Docs">
+                    <option value="Документ удостоверяющий личность">Документ удостоверяющий личность</option>
+                    <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                    <option value="Свидетельство о заключении брака">Свидетельство о заключении брака</option>
+                    <option value="Свидетельство о расторжении брака">Свидетельство о расторжении брака</option>
+                    <option value="Свидетельство об установлении отцовства">Свидетельство об установлении отцовства</option>
+                    <option value="Расчётный счёт">Расчётный счёт</option>
+                    <option value="Сберкнижка">Сберкнижка</option>
+                    <option value="Трудовая книжка">Трудовая книжка</option>
+                    <option value="Свидетельство о регистрации по месту жительства/пребывания">Свидетельство о регистрации по месту жительства/пребывания</option>
+                    <option value="Удостоверение">Удостоверение</option>
+                    <option value="Справка МСЭ">Справка МСЭ</option>
+                    <option value="Ветеран труда РА">Ветеран труда РА</option>
+                </datalist>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+
+        });
+
+        additionalForm.find('#PaymentMethod').on('change', function () {
+            switch ($(this).val()) {
+                case 'Почтовое отделение':
+                    visibilityBlock(additionalForm.find('[personalAccount]'), true, true);
+                    visibilityBlock(additionalForm.find('[postOffice]'), false, false);
+                    break;
+                default:
+                    visibilityBlock(additionalForm.find('[personalAccount]'), false, false);
+                    visibilityBlock(additionalForm.find('[postOffice]'), true, true);
+                    break;
+            }
+        });
+
+        if (document.getElementById('PaymentMethod').value)
+            additionalForm.find('#PaymentMethod').val(document.getElementById('PaymentMethod').value).trigger('change');
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+        additionalForm.find('#PersonalAccount').inputmask("9{20}", options);
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.append($cloneBlock);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input").each(function () {
+                $(this).val("");
+            });
+            $block.find('select.select2-nosearch').each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity,
+                })
+            });
+        }
+    });
+
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

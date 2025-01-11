@@ -1,0 +1,165 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.KBR.Federal.EducationSpecialistExpenseCompensationModel
+@{
+    IEnumerable<SelectListItem>? docList = Model.AppliedDocuments?.Select(i => new SelectListItem(i, i));
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <h5 class="my-2">Прошу назначить ежемесячную компенсацию как</h5>
+                    <div class="form-check">
+                        <input asp-for="SpecialistTypeId" id="SpecialistTypeId1" class="form-check-input" type="radio" value="1">
+                        <label for="SpecialistTypeId1" class="form-check-label">
+                            специалисту образовательных организаций
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="SpecialistTypeId" id="SpecialistTypeId2" class="form-check-input" type="radio" value="2">
+                        <label for="SpecialistTypeId2" class="form-check-label">
+                            специалисту пенсионеру
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <h5 class="my-2">
+                        Прошу  доставлять  установленную  мне  ежемесячную  компенсацию  через:
+                    </h5>
+                    <div class="form-check">
+                        <input asp-for="CompensationDeliveryTypeId" id="CompensationDeliveryTypeId1" class="form-check-input" type="radio" value="1">
+                        <label for="CompensationDeliveryTypeId1" class="form-check-label">
+                            отделение Управления Федеральной почтовой связи КБР - ФГУП "Почта России"
+                        </label>
+                    </div>
+                    <div class="form-check" checkBlock>
+                        <input asp-for="CompensationDeliveryTypeId" id="CompensationDeliveryTypeId2" class="form-check-input" type="radio" value="2">
+                        <label for="CompensationDeliveryTypeId2" class="form-check-label">
+                            кредитную организацию
+                        </label>
+
+                        <div class="row mb-3 justify-content-end" checkBlockBody>
+                            <div class="row mb-3">
+                                <div class="col-11 mb-2">
+                                    <label asp-for="CreditOrganizationName" class="form-label">Наименование кредитной организации</label>
+                                    <input asp-for="CreditOrganizationName" class="form-control" type="text">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-11 mb-2">
+                                    <label asp-for="CreditOrganizationAccount" class="form-label">№ лицевого счета</label>
+                                    <input asp-for="CreditOrganizationAccount" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <h5 class="my-2">
+                        Уведомление о результате предоставления (отказа  предоставления)
+                        государственной услуги направить на
+                    </h5>
+                    <div class="form-check">
+                        <input asp-for="ReceiveResultMethodId" id="ReceiveResultMethodId1" class="form-check-input" type="radio" value="1">
+                        <label for="ReceiveResultMethodId1" class="form-check-label">почтовый адрес</label>
+                    </div>
+                    <div class="form-check" checkBlock>
+                        <input asp-for="ReceiveResultMethodId" id="ReceiveResultMethodId2" class="form-check-input" type="radio" value="2">
+                        <label for="ReceiveResultMethodId2" class="form-check-label">адрес электронной почты</label>
+
+                        <div class="row mb-3 justify-content-end" checkBlockBody>
+                            <div class="row mb-3">
+                                <div class="col-11 mb-2">
+                                    <input asp-for="EMail" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="ReceiveResultMethodId" id="ReceiveResultMethodId3" class="form-check-input" type="radio" value="3">
+                        <label for="ReceiveResultMethodId3" class="form-check-label">
+                            Единый портал государственных и муниципальных услуг
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="AppliedDocuments">Приложенные документы</label>
+                    <select class="select2" multiple="multiple" asp-items="@docList" asp-for="AppliedDocuments"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+        additionalForm.find('#addFamilyMember').on('click', () => addForm('familyMembersList', 'familyMember'));
+        additionalForm.find('#addFamilyMembersEstate').on('click', () => addForm('familyMembersEstateList', 'familyMembersEstate'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        additionalForm.find("select.select2").each(function () {
+            $(this).select2({
+                tags: true,
+                minimumResultsForSearch: -1,
+                language: "ru",
+                allowClear: true,
+                showSearchBox: false
+            });
+        });
+
+        togleFields();
+    })
+
+    function togleFields() {
+        additionalForm.find('[checkBlock] input[type="radio"], [checkBlock] input[type="checkbox"]').each(function () {
+            let $block = $(this).closest('[checkBlock]');
+
+            if ($(this).is(':checked')) {
+                visibilityBlock($block.find('[checkBlockBody]'), false, false);
+            } else {
+                visibilityBlock($block.find('[checkBlockBody]'), true, true);
+            }
+        })
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

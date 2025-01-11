@@ -1,0 +1,86 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.KBR.Federal.HuntingLicenseModel
+@{
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">
+                Прошу Вас выдать мне охотничий билет единого федерального образца. Ранее состоял на учете в:
+            </h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="BeforeRegisteredBy" class="form-label">Фамилия</label>
+                    <input asp-for="BeforeRegisteredBy" class="form-control" type="text">
+                </div>
+            </div>
+
+            <h5 class="my-2">Имею охотничье оружие</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label asp-for="HuntingWeaponTypeName" class="form-label">Вид</label>
+                            <input asp-for="HuntingWeaponTypeName" class="form-control" type="text">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label asp-for="HuntingWeaponCaliber" class="form-label">Калибр</label>
+                            <input asp-for="HuntingWeaponCaliber" class="form-control" type="text">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label asp-for="HuntingWeaponSeries" class="form-label">Серия</label>
+                            <input asp-for="HuntingWeaponSeries" class="form-control" type="text">
+                        </div>
+                        <div class="col-6">
+                            <label asp-for="HuntingWeaponNumber" class="form-label">Номер</label>
+                            <input asp-for="HuntingWeaponNumber" class="form-control" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="my-2">Разрешения на право хранения и ношения оружия</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label asp-for="WeaponLicenseNumber" class="form-label">Номер</label>
+                            <input asp-for="WeaponLicenseNumber" class="form-control" type="text">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label asp-for="WeaponLicenseGivenBy" class="form-label">Кем выдано</label>
+                            <input asp-for="WeaponLicenseGivenBy" class="form-control" type="text">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-3">
+                            <label asp-for="WeaponLicenseGivenDate" class="form-label">Дата выдачи</label>
+                            <input asp-for="WeaponLicenseGivenDate" class="form-control pickdate" type="text">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () {
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", { clearIncomplete: true, showMaskOnHover: false });
+    });
+</script>

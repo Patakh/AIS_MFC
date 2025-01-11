@@ -1,0 +1,575 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Regional.Service5Model
+@{
+    
+    IEnumerable<SelectListItem> PaymentMethod = new List<SelectListItem>
+    {
+        new("Кредитное учреждение", "Кредитное учреждение"),
+        new("Почтовое отделение", "Почтовое отделение")
+    };
+}
+
+<style>
+    input:required:invalid:not(:placeholder-shown) {
+        border-color: #ff5b5c;
+        box-shadow: 0 0 0.1875rem 0.0625rem rgb(57 218 138 / 18%);
+    }
+
+    input:required:valid:not(:placeholder-shown) {
+        border-color: #39da8a;
+        box-shadow: 0 0 0.1875rem 0.0625rem rgb(57 218 138 / 18%);
+    }
+</style>
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">Заявитель</h5>
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="Fio">ФИО</label>
+                    <input type="text" asp-for="Fio" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="SNILS">СНИЛС</label>
+                    <input type="text" class="form-control" asp-for="SNILS">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="RegistrationAddress">Адрес регистрации</label>
+                    <input type="text" asp-for="RegistrationAddress" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ResidenceAddress">Адрес места жительства</label>
+                    <input type="text" asp-for="ResidenceAddress" class="form-control">
+                </div>
+            </div>
+            <h6 class="my-2">Паспортные данные</h6>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="DocSeries">Серия</label>
+                    <input type="text" class="form-control" asp-for="DocSeries">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="DocNumber">Номер</label>
+                    <input type="text" class="form-control" asp-for="DocNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="DocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DocIssueDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="DocIssuer">Кем выдан</label>
+                    <input type="text" class="form-control" asp-for="DocIssuer">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="PaymentMethod">Способ выплаты</label>
+                    <select class="select2-nosearch" id="Payment" asp-for="PaymentMethod">
+                        <option value="Почтовое отделение">Почтовое отделение</option>
+                        <optgroup label="Кредитная организация">
+                            <option value="ПАО «Сбербанк России»">ПАО «Сбербанк России»</option>
+                            <option value="АО «Россельхозбанк»">АО «Россельхозбанк»</option>
+                            <option value="ВТБ (ПАО)">ВТБ (ПАО)</option>
+                            <option value="ФО «Альфа-банк»">ФО «Альфа-банк»</option>
+                            <option value="ФО «Тинькофф Банк»">ФО «Тинькофф Банк»</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" id="PaymentA" asp-for="PersonalAccount">Лицевой счет<sup id="PaymentAS" class="text-danger fs-6"></sup></label>
+                    <input type="text" asp-for="PersonalAccount" pattern="[0-9]{20,}" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" id="PaymentO" asp-for="Post_Office">почтовое отделение <sup id="PaymentOS" class="text-danger fs-6"></sup></label>
+                    <input type="text" asp-for="Post_Office" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="Phone">Телефон</label>
+                    <input type="text" asp-for="Phone" class="form-control">
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="Col">Количество проживающих</label>
+                    <input type="text" asp-for="Col" class="form-control">
+                </div>
+            </div>
+            <br />
+            <h5 class="my-2">Члены семьи:</h5>
+            <div id="appliedFamilyList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedFamilyList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Член семьи @(i+1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="AppliedFamilyList[i].Fio_Family">ФИО</label>
+                                        <input type="text" class="form-control" asp-for="AppliedFamilyList[i].Fio_Family">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="AppliedFamilyList[i].Degree_Kinship">Степень родства</label>
+                                        <select class="select2-nosearch" asp-for="AppliedFamilyList[i].Degree_Kinship">
+                                            <option value="заявитель">заявитель</option>
+                                            <option value="супруг(а)">супруг(а)</option>
+                                            <option value="сын">сын</option>
+                                            <option value="дочь">дочь</option>
+                                            <option value="мать">мать</option>
+                                            <option value="отец">отец</option>
+                                            <option value="брат">брат</option>
+                                            <option value="сестра">сестра</option>
+                                            <option value="иной родственник">иной родственник</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <h6 class="my-2">Паспортные данные</h6>
+                                <div class="row mb-3">
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="AppliedFamilyList[i].DocSeries_Family">Серия</label>
+                                        <input type="text" class="form-control" asp-for="AppliedFamilyList[i].DocSeries_Family">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="AppliedFamilyList[i].DocNumber_Family">Номер</label>
+                                        <input type="text" class="form-control" asp-for="AppliedFamilyList[i].DocNumber_Family">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="AppliedFamilyList[i].DocIssueDate_Family">Дата выдачи</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="AppliedFamilyList[i].DocIssueDate_Family" type="text"
+                                               class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="AppliedFamilyList[i].DocIssuer_Family">Кем выдан</label>
+                                        <input type="text" class="form-control" asp-for="AppliedFamilyList[i].DocIssuer_Family">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="AppliedFamilyList[i].Availability_Benefits">Наличие льгот</label>
+                                        <input type="text" class="form-control" list="BenefitsClon" placeholder="Нет" asp-for="AppliedFamilyList[i].Availability_Benefits">
+                                        <datalist id="BenefitsClon">
+                                            <option value="Инвалид 1 гр">Инвалид 1 гр</option>
+                                            <option value="Инвалид 2 гр">Инвалид 2 гр</option>
+                                            <option value="Инвалид 3 гр">Инвалид 3 гр</option>
+                                            <option value="Инвалид детства">Инвалид детства</option>
+                                            <option value="Ребенок-инвалид">Ребенок-инвалид</option>
+                                            <option value="Ветеран труда РФ">Ветеран труда РФ</option>
+                                            <option value="Ветеран труда РА">Ветеран труда РА</option>
+                                            <option value="Многодетная семья">Многодетная семья</option>
+                                            <option value="Ветеран и (или) участник ВОВ">Ветеран и (или) участник ВОВ</option>
+                                            <option value="иная льгота">иная льгота</option>
+                                        </datalist>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger content-center " onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedFamilyDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <h5 class="my-2">Приложенные копии документов</h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedDocumentList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Документ @(i+1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3">
+                                    <div class="col-9">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].Name">Наименование</label>
+                                        <input type="text" list="Docs" asp-for="AppliedDocumentList[i].Name" class="form-control">
+                                        <datalist id="Docs">
+                                            <option value="Документ удостоверяющий личность">Документ удостоверяющий личность</option>
+                                            <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                            <option value="Свидетельство о заключении брака">Свидетельство о заключении брака</option>
+                                            <option value="Свидетельство о расторжении брака">Свидетельство о расторжении брака</option>
+                                            <option value="Свидетельство об установлении отцовства">Свидетельство об установлении отцовства</option>
+                                            <option value="Расчётный счёт">Расчётный счёт</option>
+                                            <option value="Сберкнижка">Сберкнижка</option>
+                                            <option value="Трудовая книжка">Трудовая книжка</option>
+                                            <option value="Свидетельство о регистрации по месту жительства/пребывания">Свидетельство о регистрации по месту жительства/пребывания</option>
+                                            <option value="Удостоверение">Удостоверение</option>
+                                            <option value="Справка МСЭ">Справка МСЭ</option>
+                                        </datalist>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].CopyCount">Количество экземпляров</label>
+                                        <input type="number" class="form-control" asp-for="AppliedDocumentList[i].CopyCount">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+</div>
+<div id="originalBlock">
+    <div class="g-3" id="appliedFamilyDocument" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Член семьи 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="AppliedFamilyList[0].Fio_Family">ФИО</label>
+                        <input type="text" class="form-control" asp-for="AppliedFamilyList[0].Fio_Family">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="AppliedFamilyList[0].Degree_Kinship">Степень родства</label>
+                        <select class="select2-nosearch" asp-for="AppliedFamilyList[0].Degree_Kinship">
+                            <option value="заявитель">заявитель</option>
+                            <option value="супруг(а)">супруг(а)</option>
+                            <option value="сын">сын</option>
+                            <option value="дочь">дочь</option>
+                            <option value="мать">мать</option>
+                            <option value="отец">отец</option>
+                            <option value="брат">брат</option>
+                            <option value="сестра">сестра</option>
+                            <option value="иной родственник">иной родственник</option>
+                        </select>
+                    </div>
+                </div>
+                <h6 class="my-2">Паспортные данные</h6>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="AppliedFamilyList[0].DocSeries_Family">Серия</label>
+                        <input type="text" class="form-control" asp-for="AppliedFamilyList[0].DocSeries_Family">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="AppliedFamilyList[0].DocNumber_Family">Номер</label>
+                        <input type="text" class="form-control" asp-for="AppliedFamilyList[0].DocNumber_Family">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="AppliedFamilyList[0].DocIssueDate_Family">Дата выдачи</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="AppliedFamilyList[0].DocIssueDate_Family" type="text" class="form-control pickdate">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="AppliedFamilyList[0].DocIssuer_Family">Кем выдан</label>
+                        <input type="text" class="form-control" asp-for="AppliedFamilyList[0].DocIssuer_Family">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="AppliedFamilyList[0].Availability_Benefits">Наличие льгот</label>
+                        <input type="text" class="form-control" list="Benefits" placeholder="Нет"  asp-for="AppliedFamilyList[0].Availability_Benefits">
+                        <datalist id="Benefits">
+                            <option value="Инвалид 1 гр">Инвалид 1 гр</option>
+                            <option value="Инвалид 2 гр">Инвалид 2 гр</option>
+                            <option value="Инвалид 3 гр">Инвалид 3 гр</option>
+                            <option value="Инвалид детства">Инвалид детства</option>
+                            <option value="Ребенок-инвалид">Ребенок-инвалид</option>
+                            <option value="Ветеран труда РФ">Ветеран труда РФ</option>
+                            <option value="Ветеран труда РА">Ветеран труда РА</option>
+                            <option value="Многодетная семья">Многодетная семья</option>
+                            <option value="Ветеран и (или) участник ВОВ">Ветеран и (или) участник ВОВ</option>
+                            <option value="иная льгота">иная льгота</option>
+                        </datalist>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger content-center " onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Документ 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3">
+                    <div class="col-9">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].Name">Наименование</label>
+                        <input type="text" list="DocsOriginal" asp-for="AppliedDocumentList[0].Name" class="form-control">
+                        <datalist id="DocsOriginal">
+                            <option value="Документ удостоверяющий личность">Документ удостоверяющий личность</option>
+                            <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                            <option value="Свидетельство о заключении брака">Свидетельство о заключении брака</option>
+                            <option value="Свидетельство о расторжении брака">Свидетельство о расторжении брака</option>
+                            <option value="Свидетельство об установлении отцовства">Свидетельство об установлении отцовства</option>
+                            <option value="Расчётный счёт">Расчётный счёт</option>
+                            <option value="Сберкнижка">Сберкнижка</option>
+                            <option value="Трудовая книжка">Трудовая книжка</option>
+                            <option value="Свидетельство о регистрации по месту жительства/пребывания">Свидетельство о регистрации по месту жительства/пребывания</option>
+                            <option value="Удостоверение">Удостоверение</option>
+                            <option value="Справка МСЭ">Справка МСЭ</option>
+                        </datalist>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].CopyCount">Количество экземпляров</label>
+                        <input type="number" value="0" class="form-control" asp-for="AppliedDocumentList[0].CopyCount">
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+    var btnNext = $('.btn-next');
+
+    var applicant = {
+        fio: $("#Fio,#AppliedFamilyList_0__Fio_Family"),
+        birthDate: $("#BirchDate"),
+        phone: $("#Phone"),
+        SNILS: $("#SNILS"),
+        docSeries: $("#DocSeries,#AppliedFamilyList_0__DocSeries_Family"),
+        docNumber: $("#DocNumber,#AppliedFamilyList_0__DocNumber_Family"),
+        docIssueDate: $("#DocIssueDate,#AppliedFamilyList_0__DocIssueDate_Family"),
+        docIssuer: $("#DocIssuer,#AppliedFamilyList_0__DocIssuer_Family"),
+        registrationAddress: $("#RegistrationAddress"),
+        residenceAddress: $("#ResidenceAddress")
+    };
+    $(function() {
+
+        if (additionalForm.find('#Payment').val() == 'Почтовое отделение') {
+            additionalForm.find('#PaymentOS').append(`*`);
+            additionalForm.find('#PaymentAS').empty();
+            $('#PersonalAccount').attr('required', false);
+            $('#Post_Office').attr('required', true);
+        } else {
+            if (additionalForm.find('#PaymentAS').text() == '') {
+                additionalForm.find('#PaymentAS').append(`*`);
+            };
+            additionalForm.find('#PaymentOS').empty();
+            $('#Post_Office').attr('required', false);
+            $('#PersonalAccount').attr('required', true);
+        };
+        additionalForm.find('#Payment').on('change', function() {
+            switch ($(this).val()) {
+
+                case 'Почтовое отделение':
+                    $('#PersonalAccount').attr('required', false);
+                    $('#Post_Office').attr('required', true);
+                    additionalForm.find('#PaymentOS').append(`*`);
+                    additionalForm.find('#PaymentAS').empty();
+                    break;
+                default:
+                    $('#Post_Office').attr('required', false);
+                    $('#PersonalAccount').attr('required', true);
+                    if (additionalForm.find('#PaymentAS').text() == '') {
+                        additionalForm.find('#PaymentAS').append(`*`);
+                    };
+                    additionalForm.find('#PaymentOS').empty();
+                    break;
+            }
+        });
+
+
+        additionalForm.find('#Payment').on('change', function() {
+            switch ($(this).val()) {
+
+                case 'Почтовое отделение':
+                    additionalForm.find('#PaymentAS').empty();
+                    break;
+                default:
+                    additionalForm.find('#PaymentOS').empty();
+                    break;
+            }
+        });
+
+
+        if (btnNext.length > 0) {
+            btnNext.on('click', function appContent() {
+                applicant.fio.val($("#customer_LastName").val() + ' ' + $("#customer_FirstName").val() + ' ' + $("#customer_SecondName").val());
+                applicant.birthDate.val($("#customer_DocumentBirthDate").val());
+                applicant.phone.val($("#customer_CustomerPhone1").val());
+                applicant.SNILS.val($("#customer_CustomerSnils").val());
+                applicant.docSeries.val($("#customer_DocumentSerial").val());
+                applicant.docNumber.val($("#customer_DocumentNumber").val());
+                applicant.docIssueDate.val($("#customer_DocumentIssueDate").val());
+                applicant.docIssuer.val($("#customer_DocumentIssueBody").val());
+                applicant.residenceAddress.val($("#customer_CustomerAddressResidence").val());
+                applicant.registrationAddress.val($("#customer_CustomerAddress").val())
+            });
+        };
+
+        originalBlock.find('[data-original]').each(function(_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+        additionalForm.find('#addAppliedFamilyDocument').on('click', () => addForm('appliedFamilyList', 'appliedFamilyDocument'));
+
+
+        additionalForm.find('[data-disabled]').each(function() {
+            visibilityBlock($(this), true, true);
+        });
+
+        additionalForm.find("select.select2-search").each(function() {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function() {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('#PersonalAccount').inputmask("9{20}", options);
+        additionalForm.find('#Phone').inputmask("+7(999) 999-99-99", { clearIncomplete: true, showMaskOnHover: false });
+        additionalForm.find('#DocSeries').inputmask("9999", { clearIncomplete: true, showMaskOnHover: false });
+        additionalForm.find('#DocNumber').inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+        additionalForm.find('#SNILS').inputmask("999-999-999 99", { clearIncomplete: true, showMaskOnHover: false });
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.find("select").each(function() {
+                $(this).select2('destroy');
+            });
+            $cloneList.append($cloneBlock);
+            select2Init($cloneList);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input[type='text']").each(function() {
+                $(this).val("");
+            });
+
+        }
+    });
+    function select2Init($block) {
+        $block.find("select.select2-nosearch").each(function() {
+            $(this).select2({
+                minimumResultsForSearch: Infinity
+            });
+        });
+
+         $block.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", { clearIncomplete: true, showMaskOnHover: false } );
+
+        $block.find("select.select2-search").each(function() {
+            $(this).select2({
+            });
+        });
+    }
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function() {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function() {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function(index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

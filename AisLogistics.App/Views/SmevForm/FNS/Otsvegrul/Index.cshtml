@@ -1,0 +1,121 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants;
+    var request = new FnsOtsvegrulRequestData();
+}
+<div class="row g-3">
+    <div class="col-12 col-lg-10 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Детали запроса</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center g-3">
+    <div class="col-3">
+        <label class="form-label" for="requestType">Параметр запроса</label>
+        <select class="form-select select2-nosearch" id="requestType" onchange="changeRequestType(this)">
+            <option value="Inn">ИНН</option>
+            <option value="Ogrn">ОГРН</option>
+        </select>
+    </div>
+    <div class="col-12">
+        <div class="row justify-content-center">
+            <div class="col-3" id="innBlock">
+                <label class="form-label" asp-for="@request.Inn">ИНН</label>
+                <input type="text" class="form-control required inn-ul" placeholder="ИНН" asp-for="@request.Inn" />
+            </div>
+            <div class="col-3" id="ogrnBlock" data-disabled>
+                <label class="form-label" asp-for="@request.Ogrn">ОГРН</label>
+                <input type="text" class="form-control ogrn" placeholder="ОГРН" asp-for="@request.Ogrn">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ShowErrorInputs() {
+    }
+
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                $(formContent).find('.required').each(function() {
+                    addValidation($(this));
+                });
+
+                $(formContent).find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+
+                $(formContent).find("select.select2-nosearch").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+
+                var maskOptions = { clearIncomplete: true, showMaskOnHover: false };
+                $('.inn-ul').inputmask("9{10}", maskOptions);
+                $('.ogrn').inputmask("9{13}", maskOptions);
+            }
+        };
+
+    function changeRequestType(el) {
+        switch (el.value) {
+            case 'Inn':
+                addValidation($('#innBlock [id$="Inn"]'));
+                removeValidation($('#ogrnBlock [id$="Ogrn"]'));
+                visibilityBlock($('#innBlock'), false);
+                visibilityBlock($('#ogrnBlock'), true, true);
+               break;
+            case 'Ogrn':
+                addValidation($('#ogrnBlock [id$="Ogrn"]'));
+                removeValidation($('#innBlock [id$="Inn"]'));
+                visibilityBlock($('#ogrnBlock'), false);
+                visibilityBlock($('#innBlock'), true, true);
+                break;
+        }
+    }
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+    function visibilityBlock($block, hide, isDisabled = false) {
+        if (hide) {
+            $block.hide();
+            $block.find('input, select').each(function() {
+                if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                    removeValidation($(this).attr('name'));
+                }
+                if (isDisabled) $(this).prop('disabled', true);
+            });
+        } else {
+            $block.show();
+            $block.find('input, select').each(function() {
+                $(this).prop('disabled', false);
+                let $this = $(this);
+                if ($this.hasClass('required')) {
+                    addValidation($this);
+                    SmevDataFormValidation.elements[$this.attr('name')] = [$this[0]];
+                }
+            });
+
+            $block.find('[data-disabled]').each(function () {
+                visibilityBlock($(this), true);
+            });
+        }
+    }
+</script>

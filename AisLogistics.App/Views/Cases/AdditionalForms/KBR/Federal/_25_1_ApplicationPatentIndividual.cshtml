@@ -1,0 +1,493 @@
+﻿@model _25_1_ApplicationPatentIndividualModel
+@{
+    if (Model.TransportInfo.Length == 0)
+        Model.TransportInfo = new[] { new _25_1_ApplicationPatentIndividualModel.Transport() }; 
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h6>стр. 001</h6>
+       
+            <div class="col-12">
+                <label class="form-label" asp-for="Code">Код налогового органа</label>
+                <input type="text" class="form-control maxlengthFour" asp-for="Code">
+            </div>
+            <br />
+            <div class="col-12">
+                <label class="form-label" asp-for="OgrnIP">ОГРНИП</label>
+                <input type="text" class="form-control" asp-for="OgrnIP">
+            </div>
+            <br />
+            <div class="col-3">
+                <label class="form-label" asp-for="DateStart">просит выдать патент с </label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar3"></i>
+                    </span>
+                    <input asp-for="DateStart" type="text"
+                           class="form-control pickdate">
+                </div>
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="DateEnd">по</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar3"></i>
+                    </span>
+                    <input asp-for="DateEnd" type="text"
+                           class="form-control pickdate">
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="SheetCount">с приложением копии документа на листах</label>
+                <input type="number" class="form-control maxlengthThree" asp-for="SheetCount">
+            </div>
+            <br />
+            <h6>стр. 002</h6>
+            <div class="col-12">
+                <label class="form-label" asp-for="TypesOfActivities">в отношении осуществляемого им вида предпринимательской деятельности:</label>
+                <input type="text" class="form-control" asp-for="TypesOfActivities">
+            </div>
+            <br />
+            <div class="col-12">
+                <label class="form-label" asp-for="CodeTypesOfActivity">Идентификационный код установленного законом субъекта Российской Федерации вида предпринимательской деятельности</label>
+                <input type="text" class="form-control" asp-for="CodeTypesOfActivity">
+            </div>
+            <br />
+            <div>Указанный вид предпринимательской деятельности осуществляется: </div>
+            <div class="col-12">
+                <div class="form-check" checkBlock>
+                    <input asp-for="BusinessdType" id="SpecifiedTypeOfBusinessActivity1" class="form-check-input" type="radio" value="1">
+                    <label for="SpecifiedTypeOfBusinessActivity1" class="form-check-label">с привлечением наемных работников, в том числе по договорам гражданско - правового характера</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-check" checkBlock>
+                    <input asp-for="BusinessdType" id="SpecifiedTypeOfBusinessActivity2" class="form-check-input" type="radio" value="2">
+                    <label for="SpecifiedTypeOfBusinessActivity2" class="form-check-label">без привлечения наемных работников</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="AverageNumberOfEmployees">Средняя численность наменых работников или 0, если наемные работники не привлекаются</label>
+                <input type="number" class="form-control maxlengthTwo" asp-for="AverageNumberOfEmployees" >
+            </div>
+            <br />
+            <div class="col-12">
+                <label class="form-label" asp-for="TaxRate">Индивидуальный предприниматель применяет налоговую ставку уставноленную %:</label>
+                <input type="number" class="form-control maxlengthOne" asp-for="TaxRate">
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="ReferenceToRuleLaw">ссылка на норму закона субьекта Российской Федерации</label>
+                <input type="text" class="form-control" asp-for="ReferenceToRuleLaw">
+            </div>
+            <br />
+            <div class="col-12">
+                <label class="form-label" asp-for="CodeTransport">Код транспортного средства</label>
+                <input type="text" class="form-control" asp-for="CodeTransport">
+            </div>
+            <h5 class="my-2">Транспортные средства</h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (int i = 0; i < Model.TransportInfo.Count(); i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Транспорт @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-11"> 
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="TransportInfo[i].IdentificationNumber">Идентификационный номер тс</label>
+                                        <input type="text" asp-for="TransportInfo[i].IdentificationNumber" class="form-control">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="TransportInfo[i].Brand">Марка тс</label>
+                                        <input type="text" asp-for="TransportInfo[i].Brand" class="form-control" />
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="TransportInfo[i].RegistrationMark">Регистрационный знак тс</label>
+                                        <input type="text" asp-for="TransportInfo[i].RegistrationMark" class="form-control" />
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="TransportInfo[i].LoadCapacity">Грузоподъемность тс в тоннах</label>
+                                        <input type="text" asp-for="TransportInfo[i].LoadCapacity" class="form-control loadcapacity" />
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="TransportInfo[i].Number">Количество посадочных мест</label>
+                                        <input type="number" asp-for="TransportInfo[i].Number" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1 my-auto">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2 mt-5">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+
+
+            <h6>стр. 003</h6>
+            <div class="col-12">
+                <label class="form-label" asp-for="SubjectCode">Код субъекта Российской Федерации места осуществления предпринимательской деятельности</label>
+                <input type="text" class="form-control maxlengthTwo" asp-for="SubjectCode">
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="TaxCodeForBusinessActivities">Код налогового органа по месту осуществления предпринимательской деятельности, выбранного индивидуальным предпринимателем для постановки на учет</label>
+                <input type="text" class="form-control maxlengthFour" asp-for="TaxCodeForBusinessActivities">
+            </div>
+            <br />
+            <div class="col-12">
+                <label class="form-label" asp-for="ObjectTypeCode">Код вида обЪекта</label>
+                <input type="text" class="form-control maxlengthTwo" asp-for="ObjectTypeCode">
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="FeatureOfObject">Признак обЪекта</label>
+                <input type="number" class="form-control maxlengthOne" asp-for="FeatureOfObject">
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="AreaOfObject">Площадь объекта</label>
+                <input type="number" placeholder="1.0" step="0.01" min="0" max="10" class="form-control" asp-for="AreaOfObject">
+            </div>
+            <br />
+            <div class="col-12">
+                <label class="form-label" asp-for="CodeSubjectOfRussianFederation">Субъект Российской Федерации</label>
+                <input type="number" class="form-control maxlengthTwo" asp-for="CodeSubjectOfRussianFederation">
+            </div>
+            <br />
+            <h6>Вид</h6>
+            <div class="col-12">
+                <div class="form-check" checkBlock>
+                    <input asp-for="TypeMunicipality" id="TypeMunicipality1" class="form-check-input" type="radio" value="1">
+                    <label for="TypeMunicipality1" class="form-check-label">Муниципальный район</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-check" checkBlock>
+                    <input asp-for="TypeMunicipality" id="TypeMunicipality2" class="form-check-input" type="radio" value="2">
+                    <label for="TypeMunicipality2" class="form-check-label">Городской округ</label>
+                </div>
+            </div>
+                        <div class="col-12">
+                <div class="form-check" checkBlock>
+                    <input asp-for="TypeMunicipality" id="TypeMunicipality3" class="form-check-input" type="radio" value="3">
+                    <label for="TypeMunicipality3" class="form-check-label">Внутригородская территория города федерального значения</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-check" checkBlock>
+                    <input asp-for="TypeMunicipality" id="TypeMunicipality4" class="form-check-input" type="radio" value="4">
+                    <label for="TypeMunicipality4" class="form-check-label">муниципальный округ</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="MunicipalityName">Наименование</label>
+                <input type="text" class="form-control" asp-for="MunicipalityName">
+            </div>
+            <br />
+            <h6>Вид</h6>
+            <div class="col-12">
+                <div class="form-check" checkBlock>
+                    <input asp-for="TypeSettlement" id="TypeSettlement1" class="form-check-input" type="radio" value="1">
+                    <label for="TypeSettlement1" class="form-check-label">Городское поселение</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-check" checkBlock>
+                    <input asp-for="TypeSettlement" id="TypeSettlement2" class="form-check-input" type="radio" value="2">
+                    <label for="TypeSettlement2" class="form-check-label">Сельское поселение</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-check" checkBlock>
+                    <input asp-for="TypeSettlement" id="TypeSettlement3" class="form-check-input" type="radio" value="3">
+                    <label for="TypeSettlement3" class="form-check-label">Межселенная территория в составе муниципального района</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-check" checkBlock>
+                    <input asp-for="TypeSettlement" id="TypeSettlement4" class="form-check-input" type="radio" value="4">
+                    <label for="TypeSettlement4" class="form-check-label">Внутригородской район городского округа</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="SettlementName">Наименование</label>
+                <input type="text" class="form-control" asp-for="SettlementName">
+            </div>
+            <br />
+            <h6>Населенный пункт(город, деревня, село и прочее)</h6>
+            <div class="col-12">
+                <label class="form-label" asp-for="LocalityType">Вид</label>
+                <input type="text" class="form-control" asp-for="LocalityType">
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="LocalityName">Наименование</label>
+                <input type="text" class="form-control" asp-for="LocalityName">
+            </div>
+            <br />
+            <h6>Элемент планировочной структуры</h6>
+            <div class="col-12">
+                <label class="form-label" asp-for="ElementOfPlanningStructureType">Тип</label>
+                <input type="text" class="form-control" asp-for="ElementOfPlanningStructureType">
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="ElementOfPlanningStructureName">Наименование</label>
+                <input type="text" class="form-control" asp-for="ElementOfPlanningStructureName">
+            </div>
+            <br />
+            <h6>Элемент улично-дорожной сети</h6>
+            <div class="col-12">
+                <label class="form-label" asp-for="ElementOfRoadNetworkType">Тип</label>
+                <input type="text" class="form-control" asp-for="ElementOfRoadNetworkType">
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="ElementOfRoadNetworkName">Наименование</label>
+                <input type="text" class="form-control" asp-for="ElementOfRoadNetworkName">
+            </div>
+            <br />
+            <h6>Земельный участок</h6>
+            <div class="col-12">
+                <label class="form-label" asp-for="NumberGroundArea">Номер</label>
+                <input type="text" class="form-control" asp-for="NumberGroundArea">
+            </div>
+            <br />
+            <h6>Здание / сооружение / объект незавершенного строительства</h6>
+            <div class="col-12">
+                <label class="form-label" asp-for="BuildType">Тип</label>
+                <input type="text" class="form-control" asp-for="BuildType">
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="BuildNumber">Номер</label>
+                <input type="text" class="form-control" asp-for="BuildNumber">
+            </div>
+            <br />
+            <h6>Помещение в пределах здания / сооружение / машино-место</h6>
+            <div class="col-12">
+                <label class="form-label" asp-for="ApartmentsType">Тип</label>
+                <input type="text" class="form-control" asp-for="ApartmentsType">
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="ApartmentsNumber">Номер</label>
+                <input type="text" class="form-control" asp-for="ApartmentsNumber">
+            </div>
+            <br />
+            <h6>Помещение в пределах квартиры</h6>
+            <div class="col-12">
+                <label class="form-label" asp-for="RoomType">Тип</label>
+                <input type="text" class="form-control" asp-for="RoomType">
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="RoomNumber">Номер</label>
+                <input type="text" class="form-control" asp-for="RoomNumber">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Транспорт 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-11">
+                <div class="row">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="TransportInfo[0].IdentificationNumber">Идентификационный номер тс</label>
+                        <input type="text" asp-for="TransportInfo[0].IdentificationNumber" class="form-control">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="TransportInfo[0].Brand">Марка тс</label>
+                        <input type="text" asp-for="TransportInfo[0].Brand" class="form-control" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="TransportInfo[0].RegistrationMark">Регистрационный знак тс</label>
+                        <input type="text" asp-for="TransportInfo[0].RegistrationMark" class="form-control" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="TransportInfo[0].LoadCapacity">Грузоподъемность тс в тоннах</label>
+                        <input type="text" asp-for="TransportInfo[0].LoadCapacity" class="form-control loadcapacity" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="TransportInfo[0].Number">Количество посадочных мест</label>
+                        <input type="number" asp-for="TransportInfo[0].Number" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-1 my-auto">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+
+        });
+
+        togleFields();
+
+        if ($('.btn-next')) {
+
+            $('.btn-next').on('click', function () {
+                let gender = $('[name="customer.CustomerGender"]').val() == 1 ? 'm' : 'f';
+                let lastName = $("#customer_LastName").val().trim();
+                let firstName = $("#customer_FirstName").val().trim();
+                let secondName = $("#customer_SecondName").val().trim();
+
+                var rn = new RussianName(lastName, firstName, secondName, gender);
+
+                additionalForm.find("#FioGenitiveCase").val(rn.fullName(rn.gcaseGen));
+            })
+        }
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        let optionsNotclearIncomplete = { clearIncomplete: false, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        additionalForm.find(".loadcapacity").inputmask("99.99", options);
+
+        additionalForm.find(".maxlengthOne").inputmask("9", optionsNotclearIncomplete);
+
+        additionalForm.find(".maxlengthTwo").inputmask("99", optionsNotclearIncomplete);
+
+        additionalForm.find(".maxlengthThree").inputmask("999", optionsNotclearIncomplete);
+
+        additionalForm.find(".maxlengthFour").inputmask("9999", optionsNotclearIncomplete);
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        additionalForm.find('[type="radio"], input[type="checkbox"]').on('click', function () {
+            togleFields();
+        });
+        function togleFields() {
+            additionalForm.find('[checkBlock] input[type="radio"], [checkBlock] input[type="checkbox"]').each(function () {
+                let $block = $(this).closest('[checkBlock]');
+
+                if ($(this).is(':checked')) {
+                    visibilityBlock($block.find('[checkBlockBody]'), false, false);
+                } else {
+                    visibilityBlock($block.find('[checkBlockBody]'), true, true);
+                }
+            })
+        }
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.append($cloneBlock);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input").each(function () {
+                $(this).val("");
+            });
+
+            $block.find(".loadcapacity").each(function () {
+                $(this).inputmask("99.99", options);
+            });
+            $block.find('select.select2-nosearch').each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity,
+                })
+            });
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+</script>

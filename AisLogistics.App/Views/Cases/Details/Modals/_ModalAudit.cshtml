@@ -1,0 +1,47 @@
+﻿@using AisLogistics.App.ViewModels.Cases
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<CaseAuditDto>
+@{
+   
+}
+<link rel="stylesheet" href="~/assets/css/case-details.css" asp-append-version="true" />
+<div class="case-notification">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Дата и время</th>
+                <th>Описание</th>
+                <th>Должность</th>
+                <th>ФИО</th>
+            </tr>
+        </thead>
+        <tbody class="table-border-bottom-0">
+            @if (Model.Any())
+            {
+                @foreach (var request in Model.OrderByDescending(o=>o.DateAdd))
+                {
+                            <tr class="m-s-12">
+                        <td>@request.DateAdd</td>
+                        <td>@request.Changed?.Description</td>
+                        <td>
+                            @request.Employee.OfficeName
+                            <small class="d-block">@request.Employee.Job</small>
+                        </td>
+                        <td>@request.Employee.Name</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">
+                        <div class="alert alert-primary" role="alert">
+                            <h6 class="alert-heading mb-1">Нет данных</h6>
+                            <span>Просмотры отсутствуют</span>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

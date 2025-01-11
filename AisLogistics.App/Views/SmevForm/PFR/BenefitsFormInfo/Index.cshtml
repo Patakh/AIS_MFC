@@ -1,0 +1,154 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new GetBenefitsFormInfoRequestData
+            {
+                Fio = new()
+            };
+
+}
+
+<style>
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+</style>
+
+<div class="container m-0 p-0" id="smev_request">
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <div class="row justify-content-center align-items-end mb-3">
+                <div class="col-8">
+                    <label class="form-label" for="@request.IssuingReason">Цель выдачи справки</label>
+                    <select class="form-select select2-nosearch required" asp-for="@request.IssuingReason">
+                        <option value="Item001" selected>Подтверждение факта назначения пенсии, иной выплаты</option>
+                        <option value="Item002">Подтверждение факта назначения в определённом размере (без детализации)</option>
+                        <option value="Item003">Подтверждение факта назначения в определённом размере (с детализацией)</option>
+                        <option value="Item004">О периодах, включённых в страховой стаж</option>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.AppDate">Дата, на которую предоставляются сведения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="@request.AppDate" type="text" class="form-control pickdate required" placeholder="Дата" value="@DateTime.Now.Date">
+                    </div>
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-10 mx-auto">
+                    <div class="divider text-start">
+                        <div class="divider-text fs-5 b-s-16">Персональные данные</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center g-3" data-person>
+                <div class="col-10">
+                    <label class="form-label">Заявители</label>
+                    <select class="form-select select2-nosearch applicants">
+                        <option value="">Выберите заявителя</option>
+                        @for (int i = 0; i < applicants.Count; i++)
+                        {
+                            <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-10">
+                    <div class="row mb-3">
+                        <div class="col-4">
+                            <label class="form-label" asp-for="@request.Fio.LastName">Фамилия</label>
+                            <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Fio.LastName"/>
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label" asp-for="@request.Fio.FirstName">Имя</label>
+                            <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Fio.FirstName">
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label" asp-for="@request.Fio.SecondName">Отчество</label>
+                            <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Fio.SecondName">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-4">
+                            <label class="form-label" asp-for="@request.BirthDate">Дата рождения</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                <input asp-for="@request.BirthDate" type="text" class="form-control pickdate required" placeholder="Дата рождения" value="">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label" asp-for="@request.Snils">СНИЛС</label>
+                            <input type="text" class="form-control snils required" placeholder="СНИЛС" asp-for="@request.Snils"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var applicants = @Json.Serialize(applicants);
+    var formContent = document.getElementById("smev-data-form-content");
+    var smevForm = {
+        init: () => {
+            $('#cloneList').find('.required').each(function () {
+                addValidation($(this));
+            });
+
+            $(formContent).find(".pickdate").datepicker({
+                language: "ru",
+                autoclose: true
+            });
+
+            select2Init($(formContent));
+
+            var maskOptions = { clearIncomplete: true, showMaskOnHover: false };
+            $(formContent).find(".pickdate").inputmask("99.99.9999", maskOptions);
+            $(formContent).find('.snils').inputmask("9{3}-9{3}-9{3} 9{2}", maskOptions);
+            $(formContent).find('.applicants').val('0').trigger('change');
+
+        }
+    };
+
+    function ShowErrorInputs() {
+    }
+
+    $('select.applicants').each(function () {
+        $(this).on('change',
+            function () {
+                let customerId = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]').each(function () {
+                    $(this).val('');
+                });
+                if (customerId) {
+                    let $block = $(this).closest('[data-person]');
+                    $block.find('[name$="LastName"]').val(applicants[customerId].lastName);
+                    $block.find('[name$="FirstName"]').val(applicants[customerId].firstName);
+                    $block.find('[name$="SecondName"]').val(applicants[customerId].secondName);
+                    $block.find('[name$="BirthDate"]').val(applicants[customerId].birthDate ? new Date(applicants[customerId].birthDate).toLocaleDateString() : '');
+                    $block.find('[name$="Snils"]').val(applicants[customerId].snils);
+                }
+            });
+    });
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+</script>

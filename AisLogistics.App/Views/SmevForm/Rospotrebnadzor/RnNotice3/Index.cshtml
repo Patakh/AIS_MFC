@@ -1,0 +1,784 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var request = new SendNotice3RequestData
+            {
+                IpFio = new FioType(),
+            };
+}
+<style>
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+</style>
+<div class="row justify-content-center" id="smev_request">
+    <div class="col-10">
+        <ul class="nav nav-tabs nav-justified tabs-line mb-3" id="smev-request-tablist" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#smev-request-tab1" type="button">Данные запроса</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <buton class="nav-link" data-bs-toggle="pill" data-bs-target="#smev-request-tab2" type="button">Список офисов</buton>
+            </li>
+        </ul>
+    </div>
+
+    <div class="tab-content" id="smev-request-tab-content">
+        <div class="tab-pane fade show active" id="smev-request-tab1" role="tabpanel">
+            <div class="row justify-content-center">
+                <div class="col-8">
+                    <div class="row mb-2 justify-content-center">
+                        <div class="col-6">
+                            <label class="form-label" asp-for="@request.TargetRegionCode">Регион местоположения объекта</label>
+                            <select class="select2-search" asp-for="@request.TargetRegionCode"
+                                    data-dictionary='{"dictionary":"RospotrebnadzorOktmoCode"}'>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" asp-for="@request.ContragentType">Тип заявителя</label>
+                            <select class="select2-nosearch" asp-for="@request.ContragentType">
+                                <option value="Fl">Индивидуальный предприниматель</option>
+                                <option value="Ul">Юридическое лицо</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div data-fl>
+                        <div class="row mb-3">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.IpFio.LastName">Фамилия</label>
+                                <input type="text" class="form-control required" asp-for="@request.IpFio.LastName" placeholder="Фамилия">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.IpFio.FirstName">Имя</label>
+                                <input type="text" class="form-control required" asp-for="@request.IpFio.FirstName" placeholder="Имя">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.IpFio.SecondName">Отчество</label>
+                                <input type="text" class="form-control" asp-for="@request.IpFio.SecondName" placeholder="Отчество">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2 justify-content-center" data-disabled data-ul>
+                        <div class="col-12 mt-2">
+                            <label class="form-label" asp-for="@request.UlNameShort">Название ЮЛ</label>
+                            <input type="text" class="form-control required" placeholder="Название ЮЛ" asp-for="@request.UlNameShort">
+                        </div>
+                        <div class="col-12 mt-2">
+                            <label class="form-label" asp-for="@request.UlNameFull">Полное наименование юридического лица</label>
+                            <input type="text" class="form-control required" placeholder="Полное наименование юридического лица" asp-for="@request.UlNameFull">
+                        </div>
+                        <div class="col-12 mt-2">
+                            <label class="form-label" asp-for="@request.UlNameOfficial">Фирменное название ЮЛ</label>
+                            <input type="text" class="form-control" placeholder="Фирменное название ЮЛ" asp-for="@request.UlNameOfficial">
+                        </div>
+                    </div>
+                    <div class="row mb-2 justify-content-center">
+                        <div class="col-6">
+                            <label class="form-label" asp-for="@request.Inn">ИНН</label>
+                            <input class="form-control required" placeholder="ИНН" asp-for="@request.Inn" type="text">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" asp-for="@request.Ogrn">ОГРН</label>
+                            <input class="form-control required" asp-for="@request.Ogrn" placeholder="ОГРН" type="text">
+                        </div>
+                    </div>
+                    <div class="row mb-2 justify-content-center">
+                        <div class="col-12">
+                            <label class="form-label" asp-for="@request.OrgTypeOkopf">Наименование типа организации по ОКОПФ</label>
+                            <select class="select2-search" asp-for="@request.OrgTypeOkopf">
+                                <option value="11051">Полные товарищества</option>
+                                <option value="11064">Товарищества на вере (коммандитные товарищества)</option>
+                                <option value="12247">Публичные акционерные общества</option>
+                                <option value="12267">Непубличные акционерные общества</option>
+                                <option value="14153">Сельскохозяйственные артели (колхозы)</option>
+                                <option value="14154">Рыболовецкие артели (колхозы)</option>
+                                <option value="14155">Кооперативные хозяйства (коопхозы)</option>
+                                <option value="20101">Гаражные и гаражно-строительные кооперативы</option>
+                                <option value="20102">Жилищные или жилищно-строительные кооперативы</option>
+                                <option value="20103">Жилищные накопительные кооперативы</option>
+                                <option value="20104">Кредитные потребительские кооперативы</option>
+                                <option value="20105">Кредитные потребительские кооперативы граждан</option>
+                                <option value="20106">Кредитные кооперативы второго уровня</option>
+                                <option value="20107">Потребительские общества</option>
+                                <option value="20108">Общества взаимного страхования</option>
+                                <option value="20109">Сельскохозяйственные потребительские перерабатывающие кооперативы</option>
+                                <option value="20111">Сельскохозяйственные потребительские обслуживающие кооперативы</option>
+                                <option value="20112">Сельскохозяйственные потребительские снабженческие кооперативы</option>
+                                <option value="20113">Сельскохозяйственные потребительские садоводческие кооперативы</option>
+                                <option value="20114">Сельскохозяйственные потребительские огороднические кооперативы</option>
+                                <option value="20115">Сельскохозяйственные потребительские животноводческие кооперативы</option>
+                                <option value="20121">Фонды проката</option>
+                                <option value="20201">Политические партии</option>
+                                <option value="20202">Профсоюзные организации</option>
+                                <option value="20211">Органы общественной самодеятельности</option>
+                                <option value="20217">Территориальные общественные самоуправления</option>
+                                <option value="20601">Ассоциации (союзы) экономического взаимодействия субъектов Российской Федерации</option>
+                                <option value="20603">Советы муниципальных образований субъектов Российской Федерации</option>
+                                <option value="20604">Союзы (ассоциации) кредитных кооперативов</option>
+                                <option value="20605">Союзы (ассоциации) кооперативов</option>
+                                <option value="20606">Союзы (ассоциации) общественных объединений</option>
+                                <option value="20607">Союзы (ассоциации) общин малочисленных народов</option>
+                                <option value="20608">Союзы потребительских обществ</option>
+                                <option value="20609">Адвокатские палаты</option>
+                                <option value="20611">Торгово-промышленные палаты</option>
+                                <option value="20612">Объединения работодателей</option>
+                                <option value="20613">Объединения фермерских хозяйств</option>
+                                <option value="20614">Некоммерческие партнерства</option>
+                                <option value="20615">Адвокатские бюро</option>
+                                <option value="20616">Коллегии адвокатов</option>
+                                <option value="20617">Садоводческие, огороднические или дачные некоммерческие партнерства</option>
+                                <option value="20618">Ассоциации (союзы) садоводческих, огороднических и дачных некоммерческих объединений</option>
+                                <option value="20619">Саморегулируемые организации</option>
+                                <option value="20701">Садоводческие, огороднические или дачные некоммерческие товарищества</option>
+                                <option value="20716">Товарищества собственников жилья</option>
+                                <option value="30001">Представительства юридических лиц</option>
+                                <option value="30002">Филиалы юридических лиц</option>
+                                <option value="30003">Обособленные подразделения юридических лиц</option>
+                                <option value="30004">Структурные подразделения обособленных подразделений юридических лиц</option>
+                                <option value="30005">Паевые инвестиционные фонды</option>
+                                <option value="30006">Простые товарищества</option>
+                                <option value="30008">Районные суды, городские суды, межрайонные суды (районные суды)</option>
+                                <option value="40001">Межправительственные международные организации</option>
+                                <option value="40002">Неправительственные международные организации</option>
+                                <option value="50101">Главы крестьянских (фермерских) хозяйств</option>
+                                <option value="50102">Индивидуальные предприниматели</option>
+                                <option value="50201">Адвокаты, учредившие адвокатский кабинет</option>
+                                <option value="50202">Нотариусы, занимающиеся частной практикой</option>
+                                <option value="65141">Федеральные казенные предприятия</option>
+                                <option value="65142">Казенные предприятия субъектов Российской Федерации</option>
+                                <option value="65143">Муниципальные казенные предприятия</option>
+                                <option value="65241">Федеральные государственные унитарные предприятия</option>
+                                <option value="65242">Государственные унитарные предприятия субъектов Российской Федерации</option>
+                                <option value="65243">Муниципальные унитарные предприятия</option>
+                                <option value="70401">Благотворительные фонды</option>
+                                <option value="70402">Негосударственные пенсионные фонды</option>
+                                <option value="70403">Общественные фонды</option>
+                                <option value="70404">Экологические фонды</option>
+                                <option value="71601">Государственные корпорации</option>
+                                <option value="71602">Государственные компании</option>
+                                <option value="75101">Федеральные государственные автономные учреждения</option>
+                                <option value="75103">Федеральные государственные бюджетные учреждения</option>
+                                <option value="75104">Федеральные государственные казенные учреждения</option>
+                                <option value="75201">Государственные автономные учреждения субъектов Российской Федерации</option>
+                                <option value="75203">Государственные бюджетные учреждения субъектов Российской Федерации</option>
+                                <option value="75204">Государственные казенные учреждения субъектов Российской Федерации</option>
+                                <option value="75401">Муниципальные автономные учреждения</option>
+                                <option value="75403">Муниципальные бюджетные учреждения</option>
+                                <option value="75404">Муниципальные казенные учреждения</option>
+                                <option value="75502">Благотворительные учреждения</option>
+                                <option value="75505">Общественные учреждения</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-2 justify-content-center">
+                        <div class="col-6">
+                            <label class="form-label" asp-for="@request.DateOrgReg">Дата регистрации ЮЛ или ИП</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                <input asp-for="@request.DateOrgReg" type="text" class="form-control pickdate required" placeholder="Дата регистрации ЮЛ или ИП" value="" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" asp-for="@request.DateBusinessStart">Дата начала осущ-ния деятельности</label>
+                            <div class="input-group input-group-merge">
+                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                <input asp-for="@request.DateBusinessStart" type="text" class="form-control pickdate required" placeholder="Дата начала осущ-ния деятельности" value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2 justify-content-center">
+                        <div class="col-4">
+                            <label class="form-label" asp-for="@request.Tel">Телефон</label>
+                            <input class="form-control phone" placeholder="Телефон" asp-for="@request.Tel" type="text">
+                        </div>
+                        <div class="col-sm">
+                            <label class="form-label" asp-for="@request.Email">E-mail</label>
+                            <input class="form-control email" asp-for="@request.Email" placeholder="E-mail" type="text">
+                        </div>
+                        <div class="col-5">
+                            <label class="form-label" asp-for="@request.EnableMkgu">Передать контактные данные в ИАС МКГУ</label>
+                            <select class="select2-nosearch" asp-for="@request.EnableMkgu">
+                                <option value="true">Да</option>
+                                <option value="false">Нет</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade show" id="smev-request-tab2" role="tabpanel">
+            <div class="row g-3 justify-content-center">
+                <div id="appliedDocumentList" data-clone-list>
+                    @for (var i = 0; i < 2; i++)
+                    {
+                        <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                            <h5 class="my-2 mb-5 mx-5 title">Офис @(i+1)</h5>
+                            <div class="row mb-1 justify-content-center">
+                                <div class="col-8">
+                                    <div class="g-3 row" id="clone0" data-id="0" data-clone">
+                                        <div class="row justify-content-center">
+                                            <div class="col-12">
+                                                <select class="select2-nosearch" asp-for="@request.Offices[i].OfficeType">
+                                                    <option value="Head">Организация</option>
+                                                    <option value="Branch">Филиал</option>
+                                                    <option value="Agency">Представительство</option>
+                                                    <option value="Place">Место осуществления деятельности</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 mx-auto">
+                                                <div class="divider text-start">
+                                                    <div class="divider-text fs-5 b-s-16">Перечень выполняемых работ</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1 justify-content-center">
+                                            <div class="row mb-1 justify-content-center">
+                                                <div class="col-6">
+                                                    <label class="form-label" asp-for="@request.Offices[i].Works">ОКПД2/ОКВЭД2</label>
+                                                    <input type="text" class="form-control" asp-for="@request.Offices[i].Works">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-12 mx-auto">
+                                                <div class="divider text-start">
+                                                    <div class="divider-text fs-5 b-s-16">Фактический адрес</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center mb-2">
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Offices[i].PostAddress.RegionOktmo">Регион</label>
+                                                <select class="select2-search required" asp-for="@request.Offices[i].PostAddress.RegionOktmo"
+                                                    data-dictionary='{"dictionary":"RospotrebnadzorOktmoCode"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Offices[i].PostAddress.CityType">Тип населенного пункта</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].PostAddress.CityType">
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Offices[i].PostAddress.City">Населенный пункт</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].PostAddress.City">
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center mb-2">
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Offices[i].PostAddress.Index">Индекс</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].PostAddress.Index">
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Offices[i].PostAddress.District">Район</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].PostAddress.District">
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Offices[i].PostAddress.Street">Улица</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].PostAddress.Street">
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center mb-2">
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Offices[i].PostAddress.Building">Здание</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].PostAddress.Building">
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Offices[i].PostAddress.Corp">Корпус</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].PostAddress.Corp">
+                                            </div>
+                                            <div class="col-2">
+                                                <label class="form-label" asp-for="@request.Offices[i].PostAddress.House">Дом</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].PostAddress.House">
+                                            </div>
+                                            <div class="col-2">
+                                                <label class="form-label" asp-for="@request.Offices[i].PostAddress.Room">Квартира</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].PostAddress.Room">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-12 mx-auto">
+                                                <div class="divider text-start">
+                                                    <div class="divider-text fs-5 b-s-16">Юридический адрес</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center mb-2">
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Offices[i].OfficialAddress.RegionOktmo">Регион</label>
+                                                <select class="select2-search required" asp-for="@request.Offices[i].OfficialAddress.RegionOktmo"
+                                                    data-dictionary='{"dictionary":"RospotrebnadzorOktmoCode"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Offices[i].OfficialAddress.CityType">Тип населенного пункта</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].OfficialAddress.CityType">
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Offices[i].OfficialAddress.City">Населенный пункт</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].OfficialAddress.City">
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center mb-2">
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Offices[i].OfficialAddress.Index">Индекс</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].OfficialAddress.Index">
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Offices[i].OfficialAddress.District">Район</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].OfficialAddress.District">
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Offices[i].OfficialAddress.Street">Улица</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].OfficialAddress.Street">
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center mb-2">
+
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Offices[i].OfficialAddress.Building">Здание</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].OfficialAddress.Building">
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Offices[i].OfficialAddress.Corp">Корпус</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].OfficialAddress.Corp">
+                                            </div>
+                                            <div class="col-2">
+                                                <label class="form-label" asp-for="@request.Offices[i].OfficialAddress.House">Дом</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].OfficialAddress.House">
+                                            </div>
+                                            <div class="col-2">
+                                                <label class="form-label" asp-for="@request.Offices[i].OfficialAddress.Room">Квартира</label>
+                                                <input type="text" class="form-control" asp-for="@request.Offices[i].OfficialAddress.Room">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1 mt-4">
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="row justify-content-center mt-1">
+                    <div class="col-2">
+                        <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                    </div>
+                </div>
+                <hr />
+            </div>
+        </div>
+    </div>
+
+    <div id="originalBlock">
+        <div class="g-3  justify-content-center" id="appliedDocument" data-id="" data-original>
+            <div class="row mb-1 justify-content-center">
+                <div class="col-8">
+                    <hr />
+                    <h5 class="my-2 mb-5 mx-3 title">Офис 0</h5>
+                    <div class="g-3 row mb-2 justify-content-center" id="clone0" data-id="0" data-clone">
+                        <div class="row justify-content-center mb-2">
+                            <div class="col-12">
+                                <select class="select2-nosearch" asp-for="@request.Offices[0].OfficeType">
+                                    <option value="Head">Организация</option>
+                                    <option value="Branch">Филиал</option>
+                                    <option value="Agency">Представительство</option>
+                                    <option value="Place">Место осуществления деятельности</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 mx-auto">
+                                <div class="divider text-start">
+                                    <div class="divider-text fs-5 b-s-16">Перечень выполняемых работ</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-1 justify-content-center">
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.Offices[0].Works[0]">ОКПД2</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].Works[0]">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.Offices[0].Works[0+1]">ОКВЭД2</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].Works[0+1]">
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-12 mx-auto">
+                                <div class="divider text-start">
+                                    <div class="divider-text fs-5 b-s-16">Фактический адрес</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center mb-2">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Offices[0].PostAddress.RegionOktmo">Регион</label>
+                                <select class="select2-search" asp-for="@request.Offices[0].PostAddress.RegionOktmo"
+                                        data-dictionary='{"dictionary":"RospotrebnadzorOktmoCode"}'>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Offices[0].PostAddress.CityType">Тип населенного пункта</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].PostAddress.CityType">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Offices[0].PostAddress.City">Населенный пункт</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].PostAddress.City">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center mb-2">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Offices[0].PostAddress.Index">Индекс</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].PostAddress.Index">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Offices[0].PostAddress.District">Район</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].PostAddress.District">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Offices[0].PostAddress.Street">Улица</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].PostAddress.Street">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center mb-2">
+
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Offices[0].PostAddress.Building">Здание</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].PostAddress.Building">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Offices[0].PostAddress.Corp">Корпус</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].PostAddress.Corp">
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@request.Offices[0].PostAddress.House">Дом</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].PostAddress.House">
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@request.Offices[0].PostAddress.Room">Квартира</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].PostAddress.Room">
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-12 mx-auto">
+                                <div class="divider text-start">
+                                    <div class="divider-text fs-5 b-s-16">Юридический адрес</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center mb-2">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Offices[0].OfficialAddress.RegionOktmo">Регион</label>
+                                <select class="select2-search" asp-for="@request.Offices[0].OfficialAddress.RegionOktmo"
+                                        data-dictionary='{"dictionary":"RospotrebnadzorOktmoCode"}'>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Offices[0].OfficialAddress.CityType">Тип населенного пункта</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].OfficialAddress.CityType">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Offices[0].OfficialAddress.City">Населенный пункт</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].OfficialAddress.City">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center mb-2">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Offices[0].OfficialAddress.Index">Индекс</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].OfficialAddress.Index">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Offices[0].OfficialAddress.District">Район</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].OfficialAddress.District">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Offices[0].OfficialAddress.Street">Улица</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].OfficialAddress.Street">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center mb-2">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Offices[0].OfficialAddress.Building">Здание</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].OfficialAddress.Building">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Offices[0].OfficialAddress.Corp">Корпус</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].OfficialAddress.Corp">
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@request.Offices[0].OfficialAddress.House">Дом</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].OfficialAddress.House">
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@request.Offices[0].OfficialAddress.Room">Квартира</label>
+                                <input type="text" class="form-control" asp-for="@request.Offices[0].OfficialAddress.Room">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1 d-flex align-items-center">
+                    <button type="button" class="btn btn-danger h-25" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#smev-request-tab2');
+    var originalBlock = $('#originalBlock');
+    let options = { clearIncomplete: true, showMaskOnHover: false }
+    getDictionaries();
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                getDictionaries();
+                $(formContent).find('.required').each(function() {
+                    addValidation($(this));
+                });
+
+                $(formContent).find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+
+                /* init datepicker */
+                $(formContent).find(".pickdate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                });
+                /* init inputmask */
+                $(formContent).find('[name$="Inn"]').inputmask("9{12}", options);
+                $(formContent).find('[name$="Ogrn"]').inputmask("9{15}", options);
+                $(formContent).find('[name$="Index"]').inputmask("9{6}", options);
+                $(formContent).find('.phone').inputmask("+79999999999", options);
+                $(formContent).find('.email').inputmask("email", options);
+
+
+                $(formContent).find("select.select2-nosearch").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+
+                $(formContent).find("select.select2-search").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal")
+                    });
+                });
+
+            }
+        };
+
+    $(function() {
+        originalBlock.find('[data-original]').each(function(_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+            $(item).removeClass('requred');
+        });
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+        additionalForm.find('#addAppliedDocumentWork').on('click', () => addForm('appliedDocumentListWork', 'appliedDocumentWork'));
+
+        additionalForm.find('[data-disabled]').each(function() {
+            visibilityBlock($(this), true, true);
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function() {
+            $(this).select2({
+                dropdownParent: $("#mainModal"),
+                minimumResultsForSearch: Infinity
+            });
+        });
+
+        additionalForm.find("select.select2-search").each(function() {
+            $(this).select2({
+                dropdownParent: $("#mainModal")
+            });
+        });
+        let options = { clearIncomplete: true, showMaskOnHover: false }
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.find("select").each(function() {
+                $(this).select2('destroy');
+            });
+            $cloneList.append($cloneBlock);
+            select2Init($cloneList);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input[type='text']").each(function() {
+                $(this).val("");
+            });
+            $block.find("select.select2-nosearch").each(function() {
+                $(this).select2({
+                    dropdownParent: $("#mainModal"),
+                    minimumResultsForSearch: Infinity
+                });
+            });
+            $block.find('[name$="Index"]').inputmask("9{6}", options);
+            $block.find("select.select2-search").each(function() {
+                $(this).select2({
+                    dropdownParent: $("#mainModal")
+                });
+            });
+
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function() {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function() {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function(index, item) {
+            renameBlock($(item), index);
+        });
+    }
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').hide();
+                } else {
+                    $block.hide();
+                }
+                break;
+            case false:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').show();
+                } else {
+                    $block.removeClass('d-none')
+                    $block.show();
+                }
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        removeValidation($(this));
+                    }
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                    if ($(this).hasClass('required')) {
+                        addValidation($(this));
+                    }
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    $(formContent).find('[name$="ContragentType"]').on('change',
+        function() {
+            switch ($(this).val()) {
+                case 'Fl':
+                    visibilityBlock($('[data-fl]'), false, false);
+                    visibilityBlock($('[data-ul]'), true, true);
+                    $(formContent).find('[name$="Inn"]').inputmask("9{12}", options);
+                    $(formContent).find('[name$="Ogrn"]').inputmask("9{15}", options);
+                    break;
+
+                case 'Ul':
+                    visibilityBlock($('[data-fl]'), true, true);
+                    visibilityBlock($('[data-ul]'), false, false);
+                    $(formContent).find('[name$="Inn"]').inputmask("9{10}", options);
+                    $(formContent).find('[name$="Ogrn"]').inputmask("9{13}", options);
+                    break;
+            }
+        });
+
+
+
+    function ShowErrorInputs() {
+        for (let item of document.querySelectorAll('#smev_request input, select')) {
+            if (item.getAttribute('disabled') == null && item.classList.contains('required') && item.value == '') {
+                $('#smev_request').find(`button[data-bs-target="#${item.closest('.tab-pane').id}"]`).trigger('click');
+                break;
+            }
+        };
+    }
+    (function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function() {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post(`/SmevBase/SmevGetDictionary`,
+                    {
+                        type: options.dictionary
+                    },
+                    function(dictionary) {
+                        fillSelect(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function() {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+            });
+    }
+</script>

@@ -1,0 +1,253 @@
+﻿@model _5_FamilyMembersModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="FIO" class="form-label">Кому</label>
+                    <input type="text" asp-for="FIO" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label asp-for="NumberCopies" class="form-label">Количество экземпляров</label>
+                    <input type="number" asp-for="NumberCopies" class="form-control" min="1">
+                </div>
+                <div class="col-6">
+                    <label asp-for="NumberFamilies" class="form-label">Состав семьи (кол-во человек)</label>
+                    <input type="number" asp-for="NumberFamilies" class="form-control" min="1">
+                </div>
+            </div>
+            <div class="row mb-1 align-items-center">
+                <h5 class="my-2">Тип подачи заявления</h5>
+                <div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="AddressType" id="inlineRadio1" value="1">
+                        <label class="form-check-label" for="inlineRadio1">По адресу регистрации</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="AddressType" id="inlineRadio2" value="2">
+                        <label class="form-check-label" for="inlineRadio2">По адресу проживания</label>
+                    </div>
+                </div>
+            </div>
+            <h5 class="my-2">Состав семьи</h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedDocumentList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Член семьи @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col">
+                                <div class="row mb-1 align-items-center">
+                                    <div class="col-7">
+                                        <label asp-for="AppliedDocumentList[i].FIO" class="form-label">Ф.И.О.</label>
+                                        <input type="text" asp-for="AppliedDocumentList[i].FIO" class="form-control">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].BirthDateYear">Дата рождения</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="AppliedDocumentList[i].BirthDateYear" type="text"
+                                                   class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].FamilyRelations">Родственные отношения</label>
+                                        <input asp-for="AppliedDocumentList[i].FamilyRelations" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+
+</div>
+<div id="originalBlock">
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Член семьи 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col">
+                <div class="row mb-1 align-items-center">
+                    <div class="col-7">
+                        <label asp-for="AppliedDocumentList[0].FIO" class="form-label">Ф.И.О.</label>
+                        <input type="text" asp-for="AppliedDocumentList[0].FIO" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].BirthDateYear">Дата рождения</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="AppliedDocumentList[0].BirthDateYear" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].FamilyRelations">Родственные отношения</label>
+                        <input asp-for="AppliedDocumentList[0].FamilyRelations" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<script asp-append-version="true">
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+
+        if ($('.btn-next')) {
+            $('.btn-next').on('click', function () {
+                let gender = $('[name="customer.CustomerGender"]').val() == 1 ? 'm' : 'f';
+                let lastName = $("#customer_LastName").val().trim();
+                let firstName = $("#customer_FirstName").val().trim();
+                let secondName = $("#customer_SecondName").val().trim();
+                var rn = new RussianName(lastName, firstName, secondName, gender);
+
+                additionalForm.find("#FIO").val(rn.fullName(rn.gcaseDat));
+            })
+        }
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+
+        });
+
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.append($cloneBlock);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            let options = { clearIncomplete: true, showMaskOnHover: false };
+            $block.find("input").each(function () {
+                $(this).val("");
+            });
+
+            $block.find(".pickdate").datepicker({
+                language: "ru",
+                autoclose: true
+            }).inputmask("99.99.9999", options);
+
+            $block.find('select.select2-nosearch').each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity,
+                })
+            });
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+</script>

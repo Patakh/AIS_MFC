@@ -1,0 +1,657 @@
+﻿@using AisLogistics.App.ViewModels.SelectListViewModel
+@model AisLogistics.App.Models.AdditionalForms.PassportModel
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-10 mx-auto">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Дополнительные данные</div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="LastName">Фамилия</label>
+                    <input type="text" asp-for="LastName" class="form-control" placeholder="Фамилия">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="FirstName">Имя</label>
+                    <input type="text" asp-for="FirstName" class="form-control" placeholder="Имя">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="SecondName">Отчество</label>
+                    <input type="text" asp-for="SecondName" class="form-control" placeholder="Отчество">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="BirthDate" type="text" class="form-control pickdate" placeholder="Дата рождения">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="d-block form-label">Пол</label>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="Gender" id="gender1" value="1" checked="checked">
+                        <label class="form-check-label" asp-for="Gender"><i class="bi bi-gender-male fs-6"></i> Мужской</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="Gender" id="gender2" value="2">
+                        <label class="form-check-label" asp-for="Gender"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <label class="form-label" asp-for="AddressBirth">Место рождения</label>
+                    <input type="text" asp-for="AddressBirth" class="form-control" placeholder="Место рождения">
+                </div>
+            </div>
+            <hr />
+            <br />
+            <div class="row mb-3">
+                <div class="col-8">
+                    <label class="d-block form-label">ранее имели другие фамилию, имя, отчество, то укажите ниже предыдущие данные</label>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="Before" value="1" checked="checked">
+                        <label class="form-check-label" asp-for="Before">Да</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="Before" value="2">
+                        <label class="form-check-label" asp-for="Before">Нет</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+
+                <div class="col-sm">
+                    <label class="form-label" asp-for="LastNameBefore">Фамилия</label>
+                    <input type="text" asp-for="LastNameBefore" class="form-control" placeholder="Фамилия">
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="FirstNameBefore">Имя</label>
+                    <input type="text" asp-for="FirstNameBefore" class="form-control" placeholder="Имя">
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="SecondNameBefore">Отчество</label>
+                    <input type="text" asp-for="SecondNameBefore" class="form-control" placeholder="Отчество">
+                </div>
+
+
+                <div class="col-4">
+                    <label class="d-block form-label">Пол</label>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="GenderBefore" value="1" checked="checked">
+                        <label class="form-check-label" asp-for="GenderBefore"><i class="bi bi-gender-male fs-6"></i> Мужской</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="GenderBefore" value="2">
+                        <label class="form-check-label" asp-for="GenderBefore"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="ShiftsPlace">Место смены </label>
+                    <input type="text" asp-for="ShiftsPlace" class="form-control" placeholder="Место смены">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ShiftsDate">Дата смены</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="ShiftsDate" type="text" class="form-control pickdate" placeholder="Дата смены">
+                    </div>
+                </div>
+            </div>
+            <br />
+
+            <h6 class="my-2">Адрес места жительства</h6>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="ResidenceAddress.Region">Регион</label>
+                    <input type="text" asp-for="ResidenceAddress.Region" class="form-control" placeholder="Регион" data-addressprev-clean>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="ResidenceAddress.District">Город/Район</label>
+                    <input type="text" asp-for="ResidenceAddress.District" class="form-control" placeholder="Город/Район" data-addressprev-clean>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="ResidenceAddress.Locality">Село</label>
+                    <input type="text" asp-for="ResidenceAddress.Locality" class="form-control" placeholder="Село" data-addressprev-clean>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ResidenceAddress.Street">Улица</label>
+                    <input type="text" asp-for="ResidenceAddress.Street" class="form-control" placeholder="Улица" data-addressprev-clean>
+
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-2">
+                    <label class="form-label" asp-for="ResidenceAddress.House">Дом</label>
+                    <input type="text" asp-for="ResidenceAddress.House" class="form-control" placeholder="Дом" data-addressprev-clean>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ResidenceAddress.Housing">Корпус</label>
+                    <input type="text" asp-for="ResidenceAddress.Housing" class="form-control" placeholder="Корпус" data-addressprev-clean>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ResidenceAddress.Building">Строение</label>
+                    <input type="text" asp-for="ResidenceAddress.Building" class="form-control" placeholder="Строение" data-addressprev-clean>
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="ResidenceAddress.Flat">Квартира</label>
+                    <input type="text" asp-for="ResidenceAddress.Flat" class="form-control" placeholder="Квартира" data-addressprev-clean>
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="ResidenceAddress.DateRegstration">Дата регистрации</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="ResidenceAddress.DateRegstration" type="text" class="form-control pickdate" placeholder="Дата регистрации">
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <br />
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="d-block form-label">Адрес</label>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="RegistrationAddress.AddressType" value="1" checked="checked">
+                        <label class="form-check-label" asp-for="RegistrationAddress.AddressType">Места пребывания</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="RegistrationAddress.AddressType" value="2">
+                        <label class="form-check-label" asp-for="RegistrationAddress.AddressType">Фактического проживания</label>
+                    </div>
+                </div>
+
+                <div class="col-sm">
+                    <label class="form-label" asp-for="RegistrationAddress.Region">Регион</label>
+                    <input type="text" asp-for="RegistrationAddress.Region" class="form-control" placeholder="Регион" data-addressprev-clean>
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="RegistrationAddress.District">Город/Район</label>
+                    <input type="text" asp-for="RegistrationAddress.District" class="form-control" placeholder="Город/Район" data-addressprev-clean>
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="RegistrationAddress.Locality">Село</label>
+                    <input type="text" asp-for="RegistrationAddress.Locality" class="form-control" placeholder="Село" data-addressprev-clean>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-12">
+                    <label class="form-label" asp-for="RegistrationAddress.Street">Улица</label>
+                    <input type="text" asp-for="RegistrationAddress.Street" class="form-control" placeholder="Улица" data-addressprev-clean>
+                </div>
+            </div>
+
+
+            <div class="row mb-3">
+                <div class="col-2">
+                    <label class="form-label" asp-for="RegistrationAddress.House">Дом</label>
+                    <input type="text" asp-for="RegistrationAddress.House" class="form-control" placeholder="Дом" data-addressprev-clean>
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="RegistrationAddress.Housing">Корпус</label>
+                    <input type="text" asp-for="RegistrationAddress.Housing" class="form-control" placeholder="Корпус" data-addressprev-clean>
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="RegistrationAddress.Building">Строение</label>
+                    <input type="text" asp-for="RegistrationAddress.Building" class="form-control" placeholder="Строение" data-addressprev-clean>
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="RegistrationAddress.Flat">Квартира</label>
+                    <input type="text" asp-for="RegistrationAddress.Flat" class="form-control" placeholder="Квартира" data-addressprev-clean>
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="RegistrationAddress.WithDate">Срок регистрации с</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="RegistrationAddress.WithDate" type="text" class="form-control pickdate" placeholder="c">
+                    </div>
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="RegistrationAddress.ByDate">Срок регистрации </label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="RegistrationAddress.ByDate" type="text" class="form-control pickdate" placeholder="по">
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <br />
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="Phone">Телефон</label>
+                    <input type="text" asp-for="Phone" class="form-control" placeholder="Телефон">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="Email">Email</label>
+                    <input type="text" asp-for="Email" class="form-control" placeholder="Email">
+                </div>
+            </div>
+            <hr /><br />
+
+            <h6 class="my-2">Основной документ, удостоверяющий личность гражданина Российской Федерации (паспорт)</h6>
+
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="MainDocSeries">Серия</label>
+                    <input type="text" class="form-control" placeholder="Серия" asp-for="MainDocSeries">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="MainDocNumber">Номер</label>
+                    <input type="text" class="form-control" placeholder="Номер" asp-for="MainDocNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="MainDocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="MainDocIssueDate" type="text" class="form-control pickdate" placeholder="Дата выдачи">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="MainDocIssuer">Кем выдан</label>
+                    <input type="text" class="form-control" placeholder="Кем выдан" asp-for="MainDocIssuer">
+                </div>
+            </div>
+            <hr />
+            <br />
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="d-block form-label">Был допуск к государственной тайне</label>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="Roote" value="1" checked="checked">
+                        <label class="form-check-label" asp-for="Roote">Да</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="Roote" value="2">
+                        <label class="form-check-label" asp-for="Roote">Нет</label>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="RootOrganization">Организация</label>
+                    <input type="text" asp-for="RootOrganization" class="form-control" placeholder="Организация">
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="RootDate">Год</label>
+                    <input type="text" asp-for="RootDate" class="form-control" placeholder="Год">
+                </div>
+            </div>
+            <hr />
+            <br />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="d-block form-label">Имеете договорные, контрактные обязательства, препятствующие выезду за границу</label>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="Obstacles" value="1" checked="checked">
+                        <label class="form-check-label" asp-for="Obstacles">Да</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="Obstacles" value="2">
+                        <label class="form-check-label" asp-for="Obstacles">Нет</label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row mb-3">
+                <div class="col-10">
+                    <label class="form-label" asp-for="ObstaclesOrganization">Организация</label>
+                    <input type="text" asp-for="ObstaclesOrganization" class="form-control" placeholder="Организация">
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="ObstaclesDate">Год</label>
+                    <input type="text" asp-for="ObstaclesDate" class="form-control" placeholder="Год">
+                </div>
+            </div>
+            <hr />
+            <br />
+            <h6 class="my-2">Заграничный паспорт</h6>
+
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="OverseasDocSeries">Серия</label>
+                    <input type="text" class="form-control" placeholder="Серия" asp-for="OverseasDocSeries">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="OverseasDocNumber">Номер</label>
+                    <input type="text" class="form-control" placeholder="Номер" asp-for="OverseasDocNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="OverseasDocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="OverseasDocIssueDate" type="text" class="form-control pickdate" placeholder="Дата выдачи">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="OverseasDocIssuer">Кем выдан</label>
+                    <input type="text" class="form-control" placeholder="Кем выдан" asp-for="OverseasDocIssuer">
+                </div>
+            </div>
+            <hr />
+            <br />
+            <h5 class="my-2">Сведения о трудовой деятельности за последние 10 лет(включая учебу в учебных заведениях и военную службу)</h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedDocumentList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3 align-items-end">
+
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].ReceiptsDate">Месяц и год поступления</label>
+                                        <input type="text" class="form-control" asp-for="AppliedDocumentList[i].ReceiptsDate" placeholder="Месяц и год поступления">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].DismissalsDate">Месяц и год увольнения</label>
+                                        <input type="text" class="form-control" asp-for="AppliedDocumentList[i].DismissalsDate" placeholder="Месяц и год увольнения">
+                                    </div>
+                                </div>
+                                <div class="row mb-3 align-items-end">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].Post">Должность и место работы,номер войсковой части</label>
+                                        <input type="text" class="form-control" asp-for="AppliedDocumentList[i].Post" placeholder="Должность и место работы,номер войсковой части">
+                                    </div>
+                                </div>
+                                <div class="row mb-3 align-items-end">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="AppliedDocumentList[i].AdressOrganization">Адрес организации, войсковой части</label>
+                                        <input type="text" class="form-control" asp-for="AppliedDocumentList[i].AdressOrganization" placeholder="Адрес организации, войсковой части">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+            <br />
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="FeedsDate">Дата подачи заявления </label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="FeedsDate" type="text" class="form-control pickdate" placeholder="Дата подачи заявления">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="AcceptanceDate">Дата приема документов </label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="AcceptanceDate" type="text" class="form-control pickdate" placeholder="Дата приема документов">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="originalBlock">
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <div class="row mb-1 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3 align-items-end">
+
+                    <div class="col-6">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].ReceiptsDate">Месяц и год поступления</label>
+                        <input type="text" class="form-control" asp-for="AppliedDocumentList[0].ReceiptsDate" placeholder="Месяц и год поступления">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].DismissalsDate">Месяц и год увольнения</label>
+                        <input type="text" class="form-control" asp-for="AppliedDocumentList[0].DismissalsDate" placeholder="Месяц и год увольнения">
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-end">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].Post">Должность и место работы,номер войсковой части</label>
+                        <input type="text" class="form-control" asp-for="AppliedDocumentList[0].Post" placeholder="Должность и место работы,номер войсковой части">
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-end">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="AppliedDocumentList[0].AdressOrganization">Адрес организации, войсковой части</label>
+                        <input type="text" class="form-control" asp-for="AppliedDocumentList[0].AdressOrganization" placeholder="Адрес организации, войсковой части">
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    var applicant = {
+        lastName: $('#LastName'),
+        firstName: $('#FirstName'),
+        secondName: $('#SecondName'),
+        birthDate: $('#BirthDate'),
+        addressBirth: $('#AddressBirth'),
+        docSeries: $('#MainDocSeries'),
+        docNumber: $('#MainDocNumber'),
+        docIssueDate: $('#MainDocIssueDate'),
+        docIssuer: $('#MainDocIssuer'),
+        phone: $('#Phone'),
+        email: $('#Email')
+    }
+
+    var residenceAddress = {
+        region: $("#ResidenceAddress_Region"),
+        district: $("#ResidenceAddress_District"),
+        locality: $("#ResidenceAddress_Locality"),
+        street: $("#ResidenceAddress_Street"),
+        house: $("#ResidenceAddress_House"),
+        housing: $("#ResidenceAddress_Housing"),
+        building: $("#ResidenceAddress_Building"),
+        flat: $('#ResidenceAddress_Flat')
+    }
+
+    var registrationAddress = {
+        region: $("#RegistrationAddress_Region"),
+        district: $("#RegistrationAddress_District"),
+        locality: $("#RegistrationAddress_Locality"),
+        street: $("#RegistrationAddress_Street"),
+        house: $("#RegistrationAddress_House"),
+        housing: $("#RegistrationAddress_Housing"),
+        building: $("#RegistrationAddress_Building"),
+        flat: $('#RegistrationAddress_Flat')
+    }
+
+    var btnNext = $('.btn-next');
+    btnNext.on('click', function appContent() {
+        applicant.lastName.val($("#customer_LastName").val());
+        applicant.firstName.val($("#customer_FirstName").val());
+        applicant.secondName.val($("#customer_SecondName").val());
+        applicant.birthDate.val($("#customer_DocumentBirthDate").val());
+        applicant.addressBirth.val($("#customer_DocumentBirthPlace").val());
+        applicant.docSeries.val($("#customer_DocumentSerial").val());
+        applicant.docNumber.val($("#customer_DocumentNumber").val());
+        applicant.docIssueDate.val($("#customer_DocumentIssueDate").val());
+        applicant.docIssuer.val($("#customer_DocumentIssueBody").val());
+        applicant.phone.val($("#customer_CustomerPhone1").val());
+        applicant.email.val($("#customer_CustomerEmail").val());
+
+        $('#gender1').attr('checked', false);
+        $('#gender2').attr('checked', false);
+
+        if ($('#customer_CustomerGender1').is(':checked')) {
+            $('#gender1').attr('checked', true);
+        };
+
+        if ($('#customer_CustomerGender2').is(':checked')) {
+            $('#gender2').attr('checked',true);
+        };
+
+        residenceAddress.region.val(`${$("#customer_AddressDetails_Region_Value").val()} ${$("#customer_AddressDetails_Region_ShortName").val()}`);
+        residenceAddress.district.val($("#customer_AddressDetails_Area_Value").val() ?? $("#customer_AddressDetails_City_Value").val());
+        residenceAddress.locality.val($("#customer_AddressDetails_Settlement_Value").val());
+        residenceAddress.street.val($("#customer_AddressDetails_Street_Value").val());
+        residenceAddress.house.val($("#customer_AddressDetails_House_HouseNum").val());
+        residenceAddress.housing.val($("#customer_AddressDetails_House_BuildNum").val());
+        residenceAddress.building.val($("#customer_AddressDetails_House_StructNum").val());
+        residenceAddress.flat.val($("#customer_AddressDetails_Room_FlatNumber").val());
+
+        if ($('#customerAddressCoincide').is(':checked')) {
+            registrationAddress.region.val(`${$("#customer_AddressDetails_Region_Value").val()} ${$("#customer_AddressDetails_Region_ShortName").val()}`);
+            registrationAddress.district.val($("#customer_AddressDetails_Area_Value").val() ?? $("#customer_AddressDetails_City_Value").val());
+            registrationAddress.locality.val($("#customer_AddressDetails_Settlement_Value").val());
+            registrationAddress.street.val($("#customer_AddressDetails_Street_Value").val());
+            registrationAddress.house.val($("#customer_AddressDetails_House_HouseNum").val());
+            registrationAddress.housing.val($("#customer_AddressDetails_House_BuildNum").val());
+            registrationAddress.building.val($("#customer_AddressDetails_House_StructNum").val());
+            registrationAddress.flat.val($("#customer_AddressDetails_Room_FlatNumber").val());
+        }
+    });
+    
+    $(function () {
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('#Phone').inputmask("9{1,15}", options);
+        additionalForm.find('#PersonalAccount').inputmask("9{20}", options);
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function () {
+                $(this).select2({
+                });
+            });
+        }
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.find("select").each(function () {
+                $(this).select2('destroy');
+            });
+            $cloneList.append($cloneBlock);
+            select2Init($cloneList);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input[type='text']").each(function () {
+                $(this).val("");
+            });
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>
+

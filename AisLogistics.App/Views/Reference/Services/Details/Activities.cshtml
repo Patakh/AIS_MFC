@@ -1,0 +1,453 @@
+﻿@using AisLogistics.App.Models.DTO.References
+@model ViewModelBuilder
+@{
+    string Id = ViewData["Id"]?.ToString() ?? string.Empty;
+    var model = Model.Model as List<ServiceActivityOfficeDto>;
+}
+
+<style>
+    .fs-12 {
+        font-size: 12px !important;
+    }
+    
+    .table-office-active {
+
+    }
+
+    .table-office-active th {
+        font-size: 12px !important;
+        font-family: regular !important;
+    }
+
+    .active_row {
+        border-left: 3px solid #5a8dee !important;
+    }
+
+</style>
+
+
+        <div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-6">
+                            @if (Model.IsVisibleDescription)
+                            {
+                                <div class="b-s-14">@Model.ViewDescription</div>
+                            }
+                        </div>
+                        <div class="col-6 text-end">
+
+                            @if (User.HasClaim(AccessKeyNames.ReferenceService, AccessKeyValues.Remove))
+                            {
+                                <a href="javascript:void(0);" id="btnRemove" class="text-secondary me-1 d-none">
+                                    <i class="bi bi-x-circle"></i> Закрыть
+                                </a>
+                            }
+                            @if (User.HasClaim(AccessKeyNames.ReferenceService, AccessKeyValues.Add))
+                            {
+                                <a href="javascript:void(0);" data-btn-params='{"actionType":"@ActionType.Add", "serviceId" : "@Id" }' data-btn-type="add" data-for-table="@Model.TableName" class="r-a-14">
+                                    <i class="bi bi-plus"></i> Добавить
+                                </a>
+                            }
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive">
+                                <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceService" class="directory_names-items table table-office-active cursor-pointer table-striped table-hover"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="active-border" id="service-activites-empty-table">
+                        @* <div class="p-3">
+                            <div class="alert-custom" role="alert">
+                                <div class="b-s-16">Внимание</div>
+                                <div class="r-s-14">Выберите услугу</div>
+                            </div>
+                        </div> *@
+                    </div>
+                    <div id="service-activites-table-container" class="d-none">
+                        <div class="">
+                            <div class="row justify-content-between align-items-center">
+                                <div class="col">
+                                    <div id="service-activites-table-title" class="b-s-14"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="table-responsive">
+                                <table id="service-activites-table" data-action-remove="@Model.RemoveMethodAction" class="directory_names-items table table-striped"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </div>
+       
+
+
+<script>
+    $tableActivities = $('#@(Model.TableName)');
+
+    $(document).ready(function () {
+        let  $tableOfficesActivites = $('#service-activites-table'),
+            isCanAddActivites = $tableActivities.is('[data-action-add]'),
+            isCanEditActivites = $tableActivities.is('[data-action-edit]'),
+            isCanRemoveActivites = $tableActivities.is('[data-action-remove]');
+
+        let serviceActivitesTableVisibility = {
+            show: () => {
+                $('#service-activites-empty-table').addClass("d-none");
+                $('#service-activites-table-container').removeClass("d-none");
+                $tableOfficesActivites.DataTable().ajax.reload();
+            },
+            hide: () => {
+
+                $('#service-activites-table-container').addClass("d-none");
+                $('#service-activites-empty-table').removeClass("d-none");
+            }
+        };
+
+        $tableActivities.DataTable({
+            sDom:"<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            processing: true,
+            serverSide: true,
+            searching: true,
+            filter: false,
+            info: false,
+            paging: false,
+            ordering: false,
+            searchDelay: 1500,
+            "sScrollY": 275,
+            ajax: {
+                url: $tableActivities.data('action-table'),
+                type: "POST",
+                datatype: "json"
+            },
+            drawCallback: function (settings) {
+                serviceActivitesTableVisibility.hide();
+                if (settings.json != null) {
+                    let count = settings.json.data.length;
+                    if (count == 1) {
+                        var api = this.api();
+                        api.rows().select()
+                    }
+                }
+            },
+            initComplete: function () {
+                let tableApi = this.api();
+                let activeColumn = tableApi.column(2);
+
+                $('#checkSelectedRowMain').change(function () {
+                    let value = $('#checkSelectedRowMain').prop("checked");
+                    $('[data-check-id]').each(function (i, el) {
+                        $(el).prop("checked", value)
+                    });
+                    if (value) {
+                        $('#btnRemove').removeClass('d-none');
+
+                    }
+                    else {
+                        $('#btnRemove').addClass('d-none');
+                    }
+                });
+
+                $('[data-check-id]').change(function () {
+                    if ($('#checkSelectedRowMain').prop("checked"))
+                        $('#checkSelectedRowMain').prop("checked", false);
+                    SearchChecked();
+
+                });
+
+                $('#offices').on('keyup', function () {
+                    if (tableApi.search() !== $(this).val()) {
+                        tableApi.search($(this).val()).draw();
+                    }
+                });
+
+                $('#active').select2({
+                    placeholder: "Активность",
+                    minimumResultsForSearch: -1,
+                    language: "ru",
+                    allowClear: true
+                }).on('change', function () {
+                    activeColumn.search($(this).val()).draw();
+                });
+            },
+            columnDefs: [
+                {
+                    //data: "id",
+                    targets: 0,
+                    title: `<div class="d-flex justify-content-between align-items-center">
+                                <input type="checkbox" data-check-main id="checkSelectedRowMain">
+                            </div>`,
+                    sorting: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    title: '<input id="offices" class="form-control w-100" type="text" placeholder="Офис"/>',
+                    // width: "80px",
+                    className: 'offices-column',
+                    orderable: false
+                },
+                {
+                    targets: 2,
+                    name: 'active',
+                    title: `<select id="active"  class="form-select select w-100" placeholder="Орган власти">
+                                                <option value="">Не задано</option>
+                                                <option value="true">Да</option>
+                                                <option value="false">Нет</option>
+                            </select>`,
+                    className: 'text-center',
+                    sorting: false,
+                    orderable: false
+                }
+            ],
+            columns: [
+                {
+                    render: function (data, type, row) {
+                        let content = `<input type="checkbox" data-check-id="${row.id}">`;
+                        return content;
+                    }
+                },
+                { data: "name" },
+                {
+                    data: "isActive",
+                    render: function (data, type, row) {
+                        return `${data === true ? '<i class="bi bi-check-circle text-success"></i>' : '<i class="bi bi-x-circle text-danger"></i>'}`;
+                    }
+                }
+            ]
+        }).on('click', 'tbody tr', function () {
+            $tableActivities.find('.active_row').removeClass('active_row');
+            $(this).addClass('active_row');
+            var officeName = $(this).find('td.offices-column').text();
+            var officeId = $(this).find('td [data-check-id]').data('check-id');
+            $('#service-activites-table-title').empty();
+            $('#service-activites-table-title').html(officeName);
+            serviceActivitesTableVisibility.show();
+        }).on('click', '[data-check-id]', function (e) { e.stopPropagation(); });
+
+        $tableActivities.on("reload", () => {
+            $tableActivities.DataTable().ajax.reload(null, false);
+        });
+
+        $tableOfficesActivites.DataTable({
+            sDom:
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            processing: true,
+            searching: false,
+            serverSide: true,
+            filter: true,
+            searchDelay: 1500,
+            ajax: {
+                url: '/Reference/GetServiceAcyivitiesDataJson',
+                type: "POST",
+                data: function (data) {
+                    let officeId = $tableActivities.find('.active_row td [data-check-id]').data('check-id');
+                    data.id = '@Id';
+                    if (officeId!=null) {
+                        data.officeId = officeId;
+                    }
+                }
+            },
+            initComplete: function () {
+                   
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    title: 'Активно',
+                    className: 'text-center',
+                    orderable: false
+                },
+                {
+                    targets: 2,
+                    title: 'Дата начала',
+                    className: 'text-center',
+                    orderable: false
+                },
+                {
+                    targets: 3,
+                    title: 'Дата окончания',
+                    className: 'text-center',
+                    orderable: false
+                },
+                {
+                    targets: 4,
+                    title: 'Сотрудник',
+                    orderable: false
+                },
+                {
+                    targets: 5,
+                    title: 'Комментарий',
+                    orderable: false
+                }
+            ],
+            columns: [
+                {},
+                {
+                    data: "isServicesActive",
+                    render: function (data, type, row) {
+                        return `${data === true ? '<i class="bi bi-check-circle text-success"></i>' : '<i class="bi bi-x-circle text-danger"></i>'}`;
+                    }
+                },
+                { data: "dateStart" },
+                {
+                    data: "dateStop",
+                    render: function (data, type, row) {
+                        if (data != null) {
+                            return data;
+                        }
+                        else if (isCanRemoveActivites === true) {
+                            return CloseBtn({ "id": row.id });
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                },
+                {
+                    data: "employeesFioAdd",
+                    render: function (data, type, row) {
+                        let content = `${data}<div class="r-s-12">${row.dateAdd}</div>`;
+                        if (row.isRemoveActive && isCanRemoveActivites === true) {
+                            content += DeleteBtnActivites({ "id": row.id, "isRemove": true })
+                        }
+
+                        return content;
+                    }
+                },
+                { data: "commentt" }
+            ]
+        });
+
+        $tableOfficesActivites.on("reload", () => {
+            $tableOfficesActivites.DataTable().ajax.reload(null, false);
+        });
+
+        $tableActivities.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        $tableOfficesActivites.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        let CloseBtn = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-service-close-btn-type class="">Закрыть</a>`;
+        }
+
+        let DeleteBtnActivites = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-service-remove-btn-type class="text-danger">Удалить</a>`;
+        }
+
+        $('#btnRemove').on('click', function () {
+            let mass = [];
+            $('[data-check-id]').each(function (i, el) {
+                if ($(el).prop("checked")) {
+                    mass.push($(el).attr('data-check-id'));
+                }
+            });
+            var params = {};
+            Swal.fire({
+                title: 'Причина удаления записи',
+                input: 'textarea',
+                showCancelButton: true,
+                confirmButtonText: 'Удалить',
+                cancelButtonText: 'Отмена',
+                showLoaderOnConfirm: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary ms-2'
+                },
+                buttonsStyling: false,
+                returnInputValueOnDeny: true,
+                preConfirm: (comment) => {
+                    if (comment === '') {
+                        Swal.showValidationMessage(`Введите комменетарий`);
+                    } else {
+                        params.serviceId = '@Id';
+                        params.officesId = mass;
+                        params.comment = comment;
+
+                        console.log(params);
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Reference/ServiceActivityOfficesRemove',
+                            data: params,
+                            async: false,
+                            beforeSend: () => {
+                                Swal.showLoading();
+                            },
+                            complete: () => {
+                                Swal.hideLoading();
+                            },
+                            success: (data) => {
+                                $tableActivities.trigger("reload");
+                            },
+                            error: (data, textStatus) => {
+                                $.notifi('error', 'Ошибка', data.responseText);
+                            }
+                        });
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((comment) => {
+                //$.notifi('success', 'Готово', 'Запись успешно удалена');
+            });
+
+        });
+
+    });
+
+    function SearchChecked() {
+        let isActive = false
+        $('[data-check-id]').each(function (i, el) {
+            if ($(el).prop("checked")) {
+                isActive = true;
+                return isActive;
+            }
+        });
+
+        if (isActive) {
+            $('#btnRemove').removeClass('d-none');
+
+        }
+        else {
+            $('#btnRemove').addClass('d-none');
+        }
+    }
+
+</script>

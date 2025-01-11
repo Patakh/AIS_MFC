@@ -1,0 +1,80 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Regional.Service21_2Model
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h6 class="my-2">Заявитель</h6>
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="Fio">ФИО</label>
+                    <input type="text" asp-for="Fio" class="form-control">
+                </div>
+                  <div class="col-3">
+                    <label class="form-label" asp-for="Phone">Телефон</label>
+                    <input type="text" asp-for="Phone" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="Pochta">почтовый адрес<sup class="text-danger fs-6">*</sup></label>
+                    <input type="text" asp-for="Pochta" required class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Email">Email</label>
+                    <input type="email" asp-for="Email" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Охотничий билет</h6>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="BiletSeries">Серия</label>
+                    <input type="text" class="form-control" asp-for="BiletSeries">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="BiletNumber">Номер</label>
+                    <input type="text" class="form-control" asp-for="BiletNumber">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Reason">в связи с</label>
+                    <input type="text" asp-for="Reason" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Doc">Приложение</label>
+                    <input type="text" asp-for="Doc" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+    var btnNext = $('.btn-next');
+
+    var applicant = {
+
+        fio: $("#Fio"),
+        birthDate: $("#BirthDate"),
+        phone: $("#Phone"),
+        email: $("#Email")
+    };
+    $(function() {
+        if (btnNext.length > 0) {
+            btnNext.on('click', function appContent() {
+                applicant.fio.val($("#customer_LastName").val() + ' ' + $("#customer_FirstName").val() + ' ' + $("#customer_SecondName").val());
+                applicant.phone.val($("#customer_CustomerPhone1").val());
+                applicant.email.val($("#customer_CustomerEmail").val());
+                
+            });
+        };
+        additionalForm.find('#Phone').inputmask("+7(999) 999-99-99", { clearIncomplete: true, showMaskOnHover: false });
+    });
+</script>
+
+

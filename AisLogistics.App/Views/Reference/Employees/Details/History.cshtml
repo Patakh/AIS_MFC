@@ -1,0 +1,107 @@
+﻿@model ViewModelBuilder
+@{
+
+}
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                @if (Model.IsVisibleDescription)
+                {
+                    <div class="b-s-14">@Model.ViewDescription</div>
+                }
+            </div>
+
+            <div class="col-6 pull-right">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive mt-3">
+                    <table id="@Model.TableName" data-action-table="@Model.TableMethodAction" data-action-edit="@Model.EditMethodAction" data-action-remove="@Model.RemoveMethodAction" class="directory_names-items table table-striped"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $tableHistory = $('#@(Model.TableName)');
+
+    $(document).ready(function () {
+        let isCanAddHistory = $tableHistory.is('[data-action-add]'),
+            isCanEditHistory = $tableHistory.is('[data-action-edit]'),
+            isCanRemoveHistory = $tableHistory.is('[data-action-remove]');
+
+        $tableHistory.DataTable({
+            sDom: "<'row'<'col-sm-12 col-md-6 'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            processing: true,
+            searching: false,
+            serverSide: true,
+            filter: true,
+            searchDelay: 1500,
+            ajax: {
+                url: $tableHistory.data('action-table'),
+                type: "POST",
+                datatype: "json",
+                dataSrc: function (json) {
+                    return json.data;
+                }
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    title: 'Офис',
+                    orderable: false
+                },
+                {
+                    targets: 2,
+                    title: 'Дата',
+                    orderable: false
+                },
+                {
+                    targets: 3,
+                    title: 'IP адрес',
+                    orderable: false
+                }, 
+            ],
+            columns: [
+                {},
+                { data: "officeName" },
+                { data: "logInDate" },
+                { data: "logInIp" },
+            ]
+        });
+        $tableHistory.on("reload", () => {
+            $tableHistory.DataTable().ajax.reload(null, false);
+        });
+
+        $tableHistory.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        const DeleteBtnHistory = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="remove" data-bs-toggle="tooltip" title="Удалить" class="btn btn-sm btn-icon text-danger">
+                                    <i class="bi bi-trash"></i></a>`;
+        }
+    });
+</script>
+

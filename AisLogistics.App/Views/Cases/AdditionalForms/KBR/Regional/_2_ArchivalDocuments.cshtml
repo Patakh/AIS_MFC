@@ -1,0 +1,33 @@
+﻿@model _2_ArchivalDocumentsModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FIOGen">от</label>
+                    <input type="text" asp-for="FIOGen" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Request">Прошу предоставить  архивную справку (архивную выписку, архивную копию)</label>
+                    <input type="text" asp-for="Request" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script asp-append-version="true">
+    $(function () {
+        $('.btn-next').on('click', function () {
+            let gender = $('[name="customer.CustomerGender"]').val() == 1 ? 'm' : 'f';
+            let lastName = $("#customer_LastName").val().trim();
+            let firstName = $("#customer_FirstName").val().trim();
+            let secondName = $("#customer_SecondName").val().trim();
+            var rn = new RussianName(lastName, firstName, secondName, gender);
+            $("#FIOGen").val(rn.fullName(rn.gcaseGen));
+        })
+    })
+</script>

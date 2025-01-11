@@ -1,0 +1,60 @@
+﻿@model _9_HuntingTicketCancelModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h6 class="my-2">Заявитель</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="BirthsTown">Место рождения гор.</label>
+                    <input type="text" asp-for="BirthsTown" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="PlaceWork">Место работы</label>
+                    <input type="text" asp-for="PlaceWork" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Post">Должность</label>
+                    <input type="text" asp-for="Post" class="form-control">
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">Охотничий билет</h6>
+            <div class="row mb-3">
+                <div class="col-sm-4">
+                    <label class="form-label" asp-for="HuntingTicketSeries">серия</label>
+                    <input type="text" asp-for="HuntingTicketSeries" class="form-control">
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" asp-for="HuntingTicketNumber">номер охотничьего билета</label>
+                    <input type="text" asp-for="HuntingTicketNumber" class="form-control">
+                </div> 
+            </div>
+            <br />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Reason">обстоятельства, послужившие основанием аннулирования</label>
+                    <input type="text" asp-for="Reason" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () { 
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+       
+    }); 
+</script>

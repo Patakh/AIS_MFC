@@ -1,0 +1,112 @@
+﻿.service-favorite svg {
+    height: 1.25rem;
+    width: 1.25rem;
+    font-size: 1.25rem;
+    vertical-align: text-top;
+    color: #B9B9C3
+}
+
+.service-favorite svg.favorite {
+    fill: #FF9F43;
+    stroke: #FF9F43
+}
+
+.swall-html-content {
+    width: 100% !important;
+    text-align: left !important;
+    font-size: medium !important;
+}
+
+.border-outline {
+  border: 1px solid #d4d8dd !important;
+}
+
+.swall-content-text {
+   
+}
+
+.title-content {
+  max-width: 100% !important;
+}
+
+ul.address-list {
+    display: none;
+    width: 100%;
+    z-index: 1000;
+    position: absolute;
+    list-style: none;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+    background-clip: padding-box;
+    margin-top: -0.25rem;
+}
+
+ul.address-list li {
+    padding: 6px;
+}
+
+ul.address-list li:hover {
+    color: white;
+    background-color: #5a8dee;
+    cursor: pointer
+}
+
+label {
+    color: rgba(23, 35, 89, 0.6) !important;
+    font-size:12px !important;
+    font-weight:400 !important; 
+}
+
+.form-control, select, textarea, .light-style .select2-container--default .select2-selection {
+    color: #172359 !important;
+   /* font-size: 12px;*/
+    font-family: 'regular' !important;
+    border: 1px solid rgba(93, 102, 250, 0.35);
+}
+
+.light-style .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #172359 !important;
+  /*  font-size: 12px;*/
+    font-family: 'regular' !important;
+   /* line-height: 2rem !important;*/
+}
+
+sup {
+    top: 0 !important;
+}
+.content-header small {
+    color: rgba(23, 35, 89, 0.31) !important; 
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'regular' !important;
+}
+.odd,.even{
+    cursor:pointer;
+
+}
+    .odd:hover, .even:hover {
+        background: #b2d7ff;
+        color:#fff !important;
+    }
+#sendingForm label,
+#additional-data-step label {
+    text-transform: uppercase;
+}
+
+.modal {
+    z-index: 1000;
+}
+
+#sendingForm .select2-container {
+    z-index: 1000000000000;
+}
+
+input[type="search"] {
+    background: #FFF;
+    border-radius: 2px;
+    border: 1px solid #d4d8dd;
+}

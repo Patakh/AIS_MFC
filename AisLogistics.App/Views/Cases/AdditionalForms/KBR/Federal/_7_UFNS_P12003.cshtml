@@ -1,0 +1,184 @@
+﻿@model _7_UFNS_P12003Model
+@{
+
+    IEnumerable<SelectListItem> notificationReasonTypeId = new List<SelectListItem>
+    {
+        new ("принятие решения о реорганизации", "1"),
+        new ("принятие решения об отмене ранее принятого решения о реорганизации", "2"),
+        new ("ограничение/возобновление доступа к сведениям о том, что юридическое лицо находится в процессе реорганизации", "3"),
+    };
+
+    IEnumerable<SelectListItem> reorganizationFormTypeId = new List<SelectListItem>
+    {
+        new ("преобразование", "1"),
+        new ("слияние", "2"),
+        new ("разделение", "3"),
+        new ("выделение", "4"),
+        new ("присоединение", "5"),
+        new ("одновременное сочетание различных форм реорганизации", "6"),
+    };
+
+    IEnumerable<SelectListItem> legalEntityReorganizationStatusTypeId = new List<SelectListItem>
+    {
+        new ("юридическое лицо продолжит деятельность", "1"),
+        new ("юридическое лицо прекратится", "2"),
+    };
+
+    IEnumerable<SelectListItem> legalEntityReorganizationStatusAccessTypeId = new List<SelectListItem>
+    {
+        new ("ограничить", "1"),
+        new ("возобновить", "2"),
+    };
+
+    IEnumerable<SelectListItem> applicantTypeId = new List<SelectListItem>
+    {
+        new ("лицо, действующее от имени юридического лица без доверенности", "1"),
+        new ("лицо, действующее на основании полномочия, предусмотренного федеральным законом, актом специально уполномоченного на то государственного органа или актом органа местного самоуправления", "2"),
+    };
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="NotificationReasonTypeId">Причина представления уведомления</label>
+                    <select asp-items="@notificationReasonTypeId" class="form-select select2-nosearch" asp-for="NotificationReasonTypeId"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ReorganizationFormTypeId">Форма реорганизации</label>
+                    <select asp-items="@reorganizationFormTypeId" class="form-select select2-nosearch" asp-for="ReorganizationFormTypeId"></select>
+                </div>
+            </div>
+            <h5 class="my-2">Сведения о реорганизуемом юридическом лице</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <h6 class="my-2">Сведения о юридическом лице, содержатиеся в Едином государственном реестре юридических лиц</h6>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label asp-for="LegalEntityOGRN" class="form-label">ОГРН</label>
+                            <input asp-for="LegalEntityOGRN" class="form-control" type="text">
+                        </div>
+                        <div class="col-6">
+                            <label asp-for="LegalEntityINN" class="form-label">ИНН</label>
+                            <input asp-for="LegalEntityINN" class="form-control" type="text">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label class="form-label" asp-for="LegalEntityReorganizationStatusTypeId">Сведения о состоянии юридического лица после завершения реорганизации</label>
+                            <select asp-items="@reorganizationFormTypeId" class="form-select select2-nosearch" asp-for="LegalEntityReorganizationStatusTypeId"></select>
+                        </div>
+                    </div>
+
+                    <h6 class="my-2">
+                        Сведения о внесенной в Единый государственный реестр юридических лиц записи о том, что юридическое лицо находится в процессе реорганизации
+                    </h6>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label asp-for="LegalEntityGRN" class="form-label">
+                                Государственный регистрационный номер записи (ГРН)
+                            </label>
+                            <input asp-for="LegalEntityGRN" class="form-control" type="text">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label class="form-label" asp-for="LegalEntityReorganizationStatusAccessTypeId">Доступ к сведениям о том, что юридическое лицо находится в процессе реорганизации</label>
+                            <select asp-items="@legalEntityReorganizationStatusAccessTypeId" class="form-select select2-nosearch" asp-for="LegalEntityReorganizationStatusAccessTypeId"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <h5 class="my-2">Сведения о заявителе</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ApplicantTypeId">Заявителем является</label>
+                    <select asp-items="@applicantTypeId" class="form-select select2-nosearch" asp-for="ApplicantTypeId"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="DocumentSendingEmail">
+                        Документы, связанные с предоставлением государственной услуги по государственной регистрации индивидуального предпринимателя
+                    </label>
+                    <input type="text" class="form-control" asp-for="DocumentSendingEmail">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="DocumentSendingTypeId" class="form-check-input" type="checkbox" value="1">
+                        <label asp-for="DocumentSendingTypeId" class="form-check-label">выдать на бумажном носителе</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="PersonAuthenticatedSignatureTypeId"> Сведения о лице, засвидетельствовавшим подлинность подписи заявителя в нотариальном порядке</label>
+                    <select asp-items="@applicantTypeId" class="form-select select2-nosearch" asp-for="PersonAuthenticatedSignatureTypeId"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="PersonAuthenticatedSignatureINN" class="form-label">
+                        ИНН лица, засвидетельствовавшего подлинность подписи заявителя
+                    </label>
+                    <input asp-for="PersonAuthenticatedSignatureINN" class="form-control" type="text">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () {
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", { clearIncomplete: true, showMaskOnHover: false });
+
+        additionalForm.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+    })
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

@@ -1,0 +1,224 @@
+﻿@model _57_ChildrenCenterRadugaModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label asp-for="CheckInStartDate" class="form-label">Начало заезда</label>
+                    <input asp-for="CheckInStartDate" class="form-control pickdate" type="text">
+                </div>
+                <div class="col-6">
+                    <label asp-for="CheckInEndDate" class="form-label">Конец заезда</label>
+                    <input asp-for="CheckInEndDate" class="form-control pickdate" type="text">
+                </div>
+            </div>
+
+            <h5>Список детей</h5>
+            <div id="childrenList" data-clone-list>
+                @for (var i = 0; i < Model.Children?.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Ребенок @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-8"> 
+                                <label asp-for="Children[i]!.FullName" class="form-label">Ф.И.О.</label>
+                                <input asp-for="Children[i]!.FullName" class="form-control" type="text">
+                            </div>
+                            <div class="col-3">
+                                <label asp-for="Children[i]!.BirthDate" class="form-label">Дата рождения</label>
+                                <input asp-for="Children[i]!.BirthDate" class="form-control pickdate" type="text">
+                            </div> 
+                            <div class="col-1 mt-2">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addChild"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+            <h5>Прилагаемые документы</h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedDocuments?.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Документ @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-9">
+                                <label asp-for="AppliedDocuments[i]!.Name" class="form-label">Наименование</label>
+                                <input asp-for="AppliedDocuments[i]!.Name" class="form-control" type="text">
+                            </div>
+                            <div class="col-2">
+                                <label asp-for="AppliedDocuments[i]!.PageAmount" class="form-label">Кол-во экз.</label>
+                                <input asp-for="AppliedDocuments[i]!.PageAmount" class="form-control" type="number">
+                            </div>
+                            <div class="col-1 mt-2">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Документ 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-9">
+                <label asp-for="AppliedDocuments[0]!.Name" class="form-label">Наименование</label>
+                <input asp-for="AppliedDocuments[0]!.Name" class="form-control" type="text">
+            </div>
+            <div class="col-2">
+                <label asp-for="AppliedDocuments[0]!.PageAmount" class="form-label">Кол-во экз.</label>
+                <input asp-for="AppliedDocuments[0]!.PageAmount" class="form-control" type="number">
+            </div>
+            <div class="col-1 mt-2">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="g-3" id="child" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Ребенок 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-8">
+                <label asp-for="Children[0]!.FullName" class="form-label">Ф.И.О.</label>
+                <input asp-for="Children[0]!.FullName" class="form-control" type="text">
+            </div>
+            <div class="col-3">
+                <label asp-for="Children[0]!.BirthDate" class="form-label">Дата рождения</label>
+                <input asp-for="Children[0]!.BirthDate" class="form-control pickdate" type="text">
+            </div>
+            <div class="col-1 mt-2">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+        additionalForm.find('#addChild').on('click', () => addForm('childrenList', 'child'));
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", { clearIncomplete: true, showMaskOnHover: false });
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+    });
+
+    function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+        let $cloneList = additionalForm.find(`#${cloneListId}`);
+        let $original = originalBlock.find(`#${originalId}`);
+        let $cloneBlock = $original.clone(true);
+        let indexId = $cloneList.find('[data-clone]').length;
+        renameBlock($cloneBlock, indexId);
+        blockInit($cloneBlock);
+        $cloneList.append($cloneBlock);
+    }
+
+    function blockInit($block) {
+        visibilityBlock($block, false, false);
+
+        $block.find("input").each(function () {
+            $(this).val("");
+        });
+
+        $block.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", { clearIncomplete: true, showMaskOnHover: false });
+
+        $block.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+        });
+    }
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

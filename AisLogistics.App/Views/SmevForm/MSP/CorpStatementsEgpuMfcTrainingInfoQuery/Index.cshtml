@@ -1,0 +1,568 @@
+﻿@using AisLogistics.DataLayer.Utils
+@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var request = new MspCorpStatementsEgpuMfcTrainingInfoQueryRequestData
+            {
+                StatementInfo = new MspCorpStatementTypeInfo()
+            };
+}
+<style>
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+</style>
+<div class="row justify-content-center g-3">
+    <div class="col-12">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Данные заявителя</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-1">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ApplicationType">Тип заявителя</label>
+                <select class="form-select select2-nosearch" asp-for="@request.ApplicationType">
+                    <option value="PersonApplication">Физическое лицо</option>
+                    <option value="IpApplication">Индивидуальный предприниматель</option>
+                    <option value="LegalApplication">Юридическое лицо</option>
+                </select>
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Inn">ИНН</label>
+                <input type="text" class="form-control required" placeholder="ИНН" asp-for="@request.Inn" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.RegionCode">Регион проведения тренинга</label>
+                <select class="select2-search required" asp-for="@request.RegionCode"
+                        data-dictionary='{"dictionary":"RosReestrEgrnRegionsRf"}'>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center g-3">
+    <div class="col-12 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Информация о тренингах</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3">
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <label class="form-label" asp-for="@request.StatementType">Суть заявления</label>
+                    <select class="form-select select2-nosearch" asp-for="@request.StatementType">
+                        <option value="Application1">Заявление на предоставление информации</option>
+                        <option value="Application2">Запись на тренинг (кроме «Школа предпринимательства»)</option>
+                        <option value="Application3">Запись на тренинг «Школа предпринимательства»</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center mb-1" data-disabled id="TrainingName">
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <label class="form-label" asp-for="@request.StatementInfo.TrainingName">Наименование тренинга</label>
+                    <input type="text" class="form-control required" placeholder="Наименование тренинга" asp-for="@request.StatementInfo.TrainingName" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center g-3" data-disabled id="TrainingInfo">
+    <div class="col-12">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Участник тренинга</div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <div class="row justify-content-center mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.StatementInfo.Fio.LastName">Фамилия</label>
+                    <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.StatementInfo.Fio.LastName" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.StatementInfo.Fio.FirstName">Имя</label>
+                    <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.StatementInfo.Fio.FirstName" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.StatementInfo.Fio.SecondName">Отчество</label>
+                    <input type="text" class="form-control " placeholder="Отчество" asp-for="@request.StatementInfo.Fio.SecondName" />
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3">
+                <div class="col-4">
+                    <label class="d-block form-label mb-3">Пол</label>
+                    <div class="form-check form-check-inline mx-0">
+                        <input class="form-check-input" type="radio" name="request.StatementInfo.Sex" id="smevModel_Gender1" value="Male" checked="checked">
+                        <label class="form-check-label" for="smevModel_Gender1"><i class="bi bi-gender-male fs-6"></i>Мужской</label>
+                    </div>
+                    <div class="form-check form-check-inline mx-0">
+                        <input class="form-check-input" type="radio" name="request.StatementInfo.Sex" id="smevModel_Gender2" value="Female">
+                        <label class="form-check-label" for="smevModel_Gender2"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.StatementInfo.AgeType">Возраст</label>
+                    <select class="form-select select2-nosearch" asp-for="@request.StatementInfo.AgeType" data-dictionary='{"dictionary":"MspCorpAgeTypes"}'>
+                    </select>
+                </div>
+                <div class="col-5">
+                    <label class="form-label" asp-for="@request.StatementInfo.Status">Статус</label>
+                    <select class="form-select select2-nosearch" asp-for="@request.StatementInfo.Status">
+                        <option value="Потенциальный предприниматель">Потенциальный предприниматель</option>
+                        <option value="Начинающий предприниматель (менее 1 года с момента государственной регистрации предпринимательской деятельности)">Начинающий предприниматель (менее 1 года с момента государственной регистрации предпринимательской деятельности)</option>
+                        <option value="Действующий предприниматель">Действующий предприниматель</option>
+                        <option value="Наемный работник">Наемный работник</option>
+                        <option value="Официальный безработный">Официальный безработный</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row  mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.StatementInfo.ApplicationPhoneNumber">Номер телефона</label>
+                    <input type="text" class="form-control phone required" placeholder="Номер телефона" asp-for="@request.StatementInfo.ApplicationPhoneNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.StatementInfo.ApplicationEmail">E-mail</label>
+                    <input type="text" class="form-control email required" placeholder="E-mail" asp-for="@request.StatementInfo.ApplicationEmail">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.StatementInfo.BusinessIdeas">Сфера деятельности (бизнес-идеи)</label>
+                    <input type="text" class="form-control required" placeholder="Сфера деятельности (бизнес-идеи)" asp-for="@request.StatementInfo.BusinessIdeas">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.StatementInfo.CompanyName">Наименование предприятия (при наличии)</label>
+                    <input type="text" class="form-control" placeholder="Наименование предприятия (при наличии)" asp-for="@request.StatementInfo.CompanyName">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="@request.StatementInfo.PartyMemberType">Участник программы</label>
+                    <select class="form-select select2-nosearch" asp-for="@request.StatementInfo.PartyMemberType" data-dictionary='{"dictionary":"MspCorpPartyMemberTypes"}'>
+                    </select>
+                </div>
+                <div class="col-6" data-disabled id="PartyMemberOtherTypeDescription">
+                    <label class="form-label" asp-for="@request.StatementInfo.PartyMemberOtherTypeDescription">Участник программы другое</label>
+                    <input type="text" class="form-control" placeholder="Участник программы другое" asp-for="@request.StatementInfo.PartyMemberOtherTypeDescription">
+                </div>
+            </div>
+
+        </div>
+        <div class="col-12">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Дополнительно</div>
+            </div>
+        </div>
+        <div class="row justify-content-center mb-1">
+            <div class="col-8">
+                <div class="row mb-3">
+                    <div class="col-7">
+                        <label class="form-label" asp-for="@request.StatementInfo.InfoAboutTrainingPrograms">Как Вы узнали о программах обучения?</label>
+                        <select class="form-select select2-nosearch" asp-for="@request.StatementInfo.InfoAboutTrainingPrograms" data-dictionary='{"dictionary":"MspCorpInfoAboutTrainingProgramsTypes"}'>
+                        </select>
+                    </div>
+                    <div class="col-5" data-disabled id="InfoAboutOtherTypeDescription">
+                        <label class="form-label" asp-for="@request.StatementInfo.InfoAboutOtherTypeDescription">Другое</label>
+                        <input type="text" class="form-control required" asp-for="@request.StatementInfo.InfoAboutOtherTypeDescription">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-7">
+                        <label class="form-label" asp-for="@request.StatementInfo.TrainingTime">Какое время предпочтительно для участия в тренинге?</label>
+                        <select class="form-select select2-nosearch" asp-for="@request.StatementInfo.TrainingTime" data-dictionary='{"dictionary":"MspCorpTrainingTimeTypes"}'>
+                        </select>
+                    </div>
+                    <div class="col-5" data-disabled id="TrainingTimeOtherTypeDescription">
+                        <label class="form-label" asp-for="@request.StatementInfo.TrainingTimeOtherTypeDescription">Другое</label>
+                        <input type="text" class="form-control required" asp-for="@request.StatementInfo.TrainingTimeOtherTypeDescription">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-7">
+                        <label class="form-label" asp-for="@request.StatementInfo.ScheduleTraining">Какой график прохождения обучения Вам удобен?</label>
+                        <select class="form-select select2-nosearch" asp-for="@request.StatementInfo.ScheduleTraining" data-dictionary='{"dictionary":"MspCorpScheduleTrainingTypes"}'>
+                        </select>
+                    </div>
+                    <div class="col-5" data-disabled id="ScheduleTrainingOtherTypeDescription">
+                        <label class="form-label" asp-for="@request.StatementInfo.ScheduleTrainingOtherTypeDescription">Другое</label>
+                        <input type="text" class="form-control required" asp-for="@request.StatementInfo.ScheduleTrainingOtherTypeDescription">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-7">
+                        <label class="form-label" asp-for="@request.StatementInfo.AdditionalTraining">Какие дополнительные тренинги вы хотели бы посетить ?</label>
+                        <select class="form-select select2-nosearch" asp-for="@request.StatementInfo.AdditionalTraining" data-dictionary='{"dictionary":"MspCorpAdditionalTrainingTypes"}'>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3">
+    <div class="row justify-content-center g-3">
+        <div class="col-12 mx-auto">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Подписка</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="row ">
+            <div class="col-4">
+                <div class="for-check form-check-inline mx-0">
+                    <input class="form-check-input" type="checkbox" asp-for="@request.IsSubscribe">
+                    <label class="form-check-label" asp-for="@request.IsSubscribe">Подписка на результат услуги</label>
+                </div>
+            </div>
+            <div class="col-3" id="SubscriptionEndDate" data-disabled>
+                <div class="input-group input-group-merge">
+                    <input asp-for="@request.SubscriptionEndDate" type="text" class="form-control pickdate required" placeholder="Дата окончания подписки" value="">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center g-3">
+    <div class="col-12 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Способ предоставления информации</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div class="row mb-2">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.ReportingMethod">Вариант предоставления</label>
+                <select class="form-select select2-nosearch" asp-for="@request.ReportingMethod" data-dictionary='{"dictionary":"MspCorpReportingMethodTypes","default_value":"2"}'></select>
+            </div>
+            <div class="col-4" data-disabled>
+                <label class="form-label" asp-for="@request.ReportingMethodOtherTypeText">Введите email</label>
+                <input type="text" class="form-control required" asp-for="@request.ReportingMethodOtherTypeText" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center g-3">
+    <div class="col-12 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Способ информирования о готовности результата услуги</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mb-3">
+    <div class="col-8">
+        <div class="row">
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.InformingMethodPhone">Номер телефона</label>
+                <input type="text" class="form-control phone" placeholder="Номер телефона" asp-for="@request.InformingMethodPhone">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.InformingMethodEmail">E-mail</label>
+                <input type="text" class="form-control email" placeholder="E-mail" asp-for="@request.InformingMethodEmail">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function ShowErrorInputs() {
+
+    }
+
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                $(formContent).find('.required').each(function() {
+                    addValidation($(this));
+                });
+
+                $(formContent).find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+
+                /* init datepicker */
+                $(formContent).find(".pickdate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                });
+
+                let options = { clearIncomplete: true, showMaskOnHover: false };
+
+                /* init inputmask */
+                $(formContent).find('.phone').inputmask("9999999999", options);
+                $(formContent).find('.email').inputmask("email", options);
+
+                $(formContent).find("select.select2-nosearch").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+                $(formContent).find("select.select2-search").each(function() {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal")
+                    });
+                });
+
+                function openItemForm(el) {
+
+                    if (el.value == 'true') {
+                        el.value = 'false';
+                        if (el.dataset.openitem != 'null') {
+                            document.querySelector(`#${el.dataset.openitem}`).classList.add('d-none')
+                            addDisabled(`${el.dataset.openitem}`, true)
+                        }
+                    }
+
+                    else {
+                        el.value = 'true';
+                        if (el.dataset.openitem != 'null') {
+                            document.querySelector(`#${el.dataset.openitem}`).classList.remove('d-none')
+                            addDisabled(`${el.dataset.openitem}`, false)
+                        }
+                    }
+                }
+
+
+                $(formContent).find('[name$="ReportingMethod"]').on('change',
+                    function() {
+                        let $mobile = $('#request_InformingMethodPhone');
+                        let $email = $('#request_InformingMethodEmail');
+                        let $coment = $('#request_ReportingMethodOtherTypeText');
+
+                        switch ($(this).val()) {
+                            case '1':
+                                $coment.prev().text('Введите email');
+                                visibilityBlock($coment.parent(), false, false);
+                                break;
+                            case '2':
+                                visibilityBlock($coment.parent(), true, true);
+                                break;
+                            case '3':
+                                $coment.prev().text('Введите комментарий');
+                                visibilityBlock($coment.parent(), false, false);
+                                break;
+
+                        };
+
+                    });
+                $(formContent).find('#request_IsSubscribe').on('change',
+                    function() {
+                        if ($(this).is(':checked')) {
+                            visibilityBlock($('#SubscriptionEndDate'), false, false);
+                        };
+                        if ($(this).is(':not(:checked)')) {
+                            visibilityBlock($('#SubscriptionEndDate'), true, true);
+                        };
+                    });
+
+
+                $(formContent).find('#request_StatementType').on('change',
+                    function() {
+                        switch ($(this).val()) {
+                            case 'Application1':
+                                visibilityBlock($('#TrainingName'), true, true);
+                                visibilityBlock($('#TrainingInfo'), true, true);
+                                break;
+                            case 'Application2':
+                                visibilityBlock($('#TrainingInfo'), false, false);
+                                visibilityBlock($('#TrainingName'), false, false);
+                                break;
+                            case 'Application3':
+                                visibilityBlock($('#TrainingInfo'), false, false);
+                                visibilityBlock($('#TrainingName'), true, true);
+                                break;
+                        }
+
+                    });
+
+                $(formContent).find('#request_StatementInfo_PartyMemberType').on('change',
+                    function() {
+                        switch ($(this).val()) {
+                            case '4':
+                                visibilityBlock($('#PartyMemberOtherTypeDescription'), false, false);
+                                break;
+                            default:
+                                visibilityBlock($('#PartyMemberOtherTypeDescription'), true, true);
+                                break;
+                        }
+                    });
+
+                $(formContent).find('#request_StatementInfo_InfoAboutTrainingPrograms').on('change',
+                    function() {
+                        switch ($(this).val()) {
+                            case '5':
+                                visibilityBlock($('#InfoAboutOtherTypeDescription'), false, false);
+                                break;
+                            default:
+                                visibilityBlock($('#InfoAboutOtherTypeDescription'), true, true);
+                                break;
+                        }
+                    });
+
+                $(formContent).find('#request_StatementInfo_TrainingTime').on('change',
+                    function() {
+                        switch ($(this).val()) {
+                            case '4':
+                                visibilityBlock($('#TrainingTimeOtherTypeDescription'), false, false);
+                                break;
+                            default:
+                                visibilityBlock($('#TrainingTimeOtherTypeDescription'), true, true);
+                                break;
+                        }
+                    });
+
+                $(formContent).find('#request_StatementInfo_ScheduleTraining').on('change',
+                    function() {
+                        switch ($(this).val()) {
+                            case '4':
+                                visibilityBlock($('#ScheduleTrainingOtherTypeDescription'), false, false);
+                                break;
+                            default:
+                                visibilityBlock($('#ScheduleTrainingOtherTypeDescription'), true, true);
+                                break;
+                        }
+                    });
+
+                $(formContent).find('[name$="Inn"]').inputmask('999999999999', options);
+                $(formContent).find('[name$="ApplicationType"]').on('change',
+                    function() {
+                        let options = { clearIncomplete: true, showMaskOnHover: false };
+                        let $inn = $(formContent).find('[name$="Inn"]');
+                        switch ($(this).val()) {
+                            case 'LegalApplication':
+                                $inn.inputmask('9999999999', options);
+                                break;
+                            default:
+                                $inn.inputmask('999999999999', options);
+                        }
+                    });
+            }
+        };
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').hide();
+                } else {
+                    $block.hide();
+                }
+                break;
+            case false:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').show();
+                } else {
+                    $block.show();
+                }
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        removeValidation($(this));
+                    }
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                    if ($(this).hasClass('required')) {
+                        addValidation($(this));
+                    }
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    (function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function() {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post(`/SmevBase/SmevGetDictionary`,
+                    {
+                        type: options.dictionary
+                    },
+                    function(dictionary) {
+                        fillSelect(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function() {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+            });
+    }
+
+</script>

@@ -1,0 +1,425 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new SendOpeka3RequestData
+            {
+                Fio = new(),
+                Address = new()
+            };
+}
+
+<style>
+    #smev_request td.is_selected {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-request-tabContent .tab-pane {
+        height: 550px;
+    }
+
+    #smev-data-form-content ul.address-list {
+        display: none;
+        width: 100%;
+        z-index: 1000;
+        position: absolute;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        background-clip: padding-box;
+    }
+
+        #smev-data-form-content ul.address-list li {
+            padding: 6px;
+        }
+
+            #smev-data-form-content ul.address-list li:hover {
+                color: white;
+                background-color: #5a8dee;
+                cursor: pointer
+            }
+</style>
+
+
+<div class="row g-3">
+    <div class="col-12 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Параметры запроса</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <label class="form-label" for="@request.EnableMkgu">Передать контактные данные в ИАС МКГУ</label>
+                <select class="form-select select2-nosearch" asp-for="@request.EnableMkgu">
+                    <option value="true">Да</option>
+                    <option value="false" selected="selected">Нет</option>
+                </select>
+            </div>
+            <div class="col-6">
+                <label class="form-label" for="@request.TargetRegionCode">Регион направления запроса</label>
+                <select class="form-select select2-nosearch" asp-for="@request.TargetRegionCode" data-dictionary='{"dictionary":"RospotrebnadzorOktmoDepartmentCode"}'>
+                </select>
+            </div>
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.AddInfo">Дополнительная информация</label>
+                <input type="text" class="form-control" placeholder="Дополнительная информация" asp-for="@request.AddInfo" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-12 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Персональные данные заявителя</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center" id="flBlock">
+    <div class="col-8">
+        <div class="row mt-1">
+            <div class="col-12">
+                <label class="form-label">Заявители</label>
+                <select class="form-select select2-nosearch applicants">
+                    <option value="">Выберите заявителя</option>
+                    @for (int i = 0; i < applicants.Count; i++)
+                    {
+                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Fio.LastName">Фамилия</label>
+                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Fio.LastName" />
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Fio.FirstName">Имя</label>
+                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Fio.FirstName">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Fio.SecondName">Отчество</label>
+                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Fio.SecondName">
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Контактная информация</div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-1">
+            <div class="col-5">
+                <label class="form-label" asp-for="@request.Email">E-mail</label>
+                <input type="text" class="form-control email" placeholder="E-mail" asp-for="@request.Email">
+            </div>
+            <div class="col-5">
+                <label class="form-label" asp-for="@request.Tel">Мобильный номер</label>
+                <input type="text" class="form-control phone" placeholder="Мобильный номер" asp-for="@request.Tel">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-12">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Адрес жилого помещения/здания</div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mt-1 mb-3" data-block>
+    <div class="col-8">
+        <div class="row">
+            <div class="input-group">
+                <i class="bi bi-search bx-md"></i>
+                <input type="text" placeholder="Адрес" class="form-control" id="Address">
+            </div>
+            <div class="input-group">
+                <ul class="list-group address-list">
+                </ul>
+            </div>
+        </div>
+        <div data-address>
+            <div class="row mt-1">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Address.Index">Почтовый индекс</label>
+                    <input type="text" class="form-control required" placeholder="Почтовый индекс" asp-for="@request.Address.Index" />
+                </div>
+                <div class="col-2 d-none">
+                    <label class="form-label" asp-for="@request.Address.RegionOktmo">Регион</label>
+                    <input type="text" class="form-control required" placeholder="Регион" asp-for="@request.Address.RegionOktmo">
+                </div>
+                <div class="col-8">
+                    <label class="form-label" for="Region">Регион</label>
+                    <input type="text" class="form-control" placeholder="Регион" id="Region" name="Region">
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Address.District">Район</label>
+                    <input type="text" class="form-control" placeholder="Район" asp-for="@request.Address.District">
+                </div>
+                <div class="col-4 d-none">
+                    <label class="form-label" asp-for="@request.Address.CityType">Тип населенного пункта</label>
+                    <input type="text" class="form-control" placeholder="Тип населенного пункта" asp-for="@request.Address.CityType">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Address.City">Населенный пункт</label>
+                    <input type="text" class="form-control" placeholder="Населенный пункт" asp-for="@request.Address.City">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.Address.Street">Улица</label>
+                    <input type="text" class="form-control" placeholder="Улица" asp-for="@request.Address.Street">
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Address.House">Дом</label>
+                    <input type="text" class="form-control" placeholder="Дом" asp-for="@request.Address.House">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Address.Corp">Корпус</label>
+                    <input type="text" class="form-control" placeholder="Корпус" asp-for="@request.Address.Corp">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Address.Building">Строение</label>
+                    <input type="text" class="form-control" placeholder="Строение" asp-for="@request.Address.Building">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.Address.Room">Квартира</label>
+                    <input type="text" class="form-control" placeholder="Квартира" asp-for="@request.Address.Room">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+     function ShowErrorInputs() {
+     }
+
+     var applicants = @Json.Serialize(applicants);
+
+     var formContent = document.getElementById("smev-data-form-content"),
+         smevForm = {
+             init: () => {
+                 $(formContent).find('.required').each(function() {
+                     addValidation($(this));
+                 });
+
+                 $(formContent).find("select.select2-nosearch").each(function() {
+                     $(this).select2({
+                         dropdownParent: $("#mainModal"),
+                         minimumResultsForSearch: Infinity
+                     });
+                 });
+
+                 $(formContent).find("select.select2-search").each(function() {
+                     $(this).select2({
+                         dropdownParent: $("#mainModal")
+                     });
+                 });
+
+                 let options = { clearIncomplete: true, showMaskOnHover: false };
+                 $(formContent).find(".phone").inputmask("+79{10}", options);
+                 $(formContent).find(".email").inputmask("email", options);
+
+                 $('select.applicants').each(function() {
+                     $(this).on('change',
+                         function() {
+                             let id = $(this).val();
+                             let $block = $(formContent);
+                             $block.find('[type="text"]').each(function() {
+                                 $(this).val('');
+                             });
+                             if (id) {
+                                 $block.find('[name$="LastName"]').val(applicants[id].lastName);
+                                 $block.find('[name$="FirstName"]').val(applicants[id].firstName);
+                                 $block.find('[name$="SecondName"]').val(applicants[id].secondName);
+                                 $block.find('[name$="BirthDate"]').val(applicants[id].birthDate ? new Date(applicants[id].birthDate).toLocaleDateString() : '');
+                                 $block.find('[name$="Email"]').val(applicants[id].email);
+                                 $block.find('[name$="Tel"]').val(applicants[id].phone);
+                                 $block.find('#Address').val(applicants[id].address);
+                             }
+                         });
+                 });
+             }
+         };
+
+     // Адрес ----------------------------------------------------------------------------
+     var addresses = new Map();
+     $('#Address').on('keyup',
+         function() {
+             let adr = $(this).val();
+             if (adr.length > 2) {
+                 $.post(`/SmevBase/GarSearchAddressExtended`,
+                     {
+                         SearchText: adr
+                     },
+                     function(data) {
+                         if (data.result.length > 0) {
+                             addresses.set('Address', data.result);
+                             $('.address-list').empty();
+                             data.result.forEach((item, index) => {
+                                     $('.address-list').append(`<li data-index='${index}'>${createAddressText(item)}</li>`);
+                                 }
+                             );
+                             $('.address-list').show();
+                         }
+                     });
+             } else {
+                 $(this).closest('[data-block]').find('[data-address] input').each(function() { $(this).val('') });
+             }
+         }).focusin(function() {
+         $('.address-list').show();
+     }).focusout(function() {
+         $('.address-list').delay(250).hide(0);
+     });
+
+     $('.address-list').on('click',
+         function(event) {
+             $('#Address').val($(event.target).text());
+             fillAddress(addresses.get('Address')[$(event.target).data('index')], event.target);
+         });
+
+     function createAddressText(adr) {
+         let elements = [];
+         if (adr.region) {
+             elements.push(`${adr.region.shortName} ${adr.region.value}`);
+         }
+         if (adr.area) {
+             elements.push(`${adr.area.shortName} ${adr.area.value}`);
+         }
+         if (adr.city) {
+             elements.push(`${adr.city.shortName} ${adr.city.value}`);
+         }
+         if (adr.cityAndRuralSettlements) {
+             elements.push(`${adr.cityAndRuralSettlements.shortName} ${adr.cityAndRuralSettlements.value}`);
+         }
+         if (adr.intracityDistrict) {
+             elements.push(`${adr.intracityDistrict.shortName} ${adr.intracityDistrict.value}`);
+         }
+         if (adr.settlement) {
+             elements.push(`${adr.settlement.shortName} ${adr.settlement.value}`);
+         }
+         if (adr.street) {
+             elements.push(`${adr.street.shortName} ${adr.street.value}`);
+         }
+         if (adr.house) {
+             if (adr.house.houseNum) elements.push(`д ${adr.house.houseNum}`);
+             if (adr.house.buildNum) elements.push(`корп ${adr.house.buildNum}`);
+             if (adr.house.structNum) elements.push(`стр ${adr.house.structNum}`);
+         }
+         if (adr.room) {
+             elements.push(`кв ${adr.room.flatNumber}`);
+         }
+
+         return elements.join(', ');
+     }
+
+     function fillAddress(adr, el) {
+         let $adrBlock = $(el).closest('[data-block]');
+         $adrBlock.find('[data-address] input').each(function() { $(this).val('') });
+
+         if (adr.region) {
+             $adrBlock.find('[name$="RegionOktmo"]').val(Number(adr.region.oktmo.replace(/\d{6}$/, '')));
+             $adrBlock.find('[name$="Region"]').val(`${adr.region.value}`);
+         }
+         if (adr.area) {
+             $adrBlock.find('[name$="District"]').val(`${adr.area.value}`);
+         }
+         if (adr.settlement) {
+             $adrBlock.find('[name$="CityType"]').val(`${adr.settlement.shortName}`);
+             $adrBlock.find('[name$="City"]').val(`${adr.settlement.value}`);
+         }
+         if (adr.city) {
+             $adrBlock.find('[name$="CityType"]').val(`${adr.city.shortName}`);
+             $adrBlock.find('[name$="City"]').val(`${adr.city.value}`);
+         }
+         if (adr.street) {
+             $adrBlock.find('[name$="Street"]').val(`${adr.street.value}`);
+         }
+         if (adr.house) {
+             $adrBlock.find('[name$="Index"]').val(adr.house.postalCode);
+             if (adr.house.houseNum) $adrBlock.find('[name$="House"]').val(`${adr.house.houseNum}`);
+             if (adr.house.buildNum) $adrBlock.find('[name$="Corp"]').val(`${adr.house.buildNum}`);
+             if (adr.house.buildNum) $adrBlock.find('[name$="Building"]').val(`${adr.house.structNum}`);
+         }
+         if (adr.room) {
+             $adrBlock.find('[name$="Index"]').val(adr.room.postalCode);
+             $adrBlock.find('[name$="Room"]').val(`${adr.room.flatNumber}`);
+         }
+     }
+
+     (function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function() {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post(`/SmevBase/SmevGetDictionary`,
+                    {
+                        type: options.dictionary
+                    },
+                    function(dictionary) {
+                        fillSelect(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+                function fillSelect(dictName, dictionary) {
+                    $.each($(`[data-dictionary*='"${dictName}"']`),
+                        function() {
+                            let $this = $(this);
+                            let items = dictionary;
+                            $this.empty();
+                            if ($this.is('[data-value-value]')) {
+                                items.dictionary.forEach(function(item) {
+                                    $this.append(new Option(item.value, item.value));
+                                });
+                            } else {
+                                items.dictionary.forEach(function(item) {
+                                    $this.append(new Option(item.value, item.key));
+                                });
+                            }
+
+                            if (items.defaultKey != null) {
+                                $this.val(items.defaultKey).trigger('update');
+                                $this.attr('data-def', items.defaultKey);
+                            } else {
+                                let defVal = $this.data('dictionary').default_value;
+                                if (defVal) {
+                                    $this.val(defVal).trigger('update');
+                                    $this.attr('data-def', defVal);
+                                }
+                            }
+                        });
+                }
+
+    function addValidation($el) {
+         SmevDataFormValidation.addField($el.attr('name'),
+             {
+                 validators: {
+                     notEmpty: {}
+                 }
+             });
+         SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+         $el.addClass('required');
+     }
+</script>

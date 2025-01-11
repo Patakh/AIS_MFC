@@ -1,0 +1,58 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.ServicesStageRoleModelDto
+
+<form asp-controller="Reference" asp-action="StageRoleAddSave" id="sendingForm" method="post" role="form">
+    @Html.HiddenFor(m => m.SServicesRoutesStageId)
+   @*  @Html.HiddenFor(m => m.ParentId) *@
+    <fieldset>
+        <div class="row">
+            <div class="col-12 mb-4">
+                <label for="SRolesExecutorId" class="form-label">Роль</label>
+                <select asp-for="SRolesExecutorId" asp-items="ViewBag.Roles" class="form-control">
+                    <option disabled selected value="">Не задано</option>
+                </select>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<script>
+    $(function () {
+        $("#SRolesExecutorId").select2({ dropdownParent: $("#mainModal") });
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+        {
+            fields: {
+                SRolesExecutorId: {
+                    validators: {
+                        notEmpty: {
+                            message: '@MessageDescription.FieldIsRequired'
+                        }
+                    }
+                },
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                submitButton: new FormValidation.plugins.SubmitButton(),
+                bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                autoFocus: new FormValidation.plugins.AutoFocus()
+            }
+        }).on('core.form.valid', function () {
+            var $form = $("#sendingForm");
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                dataType: 'json',
+                beforeSend: () => {
+                    $form.spinnerBtn("start");
+                },
+                complete: () => {
+                    $tableStagesRoles.trigger("reload");
+                    $form.spinnerBtn("stop");
+                    $("#mainModal").modal('hide');
+                }
+            });
+            return false;
+        });
+    })
+</script>

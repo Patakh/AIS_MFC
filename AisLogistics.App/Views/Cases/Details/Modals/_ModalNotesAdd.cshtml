@@ -1,0 +1,69 @@
+﻿@model NotesAddDto
+
+@{
+    var date = Model.DateReminder.HasValue ? Model.DateReminder.Value.ToShortDateString() : string.Empty; 
+}
+
+<form asp-controller="Cases" asp-action="ServiceNotesSave" id="sendingForm" method="post" role="form">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="DCaseId" />
+    <fieldset>
+        <div class="row">
+            <div class="col-12 mb-4">
+                <label asp-for="NotesText" class="form-label">Текст</label>
+                <textarea asp-for="NotesText"  class="form-control"></textarea>
+            </div>
+            <div class="col-12 mb-4">
+                <label asp-for ="DateReminder" class="form-label">Дата Напоминания</label>
+                <input type="text" asp-for="DateReminder" class="form-control datepick" placeholder="ДД.ММ.ГГГГ" value="@date"/>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<script>
+    $(function () {
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+        {
+        fields: {
+            NotesText: {
+                validators: {
+                    notEmpty: {
+                        message: '@MessageDescription.FieldIsRequired'
+                    }
+                }
+            }
+        },
+        plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5(),
+            autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+        }).on('core.form.valid', function () {
+            var $form = $("#sendingForm");
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                dataType: 'json',
+                beforeSend: () => {
+                    $form.spinnerBtn("start");
+                },
+                complete: () => {
+                    document.location.reload();
+                }
+            });
+            return false;
+        });
+
+        var dateinputs = $('#sendingForm .datepick');
+            dateinputs.datepicker({
+            language: "ru",
+            autoclose: true,
+            format: 'dd.mm.yyyy',
+            startDate: '-0d',
+        });
+    });
+</script>

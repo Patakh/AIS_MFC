@@ -1,0 +1,106 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Regional.InclusionVoting
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="DateVoting">Дата голосования</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DateVoting" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="PollingStationNumber">№ избирательного участка</label>
+                    <input type="text" asp-for="PollingStationNumber" class="form-control">
+                </div> 
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="RegionCodeByLocation">Cубъект РФ по месту нахождения</label>
+                    <select class="select2-search" asp-for="RegionCodeByLocation"
+                            data-dictionary='{"dictionary":"RosReestrEgrnRegionsRf", "default_value":"04"}'>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="AdressVoting">Адрес избирательного участка</label>
+                    <input type="text" class="form-control" asp-for="AdressVoting">
+                </div>
+                <div class="col-12">
+                    <a href="http://cikrf.ru/digital-services/naydi-svoy-izbiratelnyy-uchastok/" target="_blank" class="fs-12">Номер и адрес можно найти на портале ЦИК</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var additionalForm = $('#additional-data-content');
+    $(function () {
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        $("#PollingStationNumber").inputmask("9999", options);
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+    });
+
+    (function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function () {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post(`/SmevBase/SmevGetDictionary`,
+                    {
+                        type: options.dictionary
+                    },
+                    function (dictionary) {
+                        fillSelect(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function () {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+            });
+    }
+</script>

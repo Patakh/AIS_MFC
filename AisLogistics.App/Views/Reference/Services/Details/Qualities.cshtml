@@ -1,0 +1,129 @@
+﻿@model ViewModelBuilder
+@{
+    string Id = ViewData["Id"]?.ToString() ?? string.Empty;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                @if (Model.IsVisibleDescription)
+                {
+                    <div class="b-s-14">@Model.ViewDescription</div>
+                }
+            </div>
+
+            <div class="col-6 pull-right">
+                @if (User.HasClaim(AccessKeyNames.ReferenceService, AccessKeyValues.Add))
+                {
+                    <div class="col-auto text-md-end">
+                        <a href="javascript:void(0);" data-btn-params='{"actionType":"@ActionType.Add", "serviceId" : "@Id" }' data-btn-type="add" data-for-table="@Model.TableName" class="r-a-14">
+                            <i class="bi bi-plus"></i> Добавить
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive mt-3">
+                    <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceService" class="directory_names-items table table-striped"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+              
+<script>
+    $tableQualities = $('#@(Model.TableName)');
+    $(document).ready(function() {
+        let isCanAddQualities = $tableQualities.is('[data-action-add]'),
+            isCanEditQualities = $tableQualities.is('[data-action-edit]'),
+            isCanRemoveQualities = $tableQualities.is('[data-action-remove]');
+
+        $tableQualities.DataTable({
+            sDom:
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            processing: true,
+            serverSide: true,
+            filter: true,
+            searching: false,
+            ajax: {
+                url: $tableQualities.data('action-table'),
+                type: "POST",
+                datatype: "json",
+                dataSrc: function(json) {
+                    return json.data;
+                }
+            },
+                initComplete: function () {
+
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    title: 'Наименование',
+                    orderable: false
+                },
+                {
+                    targets: -1,
+                    title: 'Действия',
+                    data: "id",
+                    width: "80px",
+                    className: 'text-center editor-edit',
+                    sorting: false,
+                    orderable: false
+                }
+            ],
+            columns: [
+                { },
+                {
+                    data: "typeName"
+                },
+                {
+                    render: function(data, type, row) {
+                        let content = "";
+                        if (isCanEditQualities === true) 
+                            content += EditBtnQualities({ "id": data, "actionType": 1, "serviceId": "@Id" });
+                        if (isCanRemoveQualities === true) 
+                            content += DeleteBtnQualities({ "id": data });
+                        return content;
+                    }
+                }
+            ]
+        });
+
+        $tableQualities.on("reload", () => {
+            $tableQualities.DataTable().ajax.reload(null, false);
+        });
+
+        $tableQualities.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        let EditBtnQualities = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="edit" data-bs-toggle="tooltip" title="Изменить" class="btn btn-sm btn-icon text-body">
+            <i class="bi bi-pencil-square"></i></a>`;
+        }
+
+        let DeleteBtnQualities = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-service-remove-btn-type data-bs-toggle="tooltip" title="Удалить" class="btn btn-sm btn-icon text-danger">
+            <i class="bi bi-trash"></i></a>`;
+        }
+    });
+</script>

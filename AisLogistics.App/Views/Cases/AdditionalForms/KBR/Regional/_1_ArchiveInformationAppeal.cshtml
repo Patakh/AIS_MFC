@@ -1,0 +1,29 @@
+﻿@model _1_ArchiveInformationAppealModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h6> Начальник архивного отдела местной администрации</h6>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="ChiefLastName">Фамилия</label>
+                    <input type="text" asp-for="ChiefLastName" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="ChiefFirstName">Имя</label>
+                    <input type="text" asp-for="ChiefFirstName" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="ChiefSecondName">Отчество</label>
+                    <input type="text" asp-for="ChiefSecondName" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Request"> Прошу предоставить  архивную справку (архивную выписку, архивную копию)</label>
+                    <input type="text" asp-for="Request" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,593 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Regional.Service7Model
+@{
+    IEnumerable<SelectListItem> MethodResult = new List<SelectListItem>
+    {
+        new("электронным сообщением на контактный номер телефона", "1"),
+        new("на адрес электронной почты", "2"),
+        new("в автоматическом режиме через Единый портал государственных и муниципальных услуг (далее – ЕПГУ) в случае обращения заявителя через ЕПГУ", "3"),
+        new("почтовым отправлением через организации федеральной почтовой связи", "4"),
+        new("лично заявителю под подпись", "5")
+    };
+
+    IEnumerable<SelectListItem> PersonCategory = new List<SelectListItem>
+    {
+        new("Многодетная семья", "Многодетная семья"),
+        new("Инвалид 1 группы", "Инвалид 1 группы"),
+        new("Инвалид 2 группы", "Инвалид 2 группы"),
+        new("Инвалид 3 группы", "Инвалид 3 группы"),
+        new("Инвалид детства", "Инвалид детства"),
+        new("Ребёнок-инвалид", "Ребёнок-инвалид"),
+        new("Работник сельской местности", "Работник сельской местности"),
+        new("Реабилитация жертв политических репрессий", "Реабилитация жертв политических репрессий"),
+        new("Ветеран труда РФ", "Ветеран труда РФ"),
+        new("Ветеран труда Республики Алтай", "Ветеран труда Республики Алтай"),
+        new("Ветеран  военной службы", "Ветеран  военной службы"),
+        new("Участник /инвалид ВОВ", "Участник /инвалид ВОВ"),
+        new("Участник ликвидации последствий катастрофы на Чернобыльской АЭС", "Участник ликвидации последствий катастрофы на Чернобыльской АЭС"),
+        new("Участник ликвидации последствий аварии в 1957 году на производственном объединении \"Маяк\"", "Участник ликвидации последствий аварии в 1957 году на производственном объединении \"Маяк\""),
+        new("Гражданин, подвергшегося радиационному воздействию вследствие ядерных испытаний на Семипалатинском полигоне", "Гражданин, подвергшегося радиационному воздействию вследствие ядерных испытаний на Семипалатинском полигоне"),
+        new("Член семьи погибшего (умершего) инвалида войны, участника Великой Отечественной войны и ветерана боевых действий", "Член семьи погибшего (умершего) инвалида войны, участника Великой Отечественной войны и ветерана боевых действий")
+    };
+
+    IEnumerable<SelectListItem> Support = new List<SelectListItem>
+    {
+        new("Справка", "Справка"),
+        new("Удостоверение", "Удостоверение"),
+        new("Трудовая книжка", "Трудовая книжка")
+    };
+    
+    IEnumerable<SelectListItem> MethodInforming = new List<SelectListItem>
+    {
+        new("Дрова", "1"),
+        new("Уголь", "2"),
+        new("Дрова, уголь", "3")
+    };
+
+    IEnumerable<SelectListItem> Methodresurse = new List<SelectListItem>
+    {
+        new("ежемесячно", "1"),
+        new("единовременно", "2")
+    };
+    IEnumerable<SelectListItem> PaymentMethod = new List<SelectListItem>
+    {
+        new("Кредитное учреждение", "Кредитное учреждение"),
+        new("Почтовое отделение", "Почтовое отделение")
+    };
+}
+
+<style>
+    input:required:invalid:not(:placeholder-shown) {
+        border-color: #ff5b5c;
+        box-shadow: 0 0 0.1875rem 0.0625rem rgb(57 218 138 / 18%);
+    }
+
+    input:required:valid:not(:placeholder-shown) {
+        border-color: #39da8a;
+        box-shadow: 0 0 0.1875rem 0.0625rem rgb(57 218 138 / 18%);
+    }
+</style>
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+        <h5 class="my-2">Заявитель</h5>
+            <div class="row mb-3">
+                <div class="col-sm">
+                    <label class="form-label" asp-for="F">Фамилия</label>
+                    <input type="text" asp-for="F" class="form-control">
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="I">Имя</label>
+                    <input type="text" asp-for="I" class="form-control">
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="O">Отчество (при наличии)</label>
+                    <input type="text" asp-for="O" class="form-control">
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="BirthDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ResidenceAddress">Адрес места жительства</label>
+                    <input type="text" asp-for="ResidenceAddress" class="form-control">
+                </div>
+            </div>
+            <h6 class="my-2">Документ удостоверяющий личность</h6>
+        <div data-doc>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="DocType">Тип документа</label>
+                    <select class="select2-nosearch" asp-for="DocType" data-value-value onchange="docTypeChange($(this))"
+                            data-dictionary='{"dictionary":"FnsDocTypes", "default_value":"@Model.DocType"}'>
+                    </select>
+                </div>
+            </div>
+        
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="DocSeries">Серия</label>
+                    <input type="text" class="form-control" asp-for="DocSeries">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="DocNumber">Номер</label>
+                    <input type="text" class="form-control" asp-for="DocNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="DocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DocIssueDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+         
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="DocIssuer">Кем выдан</label>
+                    <input type="text" class="form-control" asp-for="DocIssuer">
+                </div>
+            </div>
+        </div>
+        
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="PersonCategory">Категория гражданина</label>
+                    <select class="select2-nosearch" asp-items="@PersonCategory" asp-for="PersonCategory"></select>
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">Представитель </h5>
+            <div class="row mb-3">
+                <div class="col-sm">
+                    <label class="form-label" asp-for="FRecipient">Фамилия</label>
+                    <input type="text" asp-for="FRecipient" class="form-control">
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="IRecipient">Имя</label>
+                    <input type="text" asp-for="IRecipient" class="form-control">
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="ORecipient">Отчество (при наличии)</label>
+                    <input type="text" asp-for="ORecipient" class="form-control">
+                </div>
+            </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="AdressRecipient">место регистрации</label>
+                <input type="text" class="form-control" asp-for="AdressRecipient">
+            </div>
+        </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Osnova">действующим на основании</label>
+                    <input type="text" class="form-control" asp-for="Osnova">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="OsnovaDate">от </label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="OsnovaDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="OsnovaNumber">№</label>
+                    <input type="text" class="form-control" asp-for="OsnovaNumber">
+                </div>
+            </div>
+            <h6 class="my-2">Документ удостоверяющий личность паспорт</h6>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="DocSeriesRecipient">Серия</label>
+                    <input type="text" class="form-control" asp-for="DocSeriesRecipient">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="DocNumberRecipient">Номер</label>
+                    <input type="text" class="form-control" asp-for="DocNumberRecipient">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="DocIssueDateRecipient">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DocIssueDateRecipient" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="DocIssuerRecipien">Кем выдан</label>
+                    <input type="text" class="form-control" asp-for="DocIssuerRecipien">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="MethodResult">Способ получения результата</label>
+                    <select class="select2-nosearch" id="Result" asp-items="@MethodResult" asp-for="MethodResult"></select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Phone">Телефон</label>
+                    <input type="text" asp-for="Phone" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Emaill">электронная почта</label>
+                    <input type="email" asp-for="Emaill" pattern="[A-z]{1,}[a-z0-9._%+-]+[\D]+[a-z]+\.[a-z]{2,6}$" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <br />
+            <h6 class="my-2">Право на получение мер социальной поддержки</h6>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Support">типа документа</label>
+                    <select class="select2-nosearch" asp-items="@Support" asp-for="Support"></select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="SupportSeries">Серия<sup class="text-danger fs-6">*</sup></label>
+                    <input type="text" class="form-control" required asp-for="SupportSeries">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="SupportNumber">Номер<sup class="text-danger fs-6">*</sup></label>
+                    <input type="text" class="form-control" required asp-for="SupportNumber">
+                </div>
+            </div>
+            <hr />
+            <br />
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="AppSNILS">СНИЛС</label>
+                    <input type="text" class="form-control" asp-for="AppSNILS">
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="DateYear">год расходов</label>
+                    <input type="number" asp-for="DateYear" value="@DateTime.Now.Year" class="form-control">
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="MethodInforming">Компенсация на приобретение</label>
+                    <select class="select2-nosearch" asp-items="@MethodInforming" asp-for="MethodInforming"></select>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Methodresurse">выплатить</label>
+                    <select class="select2-nosearch" asp-items="@Methodresurse" asp-for="Methodresurse"></select>
+                </div>
+            </div>
+            <br />
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="PaymentMethod">Способ выплаты</label>
+                    <select class="select2-nosearch" id="Payment" asp-for="PaymentMethod">
+                        <option value="Почтовое отделение">Почтовое отделение</option>
+                        <optgroup label="Кредитная организация">
+                            <option value="ПАО «Сбербанк России»">ПАО «Сбербанк России»</option>
+                            <option value="АО «Россельхозбанк»">АО «Россельхозбанк»</option>
+                            <option value="ВТБ (ПАО)">ВТБ (ПАО)</option>
+                            <option value="ФО «Альфа-банк»">ФО «Альфа-банк»</option>
+                            <option value="ФО «Тинькофф Банк»">ФО «Тинькофф Банк»</option>
+                            <option value="Совкомбанк">Совкомбанк</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" id="PaymentA" asp-for="PersonalAccount">Лицевой счет<sup id="PaymentAS" class="text-danger fs-6"></sup></label>
+                    <input type="text" asp-for="PersonalAccount" pattern="[0-9]{20,}" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" id="PaymentO" asp-for="Post_Office">почтовое отделение <sup id="PaymentOS" class="text-danger fs-6"></sup></label>
+                    <input type="text" asp-for="Post_Office" class="form-control">
+                </div>
+            </div>
+            <br />
+            <br />
+            <br />
+            <br />
+        </div>
+    </div>
+</div>
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+    var btnNext = $('.btn-next');
+
+    var applicant = {
+        
+        
+        lastName: $("#F"),
+        firstName: $("#I"),
+        secondName: $("#O"),
+        birthDate: $("#BirthDate"),
+        emaill: $("#Emaill"),
+        snils: $("#AppSNILS"),
+        phone: $("#Phone"),
+        emaill: $("#Emaill"),
+        docSeries: $("#DocSeries"),
+        docNumber: $("#DocNumber"),
+        docIssueDate: $("#DocIssueDate"),
+        docIssueDate: $("#DocIssueDate"),
+        docIssuer: $("#DocIssuer"),
+        residenceAddress: $("#ResidenceAddress")
+        
+    };
+    $(function() {
+        additionalForm.find('#Result').on('change', function() {
+
+            switch ($(this).val()) {
+
+                case '1':
+                    $('#Emaill').attr('required', false);
+                    $('#Phone').attr('required', true);
+                    break;
+                case '2':
+                    $('#Phone').attr('required', false);
+                    $('#Emaill').attr('required', true);
+                    break;
+            }
+        });
+        switch (additionalForm.find('#Result').val()) {
+
+            case '1':
+                $('#Emaill').attr('required', false);
+                $('#Phone').attr('required', true);
+                break;
+            case '2': k
+                $('#Phone').attr('required', false);
+                $('#Emaill').attr('required', true);
+                break;
+        };
+
+
+        if (additionalForm.find('#Payment').val() == 'Почтовое отделение') {
+            additionalForm.find('#PaymentOS').append(`*`);
+            additionalForm.find('#PaymentAS').empty();
+            $('#PersonalAccount').attr('required', false);
+            $('#Post_Office').attr('required', true);
+        } else {
+            if (additionalForm.find('#PaymentAS').text() == '') {
+                additionalForm.find('#PaymentAS').append(`*`);
+            };
+            additionalForm.find('#PaymentOS').empty();
+            $('#Post_Office').attr('required', false);
+            $('#PersonalAccount').attr('required', true);
+        };
+        additionalForm.find('#Payment').on('change', function() {
+            switch ($(this).val()) {
+
+                case 'Почтовое отделение':
+                    $('#PersonalAccount').attr('required', false);
+                    $('#Post_Office').attr('required', true);
+                    additionalForm.find('#PaymentOS').append(`*`);
+                    additionalForm.find('#PaymentAS').empty();
+                    break;
+                default:
+                    $('#Post_Office').attr('required', false);
+                    $('#PersonalAccount').attr('required', true);
+                    if (additionalForm.find('#PaymentAS').text() == '') {
+                        additionalForm.find('#PaymentAS').append(`*`);
+                    };
+                    additionalForm.find('#PaymentOS').empty();
+                    break;
+            }
+        });
+
+
+        additionalForm.find('#Payment').on('change', function() {
+            switch ($(this).val()) {
+
+                case 'Почтовое отделение':
+                    additionalForm.find('#PaymentAS').empty();
+                    break;
+                default:
+                    additionalForm.find('#PaymentOS').empty();
+                    break;
+            }
+        });
+
+
+
+        if (btnNext.length > 0) {
+            btnNext.on('click', function appContent() {
+                let option = $("#customer_SDocumentsIdentityId option:selected").text();
+                            option = option=="Паспорт гражданина РФ" ? "Паспорт гражданина Российской Федерации" : option;
+                                                        let optionSelected = $("#DocType option:selected").text();
+                                                        
+                                            if(option!=optionSelected)
+                                             {
+                                            $(`#DocType option[value="${option}"]`).remove();
+                                            $(`#DocType option:selected`).remove();
+                                            $("#DocType").removeAttr('select2-id');
+                                            let allOtion = $("#DocType").html();
+                                            $("#DocType").empty();
+                                            $("#DocType").append(new Option(option,option));
+                                            $("#DocType").append(new Option(optionSelected,optionSelected));
+                                            $("#DocType").append(allOtion);
+                                            }
+                                            
+          const options = { clearIncomplete: true, showMaskOnHover: false };
+                            switch($("#customer_SDocumentsIdentityId").val()){
+                                case '21':
+                                    applicant.docNumber.inputmask("999999", options);
+                                    applicant.docSeries.inputmask("9999", options);
+                                    break;
+                                case '3':
+                                    applicant.docSeries.inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                                    applicant.docNumber.inputmask("999999", options);
+                                    break;
+                                    default:
+                                        applicant.docSeries.inputmask("", options);
+                                        applicant.docNumber.inputmask("", options);
+                                        break;
+                            }
+                applicant.lastName.val($("#customer_LastName").val());
+                applicant.firstName.val($("#customer_FirstName").val());
+                applicant.secondName.val($("#customer_SecondName").val());
+                applicant.birthDate.val($("#customer_DocumentBirthDate").val());
+                applicant.snils.val($("#customer_CustomerSnils").val());
+                applicant.phone.val($("#customer_CustomerPhone1").val());
+                applicant.emaill.val($("#customer_CustomerEmail").val());
+                applicant.docSeries.val($("#customer_DocumentSerial").val());
+                applicant.docNumber.val($("#customer_DocumentNumber").val());
+                applicant.docIssueDate.val($("#customer_DocumentIssueDate").val());
+                applicant.docIssuer.val($("#customer_DocumentIssueBody").val());
+                applicant.residenceAddress.val($("#customer_CustomerAddressResidence").val());
+                
+            });
+        };
+
+       
+
+        additionalForm.find('[data-disabled]').each(function() {
+            visibilityBlock($(this), true, true);
+        });
+
+        additionalForm.find("select.select2-search").each(function() {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function() {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('#Phone').inputmask("+7(999) 999-99-99", { clearIncomplete: true, showMaskOnHover: false });
+       // additionalForm.find('#DocSeries').inputmask("9999", { clearIncomplete: true, showMaskOnHover: false });
+        additionalForm.find('#AppSNILS').inputmask("999-999-999 99", options);
+       // additionalForm.find('#DocNumber').inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+        additionalForm.find('#PersonalAccount').inputmask("9{20}", options);
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+         (function getDictionaries() {
+                    let dicts = new Set();
+                    $('[data-dictionary]').each(function() {
+                        let $this = $(this);
+                        let options = $this.data('dictionary');
+                        if (!dicts.has(options.dictionary)) {
+                            dicts.add(options.dictionary);
+                            $.post(`/SmevBase/SmevGetDictionary`,
+                                {
+                                    type: options.dictionary
+                                },
+                                function(dictionary) {
+                                    if (dictionary.error) return;
+                                    fillSelect(options.dictionary, dictionary);
+                                });
+                        }
+                    });
+                }());
+        
+                function fillSelect(dictName, dictionary) {
+                    $.each($(`[data-dictionary*='"${dictName}"']`),
+                        function() {
+                            let $this = $(this);
+                            let items = dictionary;
+                            $this.empty();
+                            if (!$this.hasClass('required')) {
+                                $this.append(new Option('Не выбрано', ''));
+                            }
+                            if ($this.is('[data-value-value]')) {
+                                items.dictionary.forEach(function(item) {
+                                    $this.append(new Option(item.value, item.value));
+                                });
+                            } else {
+                                items.dictionary.forEach(function(item) {
+                                    $this.append(new Option(item.value, item.key));
+                                });
+                            }
+        
+                            if ($this.data('dictionary').default_value) {
+                                let defVal = $this.data('dictionary').default_value;
+                                $this.val(defVal).trigger('update');
+                                $this.attr('data-def', defVal);
+                            } else {
+                                $this.val('').trigger('update');
+                            }
+                        });
+                }
+        
+        function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function() {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function() {
+                $(this).select2({
+                });
+            });
+        }
+  
+    });
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+     function docTypeChange($el) {
+            let $docBlock = $el.closest('[data-doc]');
+            let docOptions = { clearIncomplete: true, showMaskOnHover: false };
+            let seriesMask = '';
+            let numberMask = '';
+            switch ($el.val()) {
+                case 'Паспорт гражданина Российской Федерации':
+                    $docBlock.find('[name$="Series"]').inputmask("99 99", docOptions);
+                    $docBlock.find('[name$="Number"]').inputmask("9{6}", docOptions);
+                    break;
+                case 'Свидетельство о рождении':
+                    $docBlock.find('[name$="Series"]').inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                    $docBlock.find('[name$="Number"]').inputmask("9{6}", docOptions);
+                    break;
+                    default:
+                         $docBlock.find('[name$="Series"]').inputmask("", docOptions);
+                         $docBlock.find('[name$="Number"]').inputmask("", docOptions);
+                break;
+                                        
+            }
+        }
+</script>

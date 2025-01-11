@@ -1,0 +1,142 @@
+﻿@using AisLogistics.App.Models.DTO.Services
+@model List<CaseServiceDocumentsDto>
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th><input type="checkbox" data-check-main id="checkSelectedRowMain"></th>
+                <th>Наименование</th>
+                <th>Кол-во ориг</th>
+                <th>Кол-во коп</th>
+            </tr>
+        </thead>
+        <tbody class="table-border-bottom-0 r-s-14">
+            @if(@Model.Any())
+            {
+                @foreach(var item in Model)
+                {
+                    <tr data-document-id="@item.Id">
+                        <td class="text-center"><input type="checkbox" data-check @(item.IsCheck ? "checked" : "")></td>
+                        <td style="width:45%;">@item.DocumentName</td>
+                        <td>
+                            <div class="input-group input-group-sm bootstrap-touchspin w-50">
+                                <input type="text" data-count-original class="touchspin form-control form-control-sm" value="@item.CountOriginal" />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="input-group input-group-sm bootstrap-touchspin w-50">
+                                <input type="text" data-count-copy class="touchspin form-control form-control-sm" value=" @item.CountCopy" />
+                            </div>
+                        </td>
+                   </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7">
+                        <div class="alert alert-primary" role="alert">
+                            <h6 class="alert-heading mb-1">Нет данных</h6>
+                            <span>Документы отсутствуют</span>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="w-100 text-end">
+        <a class="btn btn-primary waves-effect  text-white" onclick="PrintIssueDocuments()" role="button">Печать</a>
+        <a class="btn btn-success waves-effect text-white" onclick="DownloadIssueDocuments()" role="button">Скачать</a>
+    </div>
+</div>
+
+<script>
+    (function() {
+        $('.touchspin').TouchSpin({
+            min: 0,
+            max: 100,
+            step: 1,
+            buttondown_class: 'btn btn-primary bootstrap-touchspin-down btn-sm',
+            buttonup_class: 'btn btn-primary bootstrap-touchspin-up btn-sm',
+            buttondown_txt: '-',
+            buttonup_txt: '+'
+        });
+
+         $('#checkSelectedRowMain').change(function() {
+                let value = $('#checkSelectedRowMain').prop("checked");
+                $('[data-check]').each(function (i, el) {
+                    $(el).prop("checked", value)
+                });
+        });
+            
+        $('[data-check]').change(function () {
+            if($('#checkSelectedRowMain').prop("checked"))
+                $('#checkSelectedRowMain').prop("checked", false);
+        }); 
+    }());
+
+    function PrintIssueDocuments() {
+        let mass = [];
+        $('tr[data-document-id]').each(function (i, el) {
+            let item = {};
+            item["id"] = $(el).attr('data-document-id')
+            item["isChecked"] = $(el).find('[data-check]').prop("checked");
+            item["countOriginal"] = $(el).find('[data-count-original]').val();
+            item["countCopy"] = $(el).find('[data-count-copy]').val();
+            mass.push(item);
+        });
+
+        $.ajax({
+            type: "Post",
+            url: "/Cases/PrintIssuanceDocuments",
+            data: { id: '@ViewBag.id', doc: mass },
+            beforeSend: () => {
+                $.pageBlock();
+            },
+            complete: () => {
+                $.unblockUI();
+            },
+            success: function (content) {
+                if (content != null) printPDF(content);
+            },
+            error: function (event) {
+            }
+        });
+    }
+
+    function DownloadIssueDocuments() {
+        let mass = [];
+        $('tr[data-document-id]').each(function (i, el) {
+            let item = {};
+            item["id"] = $(el).attr('data-document-id')
+            item["isChecked"] = $(el).find('[data-check]').prop("checked");
+            item["countOriginal"] = $(el).find('[data-count-original]').val();
+            item["countCopy"] = $(el).find('[data-count-copy]').val();
+            mass.push(item);
+        });
+
+        let url = '@Url.Action("DownloadIssuanceDocuments", "Cases", new {id = ViewBag.id })';
+        let form = document.createElement("form");
+        form.target = "_blank";
+        form.method = "POST";
+        form.action = url;
+        form.style.display = "none";
+
+        mass.forEach(function (value, i) {
+            console.log('value', value)
+            console.log('i', i)
+            for (let key in value) {
+                let input = document.createElement("input");
+                input.type = "hidden";
+                input.name = `doc[${i}].${key}`;
+                input.value = value[key];
+                form.appendChild(input);
+            }
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+    }
+</script>

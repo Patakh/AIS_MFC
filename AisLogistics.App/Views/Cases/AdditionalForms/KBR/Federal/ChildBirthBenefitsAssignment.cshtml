@@ -1,0 +1,356 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.KBR.Federal.ChildBirthBenefitsAssignmentModel
+@{
+    if (Model.Children.Length == 0)
+        Model.Children = new[] { new AisLogistics.App.Models.AdditionalForms.KBR.Federal.ChildBirthBenefitsAssignmentModel.Child() };
+
+    if (Model.AppliedDocuments.Length == 0)
+        Model.AppliedDocuments = new[] { new AisLogistics.App.Models.AdditionalForms.KBR.Federal.ChildBirthBenefitsAssignmentModel.AppliedDocument() };
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">
+                Прошу  назначить  мне  единовременное  пособие  при  рождении ребенка в
+                соответствии  сЗаконом КБР от 17 августа 1996 г. N 21-РЗ "Об охране семьи,
+                материнства, отцовства и детства" на ребенка:
+            </h5>
+            <div id="childrenList" data-clone-list>
+                @for (var i = 0; i < Model.Children.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Ребенок @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-6">
+                                <label asp-for="Children[i].FullName" class="form-label">Ф.И.О.</label>
+                                <input asp-for="Children[i].FullName" class="form-control" type="text">
+                            </div>
+                            <div class="col-4">
+                                <label asp-for="Children[i].BirthDate" class="form-label">Дата рождения</label>
+                                <input asp-for="Children[i].BirthDate" class="form-control pickdate" type="text">
+                            </div>
+                            <div class="col-2 mt-2">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addChild"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+
+            <h5 class="my-2">
+                Назначенное единовременное пособие прошу перечислить в
+            </h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check" checkBlock>
+                        <input asp-for="PaymentMethodId" id="PaymentMethodId1" class="form-check-input" type="radio" value="1">
+                        <label for="PaymentMethodId1" class="form-check-label">Кредитная организация</label>
+
+                        <div class="row mb-3 justify-content-end" checkBlockBody>
+                            <div class="row mb-3">
+                                <div class="col-11 mb-2">
+                                    <label asp-for="CreditOrganizationName" class="form-label">Наименование кредитной организации</label>
+                                    <input asp-for="CreditOrganizationName" class="form-control" type="text">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-11 mb-2">
+                                    <label asp-for="CreditOrganizationAccount" class="form-label">№ лицевого счета</label>
+                                    <input asp-for="CreditOrganizationAccount" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="PaymentMethodId" id="PaymentMethodId2" class="form-check-input" type="radio" value="2">
+                        <label for="PaymentMethodId2" class="form-check-label">
+                            Отделение организации федеральной почтовой связи
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="my-2">
+                Банковские реквизиты для выплаты
+            </h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="AccountNumber" class="form-label">Лицевой счет</label>
+                    <input asp-for="AccountNumber" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="PaymentAccountNumber" class="form-label">Расчетный счет</label>
+                    <input asp-for="PaymentAccountNumber" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="BankName" class="form-label">Наименование банка</label>
+                    <input asp-for="BankName" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="BIK" class="form-label">БИК</label>
+                    <input asp-for="BIK" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="INN" class="form-label">ИНН</label>
+                    <input asp-for="INN" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="KPP" class="form-label">КПП</label>
+                    <input asp-for="KPP" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="CardNumber" class="form-label">Номер банковской карты</label>
+                    <input asp-for="CardNumber" class="form-control" type="text">
+                </div>
+            </div>
+
+            <h5 class="my-2">
+                Сведения о законном представителе (доверенном лице)
+            </h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="AgentFullName" class="form-label">Ф.И.О.</label>
+                    <input asp-for="AgentFullName" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="AgentDocumentName" class="form-label">
+                        Наименование документа, удостоверяющего личность
+                    </label>
+                    <input asp-for="AgentDocumentName" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label asp-for="AgentDocumentSeries" class="form-label">Серия</label>
+                    <input asp-for="AgentDocumentSeries" class="form-control" type="text">
+                </div>
+                <div class="col-4">
+                    <label asp-for="AgentDocumentNumber" class="form-label">Номер</label>
+                    <input asp-for="AgentDocumentNumber" class="form-control" type="text">
+                </div>
+                <div class="col-4">
+                    <label asp-for="AgentDocumentGivenDate" class="form-label">Дата выдачи</label>
+                    <input asp-for="AgentDocumentGivenDate" class="form-control pickdate" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="AgentDocumentGivenBy" class="form-label">Кем выдан</label>
+                    <input asp-for="AgentDocumentGivenBy" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="AgentPhone" class="form-label">Телефон</label>
+                    <input asp-for="AgentPhone" class="form-control" type="text">
+                </div>
+            </div>
+
+            <h5 class="my-2">
+                Список прилагаемых документов
+            </h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedDocuments.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Документ @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-8">
+                                <label asp-for="AppliedDocuments[i].Name" class="form-label">Наименование</label>
+                                <input asp-for="AppliedDocuments[i].Name" class="form-control" type="text">
+                            </div>
+                            <div class="col-2">
+                                <label asp-for="AppliedDocuments[i].PageAmount" class="form-label">Кол-во стр</label>
+                                <input asp-for="AppliedDocuments[i].PageAmount" class="form-control" type="number">
+                            </div>
+                            <div class="col-1 mt-2">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="child" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Ребенок 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-6">
+                <label asp-for="Children[0].FullName" class="form-label">Ф.И.О.</label>
+                <input asp-for="Children[0].FullName" class="form-control" type="text">
+            </div>
+            <div class="col-4">
+                <label asp-for="Children[0].BirthDate" class="form-label">Дата рождения</label>
+                <input asp-for="Children[0].BirthDate" class="form-control pickdate" type="text">
+            </div>
+            <div class="col-1 mt-2">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Документ 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-8">
+                <label asp-for="AppliedDocuments[0].Name" class="form-label">Наименование</label>
+                <input asp-for="AppliedDocuments[0].Name" class="form-control" type="text">
+            </div>
+            <div class="col-2">
+                <label asp-for="AppliedDocuments[0].PageAmount" class="form-label">Кол-во стр</label>
+                <input asp-for="AppliedDocuments[0].PageAmount" class="form-control" type="number">
+            </div>
+            <div class="col-2 mt-2">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(funtion(){
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", { clearIncomplete: true, showMaskOnHover: false });
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        togleFields();
+    })
+
+    function togleFields() {
+        additionalForm.find('[checkBlock] input[type="radio"], [checkBlock] input[type="checkbox"]').each(function () {
+            let $block = $(this).closest('[checkBlock]');
+
+            if ($(this).is(':checked')) {
+                visibilityBlock($block.find('[checkBlockBody]'), false, false);
+            } else {
+                visibilityBlock($block.find('[checkBlockBody]'), true, true);
+            }
+        })
+    }
+
+    function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+        let $cloneList = additionalForm.find(`#${cloneListId}`);
+        let $original = originalBlock.find(`#${originalId}`);
+        let $cloneBlock = $original.clone(true);
+        let indexId = $cloneList.find('[data-clone]').length;
+        renameBlock($cloneBlock, indexId);
+        blockInit($cloneBlock);
+        $cloneList.append($cloneBlock);
+    }
+
+    function blockInit($block) {
+        visibilityBlock($block, false, false);
+
+        $block.find("input").each(function () {
+            $(this).val("");
+        });
+        $block.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+        });
+    }
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

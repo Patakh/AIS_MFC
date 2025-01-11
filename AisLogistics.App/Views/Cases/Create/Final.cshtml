@@ -1,0 +1,212 @@
+﻿@using AisLogistics.App.ViewModels.Cases;
+@model CreateCaseResponseModel
+
+<style>
+    .blacks-height_wrapper {
+        max-height: 20vh;
+    }
+</style>
+
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="row">
+            <div class="col-12 mb-2">
+                <div class="d-flex justify-content-between">
+                    <div class="b-s-16">Обращение <a asp-action="Details" asp-route-id="@Model.CaseId">@Model.CaseId</a> создано.</div>
+                    <div><a class="r-a-12" asp-action="AdditionalFormChangeModal" asp-route-id="@Model.DserviceId" data-bs-toggle="tooltip" title="Доп информация" data-btn-type="modal">Доп. информация</a></div>
+                </div>
+            </div>
+            <div class="col-12 r-l-12">Услуга</div>
+            <div class="col-12 r-s-14 mb-2">@Model.Service</div>
+
+            <div class="col-12 r-l-12">Процедура</div>
+            <div class="col-12 r-s-14 mb-2">@Model.Procedure</div>
+
+            <div class="col-12 r-l-12">Поставщик</div>
+            <div class="col-12 r-s-14 mb-2">@Model.Office</div>
+
+            <div class="col-12 r-l-12">Отдел</div>
+            <div class="col-12 r-s-14 mb-2">
+                <a id="departament" class="text-decoration-underline" asp-action="ServiceDepartamentAddModal" asp-route-id="@Model.DserviceId" asp-route-officeid="@Model.SOfficeId"
+                   data-bs-toggle="tooltip" title="Добавить" data-btn-type="modal">
+                    не выбран
+                </a>
+            </div>
+
+            <div class="col-12 r-l-12">Стоимость</div>
+            <div class="col-12 r-s-14 mb-2">@(Model.Tariff == 0 ? "Бесплатно" : $"{Model.Tariff.ToString("N")} ₽")</div>
+
+            <div class="col-12 r-l-12">Заявитель</div>
+            <div class="col-12 r-s-14 mb-2">
+                <a id="customerName" asp-controller="Cases" asp-action="ServiceCustomerAddModal" asp-route-id="@Model.CustomerId" asp-route-subjectCustomerType="@Model.CustomerType" data-btn-type="modal" data-bs-toggle="tooltip">
+                    @Model.Customer
+                </a>
+            </div>
+
+            <div class="col-12 r-l-12">Представитель</div>
+            <div class="col-12 r-s-14 mb-2">
+                @if (!string.IsNullOrEmpty(Model.Recipient)) {
+                    <a id="recipientName" asp-controller="Cases" asp-action="ServiceCustomerAddModal" asp-route-id="@Model.RecipientId" asp-route-subjectCustomerType="@SubjectCustomerType.Physical" data-btn-type="modal" data-bs-toggle="tooltip">
+                        @Model.Recipient
+                    </a>
+                }
+                else
+                {
+                    <div>-</div>
+                }
+            </div>
+
+            <div class="col-12 r-l-12">Сотрудник</div>
+            <div class="col-12 r-s-14 mb-2">@Model.Employee</div>
+
+            <div class="col-12 r-l-12">Регламентная дата</div>
+            <div class="col-12 r-s-14"><span class="b-s-16">@(Model.DataReg.HasValue ? Model.DataReg.Value.ToShortDateString() : "-")</span></div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="row">
+            <div class="col-12 mb-2">
+                <div class="b-s-14">Печать</div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item border-0">
+                        <div>
+                            <a asp-action="PrintConsultationService" asp-route-id="@Model.CaseId" class="m-s-14 me-2" target="_blank" data-bs-toggle="tooltip" title="Открыть">Консультация</a>
+                            <a asp-action="DownloadConsultationService" asp-route-id="@Model.CaseId" class="" target="_blank" data-bs-toggle="tooltip" title="Скачать"><i class="bi bi-download me-1"></i></a>
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0">
+                        <div>
+                            <a asp-action="PrintProcessingPersonalData" asp-route-id="@Model.CaseId" class="m-s-14 me-2" target="_blank" data-bs-toggle="tooltip" title="Открыть">Согласие на ОПД </a>
+                            <a asp-action="DownloadProcessingPersonalData" asp-route-id="@Model.CaseId" class="" target="_blank" data-bs-toggle="tooltip" title="Скачать"><i class="bi bi-download me-1"></i></a>
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0">
+                        <div>
+                            <a asp-action="ModalPrintAcceptDocuments" asp-route-id="@Model.CaseId" class="m-s-14" data-btn-type="modal" data-bs-toggle="tooltip">Расписка о принятии документов</a>
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0">
+                        <div>
+                            <a asp-action="ModalPrintIssuanceDocuments" asp-route-id="@Model.CaseId" class="m-s-14" data-btn-type="modal" data-bs-toggle="tooltip">Расписка о выдаче документов</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-12">
+                <ul class="nav nav-custom" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="blancs-tab" href="#" role="tab" data-bs-toggle="tab" data-bs-target="#blanks" aria-controls="blanks" aria-selected="true">
+                            Бланки
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="files-tab" href="#" role="tab" data-bs-toggle="tab" data-bs-target="#files" aria-controls="files" aria-selected="false">
+                            Файлы
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade blacks-height_wrapper show active" id="blanks" role="tabpanel" aria-labelledby="blanks-tab"></div>
+                    <div class="tab-pane fade blacks-height_wrapper" id="files" role="tabpanel" aria-labelledby="files-tab"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row g-3 mt-3">
+    <div class="col-auto">
+        <a asp-action="Details" asp-route-id="@Model.CaseId" class="btn btn-primary text-white" id="OpenDetails">Открыть обращение</a>
+    </div>
+</div> 
+<div class="row mt-3">
+    <div class="col-12">
+        <div class="b-s-14">Следующие этапы</div>
+    </div>
+</div>
+<div class="row mt-3">
+    @if (Model.CreateCaseStagesNext.Any())
+    {
+        @foreach (var item in Model.CreateCaseStagesNext)
+        {
+            <div class="col-auto">
+                <a href="javascript:void(0);" data-stage-next="@item.Id" class="r-s-16 btn btn-secondary text-white">
+                    @item.Name
+                </a>
+            </div>
+        }
+    }
+</div>
+
+
+<script>
+    $(function () {
+        ServiceBlancs_Files('@Model.DserviceId');
+
+        $('[data-stage-next]').on('click', function () {
+            let stageId = $(this).data('stageNext');
+            let serviceId = ['@Model.DserviceId'];
+            let employeeId = '@Model.EmployeeId';
+            let officeId = '@Model.SOfficeIdAdd';
+
+            let request = {
+                stageId: stageId,
+                employeeId: employeeId,
+                officeId: officeId,
+                serviceId: serviceId,
+            };
+
+            $.ajax({
+                url: '/Cases/ServiceStageSaveResult',
+                type: 'Post',
+                data: { request: request },
+                beforeSend: () => {
+                    $.pageBlock();
+                },
+                complete: () => {
+                    $.unblockUI();
+                },
+                success: (content) => {
+                    window.open(`/Cases/Index`, "_self");
+                }
+            });
+        });
+
+        new PerfectScrollbar("#blanks");
+
+        new PerfectScrollbar("#files");
+
+
+    });
+
+
+
+    function ServiceBlancs_Files(id) {
+        $.ajax({
+            url: '/Cases/BlanksListModal',
+            type: 'GET',
+            data: { id: id },
+            beforeSend: () => {
+                $("#blanks").empty();
+                $("#blanks").append('<div class="h-75 w-100 d-flex align-items-center justify-content-center"><div class="spinner-grow text-primary" role="status"></div></div>');
+            },
+            success: (content) => {
+                $("#blanks").empty();
+                $("#blanks").append(content);
+            } 
+        });
+
+        $.ajax({
+            url: '/Cases/FilesListModal',
+            type: 'GET',
+            data: { id: id },
+            beforeSend: () => {
+                $("#files").empty();
+                $("#files").append('<div class="h-75 w-100 d-flex align-items-center justify-content-center"><div class="spinner-grow text-primary" role="status"></div></div>');
+            },
+            success: (content) => {
+                $("#files").empty();
+                $("#files").append(content);
+            }
+        });
+    }
+</script>

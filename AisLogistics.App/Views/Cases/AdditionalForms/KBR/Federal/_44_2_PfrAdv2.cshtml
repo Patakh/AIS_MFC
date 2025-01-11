@@ -1,0 +1,243 @@
+﻿@model _44_2_PfrAdv2Model
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">Новые анкетные данные (указать только изменившиеся данные)</h5>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="F_Changed">Фамилия</label>
+                    <input type="text" asp-for="F_Changed" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="I_Changed">Имя</label>
+                    <input type="text" asp-for="I_Changed" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="O_Changed">Отчество</label>
+                    <input type="text" asp-for="O_Changed" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthDate_Changed">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="BirthDate_Changed" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="d-block form-label">Пол</label>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" name="Gender_Changed" id="gender1" value="М" checked="@(Model.Gender_Changed == "М" || string.IsNullOrEmpty(Model.Gender_Changed))">
+                        <label class="form-check-label" for="gender1"><i class="bi bi-gender-male fs-6"></i> Мужской</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="Gender_Changed" id="gender2" value="Ж" checked="@(Model.Gender_Changed == "Ж")">
+                        <label class="form-check-label" for="gender2"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                    </div>
+                </div>
+                <div class="col-9">
+                    <label class="form-label" asp-for="Phone_Changed">Телефоны (домашний и/или рабочий)</label>
+                    <input type="text" class="form-control" asp-for="Phone_Changed">
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Место рождения</h6>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthAddressCity_Changed">город (село, дер., …)</label>
+                    <input type="text" asp-for="BirthAddressCity_Changed" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthAddressDistrict_Changed">район</label>
+                    <input type="text" asp-for="BirthAddressDistrict_Changed" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthAddressArea_Changed">область (край, респ., …)</label>
+                    <input type="text" asp-for="BirthAddressArea_Changed" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthAddressCountry_Changed">страна</label>
+                    <input type="text" asp-for="BirthAddressCountry_Changed" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="Citizenship_Changed">Гражданство</label>
+                    <select class="select2-search" asp-for="Citizenship_Changed" data-value-value
+                            data-dictionary='{"dictionary":"OksmCodes", "default_value":"@(string.IsNullOrEmpty(Model.Citizenship_Changed) ?  "Россия" : Model.Citizenship_Changed)"}'>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="RegistrationAddress_Changed">Адрес регистрации</label>
+                    <input type="text" asp-for="RegistrationAddress_Changed" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="RegistrationAddressIndex_Changed">индекс</label>
+                    <input type="text" asp-for="RegistrationAddressIndex_Changed" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="ResidenceAddress_Changed">Адрес места жительства</label>
+                    <input type="text" asp-for="ResidenceAddress_Changed" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ResidenceAddressIndex_Changed">индекс</label>
+                    <input type="text" asp-for="ResidenceAddressIndex_Changed" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-5">
+                    <label class="form-label" asp-for="DocType_Changed">Документ, удостоверяющий личность</label>
+                    <select class="select2-nosearch" asp-for="DocType_Changed" asp-items="@SelectListViewModel.DocumentTypeListV2">
+                    </select>
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="DocSeries_Changed">Серия</label>
+                    <input type="text" class="form-control" asp-for="DocSeries_Changed">
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="DocNumber_Changed">Номер</label>
+                    <input type="text" class="form-control" asp-for="DocNumber_Changed">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="DocIssueDate_Changed">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DocIssueDate_Changed" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="DocIssuer_Changed">выдавший орган</label>
+                    <input type="text" class="form-control" asp-for="DocIssuer_Changed">
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">Актовая запись о рождении</h5>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="BirthAct!.ZagsName">Наименование ЗАГС</label>
+                    <select class="form-select select2-search" asp-for="BirthAct!.ZagsName" data-value-value
+                            data-zags-dictionary='{"dictionary":"ZagsSdrags", "default_value":"@(Model.BirthAct  == null || string.IsNullOrEmpty(Model.BirthAct.ZagsName) ?  "" : Model.BirthAct.ZagsName)"}'>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" asp-for="BirthAct!.BirthActNumber">Номер</label>
+                    <input type="text" class="form-control" asp-for="BirthAct!.BirthActNumber">
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" asp-for="BirthAct!.BirthActDate">Дата</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="BirthAct!.BirthActDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-12">
+                    <label class="form-label" asp-for="INN_Changed">Идентификационный номер налогоплательщика</label>
+                    <input type="text" class="form-control" asp-for="INN_Changed">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var regionCode = @Json.Serialize(Options.Value.Region);
+      
+    $(function () { 
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false }; 
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        getDictionaries();
+    });
+
+    (function getDictionariesZags() {
+        let dicts = new Set();
+        $('[data-zags-dictionary]').each(function () {
+            let $this = $(this);
+            let options = $this.data('zags-dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post('/SmevPfr/GetZags', null,
+                    function (dictionary) {
+                        if (dictionary.error) return;
+                        dictionary.sort((prev, next) => {
+                            if (next.code.startsWith(`R${regionCode}`)) {
+                                return 1;
+                            } else return -1;
+                        });
+
+                        fillSelectZags(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelectZags(dictName, dictionary) {
+        $.each($(`[data-zags-dictionary*='"${dictName}"']`),
+            function () {
+                let $this = $(this);
+                let items = dictionary;
+
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Не выбрано', ''));
+                }
+                if ($this.is('[data-value-value]')) {
+                    items.forEach(function (item) {
+                        $this.append(new Option(item.name, item.name));
+                    });
+                } else {
+                    items.forEach(function (item) {
+                        $this.append(new Option(item.name, item.id));
+                    });
+                }
+
+                if ($this.data('zags-dictionary').default_value) {
+                    let defVal = $this.data('zags-dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                } else {
+                    $this.val('').trigger('update');
+                }
+            });
+    }
+
+
+</script>

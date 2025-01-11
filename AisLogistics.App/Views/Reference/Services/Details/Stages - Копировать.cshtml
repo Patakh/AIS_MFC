@@ -1,0 +1,295 @@
+﻿@model ViewModelBuilder
+@{
+    string Id = ViewData["Id"]?.ToString() ?? string.Empty;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                @if (Model.IsVisibleDescription)
+                {
+                    <div class="b-s-14">@Model.ViewDescription</div>
+                }
+            </div>
+
+            <div class="col-6 pull-right">
+                @if (User.HasClaim(AccessKeyNames.ReferenceService, AccessKeyValues.Add))
+                {
+                    <div class="col-auto text-md-end">
+                        <a href="javascript:void(0);" data-btn-params='{"actionType":"@ActionType.Add", "serviceId" : "@Id" }' data-btn-type="add" data-for-table="@Model.TableName" class="r-a-14">
+                            <i class="bi bi-plus"></i> Добавить
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive mt-3">
+                    <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceService" class="directory_names-items table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $tableStages = $('#@(Model.TableName)');
+
+    $(document).ready(function () {
+        let isCanAddStages = $tableStages.is('[data-action-add]'),
+            isCanEditStages = $tableStages.is('[data-action-edit]'),
+            isCanRemoveStages = $tableStages.is('[data-action-remove]');
+
+        let tableBuilderAccord = {
+            //retrieve: true,
+            sDom: "<'row me-5 pe-1'<'col-sm-12 col-md-8 'f><'col-sm-12 col-md-3 w-25'l>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            dom: "l",
+            processing: true,
+            serverSide: true,
+            filter: true,
+            searching: false,
+            paging: false,
+            lengthChange: false,
+            bInfo: false,
+            searchDelay: 1500,
+            ajax: {
+                url: $tableStages.data('action-table'),
+                type: "POST",
+                datatype: "json",
+                dataSrc: function (json) {
+                    return json.data;
+                }
+            },
+            initComplete: function () {
+                $('[name="mainDataTable_length"]')
+                    .select2({ minimumResultsForSearch: Infinity });
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    orderable: false,
+                    data: null,
+                    defaultContent: '',
+                }
+            ],
+            columns: [
+                {},
+                {
+                    render: function (data, type, row) {
+                        var isTopLevel = (row.parentId === '@(default(Guid))');
+                        var content =
+                            `<div class="card accordion-item">
+            <h2 class="accordion-header d-flex align-items-center">
+            <button id="accbtn${row.id}" type="button" class="accordion-button collapsed ${row.hasChildren === true ? `btn-acc` : ``}" data-bs-toggle="collapse" data-bs-target="#accordion${row.id}" aria-expanded="false">
+                <i class="bx ${isTopLevel ? 'bx-briefcase-alt-2' : 'bx-subdirectory-right'} me-2"></i>
+                ${row.stageName}
+            </button>
+            ${AddSubStageBtn({ "id": row.parentId, "serviceId": row.sServicesId, "parentId": row.id })}
+            ${DeleteBtn({ "id": row.id, "parentTableId": isTopLevel ? "@Model.TableName" : `@Model.TableName${row.parentId}`, "parentId": row.parentId })}
+            </h2>
+
+            <div id="accordion${row.id}" class="accordion-collapse collapse">
+            <div class="accordion-body">
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Комментарий</label>
+                        <input type="text" class="form-control" value="${row.commentt === null ? '' : row.commentt}" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Роли</label>
+                        ${formatStageRoles(row)}
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>`;
+                        return content;
+                    }
+                }
+            ]
+        };
+
+
+        var mainTbl = $tableStages.DataTable(tableBuilderAccord);
+        $tableStages.on("reload", () => {
+            $tableStages.DataTable().ajax.reload(null, false);
+        });
+
+        tableBuilderAccord.dom = 't';
+
+        $('#@(Model.TableName) > tbody').on('click', '.btn-acc', function () {
+            var tr = $(this).closest('tr');
+            var $tbl = $($(this).closest('table')).DataTable();
+            var row = $tbl.row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown dt-hasChild');
+            }
+            else {
+                // Open this row
+
+                var rowData = row.data();
+                row.child(addSubStages(rowData)).show();
+
+                var subTableId = `@(Model.TableName)${rowData.id}`;
+                var $subTable = $('#' + subTableId);
+                tableBuilderAccord.ajax = {
+                    url: $subTable.data('action-table'),
+                    type: "POST",
+                    datatype: "json",
+                    dataSrc: function (json) {
+                        return json.data;
+                    }
+                };
+
+                tableBuilderAccord.drawCallback = function (settings) {
+                    $('#' + subTableId + ' thead').remove();
+                }
+
+                //alert(subTableId)
+                if ($.fn.dataTable.isDataTable($subTable)) {
+                    //var subDataTable = $subTable.DataTable();
+                    //alert('isDataTable')
+                }
+                else {
+                    $subTable.DataTable(tableBuilderAccord);
+                    //alert('not isDataTable')
+                }
+
+                $subTable.on("reload", (e) => {
+                    e.stopPropagation();
+                    //TODO on remove click accbtn
+                    //e.preventDefault();
+                    $subTable.DataTable().ajax.reload(null, false);
+                    //alert('reloaded')
+                    //console.log($('#subTableId'));
+                    //subDataTable.ajax.reload(null, false);
+                });
+
+                tr.addClass('shown dt-hasChild');
+            };
+        });
+
+        $(document).on("click", "a[data-btn-type='roleremove']", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            var params = $(this).data("btn-params");
+            var removeUrl = $(this).data("action-remove");
+            Swal.fire({
+                title: 'Вы уверены?',
+                text: 'Удалить роль исполнителя',
+                showCancelButton: true,
+                confirmButtonText: 'Удалить',
+                cancelButtonText: 'Отмена',
+                showLoaderOnConfirm: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary ms-2'
+                },
+                buttonsStyling: false,
+                returnInputValueOnDeny: true,
+                preConfirm: () => {
+                    $.ajax({
+                        type: 'POST',
+                        url: removeUrl,
+                        data: params,
+                        async: false,
+                        beforeSend: () => {
+                            Swal.showLoading();
+                        },
+                        complete: () => {
+                            Swal.hideLoading();
+                        },
+                        success: (data) => {
+                            //$parent.trigger("reload");
+                        },
+                        error: (data, textStatus) => {
+                            $.notifi('error', 'Ошибка', data.responseText);
+                        }
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then(() => {
+                var parentTbl = `@Model.TableName${params.parentId === '@(default(Guid))' ? '' : params.parentId}`;
+                $(`#${parentTbl}`).DataTable().ajax.reload(function () { $('#accbtn' + params.accordionId).click(); }, false);
+            });
+        });
+
+        $tableStages.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        let addSubStages = function (data) {
+            var tableAction = `@(Model.TableMethodAction)?parentId=${data.id}`,
+                tableRemove = `@Model.RemoveMethodAction`,
+                tableId = `@(Model.TableName)${data.id}`
+            return `<table id="${tableId}" data-action-table="${tableAction}" data-action-remove="${tableRemove}" class="table table-sm float-left headerless"></table>`;
+        }
+
+        let AddSubStageBtn = (data) => {
+            var content = "";
+            if (isCanAddStages === true) {
+                var params = JSON.stringify(data);
+
+                content += `<a href="javascript:void(0);" class="btn btn-sm btn-icon float-end" data-btn-params='${params}' data-btn-type="add" data-for-table="@Model.TableName" data-bs-toggle="tooltip" title="Добавить этап">
+                        <i class="bi bi-plus me-2"></i></a>`
+            }
+            return content;
+        }
+
+        let DeleteBtn = (data) => {
+            var content = "";
+            if (isCanRemoveStages === true) {
+                var params = JSON.stringify(data);
+                content += `<a href="javascript:void(0);" class="btn btn-sm btn-icon text-danger float-end" data-btn-params='${params}' data-btn-type="remove" data-parent="${data.parentTableId}" data-bs-toggle="tooltip" title="Удалить">
+                        <i class="bi bi-trash"></i></a>`;
+
+                //content += `<a href="javascript:void(0);" class="btn btn-sm btn-icon text-success float-end" data-btn-params='${params}' data-btn-type="roleremove" data-action-remove="@Model.RemoveMethodAction" data-bs-toggle="tooltip" title="Удалить">
+                //    <i class="bi bi-trash"></i></a>`;
+            }
+            return content;
+        }
+
+        let formatStageRoles = function (data) {
+            var content = '<div><a href="@Url.Action("ServiceStageAddRole", "Reference")?id=' + data.id + '&parentId=' + data.parentId + '" class="btn btn-primary text-white" data-btn-type="modal" data-bs-toggle="tooltip" title="Добавить роль"><i class="bi bi-plus"></i></a>';
+            var roles = data.routesStageRoles;
+            if (roles.length > 0) {
+                for (var i = 0; i < roles.length; i++) {
+                    content += `<span class="badge bg-label-primary ms-2">${roles[i].roleName}<a href="javascript:void(0);" class="btn btn-sm btn-icon" data-btn-params='{ "id": "${roles[i].id}", "accordionId": "${data.id}", "parentId": "${data.parentId}" }' data-btn-type="roleremove" data-action-remove="@Url.Action("ServiceStageRoleRemove", "Reference")?id=${data.id}" data-bs-toggle="tooltip" title="Удалить роль"><i class="bi bi-x text-danger"></i></a></span>`;
+                }
+            }
+            else {
+                content += '<span class="badge bg-label-danger m-1">Нет ролей исполнителя</span>';
+            }
+
+            content += '</div>';
+
+            return content;
+        }
+    });
+</script>

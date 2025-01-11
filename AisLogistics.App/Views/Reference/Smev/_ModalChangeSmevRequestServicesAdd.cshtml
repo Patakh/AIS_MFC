@@ -1,0 +1,71 @@
+﻿@model AisLogistics.App.Models.DTO.References.AddSmevReferenceServiceDto
+
+<form asp-controller="Reference" asp-action="SmevRequestServiceSave" id="sendingForm" method="post" role="form">
+    <fieldset>
+        <input type="hidden" asp-for="SmevId" />
+        <div class="row">
+            @if ((bool)ViewBag.isActive)
+            {
+                <input type="hidden" name="serviceId" value="@ViewBag.Id" />
+                <div class="col-12 mb-4">
+                    <label asp-for="ServiceId" class="form-label">Услуги</label>
+                    <select asp-for="ServiceId" asp-items="@ViewBag.Services" class="select2 form-select form-select-lg" multiple></select>
+                </div>
+            }
+            else
+            {
+                <div class="col-12">
+                    <div class="alert alert-primary" role="alert">
+                        <h6 class="alert-heading mb-1">Нет услуг</h6>
+                        <span>Добавления услуг невозможно</span>
+                    </div>
+                </div>
+            }
+        </div>
+    </fieldset>
+</form>
+
+<script>
+    $(function () {
+        $(".select2").select2({
+            dropdownParent: $("#modalContainerOver"),
+            placeholder: "Не Выбрано",
+            language: "ru"
+        });
+   
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    ServiceId: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }).on('core.form.valid', function () {
+                var $form = $("#sendingForm");
+                $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        document.location.reload();
+                    }
+                });
+                return false;
+            });
+    })
+</script>

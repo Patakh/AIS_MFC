@@ -1,0 +1,225 @@
+﻿@using AisLogistics.App.Models.DTO.Systems
+@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+}
+
+<style>
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .active_operation {
+        border-left: 3px solid #5a8dee !important;
+    }
+
+    .opertion_Wrapper {
+        height: 80vh;
+    }
+
+    .test-table_Wrapper {
+        height: 100%;
+    }
+
+    .TestEmployees_Wrapper {
+        height: 43rem;
+    }
+
+    .Test-menu-column {
+    }
+
+    .table-operation {
+        margin: 0 !important;
+    }
+
+        .table-operation td {
+            padding: 0 !important;
+        }
+
+    table.dataTable {
+        margin-top: 0 !important;
+    }
+
+    table.dataTable thead tr {
+        display: none !important
+    }
+
+</style>
+
+<section>
+    <div class="row">
+        <div class="col-3">
+            <div class="opertion_Wrapper" id="opertion_Wrapper">
+                <div class="table-responsive">
+                    <table id="@Model.TableName" data-action-table="@Model.TableMethodAction" class="table table-operation table-no-border mt-0"></table>
+                </div>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="card active-border" id="empty-table">
+                <div class="card-body">
+                    <div class="alert-custom" role="alert">
+                        <div class="b-s-16">Внимание</div>
+                        <div class="r-s-14">Выберите сотрудника</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card d-none">
+                <div class="card-body">
+                    <div class="card-title b-s-18" id="card_title"></div>
+                    <div class="table-responsive mt-3">
+                        <table id="operation_log" class="table table-sm table-striped"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        const $table = $('#@(Model.TableName)');
+        const $tableLogs = $('#operation_log');
+
+        new PerfectScrollbar("#opertion_Wrapper");
+
+        const showTable = () => {
+            $("#empty-table").remove();
+            $tableLogs.closest(".card.d-none").removeClass("d-none");
+        };
+
+
+        const operationLogsTableVisibility = {
+            show: () => {
+                let text = $table.DataTable().rows('.select').data()[0]['operationName'];
+                $('#card_title').html(text);
+                showTable();
+                $tableLogs.DataTable().ajax.reload();
+            }
+        };
+
+        $table.DataTable({
+            sDom: "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-12'p>>",
+            processing: true,
+            serverSide: true,
+            ordering: false,
+            filter: false,
+            searchDelay: 1500,
+            ajax: {
+                url: $table.data('action-table'),
+                type: "POST",
+                datatype: "json"
+            },
+            drawCallback: function (settings) {
+                if (settings.json != null) {
+                    let count = settings.json.data.length;
+                    if (count == 1) {
+                        var api = this.api();
+                        api.rows().select()
+                    }
+                }
+            },
+            columns: [
+                {
+                    title: '',
+                    name: 'test',
+                    render: function (data, type, row) {
+
+                        let content = `<div  class="card cursor-pointer mb-3">
+                                                <div class="card-body">
+                                                    <div id="automatic_text" class="b-s-14">${row.operationName}</div>
+                                                    <div class="r-s-14">Дата начало:${row.dateStart}</div>
+                                                </div>
+                                        </div>`;
+
+                        return content;
+                    }
+                },
+            ]
+        }).on('click', 'tbody tr', function (e) {
+            e.currentTarget.closest('tbody').querySelectorAll('tr').forEach(n => n.classList.remove('select'));
+            e.currentTarget.classList.add('select');
+
+            e.currentTarget.closest('tbody').querySelectorAll('.active_operation').forEach(n => n.classList.remove('active_operation'));
+            e.currentTarget.firstElementChild.firstElementChild.classList.add('active_operation');
+
+            operationLogsTableVisibility.show();
+        })
+           
+        $tableLogs.DataTable({
+            sDom: "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-12'p>>",
+            processing: true,
+            serverSide: true,
+            ordering: false,
+            filter: false,
+            searchDelay: 1500,
+            ajax: {
+                url: "/Systems/GetAutomaticLogsDataJson",
+                type: "POST",
+                data: function (data) {
+                    let row = $table.DataTable().rows('.select').data();
+                    console.log(222,row)
+                    if(row.length!=0) {
+                        data['AutomaticId'] = row[0]['id'];
+                    }
+                }
+            },
+            initComplete: function () {
+
+
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    data: "dateStart",
+                    targets: 1,
+                    title: 'Время запуска',
+                    orderable: false
+                },
+            ]
+        });
+
+
+
+        $(document).ready(function () {
+
+            function testView(e) {
+                $('[data-test-id]').removeClass('active_transfer');
+                $(e.currentTarget).addClass('active_transfer');
+
+                let id = $(e.currentTarget).data('test-id');
+
+                let text = $(e.currentTarget).find('[data-test-number]').text();
+                $.ajax({
+                    url: '/Systems/TestChangeSidebarView',
+                    type: 'POST',
+                    data: { id: id },
+                    beforeSend: () => {
+                        $.pageBlock();
+                    },
+                    complete: () => {
+                        $.unblockUI();
+                        showTable();
+                    },
+                    success: function (content) {
+                        $('#card_title').html(text);
+                        $('#TestEmployees_Wrapper').empty();
+                        $('#TestEmployees_Wrapper').html(content);
+                    }
+                });
+            };
+        });
+    </script>
+}
+
+
+
+

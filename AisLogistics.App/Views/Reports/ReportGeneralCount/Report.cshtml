@@ -1,0 +1,88 @@
+﻿@using AisLogistics.App.Models.Reports;
+@model AisLogistics.App.ViewModels.Reports.ReportViewResponseModel
+@{
+    var data = Model?.DataList?.Cast<ReportGeneralCount>();
+    int i = 0;
+    int received = 0;
+    int totalReceived = 0;
+    int issued = 0;
+    int totalIssued = 0;
+    int consultation = 0;
+    int totalConsultation = 0;
+}
+
+ 
+        @if (data != null && data.Any())
+        {
+            @foreach (IGrouping<string, ReportGeneralCount> item in data.GroupBy(q => q.out_mfc_name))
+            {
+                <div class="table-responsive table-responsive-report">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                @{
+                                    i = 0; received = 0; issued = 0; consultation = 0;
+                                }
+                                <th style="padding: 5px;" colspan="6">
+                                    <strong>@item.Key</strong>
+                                </th>
+                            </tr>
+                            <tr style="vertical-align: middle;">
+                                <th rowspan="2" style="padding: 5px; width: 35px;">№</th>
+                                <th rowspan="2" style="padding: 5px;">Услуга</th>
+                                <th colspan="4" style="padding: 5px; text-align:center;">Количество</th>
+                            </tr>
+                            <tr>
+                                <th style="padding: 5px; width: 80px; text-align:center;">Принято</th>
+                                <th style="padding: 5px; width: 80px; text-align:center;">Выдано</th>
+                                <th style="padding: 5px; width: 80px; text-align:center;">Консул</th>
+                                <th style="padding: 5px; width: 80px; text-align:center;">Всего</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var sub in item)
+                            {
+                                <tr class="r-s-12">
+                                    <td style="padding: 5px;" scope="row">@(++i)</td>
+                                    <td style="padding: 5px;">@sub.out_office_name</td>
+                                    <td style="padding: 5px; text-align:center;">@(sub.out_received_count)</td>
+                                    <td style="padding: 5px; text-align:center;">@(sub.out_issued_count)</td>
+                                    <td style="padding: 5px; text-align:center;">@(sub.out_consultation_count)</td>
+                                    <td style="padding: 5px; text-align:center;">@(sub.out_received_count + sub.out_issued_count + sub.out_consultation_count)</td>
+                                    @{
+                                        received += sub.out_received_count; issued += sub.out_issued_count; consultation += sub.out_consultation_count;
+                                    }
+                                </tr>
+                            }
+                            <tr class="b-s-12">
+                                <td style="padding: 5px; vertical-align: middle;" colspan="2" scope="row">Всего по @item.Key</td>
+                                <td style="padding: 5px; text-align:center;">@received</td>
+                                <td style="padding: 5px; text-align:center;">@issued</td>
+                                <td style="padding: 5px; text-align:center;">@consultation</td>
+                                <td style="padding: 5px; text-align:center;">@(received + issued + consultation)</td>
+                                @{
+                                    totalReceived += received; totalIssued += issued; totalConsultation += consultation;
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            }
+            <div class="table-responsive table-responsive-report">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr class="b-s-12">
+                        <td style="padding: 5px; vertical-align: middle;" scope="row">ИТОГО</td>
+                            <td style="padding: 5px; width: 80px; text-align:center;">@totalReceived</td>
+                            <td style="padding: 5px; width: 80px; text-align:center;">@totalIssued</td>
+                            <td style="padding: 5px; width: 80px; text-align:center;">@totalConsultation</td>
+                            <td style="padding: 5px; width: 80px; text-align:center;">@(totalReceived + totalIssued + totalConsultation)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <span class="text-muted">Нет данных</span>
+        } 

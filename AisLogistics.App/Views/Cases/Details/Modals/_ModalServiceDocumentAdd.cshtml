@@ -1,0 +1,88 @@
+﻿@model AisLogistics.App.Models.DTO.Cases.ServiceDocumentsDto
+@{
+    var documentsNeedsTypes = Html.GetEnumSelectList<ServiceDocumentNeedsType>();
+    var documentsTypes = Html.GetEnumSelectList<ServiceDocumentType>();
+}
+
+<form asp-controller="Cases" asp-action="ServiceDocumentNewSave" id="sendingForm" method="post" role="form">
+    <fieldset>
+        @Html.HiddenFor(m => m.CasesId)
+        @Html.HiddenFor(m => m.ServiceId)
+        <div class="row mb-3">
+            <div class="col-12">
+                <label asp-for="DocumentId" class="form-label">Документы</label>
+                <select asp-for="DocumentId" asp-items="@ViewBag.Documents" class="select2 form-select form-select-lg"></select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="DocumentNeeds">Обязательность</label>
+                <select asp-for="DocumentNeeds" asp-items="@documentsNeedsTypes" class="form-control no-search">
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="DocumentType">Тип документа</label>
+                <select asp-for="DocumentType" asp-items="@documentsTypes" class="form-control no-search">
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="DocumentCount">Количество</label>
+                <input type="number" min="0" asp-for="DocumentCount" class="form-control" placeholder="Количество">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="Commentt">Описание</label>
+                <input type="text" asp-for="Commentt" class="form-control" placeholder="Описание">
+            </div>
+        </div>
+
+    </fieldset>
+</form>
+
+<script>
+    $(".select2").select2({
+        dropdownParent: $("#mainModal")
+    });
+
+    FormValidation.formValidation(document.getElementById('sendingForm'),
+        {
+            fields: {
+
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                submitButton: new FormValidation.plugins.SubmitButton(),
+                bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                autoFocus: new FormValidation.plugins.AutoFocus()
+            }
+        }).on('core.form.valid', function () {
+            var $form = $("#sendingForm");
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                //dataType: 'json',
+                beforeSend: () => {
+                    $form.spinnerBtn("start");
+                },
+                complete: () => {
+                    $form.spinnerBtn("stop");
+                    $("#mainModal").modal('hide');
+                },
+                success: () => {
+                    document.location.reload();
+                }
+            });
+            return false;
+        });
+
+</script>

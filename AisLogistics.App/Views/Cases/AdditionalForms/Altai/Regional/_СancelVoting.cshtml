@@ -1,0 +1,29 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Regional.СancelVoting
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="DateVoting">Дата голосования</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DateVoting" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var additionalForm = $('#additional-data-content'); 
+    $(function () {
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options); 
+    });
+</script>

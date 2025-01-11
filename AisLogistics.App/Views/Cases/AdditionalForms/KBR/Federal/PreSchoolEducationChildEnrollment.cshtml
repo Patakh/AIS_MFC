@@ -1,0 +1,56 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.KBR.Federal.PreSchoolEducationChildEnrollmentModel
+@{
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="ChildFullName" class="form-label">Ф.И.О. ребенка</label>
+                    <input asp-for="ChildFullName" class="form-control" type="text" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="ChildBirthDate" class="form-label">Дата рождения ребенка</label>
+                    <input asp-for="ChildBirthDate" class="form-control pickdate" type="text" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="EducationalOrganizationName" class="form-label">
+                        Наименование образовательной организации
+                    </label>
+                    <input asp-for="EducationalOrganizationName" class="form-control" type="text" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="StartDate" class="form-label">Желательный срок начала</label>
+                    <input asp-for="StartDate" class="form-control pickdate" type="text" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="Group" class="form-label">Группа посещения</label>
+                    <input asp-for="Group" class="form-control" type="text" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () {
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", { clearIncomplete: true, showMaskOnHover: false });
+    })
+</script>

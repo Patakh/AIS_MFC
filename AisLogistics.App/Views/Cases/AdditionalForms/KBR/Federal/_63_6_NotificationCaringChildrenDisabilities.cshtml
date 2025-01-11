@@ -1,0 +1,334 @@
+﻿@model _63_6_NotificationCaringChildrenDisabilitiesModel
+@{
+
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">Заявитель</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Citizenship">принадлежность к гражданству</label>
+                    <input type="text" class="form-control" asp-for="Citizenship">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ValidityPeriodDocument">Срок действия документа удостоверяющего личность</label>
+                    <input type="text" class="form-control" asp-for="ValidityPeriodDocument">
+                </div>
+            </div>
+
+            <h5 class="my-2">Представитель</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative">Тип</label>
+                    <select class="select2-nosearch" asp-for="Representative">
+                        <option value="">Не выбрано</option>
+                        <option value="законный представитель несовершеннолетнего или недееспособного лица">законный представитель несовершеннолетнего или недееспособного лица</option>
+                        <option value="организация, на которую возложено исполнение обязанностей опекуна или попечителя">организация, на которую возложено исполнение обязанностей опекуна или попечителя</option>
+                        <option value="доверенное лицо">доверенное лицо</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="GuardianOrganizationName">наименование организации, на которую возложено исполнение обязанностей опекуна или попечителя</label>
+                    <input type="text" class="form-control" asp-for="GuardianOrganizationName">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="GuardianOrganizationAddress">адрес места нахождения организации</label>
+                    <input type="text" class="form-control" asp-for="GuardianOrganizationAddress">
+                </div>
+            </div>
+
+            <h5 class="my-2">Cообщаю</h5>
+
+
+            <div class="row mb-3" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="TerminationCare" class="form-check-input" type="checkbox" />
+                        <label asp-for="TerminationCare" class="form-check-label">прекращении ухода за</label>
+                    </div>
+                </div>
+                <div class="row mb-3 justify-content-end" checkBlockBody>
+                    <div class="col-11">
+                        <label asp-for="DisabledCitizenFullName" class="form-label">
+                            указывается фамилия, имя, отчество (при наличии) ребенка-инвалида
+                            в возрасте до 18 лет или инвалида с детства I группы (твор. падеж)
+                        </label>
+                        <input asp-for="DisabledCitizenFullName" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="AppointmentPension" class="form-check-input" type="checkbox" />
+                        <label asp-for="AppointmentPension" class="form-check-label">назначении пенсии</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="BenefitsUnemployment" class="form-check-input" type="checkbox" />
+                        <label asp-for="BenefitsUnemployment" class="form-check-label">назначении пособия по безработице</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="IsPrformingPaidWork" class="form-check-input" type="checkbox" />
+                        <label asp-for="IsPrformingPaidWork" class="form-check-label">выполнении оплачиваемой работы</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="IsAchievements" class="form-check-input" type="checkbox" />
+                        <label asp-for="IsAchievements" class="form-check-label">
+                            истечении срока, на который ребенку-инвалиду в возрасте до 18 лет или инвалиду с детства I группы была установлена категория
+                            "ребенок-инвалид" либо I группа инвалидности с детства;
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="IsExpirationDate" class="form-check-input" type="checkbox" />
+                        <label asp-for="IsExpirationDate" class="form-check-label">достижении ребенком-инвалидом возраста 18 лет, если ему по достижении этого возраста не установлена I группа инвалидности с детства;</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="PlacementInstitution" class="form-check-input" type="checkbox" />
+                        <label asp-for="PlacementInstitution" class="form-check-label">помещении ребенка-инвалида или инвалида с детства I группы в организацию социального обслуживания, предоставляющую социальные услуги в стационарной форме;</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="Other" class="form-check-input" type="checkbox" />
+                        <label asp-for="Other" class="form-check-label">другое</label>
+                    </div>
+                </div>
+                <div class="row mb-3 justify-content-end" checkBlockBody>
+                    <div class="col-11">
+                        <label asp-for="OtherCare" class="form-label">обазначение</label>
+                        <input asp-for="OtherCare" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label asp-for="CaringStartDate" class="form-label">с</label>
+                    <input asp-for="CaringStartDate" class="form-control pickdate" type="text">
+                </div>
+            </div>
+
+            <h6 class="my-2">Прошу</h6>
+            <div class="row mb-2" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="TypeNotification.NotificationTypeOne" class="form-check-input" type="checkbox" />
+                        <label asp-for="TypeNotification.NotificationTypeOne" class="form-check-label">
+                            направить уведомление, подтверждающее факт и дату приема территориальным органом Пенсионного фонда Российской Федерации настоящего заявления и
+                            представленных мною документов, на адрес электронной почты
+                        </label>
+                    </div>
+                </div>
+                <div class="row mb-3 justify-content-end" checkBlockBody>
+                    <div class="col-11 mb-2">
+                        <label class="form-label" asp-for="TypeNotification.EmailOne">адрес электронной почты гражданина</label>
+                        <input type="text" class="form-control" asp-for="TypeNotification.EmailOne">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="TypeNotification.NotificationTypeFree" class="form-check-input" type="checkbox" />
+                        <label asp-for="TypeNotification.NotificationTypeFree" class="form-check-label">
+                            включить в индивидуальный лицевой счет застрахованного лица сведения о периоде ухода за ребенком-инвалидом или инвалидом с детства I группы в целях зачета в страховой стаж в соответствии с пунктом 6 части 1 статьи 12 Федерального закона 28 декабря 2013 г. N 400-ФЗ "О страховых пенсия
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="TypeNotification.NotificationTypeTwo" class="form-check-input" type="checkbox" />
+                        <label asp-for="TypeNotification.NotificationTypeTwo" class="form-check-label">осуществлять информирование о ходе предоставления государственной услуги путем передачи текстовых сообщений</label>
+                    </div>
+                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                        <div class="row mb-2 justify-content-end" checkBlock>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input asp-for="TypeNotification.NotificationTransmitionMethod" id="NotificationTransmitionMethod1" class="form-check-input" type="radio" value="1">
+                                    <label for="NotificationTransmitionMethod1" class="form-check-label">на адрес электронной почты</label>
+                                </div>
+                            </div>
+                            <div class="row mb-3 justify-content-end" checkBlockBody>
+                                <div class="col-11 mb-2">
+                                    <label class="form-label" asp-for="TypeNotification.EmailTwo">адрес электронной почты гражданина</label>
+                                    <input type="text" class="form-control" asp-for="TypeNotification.EmailTwo">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2 justify-content-end" checkBlock>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input asp-for="TypeNotification.NotificationTransmitionMethod" id="NotificationTransmitionMethod2" class="form-check-input" type="radio" value="2">
+                                    <label for="NotificationTransmitionMethod2" class="form-check-label">на абонентский номер устройства подвижной радиотелефонной связи</label>
+                                </div>
+                            </div>
+                            <div class="row mb-3 justify-content-end" checkBlockBody>
+                                <div class="col-11 mb-2">
+                                    <label class="form-label" asp-for="TypeNotification.SubscriberNumber">абонентский номер гражданина</label>
+                                    <input type="text" class="form-control" asp-for="TypeNotification.SubscriberNumber">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+        });
+
+        additionalForm.find('[type="radio"], input[type="checkbox"]').on('click', function () {
+            togleFields();
+        });
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", { clearIncomplete: true, showMaskOnHover: false });
+
+        togleFields();
+    });
+
+    function togleFields() {
+        additionalForm.find('[checkBlock] input[type="radio"], [checkBlock] input[type="checkbox"]').each(function () {
+            let $block = $(this).closest('[checkBlock]');
+
+            if ($(this).is(':checked')) {
+                visibilityBlock($block.find('[checkBlockBody]'), false, false);
+            } else {
+                visibilityBlock($block.find('[checkBlockBody]'), true, true);
+            }
+        })
+    }
+
+    function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+        let $cloneList = additionalForm.find(`#${cloneListId}`);
+        let $original = originalBlock.find(`#${originalId}`);
+        let $cloneBlock = $original.clone(true);
+        let indexId = $cloneList.find('[data-clone]').length;
+        renameBlock($cloneBlock, indexId);
+        blockInit($cloneBlock);
+        $cloneList.append($cloneBlock);
+    }
+
+    function blockInit($block) {
+        visibilityBlock($block, false, false);
+
+        $block.find("input").each(function () {
+            $(this).val("");
+        });
+        $block.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+        });
+    }
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>
+

@@ -1,0 +1,112 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var request = new GetMfcPfrStatusRequestData();
+}
+<div class="row justify-content-center g-3">
+    <div class="col-10">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Детали запроса</div>
+        </div>
+    </div>
+</div>
+<div class="row g-3 justify-content-center">
+    <div class="col-8">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <label class="form-label" asp-for="@request.ApplicationNumber">Номер дела, переданный из МФЦ в ПФР в рамках ВС ПФР «Приём заявлений из МФЦ»</label>
+                <input type="text" class="form-control required" asp-for="@request.ApplicationNumber" />
+            </div>
+            <div class="col-12 mt-3">
+                <label class="form-label"  asp-for="@request.ServiceCode">Цель услуги</label>
+                <select  class="form-select select2-nosearch required" asp-for="@request.ServiceCode"
+                        data-dictionary='{"dictionary":"PfrMfcProcedures"}'>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function ShowErrorInputs() {}
+    getDictionaries();
+    var formContent = document.getElementById("smev-data-form-content");
+    var smevForm = {
+        init: () => {
+            $(formContent).find('.required').each(function() {
+                addValidation($(this));
+            });
+             $(formContent).find(".select2-nosearch").each(function() {
+                $(this).select2({
+                    dropdownParent: $("#mainModal"),
+                    minimumResultsForSearch: Infinity
+                });
+            });
+        }
+    };
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function() {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.ajax({
+                    url: '/SmevBase/SmevGetDictionary',
+                    type: 'POST',
+                    async: false,
+                    data: { type: options.dictionary },
+                    success: function(dictionary) {
+                        fillSelect(options.dictionary, dictionary);
+                    }
+                });
+            }
+        });
+    };
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function() {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Не выбран', ''));
+                }
+
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function(item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+            }
+        );
+
+    }
+
+</script>

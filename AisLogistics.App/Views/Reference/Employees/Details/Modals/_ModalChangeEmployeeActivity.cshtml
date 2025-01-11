@@ -1,0 +1,146 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.EmployeeActivityModelDto
+@{
+    var isDateStartValue = Model.DateStart != DateTime.MinValue ? Model.DateStart.ToShortDateString() :  DateTime.Now.ToShortDateString();
+    var isDateStartDisabled = Model.DateStart != DateTime.MinValue && Model.DateStart < DateTime.Now;
+    var isDateStopDisabled = Model.DateStop.HasValue && Model.DateStop < DateTime.Now;
+}
+
+<form asp-controller="Reference" asp-action="EmployeeActivitySave" id="sendingForm" method="post" role="form">
+    <div class="form-body pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.SEmployeesId)
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="DateStart">Дата начала</label>
+                    <div class="input-group input-group-merge" >
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        @if (isDateStartDisabled)
+                        {
+                            <input type="text" asp-for="DateStart" class="form-control" placeholder="ДД.ММ.ГГГГ" value="@isDateStartValue" disabled>
+                        }
+                        else {
+                            <input type="text" asp-for="DateStart" class="form-control" placeholder="ДД.ММ.ГГГГ" value="@isDateStartValue">
+                        }
+                    </div>
+                </div>
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="DateStop">Дата окончания</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        @if(isDateStopDisabled) {
+                            <input type="text" asp-for="DateStop" class="form-control" placeholder="ДД.ММ.ГГГГ" disabled>
+                        }
+                        else {
+                            <input type="text" asp-for="DateStop" class="form-control" placeholder="ДД.ММ.ГГГГ">
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="Commentt">Комментарий</label>
+                    <textarea asp-for="Commentt" class="form-control char-textarea" rows="3" placeholder="Комментарий"></textarea>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    $(function(){
+        $('#sendingForm select').select2({dropdownParent: $('#mainModal'), minimumResultsForSearch: -1});
+
+        var date = new Date();
+        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+
+        var $dateinput = $('#DateStart');
+        $dateinput.datepicker({
+            language: "ru",
+            autoclose: true,
+            format: 'dd.mm.yyyy',
+            startDate: '-0d',
+        });
+        $dateinput.inputmask("datetime", { inputFormat: "dd.mm.yyyy", "clearIncomplete": true, showMaskOnHover: false, insertmode: true });
+
+        var $dateStopinput = $('#DateStop');
+        $dateStopinput.datepicker({
+            language: "ru",
+            autoclose: true,
+            format: 'dd.mm.yyyy',
+            startDate: '-0d',
+        });
+        $dateStopinput.inputmask("datetime", { inputFormat: "dd.mm.yyyy", "clearIncomplete": true, showMaskOnHover: false, insertmode: true });
+
+
+        $dateinput.change(function () {
+
+            let stringDate = $(this).val().split('.');
+
+            console.log(stringDate);
+
+            const date1 = new Date();
+            const date2 = new Date(`${stringDate[1]}.${stringDate[0]}.${stringDate[2]}`);
+
+            // One day in milliseconds
+            const oneDay = 1000 * 60 * 60 * 24;
+
+            // Calculating the time difference between two dates
+            const diffInTime = date2.getTime() - date1.getTime();
+
+            // Calculating the no. of days between two dates
+            const diffInDays = Math.round(diffInTime / oneDay) + 2;
+            let start = '+' + diffInDays + 'd';
+
+            $dateStopinput.datepicker("destroy")
+
+            $dateStopinput.datepicker({
+                language: "ru",
+                autoclose: true,
+                format: 'dd.mm.yyyy',
+                startDate: start,
+            });
+        });
+
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    Commentt: {
+                        validators: {
+                            stringLength: {
+                                max: 255,
+                                message: '@MessageDescription.CommentLengthOutOfRange'
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }) .on('core.form.valid', function() {
+            var $form = $("#sendingForm");
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                dataType: 'json',
+                beforeSend: () => {
+                    $form.spinnerBtn("start");
+                },
+                complete: () => {
+                    $table.DataTable().ajax.reload(null, false);
+                    $tableActivities.DataTable().ajax.reload(null, false);
+                    $form.spinnerBtn("stop");
+                    $("#mainModal").modal('hide');
+                }
+            });
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,22 @@
+﻿@using System.Text;
+@using AisLogistics.App.ViewModels.Reports
+
+
+@model ReportNavViewRequestModel
+@{
+    ViewData["ActiveTabId"] = Model.NavId;
+}
+
+<div class="card">
+    <div class="card-body p-0">
+        <ul class="list-group list-group-flush rounded">
+            @foreach(var item in Model.Reports) {
+                <li class="list-group-item">
+                    <a class="@(item.Id.ToString()==Model.NavId ? "r-a-16" : "r-s-16")" href="@Url.Action("MainReport", "Reports", new {navId=@item.Id.ToString(), urlAction=@item.Path})" id="@item.Id.ToString()">@item.Name</a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+

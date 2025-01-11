@@ -1,0 +1,186 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    ViewData["ActiveTabId"] = "requests";
+    string providersOptions = Model.Model as string;
+}
+
+<div class="row" id="content-smev-requests">
+    <navtabs-top>
+    <nav-tab id="services" target="@Url.Action("SmevServices", "Reference")">СМЭВ Сервисы</nav-tab>
+    <nav-tab id="requests" target="@Url.Action("SmevRequests", "Reference")">СМЭВ Зпаросы</nav-tab>
+    </navtabs-top>
+    <div class="row directory_names" id="navs-tabs-default">
+        <div class="col-12">
+            <div class="table-responsive mt-3">
+                <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceDocument" class="directory_names-items table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+    {
+    <script>
+        const $table = $('#@(Model.TableName)'),
+            isCanAdd = $table.is('[data-action-add]'),
+            isCanEdit = $table.is('[data-action-edit]'),
+            isCanRemove = $table.is('[data-action-remove]');
+
+        $(document).ready(function () {
+            $table.DataTable({
+                sDom: "<'row align-items-center'<'col-md-4'f><'col-sm-12 col-md-4'<'#providers'>><'col mt-3 ms-auto text-end'<'#btnCreate'>>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                processing: true,
+                serverSide: true,
+                filter: true,
+                searching: true,
+                searchDelay: 1500,
+                ajax: {
+                    url: $table.data('action-table'),
+                    type: "POST",
+                    datatype: "json",
+                    dataSrc: function (json) {
+                        return json.data;
+                    }
+                },
+                initComplete: function () {
+                    var providersColumn = this.api().column(7);
+                    $('[name="mainDataTable_length"]')
+                        .select2({ minimumResultsForSearch: Infinity });
+                    var $providers = $('#providers');
+                    $('#btnCreate').append(`<button data-btn-params='{"actionType":"@ActionType.Add"}' data-btn-type="add" data-for-table="@Model.TableName" type="button" class="btn btn-primary">
+                                        <i class="bi bi-plus"></i> Добавить
+                                    </button>`);
+
+                    $providers.html('<label class="form-label" for="selectProviders">Сервисы</label>');
+                    var $procedureSelect = $('<select id="selectProviders" class="form-select"><option selected value="">ВСЕ</option>@Html.Raw(providersOptions)</select>')
+                        .appendTo($providers)
+                        .select2({
+                            language: "ru",
+                        })
+                        .on('change', function () {
+                            providersColumn.search($(this).val()).draw();
+                        });
+                },
+                columnDefs: [
+                    {
+                        data: "id",
+                        targets: 0,
+                        title: '',
+                        visible: false,
+                        orderable: false
+                    },
+                    {
+                        targets: 1,
+                        title: "Сервис",
+                        orderable: false
+                    },
+                    {
+                        targets: 2,
+                        title: "Наименование",
+                        orderable: false
+                    },
+                    {
+                        targets: 3,
+                        title: "Код",
+                        className: "text-center",
+                        orderable: false
+                    },
+                    {
+                        targets: 4,
+                        title: "Дни",
+                        className: "text-center",
+                        orderable: false
+                    },
+                    {
+                        targets: 5,
+                        title: "Путь",
+                        orderable: false
+                    },
+                    {
+                        targets: 6,
+                        title: "Услуги",
+                        orderable: false
+                    },
+                    {
+                        name: "services",
+                        targets: 7,
+                        title: '',
+                        visible: false,
+                        orderable: false
+                    },
+                    {
+                        targets: -1,
+                        title: "Действия",
+                        data: "id",
+                        className: "text-center editor-edit",
+                        sorting: false,
+                        orderable: false
+                    }
+                ],
+                columns: [
+                    {},
+                    { data: "smevName" },
+                    {
+                        render: function (data, type, row) {
+                            return `<span class="b-s-14">${row.requestName}</span>
+                                                    ${row.requestTypeName === null ? '' : '<br /><small class="r-l-14">' + row.requestTypeName + '</small>'}`;
+                        }
+                    },
+                    { data: "id" },
+                    {
+                        render: function (data, type, row) {
+                            return `<span>${row.countDayExecution}<span>
+                                                    ${row.weekDayName === null ? '' : '<br /><small class="r-l-14">' + row.weekDayName + '</small>'}`;
+                        }
+                    },
+                    { data: "path" },
+                    {
+                        render: function (data, type, row) {
+                            return `<a href="/Reference/SmevRequestServiceChangeModal?id=${row.id}" data-btn-type="modal">Услуги(${row.serviceOrFunctionCode})</a>`;
+                        }
+                    },
+                    {
+                        render: function (data, type, row) {
+                            return "";
+                        }
+                    },
+                    {
+                        render: function (data, type, row) {
+                            let content = "";
+                            if (isCanEdit === true)
+                                content += EditBtn({ "id": data, "actionType": 1 });
+                            if (isCanRemove === true)
+                                content += DeleteBtn({ "id": data });
+                            return content;
+                        }
+                    }
+                ]
+            });
+            $table.on("reload", () => {
+                $table.DataTable().ajax.reload(null, false);
+            });
+            $table.on('draw.dt', function () {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl, {
+                        boundary: document.body
+                    });
+                });
+            });
+        });
+
+        const EditBtn = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="edit" data-bs-toggle="tooltip" title="Изменить" class="btn btn-sm btn-icon text-body">
+                            <i class="bi bi-pencil-square"></i></a>`;
+        }
+        const DeleteBtn = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="remove" data-bs-toggle="tooltip" title="Удалить" class="btn btn-sm btn-icon text-danger">
+                            <i class="bi bi-trash"></i></a>`;
+        }
+    </script>
+}

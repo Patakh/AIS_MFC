@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html lang="ru"
+      class="light-style"
+      dir="ltr"
+      data-theme="theme-default"
+      data-assets-path="/assets/"
+      data-template="horizontal-menu-template">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="author" content="WebSystems">
+    <title>@ViewData["Title"] - @Resource.AppName</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/svg/logo/horizontal/svg/sm-color.svg" />
+
+    <!-- Fonts -->
+    @*<link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />*@
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="~/assets/vendor/fonts/fontawesome.css" />
+    <link rel="stylesheet" href="~/assets/vendor/fonts/flag-icons.css" />
+    <link rel="stylesheet" href="~/assets/vendor/css/rtl/theme-default.css" />
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/assets/vendor/bi/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/typeahead-js/typeahead.css" />
+    <link rel="stylesheet" href="~/assets/vendor/libs/spinkit/spinkit.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/sweetalert2/sweetalert2.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/bs-stepper/bs-stepper.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/datatables-select-bs5/select.bootstrap5.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/suggestions-jquery/dist/css/suggestions.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/select2/select2.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/tagify/tagify.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/magnific-popup.js/magnific-popup.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/lightgallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/jquery-timepicker/jquery-timepicker.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.css" asp-append-version="true" />
+
+    <!-- BEGIN: Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/main.css" type="text/css" asp-append-version="true">
+    @*<link rel="stylesheet" href="~/AisLogistics.App.styles.css" asp-append-version="true" />*@
+    <!-- END: Custom CSS-->
+
+    <script src="~/assets/js/config.js"></script>
+    <script src="~/assets/vendor/libs/jquery/jquery.js"></script>
+    <!-- Helpers -->
+    <script src="~/assets/vendor/js/helpers.js"> </script>
+    <script src="~/assets/js/helpers.js"></script>
+
+    @await Component.InvokeAsync("NToastNotify")
+
+    @await RenderSectionAsync("Header", required: false)
+</head>
+
+<body>
+    <!-- Layout wrapper -->
+
+    <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+        <div class="layout-container">
+            <!-- Navbar -->
+            <partial name="LayoutPartial/_HeaderPartial" />
+            <!-- Navbar -->
+            <!-- Layout page -->
+            <main class="layout-page mx-4">
+                <!-- Content wrapper -->
+                <div class="content-wrapper">
+                    <!-- Content -->
+                    <breadcrumb></breadcrumb>
+                    <div class="flex-grow-1 container-p-y pt-0">
+                        @RenderBody()
+                    </div>
+                    <!--/ Content -->
+                    <div class="content-backdrop fade"></div>
+                </div>
+                <!--/ Content wrapper -->
+            </main>
+            <!-- Layout page -->
+        </div>
+    </div>
+    <!-- END: Page JS-->
+
+    <div id="mainModal" class="modal fade" role="dialog" aria-labelledby="myMainModalLabel" aria-hidden="true" style="display: none;" data-bs-backdrop="static" data-keyboard="false"></div>
+    <div id="modalContainer" class="modal fade" role="dialog" aria-labelledby="myMainModalLabel" aria-hidden="true" style="display: none;" data-bs-backdrop="static" data-keyboard="false"></div>
+    <div id="modalContainerOver" class="modal fade" role="dialog" aria-labelledby="myMainModalLabel" aria-hidden="true" style="display: none;" data-bs-backdrop="static" data-keyboard="false"></div>
+
+    <!-- Overlay -->
+    <div class="layout-overlay layout-menu-toggle"></div>
+
+    <!-- Core JS -->
+    <!-- build:js ~/assets/vendor/js/core.js -->
+
+    <script src="~/assets/vendor/libs/jquery.signalR-6.0.1/signalr.min.js"></script>
+    <script src="~/assets/vendor/libs/popper/popper.js"></script>
+    <script src="~/assets/vendor/js/bootstrap.js"></script>
+    <script src="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="~/assets/vendor/libs/hammer/hammer.js"></script>
+    <script src="~/assets/vendor/libs/i18n/i18n.js"></script>
+    <script src="~/assets/vendor/libs/typeahead-js/typeahead.js"></script>
+    @* <script src="~/assets/vendor/js/menu.js"></script>*@
+    <!-- end build -->
+
+
+    <script src="~/assets/vendor/libs/datatables/jquery.dataTables.js"></script>
+    <script src="~/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
+    <script src="~/assets/vendor/libs/datatables-responsive/datatables.responsive.js"></script>
+    <script src="~/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.js"></script>
+    <script src="~/assets/vendor/libs/datatables-select/datatables-select.js"></script>
+    <script src="~/assets/vendor/libs/datatables-select-bs5/select.bootstrap5.js"></script>
+    <script src="~/assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
+    <script src="~/assets/vendor/libs/bs-stepper/bs-stepper.js"></script>
+    <script src="~/assets/vendor/libs/lodash.js/lodash.min.js"></script>
+    <script src="~/assets/vendor/libs/jquery.inputmask/jquery.inputmask.min.js"></script>
+    <script src="~/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js"></script>
+    <script src="~/assets/vendor/libs/bootstrap-datepicker/locales/bootstrap-datepicker.ru.min.js"></script>
+    <script src="~/assets/vendor/libs/moment/moment.js"></script>
+    <script src="~/assets/vendor/libs/suggestions-jquery/dist/js/jquery.suggestions.js"></script>
+    <script src="~/assets/vendor/libs/tagify/tagify.js"></script>
+    <script src="~/assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js"></script>
+    <script src="~/assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js"></script>
+    <script src="~/assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js"></script>
+    <script src="~/assets/vendor/libs/formvalidation/dist/js/locales/ru_RU.min.js"></script>
+    <script src="~/assets/vendor/libs/select2/select2.js"></script>
+    <script src="~/assets/vendor/libs/select2/ru.min.js"></script>
+    <script src="~/assets/vendor/libs/numeral/numeral.js"></script>
+    <script src="~/assets/vendor/libs/block-ui/block-ui.js"></script>
+    <script src="~/assets/vendor/libs/dropzone/min/dropzone.min.js"></script>
+    <script src="~/assets/vendor/libs/magnific-popup.js/jquery.magnific-popup.min.js"></script>
+    <script src="~/assets/vendor/libs/lightgallery/lightgallery.min.js"></script>
+    <script src="~/assets/vendor/libs/printjs/print.min.js"></script>
+    <script src="~/assets/vendor/libs/printjs/printPDF.min.js"></script>
+    <script src="~/assets/vendor/libs/jquery-countdown/jquery.plugin.min.js"></script>
+    <script src="~/assets/vendor/libs/jquery-countdown/jquery.countdown.min.js"></script>
+    <script src="~/assets/vendor/libs/bootstrap-touchspin-master/jquery.bootstrap-touchspin.js"></script>
+    <script src="~/assets/vendor/libs/jquery-timepicker/jquery-timepicker.js"></script>
+    <script src="~/assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.js"></script>
+    <!-- END Vendor JS-->
+    <!-- Main JS -->
+    @* <script src="~/assets/js/main.js"></script>*@
+    <!-- BEGIN: Page JS-->
+    <script src="~/assets/js/scripts.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+
+    <!-- Footer -->
+    <partial name="LayoutPartial/_FooterPartial" />
+    <!-- / Footer -->
+
+</body>
+</html>

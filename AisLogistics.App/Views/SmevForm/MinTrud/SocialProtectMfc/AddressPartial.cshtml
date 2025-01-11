@@ -1,0 +1,180 @@
+@{
+    string id = ViewBag.Id;
+    string name = ViewBag.Name ?? id.Replace('_', '.');
+    ViewBag.Id = null;
+    ViewBag.Name = null;
+}
+<div class="row align-items-end">
+
+    <div class="col-12">
+        <i class='bi bi-search'></i>
+        <label class="form-label" for="@(id)_RegAddressSearchFias">Поиск по ГАР</label>
+        <input type="text" class="form-control" id="@(id)_RegAddressSearchFias"
+               name="@(name).FullAddress" data-clear-reg="" data-input-location="" data-location-model="RegAddress" data-full="true" value="">
+        <div class="input-group">
+            <ul class="list-group address-list">
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-12 d-none">
+        <label class="form-label" for="@(id)_FiasCode">ГАР код</label>
+        <input type="text" class="form-control" id="@(id)_FiasCode" value="">
+    </div>
+    <div class="col-12 d-none">
+        <label class="form-label" for="@(id)_Region_Code">ГАР код Региона</label>
+        <input type="text" class="form-control" id="@(id)_Region_Code" name="@(name).Region.Code" data-clean value="">
+    </div>
+    <div class="col-6">
+        <label class="form-label" for="@(id)_Index" >Индекс</label>
+        <input type="text" class="form-control" oninput="changeAdrElement(@(id)_Index_Code)" id="@(id)_Index" name="@(name).Index" value="">
+    </div>
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class="col-2">
+                <input type="text" class="form-control" id="@(id)_RegionType" value="">
+            </div>
+            <div class="col-10">
+                <label class="form-label" for="@(id)_Region_Value">Регион</label>
+                <input type="text" class="form-control required" oninput="changeAdrElement(@(id)_Region_Code)" id="@(id)_Region_Value" name="@(name).Region.Value" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 d-none">
+        <label class="form-label" for="@(id)_Area_Code">ГАР код Района</label>
+        <input type="text" class="form-control" id="@(id)_Area_Code" name="@(name).Area.Code" data-clean value="">
+    </div>
+
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class="col-2">
+                <input type="text" class="form-control" id="@(id)_AreaType" value="р-н">
+            </div>
+            <div class="col-10">
+                <label class="form-label" for="@(id)_Area_Value">Район</label>
+                <input type="text" class="form-control" oninput="changeAdrElement(@(id)_Area_Code)" id="@(id)_Area_Value" name="@(name).Area.Value" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 d-none">
+        <label class="form-label" for="@(id)_City_Code">ГАР код Города</label>
+        <input type="text" class="form-control" id="@(id)_City_Code" name="@(name).City.Code" data-clean value="">
+    </div>
+
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class="col-2">
+                <input type="text" class="form-control" id="@(id)_CityType" value="г.">
+            </div>
+
+            <div class="col-10">
+                <label class="form-label" for="@(id)_City_Value">Город</label>
+                <input type="text" class="form-control" oninput="changeAdrElement(@(id)_City_Code)" id="@(id)_City_Value" name="@(name).City.Value" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 d-none">
+        <label class="form-label" for="@(id)_CityArea_Code">ГАР код Городского района</label>
+        <input type="text" class="form-control" id="@(id)_CityArea_Code" name="@(name).CityArea.Code" data-clean value="">
+    </div>
+
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class="col-2">
+                <input type="text" class="form-control" id="@(id)_CityAreaType" value="р-н">
+            </div>
+
+            <div class="col-10">
+                <label class="form-label" for="@(id)_CityArea_Value">Городской район</label>
+                <input type="text" class="form-control" oninput="changeAdrElement(@(id)_CityArea_Code)" id="@(id)_CityArea_Value" name="@(name).CityArea.Value" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 d-none">
+        <label class="form-label" for="@(id)_Place_Code">ГАР код Населенный пункта</label>
+        <input type="text" class="form-control" id="@(id)_Place_Code" name="@(name).Place.Code" data-clean value="">
+    </div>
+
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class=" col-2">
+                <input type="text" class="form-control" id="@(id)_PlaceType" value="нп">
+            </div>
+
+            <div class="col-10">
+                <label class="form-label" for="@(id)_Place_Value">Населенный пункт</label>
+                <input type="text" class="form-control" oninput="changeAdrElement(@(id)_Place_Code)" id="@(id)_Place_Value" name="@(name).Place.Value" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 d-none">
+        <label class="form-label" for="@(id)_Street_Code">ГАР код Улицы</label>
+        <input type="text" class="form-control" id="@(id)_Street_Code" name="@(name).Street.Code" data-clean value="">
+    </div>
+
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class="col-2">
+                <input type="text" class="form-control" id="@(id)_StreetType" value="ул.">
+            </div>
+
+            <div class="col-10">
+                <label class="form-label" for="@(id)_Street_Value">Улица</label>
+                <input type="text" class="form-control" oninput="changeAdrElement(@(id)_Street_Code)" id="@(id)_Street_Value" name="@(name).Street.Value" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 d-none">
+        <label class="form-label" for="@(id)_House_Code">ГАР код Дома</label>
+        <input type="text" class="form-control" id="@(id)_House_Code" name="@(name).House.Code" data-clean value="">
+    </div>
+
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class="col-2">
+                <input type="text" class="form-control" name="@(name).HouseType"  id="@(id)_HouseType" value="д. ">
+            </div>
+            <div class="col-10">
+                <label class="form-label" for="@(id)_House_Value">Дом</label>
+                <input type="text" class="form-control" oninput="changeAdrElement(@(id)_House_Code)" id="@(id)_House_Value" name="@(name).House.Value" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-4">
+        <div class="col-12 d-none">
+           <label class="form-label" for="@(id)_House_Code"></label>
+           <input type="text" class="form-control" id="@(id)_Building1" name="@(name).Building1" data-clean value="">
+        </div>
+        <div class="input-group align-items-end">
+            <div class="col-12">
+                <label class="form-label" for="@(id)_Building1">Корпус</label>
+                <input type="text" class="form-control" oninput="changeAdrElement(@(id)_Building1)" name="@(name).Building1" id="@(id)_Building1" data-clean value="">
+            </div> 
+        </div>
+    </div>
+
+    <div class="col-4">
+        <div class="input-group align-items-end">
+            <div class="col-12">
+                <label class="form-label" for="@(id)_Building2">Строение</label>
+                <input type="text" class="form-control" oninput="changeAdrElement(@(id)_Building2)" name="@(name).Building2" id="@(id)_Building2" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-4">
+        <div class="input-group align-items-end">
+            <div class="col-12">
+                <label class="form-label" for="@(id)_Apartment">Квартира</label>
+                <input type="text" class="form-control" oninput="changeAdrElement(@(id)_Apartment)" name="@(name).Apartment" id="@(id)_Apartment" data-clean value="">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,189 @@
+﻿@using AisLogistics.App.ViewModels.Reports
+@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    var data = Model.Model as ReportNavViewRequestModel;
+
+}
+
+<link rel="stylesheet" href="~/assets/css/reports.css" asp-append-version="true" />
+<section id="section-report">
+    <div class="row">
+        <div class="col-auto">
+            <div class="card">
+                <ul class="list-group list-group-flush rounded">
+                    @foreach (var item in data.Reports)
+                    {
+                        <li id="@item.Id.ToString()" data-url-action="@item.Path" class="list-group-item r-s-16 cursor-pointer">
+                            @item.Name
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="col">
+            <div id="empty-table" class="card active-border">
+                <div class="card-body">
+                    <div class="alert-custom" role="alert">
+                        <div class="b-s-16">Внимание</div>
+                        <div class="r-s-14">Выберите отчет</div>
+                    </div>
+                </div>
+            </div>
+            <div id="navs-tabs-default" class="d-none">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="reportFilter"></div>
+                        <hr/>
+                        <div class="text-end">
+                            <a href="javascript:void(0)" id="reportPrint" data-report-print="ReportDataPrint" type="button" class="btn btn-danger d-none" disabled>Печать</a>
+                            <a href="javascript:void(0)" id="reportDownload" data-report-upload="ReportDataDownLoad" type="button" class="btn btn-success d-none" disabled>Выгрузить</a>
+                            <a href="javascript:void(0)" id="reportSubmit" type="button" class="btn btn-primary">Cформировать</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="reportContentWrapper" class="card mt-3 d-none ">
+                    <div class="card-body">
+                        <div class="report-content" id="reportContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts
+{
+    <script>
+        $("[data-url-action]").on('click', function () {
+            $('[data-url-action]').removeClass('bg-light');
+            $('[data-url-action]').removeClass('r-a-16');
+            $(this).addClass('bg-light');
+            $(this).addClass('r-a-16');
+            let url = $(this).data('url-action');
+            let id = $(this).attr('id')
+            $.ajax({
+                url: '/Reports/ReportPage',
+                type: 'Get',
+                data: { navId: id, urlAction: url, },
+                beforeSend: () => {
+                    $.pageBlock();
+                },
+                complete: () => {
+                    $.unblockUI();
+                },
+                success: function (content) {
+                    $('#reportFilter').empty();
+                    $('#reportFilter').html(content);
+                    $('#reportContent').empty();
+                    $('#reportContentWrapper').addClass('d-none');
+                    $('#reportPrint').addClass('d-none');
+                    $('#reportDownload').addClass('d-none');
+                    $('#empty-table').addClass('d-none');
+                    $('#navs-tabs-default').removeClass('d-none');
+                }
+            });
+        });
+
+        $('#reportSubmit').on('click', function () {
+
+            let formData = sendingForm.serialize();
+
+            $.ajax({
+                type: sendingForm.attr('method'),
+                url: sendingForm.attr('action'),
+                data: formData,
+                beforeSend: () => {
+                    btnSubmit.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+                    btnSubmit.prop('disabled', true);
+                    btnPrint.prop('disabled', true);
+                    btnPrint.addClass("d-none");
+                    btnDownload.prop('disabled', true);
+                    btnDownload.addClass("d-none");
+                    $('#reportContentWrapper').addClass('d-none');
+                },
+                success: function (responce) {
+                    $('#reportContent').html(responce);
+                    $('#reportContentWrapper').removeClass('d-none');
+
+                    btnPrint.prop('disabled', false);
+                    btnPrint.removeClass("d-none");
+                    btnDownload.prop('disabled', false);
+                    btnDownload.removeClass("d-none");
+                },
+                complete: () => {
+                    btnSubmit.prop('disabled', false);
+                    btnSubmit.html('Cформировать')
+                }
+            });
+        })
+
+        $('#reportPrint').on('click', function () {
+
+            let formData = sendingForm.serialize();
+            let $url = $(this).data('reportPrint')
+
+            $.ajax({
+                type: 'Get',
+                url: '/Reports/' + $url,
+                data: formData,
+                beforeSend: () => {
+                    btnPrint.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+                    btnPrint.prop('disabled', true);
+                    btnSubmit.prop('disabled', true);
+                    btnDownload.prop('disabled', true);
+                },
+                success: function (responce) {
+                    if (responce != null) printPDF(responce);
+                },
+                complete: () => {
+                    btnSubmit.prop('disabled', false);
+                    btnDownload.prop('disabled', false);
+                    btnPrint.prop('disabled', false);
+                    btnPrint.html('Печать')
+                }
+            });
+        })
+
+        $('#reportDownload').on('click', function () {
+
+            var $url = '/Reports/' + $(this).data('reportUpload');
+            let formData = sendingForm.serializeArray();
+            console.log(formData);
+
+            btnPrint.prop('disabled', true);
+            btnSubmit.prop('disabled', true);
+            btnDownload.prop('disabled', true);
+
+            let form = document.createElement("form");
+            form.target = "_blank";
+            form.method = "POST";
+            form.action = $url;
+            form.style.display = "none";
+
+            formData.forEach(function (value, i) {
+                for (let key in value) {
+                    let input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = value.name;
+                    input.value = value.value;
+                    form.appendChild(input);
+                }
+            });
+
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+
+            //window.open('/Reports/' + $url + '?' + $.param(formData), '_blank');
+
+            btnSubmit.prop('disabled', false);
+            btnDownload.prop('disabled', false);
+            btnPrint.prop('disabled', false);
+        })
+
+
+    </script>
+   @*  <script src="~/assets/js/pages/reports.js" asp-append-version="true" type="text/javascript"></script> *@
+}

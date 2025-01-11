@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Privacy Policy";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Use this page to detail your site's privacy policy.</p>
+<select id="test">
+</select>
+
+@section Scripts
+{
+<script>
+    $(function() {
+        const select = $("#test"),
+            data = [
+                {
+                    id: 1, 
+                    text: "test", 
+                    job: "admin"
+                }];
+
+        select.select2({
+            data: data,
+            templateSelection: function (data, container) {
+                $(data.element).attr('data-job', data.job);
+                return data.text;
+            }
+        });
+    });
+</script>
+}

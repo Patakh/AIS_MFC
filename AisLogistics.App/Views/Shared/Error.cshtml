@@ -1,0 +1,22 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Ошибка";
+}
+
+<h1 class="text-danger">Ошибка.</h1>
+<h2 class="text-danger">Во время обработки Вашего запроса произошла ошибка.</h2>
+
+@if (Model?.ShowRequestId ?? false)
+{
+    <p>
+        <strong>ID запроса:</strong> <code>@Model?.RequestId</code>
+    </p>
+}
+
+<p>
+   Обратитесь к <strong>администратору</strong>.
+</p>
+
+<div class="text-center mt-4">
+    <img src="~/assets/img/illustrations/boy-working-light.png" alt="girl-doing-yoga-light" width="500" class="img-fluid" data-app-light-img="illustrations/boy-working-light.png" data-app-dark-img="illustrations/boy-working-dark.png">
+</div>

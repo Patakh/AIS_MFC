@@ -1,0 +1,51 @@
+﻿@model List<AisLogistics.App.Models.DTO.Systems.TestEmployeesQuestionModelDto>
+@{
+    int i = 1;
+}
+
+@if (Model.Any())
+{
+    <div class="row r-s-14">
+        @foreach (var question in Model)
+        {
+            <div class="border-bottom col-12 mb-2 pb-2">
+                <div class="text-muted">Вопрос №@(i++)</div>
+                <strong class=""> @question.QuestionName</strong>
+                @if (question.Answers.Any())
+                {
+                    foreach (var spr_answer in question.Answers)
+                    {
+                        <div class="ml-4">
+                            @if (spr_answer.IsAnswer && spr_answer.IsTruth)
+                            {
+                                <i class="bi bi-check text-success">@spr_answer.AnswerName</i>
+                            }
+                            else if (spr_answer.IsAnswer && !spr_answer.IsTruth)
+                            {
+                                <i class="bi bi-x text-danger">@spr_answer.AnswerName</i>
+                            }
+                            else if (!spr_answer.IsAnswer && spr_answer.IsTruth)
+                            {
+                                <i class="bi bi-dash text-warning">@spr_answer.AnswerName</i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-dash text-secondary">@spr_answer.AnswerName</i>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="ml-4"><i class="md md-close text-mfc_red"><span class="text-muted"> Нет ответа</span></i></div>
+                }
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="row justify-content-center">
+        <h4 class="text-mfc_red">Тест не пройден</h4>
+    </div>
+}

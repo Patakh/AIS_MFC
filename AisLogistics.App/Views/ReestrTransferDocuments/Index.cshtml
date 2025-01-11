@@ -1,0 +1,274 @@
+﻿@using AisLogistics.App.Models.DTO.ReestrTransferDocuments
+@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    //var isView = (bool)ViewBag.CasesAllView;
+}
+
+<style>
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .active_transfer {
+        border-left: 3px solid #5a8dee !important;
+    }
+
+    .transfer_wrapper {
+        height: 75vh;
+    }
+
+    .transfer-table_wrapper {
+        height: 100%;
+    }
+
+    .casesTransfer_wrapper {
+        height: 70vh;
+    }
+
+    .Transfer-menu-column {
+        /*       width: 3.5em;
+                max-width: 3.5em;*/
+    }
+
+    .table-transfer  {
+        margin: 0 !important;
+    }
+
+    .table-transfer td {
+        padding: 0 !important;
+    }
+
+    table.dataTable {
+        margin-top:0 !important; 
+    }
+
+        table.dataTable thead tr {
+            display: none !important
+        }
+
+    .pagination .page-item.previous .page-link {
+        display: none !important;
+    }
+
+    .pagination .page-item.next .page-link {
+        display: none !important;
+    }
+
+</style>
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-3">
+                    <div class="mb-3">
+                        <div class="">
+                            <div class="row">
+                                <div class="col-9">
+                                    <select id="selectOfficeFilter" class="form-select">@Html.Raw(ViewBag.OfficesReceptionCustomer)</select>
+                                </div>
+                                <div class="col-3">
+                                    <a asp-controller="ReestrTransferDocuments" asp-action="TransferDocumentsChangeModalAdd" class="btn btn-primary w-100" data-btn-type="modal" data-bs-toggle="tooltip">Добавить</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="transfer_wrapper" id="transfer_wrapper">
+                        <div class="table-responsive">
+                            <table id="@Model.TableName" data-action-table="@Model.TableMethodAction" class="table table-transfer table-no-border mt-0"></table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-9">
+                    <div class="card active-border" id="empty-table">
+                        <div class="card-body">
+                            <div class="alert-custom" role="alert">
+                                <div class="b-s-16">Внимание</div>
+                                <div class="r-s-14">Выберите реестр</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card transfer-table_wrapper d-none">
+                        <div class="card-header">
+                            <div class="card-title b-s-18 mb-0" id="card_title"></div>
+                        </div>
+                        <div class="card-body pt-0">
+                            <div class="table-responsive casesTransfer_wrapper" id="casesTransfer_wrapper"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        const $table = $('#@(Model.TableName)');
+        const showTable = () => {
+            $("#empty-table").hide();
+            $(".transfer-table_wrapper").removeClass("d-none");
+        };
+        const hiddenTable = () => {
+            $("#empty-table").show();
+            $(".transfer-table_wrapper").addClass("d-none");
+        };
+
+        $(document).ready(function () {
+
+            $table.DataTable({
+                sDom: "<'row'<'col-sm-12'tr>>" +
+                      "<'row'<'col-sm-12 col-md-12'p>>",
+                processing: true,
+                serverSide: true,
+                ordering: false,
+                filter: true,
+                searchDelay: 1500,
+                ajax: {
+                    url: $table.data('action-table'),
+                    type: "POST",
+                    datatype: "json",
+                    data: function (data) {
+                        data['officeId'] = $('#selectOfficeFilter').val();
+                    }
+                },
+                columns: [
+                    {
+                        title: '',
+                        name: 'transfer',
+                        render: function (data, type, row) {
+                            let departament = row.departementName !== null && row.departementName.length > 0 ? row.departementName : '-';
+                            let content = `<div data-transfer-id="${row.id}" class="card cursor-pointer mb-3">
+                                                        <div class="card-body fs-12 pb-0">
+                                                            <div class="d-flex justify-content-between mb-1">
+                                                               <div data-reestr-number="${row.reestrNumber}" class="b-s-14">№ ${row.reestrNumber}</div>
+                                                               <div class="text-muted"><span class="text-body">Количество: </span>${row.countService}</div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-sm-12 r-l-12">Дата:</div><div class="col-sm-12 r-s-12 mb-2">${row.dateAdd}</div>
+                                                                <div class="col-sm-12 r-l-12">Услуга:</div><div class="col-sm-12 r-s-12 mb-2">${row.serviceName}</div>
+                                                                <div class="col-sm-12 r-l-12">Поставщик:</div><div class="col-sm-12 r-s-12 mb-2">${row.providerName}</div>
+                                                                <div class="col-sm-12 r-l-12">Департамент:</div><div class="col-sm-12 r-s-12 mb-2">${departament}</div>
+                                                                <div class="col-sm-12 r-l-12">Сотрудник:</div><div class="col-sm-12 r-s-12 mb-2">${row.employeesFioAdd}</div>
+                                                            </div>
+                                                            <div class="row border-top-light">
+                                                                <div class="col-4 my-1">
+                                                                    <a href="javascript:void(0);"  data-edit-reestr class="btn btn-sm btn-icon text-primary btn-outline-none" title="Редактирование номера">
+                                                                        <i class="bi bi-pencil-square"></i> Изменить
+                                                                    </a>
+                                                                </div>
+                                                                <div class="col-4 my-1">
+                                                                    <a href="javascript:void(0)" data-print-reestr class='btn btn-sm btn-icon text-primary btn-outline-none'>
+                                                                        <i class="bi bi-printer"></i> Напечатать
+                                                                    </a>
+                                                                </div>
+                                                                <div class="col-4 my-1">
+                                                                    <a href="javascript:void(0)" data-download-reestr class='btn btn-sm btn-icon text-primary btn-outline-none'>
+                                                                        <i class='bi bi-download'></i> Выгрузить
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>`;
+
+                            return content;
+                        }
+                    },
+                ]
+            }).on('click', '[data-transfer-id]', function (e) { transferView(e) })
+              .on('click', '[data-edit-reestr]', function (e) { transferEdit(e) })
+              .on('click', '[data-print-reestr]', function (e) { trasferPrint(e) })
+              .on('click', '[data-download-reestr]', function (e) { transferDownload(e) });
+       
+            $('#selectOfficeFilter').select2({
+                language: "ru",
+            }).on('change', function () {
+                $table.DataTable().ajax.reload();
+                return false;
+            });
+
+            new PerfectScrollbar("#transfer_wrapper");
+
+            function transferView (e) {
+                $('[data-transfer-id]').removeClass('active_transfer');
+                $(e.currentTarget).addClass('active_transfer');
+
+                let id = $(e.currentTarget).data('transfer-id');
+
+                let text = $(e.currentTarget).find('[data-reestr-number]').data('reestr-number');
+
+                $('#card_title').html("Реестр №" + text);
+                $.ajax({
+                    url: '/ReestrTransferDocuments/TransferDocumentsChangeModalView',
+                    type: 'POST',
+                    data: { id: id },
+                    beforeSend: () => {
+                        $.pageBlock();
+                    },
+                    complete: () => {
+                        $.unblockUI();
+                        showTable();
+                    },
+                    success: function (content) {
+                        $('#casesTransfer_wrapper').empty();
+                        $('#casesTransfer_wrapper').html(content);
+                    }
+                });
+            };
+
+            function transferEdit (e) {
+                let th = e.currentTarget;
+                e.stopPropagation();
+                let id = $(th).parents('[data-transfer-id]').data('transfer-id');
+
+                $.ajax({
+                    url: '/ReestrTransferDocuments/TransferDocumentsChangeModalEdit',
+                    type: 'POST',
+                    data: { id: id },
+                    beforeSend: () => {
+                        $.pageBlock();
+                    },
+                    complete: () => {
+                        $.unblockUI();
+                    },
+                    success: function (content) {
+                        $('#mainModal').html(content).modal('show');
+                    }
+                });
+            };
+
+            function trasferPrint (e) {
+                let th = e.currentTarget;
+                e.stopPropagation();
+                let id = $(th).parents('[data-transfer-id]').data('transfer-id');
+
+                $.ajax({
+                    url: '/ReestrTransferDocuments/TransferDocumentsPrint',
+                    type: 'POST',
+                    data: { id: id },
+                    beforeSend: () => {
+                        $.pageBlock();
+                    },
+                    complete: () => {
+                        $.unblockUI();
+                    },
+                    success: function (data) {
+                        printPDF(data);
+                    }
+                });
+            };
+
+            function transferDownload (e) {
+                let th = e.currentTarget;
+                e.stopPropagation();
+                let id = $(th).parents('[data-transfer-id]').data('transfer-id');
+
+                let url = '@Url.Action("TransferDocumentsDownload", "ReestrTransferDocuments")/?id=' + id;
+                window.open(url, "_blank");
+            };
+ 
+        });
+    </script>
+}
+

@@ -1,0 +1,256 @@
+﻿@using AisLogistics.App.ViewModels.Cases
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    var responseData = Model.Model as SearchCasesResponseData;
+    //var filterselect = new string[] { "По умолчанию", "по дате возрастания", "по дате убывания", "по дням возростания", "по дням убывания" };
+    //var filterSelectOptions = string.Join("", filterselect.Select((s, i) => $"<option value=\"{i}\">{s}</option>"));
+    //var isView = (bool)ViewBag.CasesAllView;
+}
+
+<link rel="stylesheet" href="~/assets/css/css-reestr.css" asp-append-version="true" />
+
+<section class="search-bar-wrapper">
+    <form id="services-search-form" class="mb-3">
+        <div class="row">
+            <div class="col-3">
+                <select class="form-select select select2-search" asp-for="@responseData.ReceptionOfficeId" asp-items="@responseData.OfficesReceptionCustomerList" form="services-search-form">
+                </select>
+            </div>
+            <div class="col-7">
+                <div class="search-bar">
+                    <!-- input search -->
+                    <fieldset class="page-search-input input-group position-relative m-0">
+                        <input type="search" asp-for="@responseData.Query" class="form-control rounded-right ps-2" placeholder="Номер обращения, ПКПВД, ФИО, адрес или номер телефона" data-query>
+                    </fieldset>
+                    <!--/ input search -->
+                </div>
+            </div>
+        </div>
+    </form>
+<div class="card">
+    <div class="card-body">
+        <!-- datatable start -->
+        <div class="table-responsive">
+            <table id="@Model.TableName" data-action-table="@Model.TableMethodAction" class="directory_names-items table table-fs"></table>
+        </div>
+        <!-- datatable ends -->
+    </div>
+</div>
+</section>
+
+
+@section Scripts
+{ 
+    <script>
+
+        function CallCustomerV3(id, customer_id, tel) {
+            event.stopPropagation()
+            $.ajax({
+                type: "GET",
+                url: "/Cases/CallPhoneV3",
+                data: { caseid: id, customerId: customer_id, phone: tel },
+                success: function (result) {
+                    if (typeof ws !== 'undefined') {
+                        ws.send(result);
+                    } else {
+                        var socket = new WebSocket("ws://localhost:8887");
+                        socket.onopen = function () {
+                            socket.send(result);
+                        };
+                        socket.onmessage = function (event) {
+                        }
+                    }
+                },
+                error: function (event) {
+                }
+            });
+        }
+
+        const $tableCases = $("#@(Model.TableName)");
+
+        $(document).ready(function () {
+            $('select.select2-search').select2({});
+
+            $('#services-search-form select').change(function () {
+                $tableCases.DataTable().ajax.reload();
+                return false;
+            });
+
+
+           
+
+
+            $tableCases.DataTable({
+                sDom: "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                processing: true,
+                serverSide: true,
+                ordering: false,
+                filter: false,
+                searchDelay: 1500,
+                ajax: {
+                    url: $tableCases.data('action-table'),
+                    type: "POST",
+                    datatype: "json",
+                    data: function (data) {
+                        let form = document.querySelector('#services-search-form');
+                        var formData = new FormData(form);
+                        for (var pair of formData.entries()) {
+                            let name = pair[0].split('.')[1];
+                            if (pair[1]) data[name] = pair[1];
+                        }
+                    }
+                },
+                columns: [
+                    {//ДАТА И СТАТУС
+                        title: `Дата и статус`,
+                        //className: "case-dateAdd-column text-centr",
+                        //name: 'dateAdd',
+                        //name: 'statusId',
+                        render: function (data, type, row) {
+
+                            let colorStatus = "";
+                            switch (row.service.status.id) {
+                                case 0:
+                                    colorStatus = "warning";
+                                    break;
+                                case 1:
+                                    colorStatus = "success";
+                                    break;
+                                case 2:
+                                    colorStatus = "secondary";
+                                    break;
+                                case 4:
+                                    colorStatus = "bsecondary";
+                                    break;
+                                case 5:
+                                    colorStatus = "danger";
+                                    break;
+                            };
+                            let content = `<div class="table_date_status d-flex flex-column"><p>${row.casesMainDto.dateAdd}</p><p class="case-number-column">${row.casesMainDto.caseId}</p ><span class= "${colorStatus}">${row.service.status.name}</span></div > `;
+                            return content;
+                        }
+                    },
+
+                    {//Заявитель
+                        title: 'Заявитель',
+                        //className: "table_applicant",
+                        name: 'customer',
+                        render: function (data, type, row) {
+                            let content = '<div>'
+                            content += `<div class="b-s-14">${row.casesMainDto.applicant.name}</div>`;
+                            if (row.casesMainDto.applicant.address !== null)
+                                content += `<div class="d-flex"><div><img class="mb-auto me-1 " src="/img/location.svg" alt=""/> ${row.casesMainDto.applicant.address}</div></div>`;
+                            if (row.casesMainDto.applicant.phone !== null)
+                                content += `<div class="d-flex"><div><img class="mb-auto me-1" src="/img/phone.svg" alt=""/> ${row.casesMainDto.applicant.phone}</div></div>`;
+                            content += '</div>'
+                            return content;
+                        }
+                    },
+                    { //Услуга
+                        title: `Услуга`,
+                        //className: "case-services-column",
+                        name: 'servicesId',
+                        render: function (data, type, row) {
+                            let str = row.service.name.length > 90 ? row.service.name.slice(0, 90) + "..." : row.service.name
+                            return `<div><div title="${row.service.name}">${str}</div><div class="b-s-14">${row.service.office}</div></div>`;
+                        }
+                    },
+                    {
+                        title: 'Исполнитель',
+                        //className: "case-currentEmployee-column",
+                        name: 'currentEmployee',
+                        render: function (data, type, row) {
+                            return `<div>
+                                        <div class="b-s-14">${row.service.serivesStage.employeeCurrent.name}</div>
+                                        <div>${row.service.serivesStage.employeeCurrent.job}</div>
+                                        <div>${row.service.serivesStage.office}</div>
+                                    </div>`;
+                        }
+                    },
+                    {
+                        title: `Действие`,
+                        //className: "case-stage-column",
+                        name: 'stageId',
+                        render: function (data, type, row) {
+                            console.log(row);
+                            let call = "";
+
+                            if (row.caseApplicantPhoneDtos.length > 0) {
+                                for (var i = 0; i < row.caseApplicantPhoneDtos.length; i++) {
+                                    let phone = row.caseApplicantPhoneDtos[i];
+                                    let customerType = phone.customerType == 1 ? "Заявитель" : "Представитель";
+                                    call += `<li class="ps-3">`
+                                    call += `<a href="javascript:void(0);" class="align-middle" onclick="CallCustomerV3('${row.casesMainDto.caseId}','${row.service.id}','${phone.phone1}')">${phone.applicantName} ${customerType} ${phone.phone1} (осн)</a>`;
+                                    if (phone.phone2 != null) {
+                                        call += `<a href="javascript:void(0);" class="align-middle" onclick="CallCustomerV3('${row.casesMainDto.caseId}','${row.service.id}','${phone.phone2}')">${phone.applicantName} ${customerType} ${phone.phone2} (доп)</a>`;
+                                    }
+                                    call += '</li>';
+                                }
+                            }
+                            else {
+                                call += '<li>'
+                                call += "Нет данных";
+                                call += '</li>';
+                            }
+
+                            let content = "";
+                            content += `<div class="d-flex justify-content-between">`;
+                            content += `<div class="dropdown dropstart">
+                                          <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuCall" data-bs-toggle="dropdown" aria-expanded="false" onclick="event.stopPropagation()">
+                                                Позвонить
+                                          </button>
+                                                  <ul class="dropdown-menu width-dropdownMenuCall" aria-labelledby="dropdownMenuCall">
+                                            ${call}
+                                          </ul>
+                                        </div>`;
+                            content += `<a href="javascript:void(0);" data-service-id="${row.service.id}" data-stage-add class="btn btn-success waves-effect waves-float waves-light" role="button">Выдать</a>`;
+                            content += `</div>`
+                            return content;
+                        }
+                    }
+                ]
+            }).on('click', 'tbody tr', function () {
+                var val = $(this).find('.case-number-column').text();
+                window.open(`/Cases/Details?id=${val}`, "_blank");
+            }).on('click', '[data-stage-add]', function (e) { stageAdd(e) });
+
+
+            function stageAdd(e) {
+                e.stopPropagation();
+                let th = e.currentTarget;
+                let stageId = 7;
+                let serviceId = $(th).data('service-id');
+                let employeeId = '@responseData.EmployeeId';
+                let officeId = '@responseData.ReceptionOfficeId';
+
+                let request = {
+                    stageId: stageId,
+                    employeeId: employeeId,
+                    officeId: officeId,
+                    serviceId: serviceId,
+                };
+
+                $.ajax({
+                    url: '/Cases/ServiceStageSaveResult',
+                    type: 'Post',
+                    data: { request: request },
+                    beforeSend: () => {
+                        $.pageBlock();
+                    },
+                    complete: () => {
+                        $.unblockUI();
+                    },
+                    success: (content) => {
+                        $tableCases.DataTable().ajax.reload();
+                    }
+                });
+            }
+
+        });
+    </script>
+}
+

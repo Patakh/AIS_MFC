@@ -1,0 +1,81 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new GoskeyGetDocumentRequestData();
+}
+
+<div class="row justify-content-center" id="smev_request">
+    <div class="col-10">
+        <ul class="nav nav-tabs nav-justified tabs-line mb-3" id="smev-request-tablist" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#smev-request-tab1" type="button">Данные запроса</button>
+            </li>
+        </ul>
+        <div class="row justify-content-center" data-person>
+            <div class="col-10">
+                <div class="row mb-1">
+                    <div class="col-12">
+                        <label class="form-label">Заявители</label>
+                        <select class="form-select select2-nosearch applicants">
+                            <option value="">Выберите заявителя</option>
+                            @for (int i = 0; i < applicants.Count; i++)
+                            {
+                                <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request.Series">Серия паспорта</label>
+                        <input type="text" class="form-control required" asp-for="@request.Series" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request.Number">Номер паспорта</label>
+                        <input type="text" class="form-control required" asp-for="@request.Number" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request.Phone">Номер телефона</label>
+                        <input type="text" class="form-control required" asp-for="@request.Phone" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var applicants = @Json.Serialize(applicants);
+    var formContent = document.getElementById("smev-data-form-content");
+    var smevForm = {
+        init: () => {
+            $('#smev_request').find('.required').each(function () {
+                addValidation($(this));
+            });
+            
+            select2Init($('#smev_request'));            
+            let options = { clearIncomplete: true, showMaskOnHover: false }
+            $(formContent).find('[id$="Series"]').inputmask("9{4}", options);
+            $(formContent).find('[id$="Number"]').inputmask("9{6}", options);
+            $(formContent).find('[id$="Phone"]').inputmask("79{10}", options);
+        }
+    }
+
+    $('select.applicants').each(function () {
+        $(this).on('change',
+            function () {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]').each(function () {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$="Series"]').val(applicants[id].documentSerial);
+                    $block.find('[name$="Number"]').val(applicants[id].documentNumber);
+                    $block.find('[name$="Phone"]').val(applicants[id].phone);
+                }
+            }
+        );
+    });
+</script>

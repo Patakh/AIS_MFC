@@ -1,0 +1,28 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.KBR.Federal.HomeVizitModel
+@{
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="col-12">
+                <label asp-for="ServiceName" class="form-label">Оказываемая услуга</label>
+                <input asp-for="ServiceName" class="form-control" type="text" />
+            </div>
+
+            <div class="col-12">
+                <label asp-for="Address" class="form-label">Выезд по адресу</label>
+                <input asp-for="Address" class="form-control" type="text" />
+            </div>
+
+            <div class="col-12">
+                <label asp-for="ClientVizitReason" class="form-label">Причина выезда к клиенту</label>
+                <input asp-for="ClientVizitReason" class="form-control" type="text" />
+            </div>
+
+            <div class="col-12">
+                <label asp-for="DocumentRequsites" class="form-label">Подтверждающий документ</label>
+                <input asp-for="DocumentRequsites" class="form-control" type="text" />
+            </div>
+        </div>
+    </div>
+</div>

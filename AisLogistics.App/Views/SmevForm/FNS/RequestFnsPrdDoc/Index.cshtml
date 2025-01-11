@@ -1,0 +1,379 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var request = new SendFnsPrdDocRequestData();
+}
+<style>
+    #smev-data-form-content span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content tr.is_active {
+        color: #39da8a;
+    }
+
+    #smev-request-tabContent .tab-pane {
+        height: 550px;
+    }
+
+</style>
+<div class="row justify-content-center" id="smev_request">
+    <div class="col-8">
+        <div class="row mt-3">
+            <div class="col-12 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Вид государственной регистрации</div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+            <div class="col-12">
+                <select class="select2-nosearch required" asp-for="@request.GosRegType">
+                    <option value="Ip">ИП</option>
+                    <option value="Ul">ЮЛ</option>
+                </select>
+            </div>
+        </div>
+        <div class="row justify-content-center mb-2">
+            <div class="row mt-1">
+                <div class="col-12 mx-auto">
+                    <div class="divider text-start">
+                        <div class="divider-text fs-5 b-s-16">Документы</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-end mb-2">
+                <div class="col-12">
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fa fa-exclamation-circle pr-4" style="color: #856404" aria-hidden="true"></i>
+                        <span>Только файлы c расширением ZIP</span>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button type="button" class="btn btn-outline-secondary buttons_height lh-1" onclick="getServiceDocuments()">
+                        ОБНОВИТЬ
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary buttons_height lh-1" data-upload-type="Desktop">
+                        ЗАГР
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary buttons_height lh-1" data-upload-type="Scan">
+                        СКАН
+                    </button>
+                </div>
+            </div>
+            <div class="col-12">
+                <table id="attachmentsBlock" class="table table-hover table-striped" style="table-layout: fixed">
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-10" id="noDocuments" style="display:none">
+                <div class="alert alert-primary" role="alert">
+                    <h6 class="alert-heading mb-1"></h6>
+                </div>
+                <div class="alert alert-warning" role="alert">
+                    <i class="fa fa-exclamation-circle pr-4" style="color: #856404" aria-hidden="true"></i>
+                    <span>Добавьте файлы к услуге c расширением ZIP</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+
+    var $formContent = $("#smev_request");
+    var documentId;
+    var smevForm = {
+        init: () => {
+            fileUploadInit($formContent);
+            $.post(`/SmevFns/GetFnsDepartments`,
+                function (items) {
+                    $('#request_FnsDepartmentId');
+                    items.sort((prev, next) => {
+                        if (next.code.startsWith(regionCode)) {
+                            return 1;
+                        } else return -1;
+                    });
+                    items.forEach((item) => {
+                        $('#request_FnsDepartmentId').append(new Option(`${item.name} (${item.address})`, item.code));
+                    });
+                });
+
+            $formContent.find('[data-disabled]').each(function () {
+                if (!$(this).hasSelector(":invalid")) {
+                    showMessage("Invalid value");
+                }
+            });
+            select2Init($formContent);
+            getServiceDocuments();
+            //===документы===
+
+        }
+    };
+    function getServiceDocuments() {
+        let i = 0;
+        $.ajax({
+            url: '/Cases/ServiceDocumentsJson',
+            type: "POST",
+            async: false,
+            data: { id: $('#ServiceId').val() },
+            success: function (data) {
+                $('#attachmentsBlock tbody').empty();
+                documentId = data[0].id;
+                let k = 0;
+                data.forEach(doc =>
+                    doc.files.forEach(file => {
+                        if (file.extension == '.zip') {
+                            k++;
+                            i++;
+                            let container = $('<div class="my-3">');
+                            container.attr('data-attach', k - 1);
+                            let tr = $('<tr>');
+                            tr.addClass('align-middle');
+                            tr.append(`<td data-index class="px-2" style="width: 1%;">${k}.</td>`);
+                            tr.append(`<td data-name class="px-2">${file.name}${file.extension}</td>`);
+                            tr.append(
+                                `<td class="px-2" style="width: 350px; max-width: 350px;">
+                                                                                         <select onchage="docChange(this)" required class="select2DOC Fns select2-search required">
+                                                                                                <option value="">Выберите тип</option>
+                                                                                                <option value="01">Транспортный контейнер, подготовленный
+                                                                                                с помощью ПО «Подготовка пакета электронных документов для государственной регистрации»</option>
+                                                                                          </select>
+                                                                                     </td>`);
+                            tr.append(
+                                `<td class="px-2" style="width: 10%;">${(file.size / 1024).toFixed(2)} кБ</td>`);
+                            tr.append(
+                                `<td class="px-2" style="width: 1%;">
+                                                                                         <a class="btn btn-sm btn-icon viewing-file" lgBeforeOpen data-bs-toggle="tooltip" title="" data-sub-html="${file.name}${file.extension}" href="/SmevBase/DownloadFile/${file.id}" data-bs-original-title="Просмотр" aria-label="Просмотр">
+                                                                                             <i class="bi bi-eye"></i>
+                                                                                         </a>
+                                                                                    </td>`);
+                            tr.append(
+                                `<td class="px-2" style="width: 1%;">
+                                                                         <i onclick="docRemove(this)" role="button" class='bi bi-trash'></i>
+                                                                     </td>`);
+                            let trHide = $(
+                                '<tr class="" style="display:none" >');
+                            trHide.append(
+                                `<td style="width: 1%;">
+                                                                                         <input type="text" name="request.Attachments[${k - 1}].FileName" disabled value="${file.id}">
+                                                                                     </td>`);
+                            trHide.append(
+                                `<td style="width: 1%;">
+                                                                                         <input type="text" name="request.Attachments[${k - 1}].IsFtpReference" disabled value="true">
+                                                                                     </td>`);
+                            trHide.append(
+                                `<td style="width: 1%;">
+                                                                                         <input type="text" name="request.Attachments[${k - 1}].AttachmentTypeCode" disabled value="">
+                                                                                    </td>`);
+                            container.append(tr);
+                            container.append(trHide);
+                            $('#attachmentsBlock tbody').append(container);
+                        }
+                    })
+                )
+                $('.select2DOC').select2({
+                    dropdownParent: $('#mainModal')
+                });
+
+                $(document).on('change', 'select.select2DOC', function (event) {
+                    var $select = $(this);
+                    var $option = $select.find('option:selected').val();
+                    var row = $select.closest('tr');
+                    if ($option == '') {
+                        row.removeClass('is_active');
+                    } else {
+                        row.addClass('is_active');
+                    }
+                });
+
+                $('#attachmentsBlock').find("select").each(function () {
+                    $(this).on('change', function (event) {
+
+                        let trHide = event.target.closest('tr').nextSibling;
+                        $(trHide).find('[name$="AttachmentTypeCode"]').val(event.target.value);
+                        switch (event.target.value) {
+                            case '':
+                                $(trHide).removeClass('active');
+                                visibilityBlock($(trHide), true, true);
+                                break;
+
+                            default:
+                                $(trHide).addClass('active');
+                                visibilityBlock($(trHide), true, false);
+                        }
+                        renameAttach();
+                    });
+                });
+
+
+                $('#attachmentsBlock').find('[type="checkbox"]').each(function () {
+                    $(this).on('change', function (event) {
+                        let trHide = event.target.closest('tr').nextSibling;
+                        switch (event.target.checked) {
+                            case false:
+                                $(trHide).removeClass('active');
+                                visibilityBlock($(trHide), true, true);
+                                break;
+                            case true:
+                                $(trHide).addClass('active');
+                                visibilityBlock($(trHide), true, false);
+                        }
+                        renameAttach();
+                    });
+                });
+                if (data.length == 0) {
+                    $formContent.find('#noDocuments').show();
+                    $formContent.find('.alert-heading').text('Нет документов');
+                } else if (i == 0) {
+                    $formContent.find('#noDocuments').show();
+                    $formContent.find('.alert-heading').text('Нет подходящих документов');
+                };
+                const dynamicGallery = document.getElementById('smev_request');
+                dynamicGallery.addEventListener('lgBeforeOpen', (event) => {
+                    $(dynamicGallery).find('[data-bs-toggle="tooltip"], .tooltip').tooltip("hide");
+                });
+                lightGallery(dynamicGallery, {
+                    selector: '.viewing-file',
+                    escKey: false
+                });
+            }
+        });
+    }
+    $formContent.find('.required').each(function () {
+        addValidation($(this));
+    });
+    function changeAddInfoParentType(el) {
+        switch (el.value) {
+            case "SecondParentDied":
+                visibilityBlock($(el).closest('[id^="ParentClone"]').find('[data-marriage]'), false, false);
+                break;
+            default:
+                disabledBlok($(el).closest('[id^="ParentClone"]').find('[data-marriage]'), true, true);
+                break;
+        }
+    }
+
+    function identityDocChange(el) {
+        let blockDoc = el.closest('fieldset');
+        let blockAct = blockDoc.closest('[data-clone]').querySelector('[data-child-act]');
+        switch (el.value) {
+            case "1":
+                $(blockAct).addClass('d-none');
+                $(blockDoc).find('input[id$="CodePodr"]').attr('disabled', false);
+                $(blockDoc).find('input[id$="CodePodr"]').addClass('required');
+                break;
+            case "4":
+                $(blockAct).removeClass('d-none');
+                if (!$(blockAct).find('.act').is(':checked')) {
+                    $(blockAct).find('.act').click();
+                }
+                $(blockDoc).find('input[id$="CodePodr"]').removeClass('required');
+                $(blockDoc).find('input[id$="CodePodr"]').attr('disabled', true);
+                break;
+        }
+    }
+
+    function hidingblock(blockId, tid, status) { //Функция запускается при клике ПОКАЗАТЬ
+        if (!tid) {
+            tid = blockId.id.split('_');
+            tid.pop();
+            tid = tid.join('_');
+            tid = tid + '_';
+        }
+        blockId?.querySelectorAll('input')?.forEach(item => {
+            item.value != '' ? item.classList.add('custom-input-value') : item.classList.remove('custom-input-value');
+        });
+        status ? blockId.classList.remove('d-none') : blockId.classList.toggle('d-none');
+        disableAddress('[data-disable-address]');
+        document.querySelector(`#${tid}Apartmen_Valuee`) ? document.querySelector(`#${tid}Apartmen_Valuee`).removeAttribute('disabled') : void 0;
+        document.querySelector(`#${tid}Apartmen_Typee`) ? document.querySelector(`#${tid}Apartmen_Typee`).removeAttribute('disabled') : void 0;
+    };
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').hide();
+                } else {
+                    $block.hide();
+                }
+                break;
+            case false:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').show();
+                } else {
+                    $block.removeClass('d-none')
+                    $block.show();
+                }
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        removeValidation($(this));
+                    }
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                    if ($(this).hasClass('required')) {
+                        addValidation($(this));
+                    }
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    function docRemove(el) {
+        el.closest('[data-attach]').remove();
+        renameAttach();
+    }
+    function renameAttach() {
+        let indexActive = 0;
+        $('#attachmentsBlock [data-attach]').each((index, item) => {
+            $(item).attr('data-attach', index);
+            $(item).find('[data-index]').html(index + 1);
+            $(item).find('input[type="text"]').each(function () {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexActive));
+            });
+            if ($(item).find('tr.active').length > 0) indexActive++;
+        });
+    }
+
+    function ShowErrorInputs() {
+        for (let item of document.querySelectorAll('#smev_request input, select')) {
+            if (item.getAttribute('disabled') == null && item.classList.contains('required') && item.value == '' && item.is(":invalid")) {
+                $('#smev_request').find(`button[data-bs-target="#${item.closest('.tab-pane').id}"]`).trigger('click');
+                break;
+            }
+        }
+    }
+
+</script>

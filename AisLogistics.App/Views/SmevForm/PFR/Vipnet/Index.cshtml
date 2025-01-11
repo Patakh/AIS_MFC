@@ -1,0 +1,212 @@
+﻿@using SmevRouter
+@using Sentry
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new GetPfrVipnetQueryRequestData
+    {
+        Attachments = new RequestAttachment[]
+        {
+            new RequestAttachment()
+        }
+    };
+}
+
+<style>
+    #smev-request-tabContent .tab-pane {
+        height: 550px;
+    }
+
+    #smev-data-form-content div.lg-container {
+        position: relative;
+        z-index: 9999;
+    }
+</style>
+
+<div class="row justify-content-center" id="smev_request">
+    <div class="col-10">
+        <ul class="nav nav-tabs nav-justified tabs-line mb-3" id="smev-request-tablist" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#smev-request-tab1" type="button">Данные запроса</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="smev-request-tab-content">
+            <div class="tab-pane fade show active" id="smev-request-tab1" role="tabpanel">
+                <div class="row justify-content-center" data-person>
+                    <div class="col-10">
+                        <div class="row mb-1 align-items-end">
+                            <div class="col-8">
+                                <label class="form-label" asp-for="@request.TargetPfrId">Отделение ПФР</label>
+                                <select class="select2-nosearch required" asp-for="@request.TargetPfrId"
+                                        data-dictionary='{"dictionary":"Oksm"}'>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <button type="button" class="btn btn-success w-100 px-0" id="allFiles">
+                                    <i class="bi bi-check2-square"></i>
+                                    Выделить все
+                                </button>
+                            </div>
+                            @*<div class="col-12">
+                                <input class="form-check-input" type="checkbox" asp-for="@request.IsRcRequest">
+                                <label class="form-check-label b-s-16" asp-for="@request.IsRcRequest">
+                                    Запрос из ресурсного центра
+                                </label>
+                            </div>*@
+                            <hr />
+                            <div class="col-12">
+                                <button type="button" class="btn btn-outline-secondary buttons_height lh-1" onclick="getServiceDocuments()">
+                                    ОБНОВИТЬ
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary buttons_height lh-1" data-upload-type="Desktop">
+                                    ЗАГР
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary buttons_height lh-1" data-upload-type="Scan">
+                                    СКАН
+                                </button>
+                            </div>
+                            <div class="col-12">
+                                <table id="attachmentsBlock" class="table table-hover table-striped" style="table-layout: fixed">
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-10" id="noDocuments" style="display:none">
+                                <div class="alert alert-primary" role="alert">
+                                    <h6 class="alert-heading mb-1">Нет документов</h6>
+                                    <span>Добавьте файлы к услуге</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var $formContent = $("#smev_request");
+    var documentId;
+    var smevForm = {
+        init: () => {
+            fileUploadInit($formContent);
+            $formContent.find('.required').each(function () {
+                addValidation($(this));
+            });
+            fileUploadInit($formContent);
+            select2Init($formContent);
+
+            $.post(`/SmevPfr/GetPfrDepartments`,
+                function (dictionary) {
+                    $('#request_TargetPfrId').append(new Option('Не выбрано', ''));
+                    dictionary.forEach(item => $('#request_TargetPfrId').append(new Option(item.pfrName, item.id)));
+                });
+
+        }
+    };
+    getServiceDocuments();
+    function getServiceDocuments() {
+        $.ajax({
+            url: '/Cases/ServiceDocumentsJson',
+            type: "POST",
+            async: false,
+            data: { id: $('#ServiceId').val() },
+            success: function (data) {
+                $('#attachmentsBlock tbody').empty();
+                documentId = data[0].id;
+                let k = 0;
+                data.forEach(doc =>
+                    doc.files.forEach(file => {
+                        k++;
+                        //let docTypes = $('<select>');
+                        //docTypes.attr('data-dictionary', '{"dictionary":"MvdAisOpvAttachmentTypeCodesChild", "default_value":"02"}')
+                        //docTypes.addClass('required');
+                        //docTypes.addClass('form-select');
+
+                        let container = $('<div class="my-3">');
+                        container.attr('data-attach', k - 1);
+                        let tr = $('<tr>');
+                        tr.addClass('align-middle');
+                        tr.append(`<td data-index class="px-2" style="width: 1%;">${k}.</td>`);
+                        tr.append(`<td data-name class="px-2">${file.name}${file.extension}</td>`);
+                        //tr.append(`<td class="px-2" style="width: 40%;">${docTypes[0].outerHTML}</td>`);
+                        tr.append(`<td class="px-2" style="width: 10%;">${(file.size / 1024).toFixed(2)} кБ</td>`);
+                        //tr.append(`<td class="px-2" style="width: 1%;"><a class="btn btn-sm btn-icon viewing-file" data-bs-toggle="tooltip" title="" data-sub-html="${file.name}${file.extension}" href="/SmevBase/DownloadFile/${file.id}" data-bs-original-title="Просмотр" aria-label="Просмотр"><i class="bi bi-eye"></i></a></td>`);
+                        //tr.append(`<td class="px-2" style="width: 1%;"><i onclick="docMove('up', this)" role="button" class='bi bi-chevron-up btn-link'></i><i onclick="docMove('down', this)" role="button" class='bi bi-chevron-down btn-link'></i></td>`);
+                        tr.append(`<td class="px-2" style="width: 1%;"><i onclick="docRemove(this)" role="button" class='bi bi-trash'></i></td>`);
+                        tr.append(`<td class="px-2" style="width: 1%;"><input class="form-check-input" type="checkbox" checked></td>`);
+
+                        let trHide = $('<tr class="active" style="display: none;">');
+                        trHide.append(`<td style="width: 1%;"><input type="text" name="request.Attachments[${k - 1}].FileName" value="${file.id}"></td>`);
+                        trHide.append(`<td style="width: 1%;"><input type="text" name="request.Attachments[${k - 1}].IsFtpReference" value="true"></td>`);
+
+                        container.append(tr);
+                        container.append(trHide);
+                        $('#attachmentsBlock tbody').append(container);
+                    }))
+
+                $('#attachmentsBlock').find('[type="checkbox"]').each(function () {
+                    $(this).on('change', function (event) {
+                        let trHide = event.target.closest('tr').nextSibling;
+                        switch (event.target.checked) {
+                            case false:
+                                $(trHide).removeClass('active');
+                                visibilityBlock($(trHide), true, true);
+                                break;
+                            case true:
+                                $(trHide).addClass('active');
+                                visibilityBlock($(trHide), true, false);
+                        }
+                        renameAttach();
+                    });
+                });
+
+                if (data.length == 0) $formContent.find('#noDocuments').show();
+
+                //const dynamicGallery = document.getElementById('smev-request-tab1');
+                //dynamicGallery.addEventListener('lgBeforeOpen', (event) => {
+                //    $(dynamicGallery).find('[data-bs-toggle="tooltip"], .tooltip').tooltip("hide");
+                //});
+                //lightGallery(dynamicGallery, {
+                //    selector: '.viewing-file',
+                //    escKey: false,
+                //    closable: false
+                //});
+            }
+        });
+
+        $('#allFiles').on('click', (event) => {
+            $('#attachmentsBlock [type="checkbox"]').each((index, item) => {
+                $(item).prop('checked', true);
+                $(item).change();
+            });
+        });
+    }
+
+    function renameAttach() {
+        let indexActive = 0;
+        $('#attachmentsBlock [data-attach]').each((index, item) => {
+            $(item).attr('data-attach', index);
+            $(item).find('[data-index]').html(index + 1);
+            $(item).find('input[type="text"]').each(function () {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexActive));
+            });
+            if ($(item).find('tr.active').length > 0) indexActive++;
+        });
+    }
+
+    function docRemove(el) {
+        el.closest('[data-attach]').remove();
+        renameAttach();
+    }
+
+    function ShowErrorInputs() {
+        for (let item of document.querySelectorAll('#smev_request input')) {
+            if (item.getAttribute('disabled') == null && item.classList.contains('required') && item.value == '') {
+                $('#smev_request').find(`button[data-bs-target="#${item.closest('.tab-pane').id}"]`).trigger('click');
+                break;
+            }
+        }
+    }
+</script>

@@ -1,0 +1,886 @@
+﻿@using AisLogistics.DataLayer.Common.Dto.Case
+@using AisLogistics.App.ViewModels.SelectListViewModel
+@model CustomerServiceModelDto
+@{
+    var customer = Model;
+    var AddressDetails = customer.AddressDetails;
+    bool isGetCustomerSnils = false;
+    bool isGetCustomerInn = false;
+}
+
+<style>
+    .border-outline-input {
+        border: 1px solid #d4d8dd !important;
+    }
+
+    ul.address-list {
+        display: none;
+        width: 100%;
+        z-index: 1000;
+        position: absolute;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        background-clip: padding-box;
+        margin-top: -0.25rem;
+    }
+
+        ul.address-list li {
+            padding: 6px;
+        }
+
+            ul.address-list li:hover {
+                color: white;
+                background-color: #5a8dee;
+                cursor: pointer
+            }
+</style>
+
+<form asp-controller="Cases" asp-action="ServiceCustomerSave" id="sendingForm" method="post" role="form">
+    <input asp-for="@customer.Id" type="hidden" />
+    <input asp-for="@customer.DCasesId" type="hidden" />
+    <input asp-for="@customer.CustomerType" type="hidden" />
+    <fieldset>
+        <!-- Документ, удостоверяющий личность -->
+        <div class="row g-3">
+            <div class="col-11 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Документ, удостоверяющий личность</div>
+                </div>
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-11 mx-auto">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@customer.SDocumentsIdentityId">Тип документа</label>
+                        <select type="text" class="form-select select2" asp-for="@customer.SDocumentsIdentityId" asp-items="@SelectListViewModel.DocumentTypeListBase"></select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-3">
+                        <label class="form-label" asp-for="@customer.DocumentSerial">Серия</label>
+                        <input type="text" class="form-control" placeholder="Серия" asp-for="@customer.DocumentSerial">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="@customer.DocumentNumber">Номер</label>
+                        <input type="text" class="form-control" placeholder="Номер" asp-for="@customer.DocumentNumber" />
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="@customer.DocumentIssueDate">Дата выдачи</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                            <input asp-for="@customer.DocumentIssueDate" type="text" class="form-control pickadate" placeholder="Дата выдачи" value="@(customer.DocumentIssueDate.HasValue ?  customer.DocumentIssueDate.Value.ToShortDateString() : "" )" />
+                        </div>
+                    </div>
+                    <div class="col-3" data-document-code>
+                        <label class="form-label" asp-for="@customer.DocumentCode">Подразделение</label>
+                        <input type="text" class="form-control" placeholder="Подразделение" asp-for="@customer.DocumentCode">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@customer.DocumentIssueBody">Кем выдан</label>
+                        <input type="text" class="form-control" placeholder="Кем выдан" asp-for="@customer.DocumentIssueBody">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Персональные данные -->
+        <div class="row g-3">
+            <div class="col-11 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Персональные данные</div>
+                </div>
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-11 mx-auto">
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@customer.LastName">Фамилия</label>
+                        <input type="text" class="form-control" placeholder="Фамилия" asp-for="@customer.LastName" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@customer.FirstName">Имя</label>
+                        <input type="text" class="form-control" placeholder="Имя" asp-for="@customer.FirstName">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@customer.SecondName">Отчество</label>
+                        <input type="text" class="form-control" placeholder="Отчество" asp-for="@customer.SecondName">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@customer.DocumentBirthDate">Дата рождения</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                            <input asp-for="@customer.DocumentBirthDate" type="text" class="form-control pickadate" placeholder="Дата рождения" value="@customer.DocumentBirthDate.Value.ToShortDateString()">
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <label class="d-block form-label">Пол</label>
+                        <div class="form-check form-check-inline mt-2">
+                            <input class="form-check-input" type="radio" asp-for="@customer.CustomerGender" id="Customer_CustomerGender1" value="1" checked="checked">
+                            <label class="form-check-label" for="Customer_CustomerGender1"><i class="bi bi-gender-male fs-6"></i> Мужской</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" asp-for="@customer.CustomerGender" id="Customer_CustomerGender2" value="2">
+                            <label class="form-check-label" for="Customer_CustomerGender2"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@customer.DocumentBirthPlace">Место рождения</label>
+                        <input type="text" class="form-control" placeholder="Место рождения" asp-for="@customer.DocumentBirthPlace">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@customer.CustomerAddress">Адрес регистрации</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Адрес регистрации" asp-for="@customer.CustomerAddress" aria-describedby="button-addon2">
+                            <button type="button" class="btn border-outline border-outline-input waves-effect" id="button-addon2" data-bs-toggle="collapse" data-bs-target="#CustomerAddressDetails" aria-expanded="false" aria-controls="CustomerAddressDetails">
+                                <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="input-group" id="customerAddress">
+                            <ul class="list-group address-list w-100">Выберите вариант или продолжите ввод</ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="collapse row mb-3" id="CustomerAddressDetails">
+                    <div class="col-11 mx-auto">
+                        <div class="row">
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@customer.AddressDetails.Region.ShortName">Тип</label>
+                                <input type="text" class="form-control" placeholder="Тип" asp-for="@customer.AddressDetails.Region.ShortName" data-clean>
+                                <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Region.Name" data-clean>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@customer.AddressDetails.Region.Value">Регион</label>
+                                <input type="text" class="form-control" placeholder="Регион" asp-for="@customer.AddressDetails.Region.Value" data-clean>
+                                <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Region.ObjectGuid" data-clean>
+                                <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Region.RegionCode" data-clean>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@customer.AddressDetails.Area.ShortName">Тип</label>
+                                <input type="text" class="form-control" placeholder="Тип" asp-for="@customer.AddressDetails.Area.ShortName" data-clean>
+                                <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Area.Name" data-clean>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@customer.AddressDetails.Area.Value">Муницип. Район/окр</label>
+                                <input type="text" class="form-control" placeholder="Муницип. Район/окр" asp-for="@customer.AddressDetails.Area.Value" data-clean>
+                                <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Area.ObjectGuid" data-clean>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@customer.AddressDetails.CityAndRuralSettlements.ShortName">Тип</label>
+                                <input type="text" class="form-control" placeholder="Тип" asp-for="@customer.AddressDetails.CityAndRuralSettlements.ShortName" data-clean>
+                                <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.CityAndRuralSettlements.Name" data-clean>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@customer.AddressDetails.CityAndRuralSettlements.Value">Поселение</label>
+                                <input type="text" class="form-control" placeholder="Поселение" asp-for="@customer.AddressDetails.CityAndRuralSettlements.Value" data-clean>
+                                <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.CityAndRuralSettlements.ObjectGuid" data-clean>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@customer.AddressDetails.City.ShortName">Тип</label>
+                                <input type="text" class="form-control" placeholder="Респ" asp-for="@customer.AddressDetails.City.ShortName" data-clean>
+                                <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.City.Name" data-clean>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@customer.AddressDetails.City.Value">Город</label>
+                                <input type="text" class="form-control" placeholder="Город" asp-for="@customer.AddressDetails.City.Value" data-clean>
+                                <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.City.ObjectGuid" data-clean>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@customer.AddressDetails.Settlement.ShortName">Тип</label>
+                                <input type="text" class="form-control" placeholder="Тип" asp-for="@customer.AddressDetails.Settlement.ShortName" data-clean>
+                                <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Settlement.Name" data-clean>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@customer.AddressDetails.Settlement.Value">Населённый пункт</label>
+                                <input type="text" class="form-control" placeholder="Адрес регистрации" asp-for="@customer.AddressDetails.Settlement.Value" data-clean>
+                                <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Settlement.ObjectGuid" data-clean>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@customer.AddressDetails.IntracityDistrict.ShortName">Тип</label>
+                                <input type="text" class="form-control" placeholder="Тип" asp-for="@customer.AddressDetails.IntracityDistrict.ShortName" data-clean>
+                                <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.IntracityDistrict.Name" data-clean>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@customer.AddressDetails.IntracityDistrict.Value">Внутригородской район</label>
+                                <input type="text" class="form-control" placeholder="Внутригородской район" asp-for="@customer.AddressDetails.IntracityDistrict.Value" data-clean>
+                                <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.IntracityDistrict.ObjectGuid" data-clean>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@customer.AddressDetails.Street.ShortName">Тип</label>
+                                <input type="text" class="form-control" placeholder="Тип" asp-for="@customer.AddressDetails.Street.ShortName" data-clean>
+                                <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Street.Name" data-clean>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@customer.AddressDetails.Street.Value">Улица</label>
+                                <input type="text" class="form-control" placeholder="Улица" asp-for="@customer.AddressDetails.Street.Value" data-clean>
+                                <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Street.ObjectGuid" data-clean>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@customer.AddressDetails.House.HouseNum">Дом</label>
+                                <input type="text" class="form-control" placeholder="Дом" asp-for="@customer.AddressDetails.House.HouseNum" data-clean>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@customer.AddressDetails.House.BuildNum">Корпус</label>
+                                <input type="text" class="form-control" placeholder="Корпус" asp-for="@customer.AddressDetails.House.BuildNum" data-clean>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@customer.AddressDetails.House.StructNum">Строение</label>
+                                <input type="text" class="form-control" placeholder="Строение" asp-for="@customer.AddressDetails.House.StructNum" data-clean>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2" hidden>
+                                <label class="form-label" asp-for="@customer.AddressDetails.House.ObjectGuid">Индетиф</label>
+                                <input type="text" class="form-control" placeholder="Индекс" asp-for="@customer.AddressDetails.House.ObjectGuid" data-clean>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@customer.AddressDetails.House.PostalCode">Индекс</label>
+                                <input type="text" class="form-control" placeholder="Индекс" asp-for="@customer.AddressDetails.House.PostalCode" data-clean>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@customer.AddressDetails.House.Okato">Окато</label>
+                                <input type="text" class="form-control" placeholder="Окато" asp-for="@customer.AddressDetails.House.Okato" data-clean>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@customer.AddressDetails.House.Oktmo">ОКТМО</label>
+                                <input type="text" class="form-control" placeholder="ОКТМО" asp-for="@customer.AddressDetails.House.Oktmo" data-clean>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@customer.AddressDetails.Room.FlatType">Тип</label>
+                                <input type="text" class="form-control" placeholder="Тип" asp-for="@customer.AddressDetails.Room.FlatType" data-clean>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="@customer.AddressDetails.Room.FlatNumber">Квартира</label>
+                                <input type="text" class="form-control" placeholder="Квартира" asp-for="@customer.AddressDetails.Room.FlatNumber" data-clean>
+                                <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Room.ObjectGuid" data-clean>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@customer.CustomerAddressResidence">Адрес проживания</label>
+                        <input class="form-check-input" type="checkbox" value="" id="customerAddressCoincide">
+                        <label class="form-check-label" for="customerAddressCoincide">
+                            Совпадает с адресом регистрации
+                        </label>
+                        <input type="text" class="form-control" placeholder="Адрес проживания" asp-for="@customer.CustomerAddressResidence">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-8">
+                        <label class="form-label" asp-for="@customer.CustomerAddressTemp">Адрес временной регистрации</label>
+                        <input type="text" class="form-control" placeholder="Адрес временной регистрации" asp-for="@customer.CustomerAddressTemp">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@customer.DateTempRegistration">Дата временной регистрации</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                            <input asp-for="@customer.DateTempRegistration" type="text" class="form-control pickadate" placeholder="Дата временной рег.">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6 snils-valid">
+                        <label class="form-label" asp-for="@customer.CustomerSnils">СНИЛС</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="СНИЛС" asp-for="@customer.CustomerSnils" aria-describedby="isGetCustomerSnils">
+                            <div class="input-group-text">
+                                <div class="form-check">
+                                    <input asp-for="@isGetCustomerSnils" class="form-check-input" type="checkbox" title="Получить СНИЛС">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="isGetCustomerSnils_info" class="fv-plugins-message-container text-primary d-none">
+                            <div>СНИЛС будет получен через СМЭВ</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="@customer.CustomerInn">ИНН</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="ИНН" asp-for="@customer.CustomerInn" aria-describedby="isGetCustomerInn" />
+                            <div class="input-group-text">
+                                <div class="form-check">
+                                    <input asp-for="@isGetCustomerInn" class="form-check-input" type="checkbox" title="Получить ИНН">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="isGetCustomerInn_info" class="fv-plugins-message-container text-primary d-none">
+                            <div>ИНН будет получен через СМЭВ</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (customer.CustomerType == 2)
+        {
+            <!-- Доверенность -->
+            <div class="row g-3">
+                <div class="col-11 mx-auto">
+                    <div class="divider text-start">
+                        <div class="divider-text fs-5 b-s-16">Документ, подтверждающий полномочия представителя</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-11 mx-auto">
+                    <div class="row mb-3">
+                        <div class="col-9">
+                            <label class="form-label" asp-for="@customer.NameProcuration">Наименование документа, подтверждающего полномочия представителя</label>
+                                <input type="text" class="form-control" placeholder="Наименование документа, подтверждающего полномочия представителя" asp-for="@customer.NameProcuration" />
+                        </div>
+                        <div class="col-3">
+                                <label class="form-label" asp-for="@customer.NumberProcuration">Серия и Номер доверенности</label>
+                                <input type="text" class="form-control" placeholder="Серия и Номер доверенности" asp-for="@customer.NumberProcuration" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-9">
+                                <label class="form-label" asp-for="@customer.IssueBodyProcuration">Кем выдан</label>
+                                <input type="text" class="form-control" placeholder="Кем выдан" asp-for="@customer.IssueBodyProcuration" />
+                        </div>
+                        <div class="col-3">
+                                <label class="form-label" asp-for="@customer.IssueDateProcuration">Дата выдачи</label>
+                                <input type="text" class="form-control pickadate" placeholder="Дата выдачи" asp-for="@customer.IssueDateProcuration" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                                <label class="form-label" asp-for="@customer.PeriodProcuration">Cрок действия полномочий</label>
+                                <input type="text" class="form-control" placeholder="Cрок действия полномочий" asp-for="@customer.PeriodProcuration" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <!-- Контакты -->
+        <div class="row g-3">
+            <div class="col-11 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Контакты</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-11 mx-auto">
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@customer.CustomerPhone1">Телефон</label>
+                    <input type="text" class="form-control" placeholder="Телефон" asp-for="@customer.CustomerPhone1" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@customer.CustomerPhone2">Доп.телефон</label>
+                    <input type="text" class="form-control" placeholder="Доп.телефон" asp-for="@customer.CustomerPhone2">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@customer.CustomerEmail">Электронная почта</label>
+                    <input type="text" class="form-control" placeholder="Электронная почта" asp-for="@customer.CustomerEmail">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<script>
+    $(function () {
+        console.log($('@customer.CustomerType' == 1));
+
+        const customer = {
+            documentsIdentityId: $("#customer_SDocumentsIdentityId"),
+            documentSerial: $("#customer_DocumentSerial"),
+            documentNumber: $("#customer_DocumentNumber"),
+            documentIssueDate: $("#customer_DocumentIssueDate"),
+            documentCode: $("#customer_DocumentCode"),
+            documentIssueBody: $("#customer_DocumentIssueBody"),
+            documentBirthPlace: $("#customer_DocumentBirthPlace"),
+            address: $("#customer_CustomerAddress"),
+            addressResidence: $("#customer_CustomerAddressResidence"),
+            addressTemp: $("#customer_CustomerAddressTemp"),
+            firstName: $("#customer_FirstName"),
+            lastName: $("#customer_LastName"),
+            secondName: $("#customer_SecondName"),
+            gender: $("[name='customer.CustomerGender']"),
+            snils: $("#customer_CustomerSnils"),
+            inn: $("#customer_CustomerInn"),
+            phone1: $("#customer_CustomerPhone1"),
+            phone2: $("#customer_CustomerPhone2"),
+            checksCustomerAddressCoincide: $('#customerAddressCoincide'),
+            isGetCustomerSnils: $('#isGetCustomerSnils'),
+            isGetCustomerInn: $('#isGetCustomerInn')
+        },
+        pickadate = $("#mainModal .pickadate");
+
+        pickadate.datepicker({
+            language: "ru",
+            autoclose: true,
+            endDate: "-0"
+        })
+
+        const setGender = {
+            identify: (type) => {
+                if (type === "MALE")
+                    $(customer.gender[0]).prop("checked", true);
+                else
+                    $(customer.gender[1]).prop("checked", true);
+            }
+        };
+
+        $("#mainModal .select2").select2({
+            dropdownParent: $("#mainModal")
+        });
+
+        window.Helpers.initCustomOptionCheck();
+
+        customer.isGetCustomerSnils.on('click', function () {
+            if ($(this).is(':checked')) {
+                customer.snils.val('');
+                customer.snils.attr('disabled', 'disabled');
+                FormValidationCustomer.disableValidator('customer.CustomerSnils');
+                $('#isGetCustomerSnils_info').removeClass('d-none');
+            }
+            else {
+                $('#isGetCustomerSnils_info').addClass('d-none');
+                FormValidationCustomer.enableValidator('customer.CustomerSnils');
+                customer.snils.removeAttr('disabled');
+            }
+        });
+
+        customer.isGetCustomerInn.on('click', function () {
+            if ($(this).is(':checked')) {
+                customer.inn.val('');
+                customer.inn.attr('disabled', 'disabled');
+                //FormValidationCustomer.disableValidator('customer.CustomerInn');
+                $('#isGetCustomerInn_info').removeClass('d-none');
+            }
+            else {
+                $('#isGetCustomerInn_info').addClass('d-none');
+                //FormValidation2.enableValidator('customer.CustomerInn');
+                customer.inn.removeAttr('disabled');
+            }
+        });
+
+        const findCustomerByDocument = {
+            load: (type) => {
+                if (customer.documentSerial.inputmask("isComplete") === true && customer.documentNumber.inputmask("isComplete") === true) {
+                    $.ajax({
+                        url: '/Cases/FindCustomerByDocumentDataJson',
+                        type: 'POST',
+                        data: {
+                            serial: customer.documentSerial.val(),
+                            number: customer.documentNumber.val()
+                        },
+                        success: function (data) {
+                            if (!data) return;
+                            document.querySelector('#sendingForm').querySelectorAll('input[type="text"]').forEach((e) => {
+                                let name = e.name.split('.')[1];
+                                if (e.name.split('.')[0] !== "customer") return;
+                                if (!name) return;
+                                let newValue = data[name.charAt(0).toLowerCase() + name.slice(1)];
+                                if (!newValue) return;
+                                if (e.classList.contains("pickadate")) newValue = moment(newValue).format("DD.MM.YYYY");
+                                e.value = newValue;
+                            });
+                            setGender.identify(data["customerGender"] === 1 ? "MALE" : "FEMALE");
+                            // if (data['customerSnils'] != null && data['customerSnils'] != "") $(customer.isGetCustomerSnils).prop("checked", false);
+                            // if (data['customerInn'] != null && data['customerInn'] != "") $(customer.isGetCustomerInn).prop("checked", false);
+                            if (data["addressDetails"] != null) {
+                                fillAddress(data["addressDetails"], $('#CustomerAddressDetails'));
+                            }
+                            toastr.success('<p style="line-height: 1.2;" class="mt-1 small">Данные заполнились автоматически.</p><button type="button" class="btn btn-sm btn-secondary">Отменить</button>', 'Найден заявитель', {
+                                timeOut: 3500, extendedTimeOut: 3500, preventDuplicates: true,
+                                onclick: function () { findCustomerByDocument.clear(); }
+                            });
+                        }
+                    });
+                }
+                else return;
+            }
+        }
+
+        var FormValidationCustomer = FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                locale: 'ru_RU',
+                localization: FormValidation.locales.ru_RU,
+                fields: {
+                    'customer.DocumentSerial': {
+                        validators: {
+                            notEmpty: {}
+                        }
+                    },
+                    'customer.DocumentNumber': {
+                        validators: {
+                            notEmpty: {}
+                        }
+                    },
+                    'customer.DocumentIssueDate': {
+                        validators: {
+                            notEmpty: {}
+                        }
+                    },
+                    'customer.LastName': {
+                        validators: {
+                            notEmpty: {}
+                        }
+                    },
+                    'customer.FirstName': {
+                        validators: {
+                            notEmpty: {}
+                        }
+                    },
+                    'customer.DocumentBirthDate': {
+                        validators: {
+                            notEmpty: {}
+                        }
+                    },
+                    'customer.DocumentBirthPlace': {
+                        validators: {
+                            notEmpty: {}
+                        }
+                    },
+                    'customer.CustomerSnils': {
+                        validators: {
+                            notEmpty: {}
+                        }
+                    },
+                    'customer.DocumentCode': {
+                        validators: {
+                            notEmpty: {}
+                        }
+                    },
+                    'customer.DocumentIssueBody': {
+                        validators: {
+                            notEmpty: {}
+                        }
+                    },
+                    'customer.CustomerSnils': {
+                        validators: {
+                            callback: {
+                                callback: validateSnils,
+                                enabled: true
+                            }
+                        }
+                    },
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                },
+                init: instance => {
+                    instance.on('plugins.message.placed', function (e) {
+                        //* Move the error message out of the `input-group` element
+                        if (e.element.parentElement.classList.contains('input-group')) {
+                            e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
+                        }
+                    });
+                }
+            }).on('core.form.valid', function () {
+                var $form = $("#sendingForm");
+                $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $form.spinnerBtn("stop");
+                        $("#mainModal").modal('hide');
+                    },
+                    success: () => {
+                        if ('@customer.CustomerType' == 1) {
+                            if ($("#customerName").length > 0) {
+                                let text = $("#customer_LastName").val() + " " + $("#customer_FirstName").val() + " " + $("#customer_SecondName").val();
+                                $("#customerName").text(text);
+                            }
+                            else {
+                                document.location.reload();
+                            }
+                        }
+                        if ('@customer.CustomerType' == 2) {
+                            if ($("#recipientName").length > 0) {
+                                let text = $("#customer_LastName").val() + " " + $("#customer_FirstName").val() + " " + $("#customer_SecondName").val();
+                                $("#recipientName").text(text);
+                            }
+                            else {
+                                document.location.reload();
+                            }
+                        }
+                    }
+
+                });
+                return false;
+            });
+
+
+        customer.documentsIdentityId.on('change', function () {
+            let v = $(this).val();
+            switch (v) {
+                case "21":
+                    customer.documentSerial.inputmask("99 99", { clearIncomplete: true, showMaskOnHover: false, oncomplete: function () { findCustomerByDocument.load(1); customer.documentNumber.focus(); } });
+                    customer.documentNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false, oncomplete: function () { findCustomerByDocument.load(1); } });
+                    customer.documentCode.parent('[data-document-code]').removeClass('d-none');
+                    customer.documentCode.removeAttr('disabled');
+                    FormValidationCustomer.enableValidator('customer.DocumentSerial');
+                    FormValidationCustomer.enableValidator('customer.DocumentNumber');
+                    FormValidationCustomer.enableValidator('customer.DocumentCode');
+                    FormValidationCustomer.enableValidator('customer.DocumentIssueDate');
+                    FormValidationCustomer.enableValidator('customer.DocumentIssueBody');
+                    break;
+                case "3":
+                    customer.documentSerial.inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false, oncomplete: function () { customer.documentNumber.focus(); } });
+                    customer.documentNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false, oncomplete: function () { findCustomerByDocument.load(1); } });
+                    customer.documentCode.attr('disabled', 'disabled');
+                    customer.documentCode.parent('[data-document-code]').addClass('d-none');
+                    FormValidationCustomer.disableValidator('customer.DocumentCode');
+                    FormValidationCustomer.enableValidator('customer.DocumentSerial');
+                    FormValidationCustomer.enableValidator('customer.DocumentNumber');
+                    FormValidationCustomer.enableValidator('customer.DocumentIssueDate');
+                    FormValidationCustomer.enableValidator('customer.DocumentIssueBody');
+                    break;
+                case "22":
+                    customer.documentSerial.inputmask("", { clearIncomplete: true, showMaskOnHover: false, oncomplete: function () { findCustomerByDocument.load(1); customer.documentNumber.focus(); } });
+                    customer.documentNumber.inputmask("999999", { clearIncomplete: true, showMaskOnHover: false, oncomplete: function () { findCustomerByDocument.load(1); } });
+                    customer.documentCode.parent('[data-document-code]').addClass('d-none');
+                    customer.documentCode.attr('disabled', 'disabled');
+                    FormValidationCustomer.enableValidator('customer.DocumentNumber');
+                    FormValidationCustomer.enableValidator('customer.DocumentIssueDate');
+                    FormValidationCustomer.enableValidator('customer.DocumentIssueBody');
+                    FormValidationCustomer.disableValidator('customer.DocumentSerial');
+                    FormValidationCustomer.disableValidator('customer.DocumentCode');
+                    break;
+                default:
+                    customer.documentSerial.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                    customer.documentNumber.inputmask("", { clearIncomplete: true, showMaskOnHover: false });
+                    customer.documentCode.parent('[data-document-code]').addClass('d-none');
+                    customer.documentCode.attr('disabled', 'disabled');
+                    FormValidationCustomer.disableValidator('customer.DocumentSerial');
+                    FormValidationCustomer.disableValidator('customer.DocumentNumber');
+                    FormValidationCustomer.disableValidator('customer.DocumentCode');
+                    FormValidationCustomer.disableValidator('customer.DocumentIssueDate');
+                    FormValidationCustomer.disableValidator('customer.DocumentIssueBody');
+                    break;
+            }
+        });
+
+
+        customer.documentsIdentityId.change();
+
+        /*inputmask*/
+        pickadate.inputmask("99.99.9999", { clearIncomplete: true, showMaskOnHover: false });
+        customer.documentCode.inputmask("999-999", { clearIncomplete: true, showMaskOnHover: false });
+        customer.snils.inputmask("999-999-999 99", { clearIncomplete: true, showMaskOnHover: false, oncomplete: function () { $(customer.isGetCustomerSnils).prop("checked", false) } });
+        customer.inn.inputmask("999999999999", { clearIncomplete: true, showMaskOnHover: false, oncomplete: function () { $(customer.isGetCustomerInn).prop("checked", false) } });
+        customer.phone1.inputmask("+7(999) 999-99-99", { clearIncomplete: true, showMaskOnHover: false });
+        customer.phone2.inputmask("+7(999) 999-99-99", { clearIncomplete: true, showMaskOnHover: false });
+
+        /*Adrress customer search Gar*/
+        let Customeraddresses = new Map();
+
+        customer.address.on('input', function () {
+            let adr = $(this).val();
+            let $adrList = $('#customerAddress').find('.address-list');
+            if (adr.length > 3) {
+                $adrList.empty();
+                Customeraddresses.clear();
+                GetAddressGar(adr, $adrList, Customeraddresses);
+            }
+            else if (adr.length > 1) {
+                $adrList.hide(0);
+                $adrList.empty();
+                Customeraddresses.clear();
+            }
+        });
+
+        customer.address.focusout(function () {
+            let $adrList = $('#customerAddress').find('.address-list');
+            $adrList.delay(150).hide(0);
+        });
+
+        customer.address.focus(function () {
+            let $adrList = $('#customerAddress').find('.address-list');
+            if ($adrList.children().length > 0 && $(this).val().length) $adrList.show();
+        });
+
+        $('#customerAddress .address-list').on('click',
+            function (event) {
+
+                let $selectedAdr = $(event.target);
+                if ($selectedAdr.attr('data-index') !== undefined) {
+                    customer.address.val($selectedAdr.text());
+                    $('#CustomerAddressDetails').find('[data-clean]').each(function (idx) {
+                        $(this).val('');
+                    });
+                    fillAddress(Customeraddresses.get($selectedAdr.attr('data-index')), $('#CustomerAddressDetails'));
+                }
+            }
+        );
+        /*Adrress customer search Gar*/
+
+        customer.checksCustomerAddressCoincide.on('click', function () {
+            let address = customer.address.val();
+            if (address == "") {
+                toastr['warning']('Адрес регистрации заявителя не заполнен', 'Предупреждение', {
+                    closeButton: true,
+                    tapToDismiss: false,
+                    rtl: false
+                });
+                $(this).prop('checked', false);
+            }
+            else {
+                customer.addressResidence.val(address);
+            }
+        });
+
+    })
+
+    function createAddressText(adr) {
+        let elements = [];
+
+        if (adr.region) {
+            elements.push(`${adr.region.shortName} ${adr.region.value}`);
+        }
+        if (adr.area) {
+            elements.push(`${adr.area.shortName} ${adr.area.value}`);
+        }
+        if (adr.city) {
+            elements.push(`${adr.city.shortName} ${adr.city.value}`);
+        }
+        if (adr.cityAndRuralSettlements) {
+            elements.push(`${adr.cityAndRuralSettlements.shortName} ${adr.cityAndRuralSettlements.value}`);
+        }
+        if (adr.intracityDistrict) {
+            elements.push(`${adr.intracityDistrict.shortName} ${adr.intracityDistrict.value}`);
+        }
+        if (adr.settlement) {
+            elements.push(`${adr.settlement.shortName} ${adr.settlement.value}`);
+        }
+        if (adr.street) {
+            elements.push(`${adr.street.shortName} ${adr.street.value}`);
+        }
+        if (adr.house) {
+            if (adr.house.houseNum) elements.push(`д ${adr.house.houseNum}`);
+            if (adr.house.buildNum) elements.push(`корп ${adr.house.buildNum}`);
+            if (adr.house.structNum) elements.push(`стр ${adr.house.structNum}`);
+        }
+        if (adr.room) {
+            elements.push(`кв ${adr.room.flatNumber}`);
+        }
+
+        return elements.join(', ');
+    }
+
+    function fillAddress(adrData, $addressBlock) {
+        if (adrData.region) {
+            $addressBlock.find('[id$="Region_ShortName"]').val(adrData.region.shortName);
+            $addressBlock.find('[id$="Region_Name"]').val(adrData.region.name);
+            $addressBlock.find('[id$="Region_Value"]').val(adrData.region.value);
+            $addressBlock.find('[id$="Region_ObjectGuid"]').val(adrData.region.objectGuid);
+            $addressBlock.find('[id$="Region_RegionCode"]').val(adrData.region.regionCode);
+        }
+
+        if (adrData.area) {
+            $addressBlock.find('[id$="Area_ShortName"]').val(adrData.area.shortName);
+            $addressBlock.find('[id$="Area_Name"]').val(adrData.area.name);
+            $addressBlock.find('[id$="Area_Value"]').val(adrData.area.value);
+            $addressBlock.find('[id$="Area_ObjectGuid"]').val(adrData.area.objectGuid);
+        }
+
+        if (adrData.cityAndRuralSettlements) {
+            $addressBlock.find('[id$="CityAndRuralSettlements_ShortName"]').val(adrData.cityAndRuralSettlements.shortName);
+            $addressBlock.find('[id$="CityAndRuralSettlements_Name"]').val(adrData.cityAndRuralSettlements.name);
+            $addressBlock.find('[id$="CityAndRuralSettlements_Value"]').val(adrData.cityAndRuralSettlements.value);
+            $addressBlock.find('[id$="CityAndRuralSettlements_ObjectGuid"]').val(adrData.cityAndRuralSettlements.objectGuid);
+        }
+
+        if (adrData.city) {
+            $addressBlock.find('[id$="City_ShortName"]').val(adrData.city.shortName);
+            $addressBlock.find('[id$="City_Name"]').val(adrData.city.name);
+            $addressBlock.find('[id$="City_Value"]').val(adrData.city.value);
+            $addressBlock.find('[id$="City_ObjectGuid"]').val(adrData.city.objectGuid);
+        }
+
+        if (adrData.settlement) {
+            $addressBlock.find('[id$="Settlement_ShortName"]').val(adrData.settlement.shortName);
+            $addressBlock.find('[id$="Settlement_Name"]').val(adrData.settlement.name);
+            $addressBlock.find('[id$="Settlement_Value"]').val(adrData.settlement.value);
+            $addressBlock.find('[id$="Settlement_ObjectGuid"]').val(adrData.settlement.objectGuid);
+        }
+
+        if (adrData.intracityDistrict) {
+            $addressBlock.find('[id$="IntracityDistrict_ShortName"]').val(adrData.intracityDistrict.shortName);
+            $addressBlock.find('[id$="IntracityDistrict_Name"]').val(adrData.intracityDistrict.name);
+            $addressBlock.find('[id$="IntracityDistrict_Value"]').val(adrData.intracityDistrict.value);
+            $addressBlock.find('[id$="IntracityDistrict_ObjectGuid"]').val(adrData.intracityDistrict.objectGuid);
+        }
+
+        if (adrData.street) {
+            $addressBlock.find('[id$="Street_ShortName"]').val(adrData.street.shortName);
+            $addressBlock.find('[id$="Street_Name"]').val(adrData.street.name);
+            $addressBlock.find('[id$="Street_Value"]').val(adrData.street.value);
+            $addressBlock.find('[id$="Street_ObjectGuid"]').val(adrData.street.objectGuid);
+        }
+
+        if (adrData.house) {
+            $addressBlock.find('[id$="House_HouseNum"]').val(adrData.house.houseNum);
+            $addressBlock.find('[id$="House_BuildNum"]').val(adrData.house.buildNum);
+            $addressBlock.find('[id$="House_StructNum"]').val(adrData.house.structNum);
+            $addressBlock.find('[id$="House_ObjectGuid"]').val(adrData.house.objectGuid);
+            $addressBlock.find('[id$="House_PostalCode"]').val(adrData.house.postalCode);
+            $addressBlock.find('[id$="House_Okato"]').val(adrData.house.okato);
+            $addressBlock.find('[id$="House_Oktmo"]').val(adrData.house.oktmo);
+        }
+
+        if (adrData.room) {
+            $addressBlock.find('[id$="Room_FlatType"]').val(adrData.room.flatType);
+            $addressBlock.find('[id$="Room_FlatNumber"]').val(adrData.room.flatNumber);
+            $addressBlock.find('[id$="Room_ObjectGuid"]').val(adrData.room.objectGuid);
+        }
+    }
+
+    function GetAddressGar(searchAddress, $addressBlock, addressMap) {
+        $.ajax({
+            url: '/SmevBase/GarSearchAddressExtended',
+            type: 'POST',
+            data: {
+                SearchText: searchAddress
+            },
+            beforeSend: function () {
+                $addressBlock.empty();
+                addressMap.clear();
+            },
+            success: function (data) {
+                console.log(3333, data);
+                if (data.result != null && data.result.length > 0) {
+                    $addressBlock.empty();
+                    addressMap.clear();
+                    $addressBlock.append('<lh><small>Выберите вариант или продолжите ввод</small></lh>')
+                    data.result.forEach((item, index) => {
+                        $addressBlock.append(`<li data-index='${index}'>${createAddressText(item)}</li>`);
+                        addressMap.set(`${index}`, item);
+                    });
+                    $addressBlock.show();
+                }
+            }
+        });
+    }
+</script>

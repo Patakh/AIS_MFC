@@ -1,0 +1,1169 @@
+﻿@using AisLogistics.App.ViewModels.Cases
+@using AisLogistics.App.ViewModels.SelectListViewModel
+@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    var createModel = Model.Model as CreateCaseRequestModel;
+    var customer = createModel.Customer;
+    var representative = createModel.Representative;
+    var customerLegal = createModel.CustomerLegal;
+    var isGetCustomerSnils = createModel.IsGetCustomerSnils;
+    var isGetCustomerInn = createModel.IsGetCustomerInn;
+    var isGetRepresentativeSnils = createModel.IsGetRepresentativeSnils;
+    var isGetRepresentativeInn = createModel.IsGetRepresentativeInn;
+    var i = 1;
+}
+
+<link rel="stylesheet" href="~/assets/css/case-create.css" asp-append-version="true" />
+
+
+<section class="w-75 m-auto">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="bs-stepper" id="create-case-wizard">
+                <div class="bs-stepper-header">
+                    <div class="step w-100" data-target="#service-step">
+                        <button type="button" class="step-trigger w-100">
+                            <span class="bs-stepper-circle">1</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Услуга</span>
+                                <span class="bs-stepper-subtitle">Оказываемая услуга</span>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="line"><i class="bi bi-chevron-right "></i></div>
+                    <div class="step w-100" data-target="#personal-info-step">
+                        <button type="button" class="step-trigger w-100">
+                            <span class="bs-stepper-circle">2</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Заявитель</span>
+                                <span class="bs-stepper-subtitle">Персональные данные</span>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="line"><i class="bi bi-chevron-right "></i></div>
+                    <div class="step w-100" data-target="#additional-data-step">
+                        <button type="button" class="step-trigger w-100">
+                            <span class="bs-stepper-circle">3</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Дополнительная информация</span>
+                                <span class="bs-stepper-subtitle">Дополнительные данные</span>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="line"><i class="bi bi-chevron-right "></i></div>
+                    <div class="step w-100" data-target="#final-step">
+                        <button type="button" class="step-trigger w-100">
+                            <span class="bs-stepper-circle">4</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Результат</span>
+                                <span class="bs-stepper-subtitle">Результат обращения</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                <div class="bs-stepper-content">
+                    <form onSubmit="return false" id="create-case-wizard-form" autocomplete="off">
+                        <!-- Services & Tariff -->
+                        <div id="service-step" class="content">
+                            <div class="content-header mb-3">
+                                <h6 class="mb-0">Услуги</h6>
+                                <small>Выберите оказываемую услугу.</small>
+                            </div>
+                            <div class="row g-3">
+                                <div class="pb-2">
+                                    <div id="service-content">
+                                        <div class="mb-4">
+                                            <div class="row mb-2">
+                                                <div class="col-6">
+                                                    <select id="services-table-customerTypes" asp-items='@ViewBag.CustomerTypes' class="form-control" placeholder="Тип заявителя">
+                                                    </select>
+                                                </div>
+                                                <div class="col-6">
+                                                    <select id="services-table-office" asp-items='@ViewBag.Providers' class="form-control" placeholder="Орган власти">
+                                                        <option value="">Не Выбрано</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="input-group input-group-merge shadow-none mb-2">
+
+                                                <span class="input-group-text">
+                                                    <i class="bi bi-search"></i>
+                                                </span>
+                                                <input type="search" id="services-table-search" class="form-control" placeholder="Поиск услуги..." aria-label="Поиск услуги..." autocomplete="off">
+                                            </div>
+                                            <div>
+                                                @foreach (var item in ViewBag.Hashtag as SelectList)
+                                                {
+                                                    <a href="javascript:void(0);" id="@($"services-table-hashtag_{i++}")" class="btn btn-sm btn-primary rounded-3 border-0" role="button" data-hashtag-value="@("#" + @item.Value)">@("#" + @item.Value)</a>
+                                                }
+                                            </div>
+                                        </div>
+                                        <table class="table cursor-pointer table-hover no-thead" id="services-table"></table>
+                                    </div>
+
+                                    <div id="service-procedure-table-container" class="d-none">
+                                        <hr class="mx-n4 my-4">
+                                        <div class="content-header mb-3">
+                                            <h6 class="mb-0">Процедура</h6>
+                                            <small>Выберите процедуру оказываемой услуги.</small>
+                                        </div>
+                                        <table class="table cursor-pointer table-hover no-thead table-bordered" id="service-procedure-table"></table>
+                                    </div>
+
+                                    <div id="service-tariff-table-container" class="d-none">
+                                        <hr class="mx-n4 my-4">
+                                        <div class="content-header mb-3">
+                                            <h6 class="mb-0">Тариф</h6>
+                                            <small>Выберите тариф оказываемой услуги.</small>
+                                        </div>
+                                        <table class="table cursor-pointer table-hover table-bordered" id="service-tariff-table">
+                                            <thead>
+                                                <tr>
+                                                    <th rowspan="2">Тип платежа</th>
+                                                    <th rowspan="2">Стоимость</th>
+                                                    <th rowspan="2">Плата через МФЦ</th>
+                                                    <th colspan="3" class="text-center">Срок</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>Обработка</th>
+                                                    <th>Исполнение</th>
+                                                    <th>Возврат</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button class="btn btn-label-secondary btn-prev" disabled>
+                                        <i class="bi bi-chevron-left ms-sm-n2"></i>
+                                        <span class="d-sm-inline-block d-none">Назад</span>
+                                    </button>
+                                    <button class="btn btn-primary btn-next" id="btn-next-second-step" disabled>
+                                        <span class="d-sm-inline-block d-none">Далее</span>
+                                        <i class="bi bi-chevron-right  me-sm-n2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Personal Info -->
+                        <div id="personal-info-step" class="content">
+                            <div id="wrapperCustomerPhysical">
+                                <div class="content-header mb-3">
+                                    <h6 class="mb-0">Заявитель</h6>
+                                    <small>Введите персональные данные заявителя.</small>
+                                </div>
+                                <!-- Документ, удостоверяющий личность -->
+                                <div class="row g-3">
+                                    <div class="col-10 mx-auto">
+                                        <div class="divider text-start">
+                                            <div class="divider-text fs-5 b-s-16">Документ, удостоверяющий личность</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-8 mx-auto">
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label class="form-label" asp-for="@customer.SDocumentsIdentityId">Тип документа</label>
+                                                <select class="form-select" asp-for="@customer.SDocumentsIdentityId" asp-items="@SelectListViewModel.DocumentTypeListBase"></select>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-3">
+                                                <label class="form-label" asp-for="@customer.DocumentSerial">Серия<sup class="text-danger fs-6">*</sup></label>
+                                                <input type="text" class="form-control" placeholder="Серия" asp-for="@customer.DocumentSerial">
+                                            </div>
+                                            <div class="col-3">
+                                                <label class="form-label" asp-for="@customer.DocumentNumber">Номер<sup class="text-danger fs-6">*</sup></label>
+                                                <input type="text" class="form-control" placeholder="Номер" asp-for="@customer.DocumentNumber" />
+                                            </div>
+                                            <div class="col-3">
+                                                <label class="form-label" asp-for="@customer.DocumentIssueDate">Дата выдачи<sup class="text-danger fs-6">*</sup></label>
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                                    <input asp-for="@customer.DocumentIssueDate" type="text" class="form-control pickadate" placeholder="Дата выдачи">
+                                                </div>
+                                            </div>
+                                            <div class="col-3" data-document-code>
+                                                <label class="form-label" asp-for="@customer.DocumentCode">Подразделение<sup class="text-danger fs-6">*</sup></label>
+                                                <input type="text" class="form-control" placeholder="Подразделение" asp-for="@customer.DocumentCode">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label class="form-label" asp-for="@customer.DocumentIssueBody">Кем выдан<sup class="text-danger fs-6">*</sup></label>
+                                                <input type="text" class="form-control" placeholder="Кем выдан" asp-for="@customer.DocumentIssueBody">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Персональные данные -->
+                                <div class="row g-3">
+                                    <div class="col-10 mx-auto">
+                                        <div class="divider text-start">
+                                            <div class="divider-text fs-5 b-s-16">Персональные данные</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-8 mx-auto">
+                                        <div class="row mb-3">
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@customer.LastName">Фамилия<sup class="text-danger fs-6">*</sup></label>
+                                                <input type="text" class="form-control" placeholder="Фамилия" asp-for="@customer.LastName" />
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@customer.FirstName">Имя<sup class="text-danger fs-6">*</sup></label>
+                                                <input type="text" class="form-control" placeholder="Имя" asp-for="@customer.FirstName">
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@customer.SecondName">Отчество</label>
+                                                <input type="text" class="form-control" placeholder="Отчество" asp-for="@customer.SecondName">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@customer.DocumentBirthDate">Дата рождения<sup class="text-danger fs-6">*</sup></label>
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                                    <input asp-for="@customer.DocumentBirthDate" type="text" class="form-control pickadate" placeholder="Дата рождения">
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <label class="d-block form-label">Пол</label>
+                                                <div class="form-check form-check-inline mt-2">
+                                                    <input class="form-check-input" type="radio" asp-for="@customer.CustomerGender" id="customer_CustomerGender1" value="1" checked="checked">
+                                                    <label class="form-check-label" for="customer_CustomerGender1"><i class="bi bi-gender-male fs-6"></i> Мужской</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" asp-for="@customer.CustomerGender" id="customer_CustomerGender2" value="2">
+                                                    <label class="form-check-label" for="customer_CustomerGender2"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label class="form-label" asp-for="@customer.DocumentBirthPlace">Место рождения<sup class="text-danger fs-6">*</sup></label>
+                                                <input type="text" class="form-control" placeholder="Место рождения" asp-for="@customer.DocumentBirthPlace">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label class="form-label" asp-for="@customer.CustomerAddress">Адрес регистрации</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="Адрес регистрации" asp-for="@customer.CustomerAddress" aria-describedby="button-addon2">
+                                                    <button type="button" class="btn border-outline waves-effect" id="button-addon2" data-bs-toggle="collapse" data-bs-target="#CustomerAddressDetails" aria-expanded="false" aria-controls="CustomerAddressDetails">
+                                                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="input-group" id="customerAddress">
+                                                    <ul class="list-group address-list w-100">Выберите вариант или продолжите ввод</ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="collapse row mb-3" id="CustomerAddressDetails">
+                                            <div class="col-11 mx-auto">
+                                                <div class="row">
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.Region.ShortName">Тип</label>
+                                                        <input type="text" class="form-control" placeholder="Тип" asp-for="@customer.AddressDetails.Region.ShortName" data-clean>
+                                                        <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Region.Name" data-clean>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.Region.Value">Регион</label>
+                                                        <input type="text" class="form-control" placeholder="Регион" asp-for="@customer.AddressDetails.Region.Value" data-clean>
+                                                        <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Region.ObjectGuid" data-clean>
+                                                        <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Region.RegionCode" data-clean>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.Area.ShortName">Тип</label>
+                                                        <input type="text" class="form-control" placeholder="Тип" asp-for="@customer.AddressDetails.Area.ShortName" data-clean>
+                                                        <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Area.Name" data-clean>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.Area.Value">Муницип. Район/окр</label>
+                                                        <input type="text" class="form-control" placeholder="Муницип. Район/окр" asp-for="@customer.AddressDetails.Area.Value" data-clean>
+                                                        <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Area.ObjectGuid" data-clean>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.CityAndRuralSettlements.ShortName">Тип</label>
+                                                        <input type="text" class="form-control" placeholder="Тип" asp-for="@customer.AddressDetails.CityAndRuralSettlements.ShortName" data-clean>
+                                                        <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.CityAndRuralSettlements.Name" data-clean>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.CityAndRuralSettlements.Value">Поселение</label>
+                                                        <input type="text" class="form-control" placeholder="Поселение" asp-for="@customer.AddressDetails.CityAndRuralSettlements.Value" data-clean>
+                                                        <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.CityAndRuralSettlements.ObjectGuid" data-clean>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.City.ShortName">Тип</label>
+                                                        <input type="text" class="form-control" placeholder="Тип" asp-for="@customer.AddressDetails.City.ShortName" data-clean>
+                                                        <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.City.Name" data-clean>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.City.Value">Город</label>
+                                                        <input type="text" class="form-control" placeholder="Город" asp-for="@customer.AddressDetails.City.Value" data-clean>
+                                                        <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.City.ObjectGuid" data-clean>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.Settlement.ShortName">Тип</label>
+                                                        <input type="text" class="form-control" placeholder="Тип" asp-for="@customer.AddressDetails.Settlement.ShortName" data-clean>
+                                                        <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Settlement.Name" data-clean>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.Settlement.Value">Населённый пункт</label>
+                                                        <input type="text" class="form-control" placeholder="Адрес регистрации" asp-for="@customer.AddressDetails.Settlement.Value" data-clean>
+                                                        <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Settlement.ObjectGuid" data-clean>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.IntracityDistrict.ShortName">Тип</label>
+                                                        <input type="text" class="form-control" placeholder="Тип" asp-for="@customer.AddressDetails.IntracityDistrict.ShortName" data-clean>
+                                                        <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.IntracityDistrict.Name" data-clean>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.IntracityDistrict.Value">Внутригородской район</label>
+                                                        <input type="text" class="form-control" placeholder="Внутригородской район" asp-for="@customer.AddressDetails.IntracityDistrict.Value" data-clean>
+                                                        <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.IntracityDistrict.ObjectGuid" data-clean>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.Street.ShortName">Тип</label>
+                                                        <input type="text" class="form-control" placeholder="Тип" asp-for="@customer.AddressDetails.Street.ShortName" data-clean>
+                                                        <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Street.Name" data-clean>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.Street.Value">Улица</label>
+                                                        <input type="text" class="form-control" placeholder="Улица" asp-for="@customer.AddressDetails.Street.Value" data-clean>
+                                                        <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Street.ObjectGuid" data-clean>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.House.HouseNum">Дом</label>
+                                                        <input type="text" class="form-control" placeholder="Дом" asp-for="@customer.AddressDetails.House.HouseNum" data-clean>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.House.BuildNum">Корпус</label>
+                                                        <input type="text" class="form-control" placeholder="Корпус" asp-for="@customer.AddressDetails.House.BuildNum" data-clean>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.House.StructNum">Строение</label>
+                                                        <input type="text" class="form-control" placeholder="Строение" asp-for="@customer.AddressDetails.House.StructNum" data-clean>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-2" hidden>
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.House.ObjectGuid">Индетиф</label>
+                                                        <input type="text" class="form-control" placeholder="Индекс" asp-for="@customer.AddressDetails.House.ObjectGuid" data-clean>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.House.PostalCode">Индекс</label>
+                                                        <input type="text" class="form-control" placeholder="Индекс" asp-for="@customer.AddressDetails.House.PostalCode" data-clean>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.House.Okato">Окато</label>
+                                                        <input type="text" class="form-control" placeholder="Окато" asp-for="@customer.AddressDetails.House.Okato" data-clean>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.House.Oktmo">ОКТМО</label>
+                                                        <input type="text" class="form-control" placeholder="ОКТМО" asp-for="@customer.AddressDetails.House.Oktmo" data-clean>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.Room.FlatType">Тип</label>
+                                                        <input type="text" class="form-control" placeholder="Тип" asp-for="@customer.AddressDetails.Room.FlatType" data-clean>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@customer.AddressDetails.Room.FlatNumber">Квартира</label>
+                                                        <input type="text" class="form-control" placeholder="Квартира" asp-for="@customer.AddressDetails.Room.FlatNumber" data-clean>
+                                                        <input type="hidden" class="form-control" asp-for="@customer.AddressDetails.Room.ObjectGuid" data-clean>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label class="form-label" asp-for="@customer.CustomerAddressResidence">Адрес проживания</label>
+                                                <input class="form-check-input" type="checkbox" value="" id="customerAddressCoincide">
+                                                <label class="form-check-label" for="customerAddressCoincide">
+                                                    Совпадает с адресом регистрации
+                                                </label>
+                                                <input type="text" class="form-control" placeholder="Адрес проживания" asp-for="@customer.CustomerAddressResidence">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-9">
+                                                <label class="form-label" asp-for="@customer.CustomerAddressTemp">Адрес временной регистрации</label>
+                                                <input type="text" class="form-control" placeholder="Адрес временной регистрации" asp-for="@customer.CustomerAddressTemp">
+                                            </div>
+                                            <div class="col-3">
+                                                <label class="form-label" asp-for="@customer.DateTempRegistration">Дата временной регистрации</label>
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                                    <input asp-for="@customer.DateTempRegistration" type="text" class="form-control pickadate" placeholder="Дата временной рег.">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-6 snils-valid">
+                                                <label class="form-label" asp-for="@customer.CustomerSnils">СНИЛС</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="СНИЛС" asp-for="@customer.CustomerSnils" aria-describedby="isGetCustomerSnils">
+                                                    <div class="input-group-text">
+                                                        <div class="form-check">
+                                                            <input asp-for="@isGetCustomerSnils" class="form-check-input" type="checkbox" title="Получить СНИЛС">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="isGetCustomerSnils_info" class="fv-plugins-message-container text-primary d-none">
+                                                    <div>СНИЛС будет получен через СМЭВ</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <label class="form-label" asp-for="@customer.CustomerInn">ИНН</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="ИНН" asp-for="@customer.CustomerInn" aria-describedby="isGetCustomerInn" />
+                                                    <div class="input-group-text">
+                                                        <div class="form-check">
+                                                            <input asp-for="@isGetCustomerInn" class="form-check-input" type="checkbox" title="Получить ИНН">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="isGetCustomerInn_info" class="fv-plugins-message-container text-primary d-none">
+                                                    <div>ИНН будет получен через СМЭВ</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Контакты -->
+                                <div class="row g-3">
+                                    <div class="col-10 mx-auto">
+                                        <div class="divider text-start">
+                                            <div class="divider-text fs-5 b-s-16">Контакты</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-8 mx-auto">
+                                    <div class="row mb-3">
+                                        <div class="col-4">
+                                            <label class="form-label" asp-for="@customer.CustomerPhone1">Телефон<sup class="text-danger fs-6">*</sup></label>
+                                            <input type="text" class="form-control" placeholder="Телефон" asp-for="@customer.CustomerPhone1" />
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label" asp-for="@customer.CustomerPhone2">Доп.телефон</label>
+                                            <input type="text" class="form-control" placeholder="Доп.телефон" asp-for="@customer.CustomerPhone2">
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label" asp-for="@customer.CustomerEmail">Электронная почта</label>
+                                            <input type="text" class="form-control" placeholder="Электронная почта" asp-for="@customer.CustomerEmail">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="wrapperCustomerLegal">
+                                <div class="content-header mb-3">
+                                    <h6 class="mb-0">Заявитель</h6>
+                                    <small>Введите юридические данные заявителя.</small>
+                                </div>
+                                <!-- Документ, удостоверяющий личность -->
+                                <div class="row g-3">
+                                    <div class="col-10 mx-auto">
+                                        <div class="divider text-start">
+                                            <div class="divider-text fs-5 b-s-16">Данные организации</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-8 mx-auto">
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label class="form-label" asp-for="@customerLegal.SServicesCustomerTypeId">Тип юридического лица</label>
+                                                <select type="text" class="form-select" asp-for="@customerLegal.SServicesCustomerTypeId">
+                                                    <option value="1915424" selected="selected">Юридические лица, являющиеся коммерческими организациями</option>
+                                                    <option value="1915666">Юридические лица, являющиеся некоммерческими организациями</option>
+                                                    <option value="1915767">Организации без прав юридического лица, индивидуальные предприниматели</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label class="form-label" asp-for="@customerLegal.CustomerName">Наименование организации или ИП</label>
+                                                <input type="text" class="form-control" placeholder="Организации или ИП" asp-for="@customerLegal.CustomerName">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label class="form-label" asp-for="@customerLegal.CustomerAddress">Адрес регистрации</label>
+                                                <input type="text" class="form-control" placeholder="Адрес регистрации" asp-for="@customerLegal.CustomerAddress">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@customerLegal.CustomerInn">ИНН</label>
+                                                <input type="text" class="form-control" placeholder="ИНН" asp-for="@customerLegal.CustomerInn">
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@customerLegal.CustomerOgrn">ОГРН</label>
+                                                <input type="text" class="form-control" placeholder="ОГРН" asp-for="@customerLegal.CustomerOgrn" />
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@customerLegal.CustomerKpp">КПП</label>
+                                                <input type="text" class="form-control" placeholder="КПП" asp-for="@customerLegal.CustomerKpp" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@customerLegal.CustomerOkato">ОКАТО</label>
+                                                <input type="text" class="form-control" placeholder="ОКАТО" asp-for="@customerLegal.CustomerOkato">
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@customerLegal.CustomerOktmo">ОКТМО</label>
+                                                <input type="text" class="form-control" placeholder="ОКТМО" asp-for="@customerLegal.CustomerOktmo" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Руководитель -->
+                                <div class="row g-3">
+                                    <div class="col-10 mx-auto">
+                                        <div class="divider text-start">
+                                            <div class="divider-text fs-5 b-s-16">Персональные данные руководителя</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-8 mx-auto">
+                                        <div class="row mb-3">
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@customerLegal.HeadLastName">Фамилия</label>
+                                                <input type="text" class="form-control" placeholder="Фамилия" asp-for="@customerLegal.HeadLastName" />
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@customerLegal.HeadFirstName">Имя</label>
+                                                <input type="text" class="form-control" placeholder="Имя" asp-for="@customerLegal.HeadFirstName">
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@customerLegal.HeadSecondName">Отчество</label>
+                                                <input type="text" class="form-control" placeholder="Отчество" asp-for="@customerLegal.HeadSecondName">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@customerLegal.HeadPosition">Должность</label>
+                                                <input type="text" class="form-control" placeholder="Должность" asp-for="@customerLegal.HeadPosition" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Контакты -->
+                                <div class="row g-3">
+                                    <div class="col-10 mx-auto">
+                                        <div class="divider text-start">
+                                            <div class="divider-text fs-5 b-s-16">Контакты</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-8 mx-auto">
+                                    <div class="row mb-3">
+                                        <div class="col-4">
+                                            <label class="form-label" asp-for="@customerLegal.CustomerPhone1">Телефон</label>
+                                            <input type="text" class="form-control" placeholder="Телефон" asp-for="@customerLegal.CustomerPhone1" />
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label" asp-for="@customerLegal.CustomerPhone2">Доп.телефон</label>
+                                            <input type="text" class="form-control" placeholder="Доп.телефон" asp-for="@customerLegal.CustomerPhone2">
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label" asp-for="@customerLegal.CustomerEmail">Электронная почта</label>
+                                            <input type="text" class="form-control" placeholder="Электронная почта" asp-for="@customerLegal.CustomerEmail">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Representative Info -->
+                            <div class="content-header mb-3">
+                                <h6 class="mb-0">Представитель</h6>
+                                <small>Введите персональные данные представителя. <a href="javascript:void(0);" id="skip-three-step" class="fs-6 ps-1">Раскрыть</a></small>
+                            </div>
+                            <div id="representative-info">
+                                <!-- Документ, удостоверяющий личность -->
+                                <div class="row g-3">
+                                    <div class="col-10 mx-auto">
+                                        <div class="divider text-start">
+                                            <div class="divider-text fs-5 b-s-16">Документ, удостоверяющий личность</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-8 mx-auto">
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label class="form-label" asp-for="@representative.SDocumentsIdentityId">Тип документа</label>
+                                                <select class="form-select" asp-for="@representative.SDocumentsIdentityId" disabled>
+                                                    <option value="3">Свидетельство о рождении</option>
+                                                    <option value="10">Паспорт иностранного гражданина</option>
+                                                    <option value="21" selected="selected">Паспорт гражданина РФ</option>
+                                                    <option value="22">Загранпаспорт гражданина РФ</option>
+                                                    <option value="26">Паспорт моряка</option>
+                                                    <option value="12">Вид на жительство</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-3">
+                                                <label class="form-label" asp-for="@representative.DocumentSerial">Серия<sup class="text-danger fs-6">*</sup></label>
+                                                <input type="text" class="form-control" placeholder="Серия" asp-for="@representative.DocumentSerial" disabled />
+                                            </div>
+                                            <div class="col-3">
+                                                <label class="form-label" asp-for="@representative.DocumentNumber">Номер<sup class="text-danger fs-6">*</sup></label>
+                                                <input type="text" class="form-control" placeholder="Номер" asp-for="@representative.DocumentNumber" disabled />
+                                            </div>
+                                            <div class="col-3">
+                                                <label class="form-label" asp-for="@representative.DocumentIssueDate">Дата выдачи<sup class="text-danger fs-6">*</sup></label>
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                                    <input asp-for="@representative.DocumentIssueDate" type="text" class="form-control pickadate" placeholder="Дата выдачи" disabled />
+                                                </div>
+                                            </div>
+                                            <div class="col-3" data-document-code>
+                                                <label class="form-label" asp-for="@representative.DocumentCode">Подразделение<sup class="text-danger fs-6">*</sup></label>
+                                                <input type="text" class="form-control" placeholder="Подразделение" asp-for="@representative.DocumentCode" disabled />
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label class="form-label" asp-for="@representative.DocumentIssueBody">Кем выдан<sup class="text-danger fs-6">*</sup></label>
+                                                <input type="text" class="form-control" placeholder="Кем выдан" asp-for="@representative.DocumentIssueBody" disabled />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Персональные данные -->
+                                <div class="row g-3">
+                                    <div class="col-10 mx-auto">
+                                        <div class="divider text-start">
+                                            <div class="divider-text fs-5 b-s-16">Персональные данные</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-8 mx-auto">
+                                        <div class="row mb-3">
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@representative.LastName">Фамилия<sup class="text-danger fs-6">*</sup></label>
+                                                <input type="text" class="form-control" placeholder="Фамилия" asp-for="@representative.LastName" disabled />
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@representative.FirstName">Имя<sup class="text-danger fs-6">*</sup></label>
+                                                <input type="text" class="form-control" placeholder="Имя" asp-for="@representative.FirstName" disabled />
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@representative.SecondName">Отчество</label>
+                                                <input type="text" class="form-control" placeholder="Отчество" asp-for="@representative.SecondName" disabled />
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@representative.DocumentBirthDate">Дата рождения<sup class="text-danger fs-6">*</sup></label>
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                                    <input asp-for="@representative.DocumentBirthDate" type="text" class="form-control pickadate" placeholder="Дата рождения" disabled />
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <label class="d-block form-label">Пол</label>
+                                                <div class="form-check form-check-inline mt-2">
+                                                    <input class="form-check-input" type="radio" asp-for="@representative.CustomerGender" id="representative_representativeGender1" value="1" checked="checked" disabled />
+                                                    <label class="form-check-label" for="representative_representativeGender1"><i class="bi bi-gender-male fs-6"></i> Мужской</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" asp-for="@representative.CustomerGender" id="representative_representativeGender2" value="2" disabled />
+                                                    <label class="form-check-label" for="representative_representativeGender2"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label class="form-label" asp-for="@representative.DocumentBirthPlace">Место рождения<sup class="text-danger fs-6">*</sup></label>
+                                                <input type="text" class="form-control" placeholder="Место рождения" asp-for="@representative.DocumentBirthPlace" disabled />
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label class="form-label" asp-for="@representative.CustomerAddress">Адрес регистрации</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="Адрес регистрации" asp-for="@representative.CustomerAddress" aria-describedby="button-addon2" disabled>
+                                                    <button type="button" class="btn border-outline waves-effect" id="button-addon2" data-bs-toggle="collapse" data-bs-target="#RepresentativeAddressDetails" aria-expanded="false" aria-controls="RepresentativeAddressDetails">
+                                                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="input-group" id="representativeAddress">
+                                                    <ul class="list-group address-list w-100">Выберите вариант или продолжите ввод</ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="collapse row mb-3" id="RepresentativeAddressDetails">
+                                            <div class="col-11 mx-auto">
+                                                <div class="row">
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.Region.ShortName">Тип</label>
+                                                        <input type="text" class="form-control" placeholder="Тип" asp-for="@representative.AddressDetails.Region.ShortName" data-clean disabled>
+                                                        <input type="hidden" class="form-control" asp-for="@representative.AddressDetails.Region.Name" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.Region.Value">Регион</label>
+                                                        <input type="text" class="form-control" placeholder="Регион" asp-for="@representative.AddressDetails.Region.Value" data-clean disabled>
+                                                        <input type="hidden" class="form-control" asp-for="@representative.AddressDetails.Region.ObjectGuid" data-clean disabled>
+                                                        <input type="hidden" class="form-control" asp-for="@representative.AddressDetails.Region.RegionCode" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.Area.ShortName">Тип</label>
+                                                        <input type="text" class="form-control" placeholder="Тип" asp-for="@representative.AddressDetails.Area.ShortName" data-clean disabled>
+                                                        <input type="hidden" class="form-control" asp-for="@representative.AddressDetails.Area.Name" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.Area.Value">Муницип. Район/окр</label>
+                                                        <input type="text" class="form-control" placeholder="Муницип. Район/окр" asp-for="@representative.AddressDetails.Area.Value" data-clean disabled>
+                                                        <input type="hidden" class="form-control" asp-for="@representative.AddressDetails.Area.ObjectGuid" data-clean disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.CityAndRuralSettlements.ShortName">Тип</label>
+                                                        <input type="text" class="form-control" placeholder="Тип" asp-for="@representative.AddressDetails.CityAndRuralSettlements.ShortName" data-clean disabled>
+                                                        <input type="hidden" class="form-control" asp-for="@representative.AddressDetails.CityAndRuralSettlements.Name" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.CityAndRuralSettlements.Value">Поселение</label>
+                                                        <input type="text" class="form-control" placeholder="Поселение" asp-for="@representative.AddressDetails.CityAndRuralSettlements.Value" data-clean disabled>
+                                                        <input type="hidden" class="form-control" asp-for="@representative.AddressDetails.CityAndRuralSettlements.ObjectGuid" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.City.ShortName">Тип</label>
+                                                        <input type="text" class="form-control" placeholder="Тип" asp-for="@representative.AddressDetails.City.ShortName" data-clean disabled>
+                                                        <input type="hidden" class="form-control" asp-for="@representative.AddressDetails.City.Name" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.City.Value">Город</label>
+                                                        <input type="text" class="form-control" placeholder="Город" asp-for="@representative.AddressDetails.City.Value" data-clean disabled>
+                                                        <input type="hidden" class="form-control" asp-for="@representative.AddressDetails.City.ObjectGuid" data-clean>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.Settlement.ShortName">Тип</label>
+                                                        <input type="text" class="form-control" placeholder="Тип" asp-for="@representative.AddressDetails.Settlement.ShortName" data-clean disabled>
+                                                        <input type="hidden" class="form-control" asp-for="@representative.AddressDetails.Settlement.Name" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.Settlement.Value">Населённый пункт</label>
+                                                        <input type="text" class="form-control" placeholder="Адрес регистрации" asp-for="@representative.AddressDetails.Settlement.Value" data-clean disabled>
+                                                        <input type="hidden" class="form-control" asp-for="@representative.AddressDetails.Settlement.ObjectGuid" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.IntracityDistrict.ShortName">Тип</label>
+                                                        <input type="text" class="form-control" placeholder="Тип" asp-for="@representative.AddressDetails.IntracityDistrict.ShortName" data-clean disabled>
+                                                        <input type="hidden" class="form-control" asp-for="@representative.AddressDetails.IntracityDistrict.Name" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.IntracityDistrict.Value">Внутригородской район</label>
+                                                        <input type="text" class="form-control" placeholder="Внутригородской район" asp-for="@representative.AddressDetails.IntracityDistrict.Value" data-clean disabled>
+                                                        <input type="hidden" class="form-control" asp-for="@representative.AddressDetails.IntracityDistrict.ObjectGuid" data-clean disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.Street.ShortName">Тип</label>
+                                                        <input type="text" class="form-control" placeholder="Тип" asp-for="@representative.AddressDetails.Street.ShortName" data-clean disabled>
+                                                        <input type="hidden" class="form-control" asp-for="@representative.AddressDetails.Street.Name" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.Street.Value">Улица</label>
+                                                        <input type="text" class="form-control" placeholder="Улица" asp-for="@representative.AddressDetails.Street.Value" data-clean disabled>
+                                                        <input type="hidden" class="form-control" asp-for="@representative.AddressDetails.Street.ObjectGuid" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.House.HouseNum">Дом</label>
+                                                        <input type="text" class="form-control" placeholder="Дом" asp-for="@representative.AddressDetails.House.HouseNum" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.House.BuildNum">Корпус</label>
+                                                        <input type="text" class="form-control" placeholder="Корпус" asp-for="@representative.AddressDetails.House.BuildNum" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.House.StructNum">Строение</label>
+                                                        <input type="text" class="form-control" placeholder="Строение" asp-for="@representative.AddressDetails.House.StructNum" data-clean disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-2" hidden>
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.House.ObjectGuid">Индекс</label>
+                                                        <input type="text" class="form-control" placeholder="Индекс" asp-for="@representative.AddressDetails.House.ObjectGuid" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.House.PostalCode">Индекс</label>
+                                                        <input type="text" class="form-control" placeholder="Индекс" asp-for="@representative.AddressDetails.House.PostalCode" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.House.Okato">Окато</label>
+                                                        <input type="text" class="form-control" placeholder="Окато" asp-for="@representative.AddressDetails.House.Okato" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.House.Oktmo">ОКТМО</label>
+                                                        <input type="text" class="form-control" placeholder="ОКТМО" asp-for="@representative.AddressDetails.House.Oktmo" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.Room.FlatType">Тип</label>
+                                                        <input type="text" class="form-control" placeholder="Тип" asp-for="@representative.AddressDetails.Room.FlatType" data-clean disabled>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label class="form-label" asp-for="@representative.AddressDetails.Room.FlatNumber">Квартира</label>
+                                                        <input type="text" class="form-control" placeholder="Квартира" asp-for="@representative.AddressDetails.Room.FlatNumber" data-clean disabled>
+                                                        <input type="hidden" class="form-control" asp-for="@representative.AddressDetails.Room.ObjectGuid" data-clean disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label class="form-label" asp-for="@representative.CustomerAddressResidence">
+                                                    Адрес проживания<sup class="text-danger fs-6">*</sup>
+                                                    <input class="form-check-input" type="checkbox" value="" id="representativeAddressCoincide" disabled>
+                                                    <label class="form-check-label" for="representativeAddressCoincide">
+                                                        Совпадает с адресом регистрации
+                                                    </label>
+                                                </label>
+                                                <input type="text" class="form-control" placeholder="Адрес проживания" asp-for="@representative.CustomerAddressResidence" disabled />
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-9">
+                                                <label class="form-label" asp-for="@representative.CustomerAddressTemp">Адрес временной регистрации</label>
+                                                <input type="text" class="form-control" placeholder="Адрес временной регистрации" asp-for="@representative.CustomerAddressTemp" disabled />
+                                            </div>
+                                            <div class="col-3">
+                                                <label class="form-label" asp-for="@representative.DateTempRegistration">Дата временной регистрации</label>
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                                    <input asp-for="@representative.DateTempRegistration" type="text" class="form-control pickadate" placeholder="Дата временной рег." disabled />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-6 snils-valid">
+                                                <label class="form-label" asp-for="@representative.CustomerSnils">СНИЛС</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="СНИЛС" asp-for="@representative.CustomerSnils" aria-describedby="isGetRepresentativeSnils" disabled />
+                                                    <div class="input-group-text">
+                                                        <div class="form-check">
+                                                            <input asp-for="@isGetRepresentativeSnils" class="form-check-input" type="checkbox" title="Получить СНИЛС" disabled />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="isGetRepresentativeSnils_info" class="fv-plugins-message-container text-primary d-none">
+                                                    <div>СНИЛС будет получен через СМЭВ</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label" asp-for="@representative.CustomerInn">ИНН</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" placeholder="ИНН" asp-for="@representative.CustomerInn" aria-describedby="isGetRepresentativeInn" disabled />
+                                                    <div class="input-group-text">
+                                                        <div class="form-check">
+                                                            <input asp-for="@isGetRepresentativeInn" class="form-check-input" type="checkbox" title="Получить ИНН" disabled />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="isGetRepresentativeInn_info" class="fv-plugins-message-container text-primary d-none">
+                                                    <div>ИНН будет получен через СМЭВ</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Доверенность -->
+                                <div class="row g-3">
+                                    <div class="col-10 mx-auto">
+                                        <div class="divider text-start">
+                                            <div class="divider-text fs-5 b-s-16">Документ, подтверждающий полномочия представителя</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-8 mx-auto">
+                                        <div class="row mb-3">
+                                            <div class="col-9">
+                                                <label class="form-label" asp-for="@representative.NameProcuration">Наименование документа, подтверждающего полномочия представителя</label>
+                                                <input type="text" class="form-control" placeholder="Наименование документа, подтверждающего полномочия представителя" asp-for="@representative.NameProcuration" disabled />
+                                            </div>
+                                            <div class="col-3">
+                                                <label class="form-label" asp-for="@representative.NumberProcuration">Серия и Номер доверенности</label>
+                                                <input type="text" class="form-control" placeholder="Серия и Номер доверенности" asp-for="@representative.NumberProcuration" disabled />
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-9">
+                                                <label class="form-label" asp-for="@representative.IssueBodyProcuration">Кем выдан</label>
+                                                <input type="text" class="form-control" placeholder="Кем выдан" asp-for="@representative.IssueBodyProcuration" disabled />
+                                            </div>
+                                            <div class="col-3">
+                                                <label class="form-label" asp-for="@representative.IssueDateProcuration">Дата выдачи</label>
+                                                <input type="text" class="form-control pickadate" placeholder="Дата выдачи" asp-for="@representative.IssueDateProcuration" disabled />
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <label class="form-label" asp-for="@representative.PeriodProcuration">Cрок действия полномочий</label>
+                                                <input type="text" class="form-control" placeholder="Cрок действия полномочий" asp-for="@representative.PeriodProcuration" disabled />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Контакты -->
+                                <div class="row g-3">
+                                    <div class="col-10 mx-auto">
+                                        <div class="divider text-start">
+                                            <div class="divider-text fs-5 b-s-16">Контакты</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-8 mx-auto">
+                                    <div class="row mb-3">
+                                        <div class="col-4">
+                                            <label class="form-label" asp-for="@representative.CustomerPhone1">Телефон<sup class="text-danger fs-6">*</sup></label>
+                                            <input type="text" class="form-control" placeholder="Телефон" asp-for="@representative.CustomerPhone1" disabled />
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label" asp-for="@representative.CustomerPhone2">Доп.телефон</label>
+                                            <input type="text" class="form-control" placeholder="Доп.телефон" asp-for="@representative.CustomerPhone2" disabled />
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label" asp-for="@representative.CustomerEmail">Электронная почта</label>
+                                            <input type="text" class="form-control" placeholder="Электронная почта" asp-for="@representative.CustomerEmail" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-8 mx-auto" id="wrapperCustomerAlert">
+                                <div class="row mb-3">
+                                    <label class="form-label" asp-for="@customer.SAlertCustomerId">Информирование</label>
+                                    <div class="col-md mb-md-0 mb-2">
+                                        <div class="form-check custom-option custom-option-basic h-100">
+                                            <label class="form-check-label custom-option-content custom-option-form" for="customer_SAlertCustomerId0">
+                                                <input asp-for="@customer.SAlertCustomerId" class="form-check-input" type="radio" value="0" id="customer_SAlertCustomerId0" checked="">
+                                                <span class="custom-option-header">
+                                                    <span class="b-s-14 mb-0">Не информировать</span>
+                                                </span>
+                                                <span class="custom-option-body">
+                                                    Не информировать заявителя о ходе и результате предоставления услуги.
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md mb-md-0 mb-2">
+                                        <div class="form-check custom-option custom-option-basic h-100">
+                                            <label class="form-check-label custom-option-content custom-option-form" for="customer_SAlertCustomerId1">
+                                                <input asp-for="@customer.SAlertCustomerId" class="form-check-input" type="radio" value="1" id="customer_SAlertCustomerId1">
+                                                <span class="custom-option-header">
+                                                    <span class="b-s-14 mb-0">Звонок</span>
+                                                </span>
+                                                <span class="custom-option-body">
+                                                    Информирование заявителя о ходе и результате предоставления услуги по телефону
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md mb-md-0 mb-2">
+                                        <div class="form-check custom-option custom-option-basic h-100">
+                                            <label class="form-check-label custom-option-content custom-option-form" for="customer_SAlertCustomerId2">
+                                                <input asp-for="@customer.SAlertCustomerId" class="form-check-input" type="radio" value="2" id="customer_SAlertCustomerId2">
+                                                <span class="custom-option-header">
+                                                    <span class="b-s-14 mb-0">СМС</span>
+                                                </span>
+                                                <span class="custom-option-body">
+                                                    Информирование заявителя о ходе и результате предоставления услуги путем СМС-оповещения.
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label class="form-label" asp-for="@customer.PollIasMkgu">Опрос <abbr data-bs-toggle="tooltip" data-bs-offset="0,8" data-bs-placement="top" data-color="dark" title="Информационно-аналитическая система мониторинга качества государственных услуг">ИАС МКГУ</abbr></label>
+                                    <div class="col-md mb-md-0 mb-2">
+                                        <div class="form-check custom-option custom-option-basic h-100">
+                                            <label class="form-check-label custom-option-content custom-option-form" for="customer_PollIasMkgu0">
+                                                <input asp-for="@customer.PollIasMkgu" class="form-check-input" type="radio" value="0" id="customer_PollIasMkgu0" checked="">
+                                                <span class="custom-option-header">
+                                                    <span class="b-s-14 mb-0">Отказ</span>
+                                                </span>
+                                                <span class="custom-option-body">
+                                                    Отказ от оценки качества предоставления услуги.
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md mb-md-0 mb-2">
+                                        <div class="form-check custom-option custom-option-basic h-100">
+                                            <label class="form-check-label custom-option-content custom-option-form" for="customer_PollIasMkgu2">
+                                                <input asp-for="@customer.PollIasMkgu" class="form-check-input" type="radio" value="2" id="customer_PollIasMkgu2">
+                                                <span class="custom-option-header">
+                                                    <span class="b-s-14 mb-0">Терминал</span>
+                                                </span>
+                                                <span class="custom-option-body">
+                                                    Терминалы, расположенные в территориальных органах ведомств, а также в МФЦ.
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md mb-md-0 mb-2">
+                                        <div class="form-check custom-option custom-option-basic h-100">
+                                            <label class="form-check-label custom-option-content custom-option-form" for="customer_PollIasMkgu1">
+                                                <input asp-for="@customer.PollIasMkgu" class="form-check-input" type="radio" value="1" id="customer_PollIasMkgu1">
+                                                <span class="custom-option-header">
+                                                    <span class="b-s-14 mb-0">СМС</span>
+                                                </span>
+                                                <span class="custom-option-body">
+                                                    Сбор мнений получателя услуги с помощью бесплатного смс-опроса.
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-8 mx-auto" id="wrapperRepresentativeAlert">
+                                <div class="row mb-3">
+                                    <label class="form-label" asp-for="@representative.SAlertCustomerId">Информирование</label>
+                                    <div class="col-md mb-md-0 mb-2">
+                                        <div class="form-check custom-option custom-option-basic h-100">
+                                            <label class="form-check-label custom-option-content custom-option-form" for="representative_SAlertCustomerId0">
+                                                <input asp-for="@representative.SAlertCustomerId" class="form-check-input" type="radio" value="0" id="representative_SAlertCustomerId0" checked="" disabled>
+                                                <span class="custom-option-header">
+                                                    <span class="b-s-14 mb-0">Не информировать</span>
+                                                </span>
+                                                <span class="custom-option-body">
+                                                    Не информировать заявителя о ходе и результате предоставления услуги.
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md mb-md-0 mb-2">
+                                        <div class="form-check custom-option custom-option-basic h-100">
+                                            <label class="form-check-label custom-option-content custom-option-form" for="representative_SAlertCustomerId1">
+                                                <input asp-for="@representative.SAlertCustomerId" class="form-check-input" type="radio" value="1" id="representative_SAlertCustomerId1" disabled>
+                                                <span class="custom-option-header">
+                                                    <span class="b-s-14 mb-0">Звонок</span>
+                                                </span>
+                                                <span class="custom-option-body">
+                                                    Информирование заявителя о ходе и результате предоставления услуги по телефону.
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md mb-md-0 mb-2">
+                                        <div class="form-check custom-option custom-option-basic h-100">
+                                            <label class="form-check-label custom-option-content custom-option-form" for="representative_SAlertCustomerId2">
+                                                <input asp-for="@representative.SAlertCustomerId" class="form-check-input" type="radio" value="2" id="representative_SAlertCustomerId2" disabled>
+                                                <span class="custom-option-header">
+                                                    <span class="b-s-14 mb-0">СМС</span>
+                                                </span>
+                                                <span class="custom-option-body">
+                                                    Информирование заявителя о ходе и результате предоставления услуги путем СМС-оповещения.
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label class="form-label" asp-for="@representative.PollIasMkgu">Опрос <abbr data-bs-toggle="tooltip" data-bs-offset="0,8" data-bs-placement="top" data-color="dark" title="Информационно-аналитическая система мониторинга качества государственных услуг">ИАС МКГУ</abbr></label>
+                                    <div class="col-md mb-md-0 mb-2">
+                                        <div class="form-check custom-option custom-option-basic h-100">
+                                            <label class="form-check-label custom-option-content custom-option-form" for="representative_PollIasMkgu0">
+                                                <input asp-for="@representative.PollIasMkgu" class="form-check-input" type="radio" value="0" id="representative_PollIasMkgu0" checked="" disabled>
+                                                <span class="custom-option-header">
+                                                    <span class="b-s-14 mb-0">Отказ</span>
+                                                </span>
+                                                <span class="custom-option-body">
+                                                    Отказ от оценки качества предоставления услуги.
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md mb-md-0 mb-2">
+                                        <div class="form-check custom-option custom-option-basic h-100">
+                                            <label class="form-check-label custom-option-content custom-option-form" for="representative_PollIasMkgu2">
+                                                <input asp-for="@representative.PollIasMkgu" class="form-check-input" type="radio" value="2" id="representative_PollIasMkgu2" disabled>
+                                                <span class="custom-option-header">
+                                                    <span class="b-s-14 mb-0">Терминал</span>
+                                                </span>
+                                                <span class="custom-option-body">
+                                                    Терминалы, расположенные в территориальных органах ведомств, а также в МФЦ.
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md mb-md-0 mb-2">
+                                        <div class="form-check custom-option custom-option-basic h-100">
+                                            <label class="form-check-label custom-option-content custom-option-form" for="representative_PollIasMkgu1">
+                                                <input asp-for="@representative.PollIasMkgu" class="form-check-input" type="radio" value="1" id="representative_PollIasMkgu1" disabled>
+                                                <span class="custom-option-header">
+                                                    <span class="b-s-14 mb-0">СМС</span>
+                                                </span>
+                                                <span class="custom-option-body">
+                                                    Сбор мнений получателя услуги с помощью бесплатного смс-опроса.
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 d-flex justify-content-between">
+                                <button class="btn btn-primary btn-prev">
+                                    <i class="bi bi-chevron-left ms-sm-n2"></i>
+                                    <span class="d-sm-inline-block d-none">Назад</span>
+                                </button>
+                                <button class="btn btn-primary btn-next">
+                                    <span class="d-sm-inline-block d-none">Далее</span>
+                                    <i class="bi bi-chevron-right  me-sm-n2"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Дополнительные данные -->
+                        <div id="additional-data-step" class="content">
+                            <div class="row g-3">
+                                <div id="additional-data" class=""></div>
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button class="btn btn-primary btn-prev">
+                                        <i class="bi bi-chevron-left ms-sm-n2"></i>
+                                        <span class="d-sm-inline-block d-none">Назад</span>
+                                    </button>
+                                    <button class="btn btn-success btn-submit" id="btn-form-submit">
+                                        <span class="d-sm-inline-block d-none">Сохранить</span>
+                                        <i class="bi bi-chevron-right  me-sm-n2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Final -->
+                        <div id="final-step" class="content"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts
+{
+    <script src="~/assets/js/pages/case-create.js"></script>
+}

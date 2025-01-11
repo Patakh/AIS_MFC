@@ -1,0 +1,451 @@
+﻿@model AisLogistics.App.Models.AdditionalForms._67_7Model
+@{
+    IEnumerable<SelectListItem> numberTypeList = new List<SelectListItem>
+    {
+        new ("не выбрано", ""),
+        new("кадастровый", "1"),
+        new("условный", "2"),
+        new("инвентарный", "3")
+    };
+    List<String> typesActivities = new List<String>
+    {
+
+        new String("Животноводство, в том числе кочевое (оленеводство, коневодство, яководство, овцеводство)"),
+        new String("Переработка продукции животноводства, включая сбор, заготовку и выделку шкур, шерсти, волоса, окостенелых рогов, копыт, пантов, костей, эндокринных желез, мяса, субпродуктов"),
+        new String("Собаководство (разведение оленегонных, ездовых и охотничьих собак)"),
+        new String("Разведение зверей, переработка и реализация продукции звероводства"),
+        new String("Бортничество, пчеловодство"),
+        new String("Рыболовство (в том числе морской зверобойный промысел) и реализация водных биологических ресурсов"),
+        new String("Промысловая охота, переработка и реализация охотничьей продукции"),
+        new String("Земледелие (огородничество), а также разведение и переработка ценных в лекарственном отношении растений"),
+        new String("Заготовка древесины и недревесных лесных ресурсов для собственных нужд"),
+        new String("Собирательство (заготовка, переработка и реализация пищевых лесных ресурсов, сбор лекарственных растений)"),
+        new String("Добыча и переработка общераспространенных полезных ископаемых для собственных нужд"),
+        new String("Художественные промыслы и народные ремесла (кузнечное и железоделательное ремесло, изготовление утвари, инвентаря, лодок, нарт, иных традиционных средств передвижения, музыкальных инструментов, берестяных изделий, чучел промысловых зверей и птиц, сувениров из меха оленей и промысловых зверей и птиц, иных материалов, плетение из трав и иных растений, вязание сетей, резьба по кости, резьба по дереву, пошив национальной одежды и другие виды промыслов и ремесел, связанные с обработкой меха, кожи, кости и других материалов)"),
+        new String("Строительство национальных традиционных жилищ и других построек, необходимых для осуществления традиционных видов хозяйственной деятельности"),
+    };
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h1 class="my-2"></h1>
+            <h5 class="my-2">Заявитель</h5>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerFio.LastName">Фамилия</label>
+                    <input type="text" asp-for="CustomerFio.LastName" class="form-control" placeholder="Фамилия">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerFio.FirstName">Имя</label>
+                    <input type="text" asp-for="CustomerFio.FirstName" class="form-control" placeholder="Имя">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerFio.SecondName">Отчество</label>
+                    <input type="text" asp-for="CustomerFio.SecondName" class="form-control" placeholder="Отчество">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="BirthDate" type="text"
+                               class="form-control pickdate" placeholder="Дата рождения">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Inn">ИНН</label>
+                    <input type="text" asp-for="Inn" class="form-control" placeholder="ИНН">
+                </div>
+                <div class="col-4">
+                    <label class="d-block form-label">Пол</label>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="CustomerGender" id="customer_CustomerGender1" value="1" checked="checked">
+                        <label class="form-check-label" for="customer_CustomerGender1"><i class="bi bi-gender-male fs-6"></i> Мужской</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="CustomerGender" id="customer_CustomerGender2" value="2">
+                        <label class="form-check-label" for="customer_CustomerGender2"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="BirthPlace">Место рождения</label>
+                    <input type="text" asp-for="BirthPlace" class="form-control" placeholder="Место рождения">
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">Документ, удостоверяющий личность</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="DocCode">Тип документа</label>
+                    <select class="select2-nosearch" asp-for="DocCode"
+                            data-dictionary='{"dictionary":"FnsDocTypes", "default_value":"@Model.DocCode"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-8">
+                    <label class="form-label" asp-for="DocSeriesNumber">Серия и номер</label>
+                    <input type="text" class="form-control" placeholder="Серия и номер" asp-for="DocSeriesNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="DocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DocIssueDate" type="text"
+                               class="form-control pickdate" placeholder="Дата выдачи">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label class="form-label" asp-for="DocIssuer">Кем выдан</label>
+                    <input type="text" class="form-control" placeholder="Кем выдан" asp-for="DocIssuer">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="CustomerSnils">СНИЛС</label>
+                    <input type="text" class="form-control" placeholder="СНИЛС" asp-for="CustomerSnils">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="CustomerInn">ИНН</label>
+                    <input type="text" class="form-control" placeholder="ИНН" asp-for="CustomerInn" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Nation">Наименование коренного малочисленного народа</label>
+                    <input type="text" class="form-control" asp-for="Nation">
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">Адрес регистрации по месту жительства в Российской Федерации</h6>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Residence.PostalCode">Почтовый индекс</label>
+                    <input type="text" class="form-control" asp-for="Residence.PostalCode">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Residence.RussiaCode">Субъект Российской Федерации (код)</label>
+                    <input type="text" class="form-control" asp-for="Residence.RussiaCode">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Residence.District">Район</label>
+                    <input type="text" class="form-control" asp-for="Residence.District">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Residence.Locality">Населенный пункт(город, село, поселок, </label>
+                    <input type="text" class="form-control" asp-for="Residence.Locality">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Residence.Street">Улица</label>
+                    <input type="text" class="form-control" asp-for="Residence.Street">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Residence.HouseNumber">Номер дома</label>
+                    <input type="text" class="form-control" asp-for="Residence.HouseNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Residence.CaseNumber">Номер корпуса</label>
+                    <input type="text" class="form-control" asp-for="Residence.CaseNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Residence.ApartmentNumber">Номер квартиры</label>
+                    <input type="text" class="form-control" asp-for="Residence.ApartmentNumber">
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">Адрес регистрации по месту пребывания в Российской Федерации (при наличии)</h6>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Stay.PostalCode">Почтовый индекс</label>
+                    <input type="text" class="form-control" asp-for="Stay.PostalCode">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Stay.RussiaCode">Субъект Российской Федерации (код)</label>
+                    <input type="text" class="form-control" asp-for="Stay.RussiaCode">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Stay.District">Район</label>
+                    <input type="text" class="form-control" asp-for="Stay.District">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Stay.Locality">Населенный пункт(город, село, поселок, </label>
+                    <input type="text" class="form-control" asp-for="Stay.Locality">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Stay.Street">Улица</label>
+                    <input type="text" class="form-control" asp-for="Stay.Street">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Stay.HouseNumber">Номер дома</label>
+                    <input type="text" class="form-control" asp-for="Stay.HouseNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Stay.CaseNumber">Номер корпуса</label>
+                    <input type="text" class="form-control" asp-for="Stay.CaseNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Stay.ApartmentNumber">Номер квартиры</label>
+                    <input type="text" class="form-control" asp-for="Stay.ApartmentNumber">
+                </div>
+            </div>
+            <h6 class="my-2">ОСУЩЕСТВЛЯЕМЫЙ ВИД (ВИДЫ) ТРАДИЦИОННОЙ ХОЗЯЙСТВЕННОЙ ДЕЯТЕЛЬНОСТИ:</h6>
+            @{
+
+                foreach (string i in typesActivities)
+                {
+                    <div class="row mb-3">
+                        <div class="col-8">
+                            <div class="form-check form-check-inline mt-2">
+                                <input class="form-check-input" type="checkbox" asp-for="TypesActivities">
+                                <label class="form-label" asp-for="TypesActivities">@i</label>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            }
+
+
+
+        </div>
+    </div>
+</div>
+
+<div id="originalBlock">
+</div>
+<script src="~/assets/js/pages/case-create-physical.js"></script>
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function () {
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('#addTaxationObject').on('click', () => addForm('taxationObjectList', 'taxationObject'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        select2Init(additionalForm);
+
+        let $doc = additionalForm.find('#docBlock');
+        let $inn = additionalForm.find('[name$="Inn"]');
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('[name$="Phone"]').inputmask("9{1,15}", options);
+        additionalForm.find('[name$="Inn"]').inputmask("9{12}", options);
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        $inn.on('input', function () {
+
+            if ($(this).val()) {
+                visibilityBlock($doc, true, true);
+            }
+            else {
+                visibilityBlock($doc, false, false);
+            }
+        });
+
+        $inn.on('blur', function () {
+            if ($inn.val().indexOf('_') > -1) {
+                $inn.val('');
+                visibilityBlock($doc, false, false);
+            }
+            $inn.trigger('input');
+        });
+
+        if ($inn.val()) {
+            visibilityBlock($doc, true, true);
+        }
+        else {
+            visibilityBlock($doc, false, false);
+        }
+
+        additionalForm.find('#CustomerType').on('change', function () {
+            let $representative = additionalForm.find('#representativeBlock');
+            switch ($(this).val()) {
+                case '1':
+                    visibilityBlock($representative, true, true);
+                    break;
+                case '2':
+                    visibilityBlock($representative, false, false);
+                    break;
+            }
+        });
+
+        additionalForm.find('#CustomerType').trigger('change');
+
+        (function getDictionaries() {
+            let dicts = new Set();
+            $('[data-dictionary]').each(function () {
+                let $this = $(this);
+                let options = $this.data('dictionary');
+                if (!dicts.has(options.dictionary)) {
+                    dicts.add(options.dictionary);
+                    $.post(`/SmevBase/SmevGetDictionary`,
+                        {
+                            type: options.dictionary
+                        },
+                        function (dictionary) {
+                            if (dictionary.error) return;
+                            fillSelect(options.dictionary, dictionary);
+                        });
+                }
+            });
+        }());
+
+        function fillSelect(dictName, dictionary) {
+            $.each($(`[data-dictionary*='"${dictName}"']`),
+                function () {
+                    let $this = $(this);
+                    let items = dictionary;
+                    $this.empty();
+                    if (!$this.hasClass('required')) {
+                        $this.append(new Option('Не выбрано', ''));
+                    }
+                    if ($this.is('[data-value-value]')) {
+                        items.dictionary.forEach(function (item) {
+                            $this.append(new Option(item.value, item.value));
+                        });
+                    } else {
+                        items.dictionary.forEach(function (item) {
+                            $this.append(new Option(item.value, item.key));
+                        });
+                    }
+
+                    if ($this.data('dictionary').default_value) {
+                        let defVal = $this.data('dictionary').default_value;
+                        if (defVal) {
+                            $this.val(defVal).trigger('update');
+                            $this.attr('data-def', defVal);
+                        }
+                    } else {
+                        $this.val('').trigger('update');
+                    }
+                });
+        }
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.find("select").each(function () {
+                $(this).select2('destroy');
+            });
+            $cloneList.append($cloneBlock);
+            select2Init($cloneList);
+        }
+
+        function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function () {
+                $(this).select2({
+                });
+            });
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("select").each(function () {
+                $(this).prop("selectedIndex", 0).trigger('change');
+            });
+
+            $block.find("input").each(function () {
+                $(this).val("");
+            });
+
+            $block.find(".pickdate").datepicker({
+                language: "ru",
+                autoclose: true
+            }).inputmask("99.99.9999", options);
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `clone${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+
+    }
+</script>

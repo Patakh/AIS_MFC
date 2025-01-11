@@ -1,0 +1,36 @@
+﻿@model AisLogistics.App.Models.DTO.Identity.IdentityUserDto
+@{
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card-body">
+            <div class="info-container">
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                        <span class="fw-bold me-2">Логин:</span>
+                        <span>@Model.UserName</span>
+                    </li>
+                    <li class="mb-3">
+                        <span class="fw-bold me-2">Блокировка:</span>
+                        @if (Model.IsLockedout)
+                        {
+                        <span class="badge bg-label-danger">Заблокирован</span>
+                        }
+                        else
+                        {
+                        <span class="badge bg-label-success">НЕТ</span>
+                        }
+                    </li>
+                    <li class="mb-3">
+                        <span class="fw-bold me-2">Email:</span>
+                        <span>@Model.Email</span>
+                    </li>
+                    <li class="mb-3">
+                        <span class="fw-bold me-2">Телефон:</span>
+                        <span>@(Model.PhoneNumber ?? "не указано")</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

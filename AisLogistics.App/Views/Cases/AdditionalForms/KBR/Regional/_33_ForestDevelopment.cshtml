@@ -1,0 +1,139 @@
+﻿@model _33_ForestDevelopmentModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <input type="hidden" asp-for="TypeAppliccant" />
+            <div class="row mb-3" ulBank data-disabled>
+                <div class="col-12">
+                    <label class="form-label" asp-for="LegalAdress">юридический адрес</label>
+                    <input type="text" asp-for="LegalAdress" class="form-control">
+                </div>
+                <div class="col-12">
+                    <label class="form-label" asp-for="FaktAdress">фактический адрес</label>
+                    <input type="text" asp-for="FaktAdress" class="form-control">
+                </div>
+                <h6 class="my-2">Банковские реквизиты</h6>
+                <div class="col-12">
+                    <label class="form-label" asp-for="NameBank">полное наименование банка</label>
+                    <input type="text" asp-for="NameBank" class="form-control">
+                </div>
+                <div class="col-12">
+                    <label class="form-label" asp-for="AccountNumber">номер расчетного счета</label>
+                    <input type="text" asp-for="AccountNumber" class="form-control">
+                </div>
+                <div class="col-12">
+                    <label class="form-label" asp-for="CorrespondentNumber">номер корреспондентского счета</label>
+                    <input type="text" asp-for="CorrespondentNumber" class="form-control">
+                </div>
+                <div class="col-12">
+                    <label class="form-label" asp-for="BIK">БИК</label>
+                    <input type="text" asp-for="BIK" class="form-control">
+                </div>
+            </div>
+             
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FIOChairman">ФИО Председателя Минприроды КБР</label>
+                    <input type="text" asp-for="FIOChairman" class="form-control">
+                </div>
+            </div>
+            <h6 class="my-2">Договор аренды или права постоянного (бессрочного) пользования лесным участком</h6>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="DateRegistrationAgreement">Дата регистрации договора</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DateRegistrationAgreement" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-9">
+                    <label class="form-label" asp-for="NumberRegistrationAgreement">номер регистрации договора</label>
+                    <input type="text" asp-for="NumberRegistrationAgreement" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Location">Местоположение</label>
+                    <input type="text" asp-for="Location" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="AreaForestPlot">площадь лесного участка</label>
+                    <input type="text" asp-for="AreaForestPlot" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Type">вид</label>
+                    <input type="text" asp-for="Type" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="PeriodUse">срок использования</label>
+                    <input type="text" asp-for="PeriodUse" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () {
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        additionalForm.find("#AccountNumber").inputmask("9{20}", options);
+        additionalForm.find("#CorrespondentNumber").inputmask("9{20}", options);
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        if ($('.btn-next')) {
+            $('.btn-next').on('click', function () {
+                let customerType = $('#services-table-customerTypes').val();
+                let ulBankVisible = customerType == '1915767' || customerType == '1912196';
+                if (ulBankVisible) additionalForm.find("#TypeAppliccant").val('1');
+                visibilityBlock($('[ulBank]'), ulBankVisible, ulBankVisible)
+            })
+        }
+
+        if (document.getElementById('TypeAppliccant').value && document.getElementById('TypeAppliccant').value == '1')
+            visibilityBlock($('[ulBank]'), false, false);
+        else
+            visibilityBlock($('[ulBank]'), true, true)
+    });
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

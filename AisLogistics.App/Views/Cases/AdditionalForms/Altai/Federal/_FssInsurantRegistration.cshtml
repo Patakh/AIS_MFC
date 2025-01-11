@@ -1,0 +1,411 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.FssInsurantRegistrationModel
+@{
+    IEnumerable<SelectListItem> regReasonList = new List<SelectListItem>
+    {
+        new("не выбрано", ""),
+        new("заключением гражданско-правового договора с физическим лицом", "1"),
+        new("изменением места жительства", "2"),
+    };
+
+    IEnumerable<SelectListItem> methodResultList = new List<SelectListItem>
+    {
+        new("не выбрано", ""),
+        new("вручить", "1"),
+        new("направить по почте", "2"),
+        new("направить в форме электронного документа", "3"),
+    };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FssDepartmentName">Наименование территориального органа Фонда социального страхования Российской Федерации</label>
+                    <input type="text" asp-for="FssDepartmentName" class="form-control" placeholder="Наименование территориального органа Фонда социального страхования Российской Федерации">
+                </div>
+            </div>
+            <h5 class="my-2">Заявитель</h5>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerFio.LastName">Фамилия</label>
+                    <input type="text" asp-for="CustomerFio.LastName" class="form-control" placeholder="Фамилия">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerFio.FirstName">Имя</label>
+                    <input type="text" asp-for="CustomerFio.FirstName" class="form-control" placeholder="Имя">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerFio.SecondName">Отчество</label>
+                    <input type="text" asp-for="CustomerFio.SecondName" class="form-control" placeholder="Отчество">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="BirthDate" type="text"
+                               class="form-control pickdate" placeholder="Дата рождения">
+                    </div>
+                </div>
+                <div class="col-8">
+                    <label class="form-label" asp-for="BirthPlace">Место рождения</label>
+                    <input type="text" asp-for="BirthPlace" class="form-control" placeholder="Место рождения">
+                </div>
+            </div>
+            <h6 class="my-2">Адрес</h6>
+            <div class="row mb-1">
+                <div class="col-6">
+                    <label class="form-label" asp-for="Address.PostCode">Почтовый индекс</label>
+                    <input type="text" asp-for="Address.PostCode" class="form-control" placeholder="Почтовый индекс">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="Address.RegionCode">Субъект Российской Федерации</label>
+                    <select class="select2-nosearch" asp-for="Address.RegionCode" data-value-value
+                            data-dictionary='{"dictionary":"FnsRegionCodes", "default_value":"@Model.Address.RegionCode"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-6">
+                    <label class="form-label" asp-for="Address.City">(Город, область, иной населенный пункт)</label>
+                    <input type="text" asp-for="Address.City" class="form-control" placeholder="(Город, область, иной населенный пункт)">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="Address.Street">Улица/переулок/проспект</label>
+                    <input type="text" asp-for="Address.Street" class="form-control" placeholder="Улица/переулок/проспект">
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Address.House">Дом</label>
+                    <input type="text" asp-for="Address.House" class="form-control" placeholder="Дом">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Address.Housing">Корпус</label>
+                    <input type="text" asp-for="Address.Housing" class="form-control" placeholder="Корпус">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Address.Flat">Квартира</label>
+                    <input type="text" asp-for="Address.Flat" class="form-control" placeholder="Квартира">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-1">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Phone">Телефон (с указанием кода)</label>
+                    <input type="text" asp-for="Phone" class="form-control" placeholder="Телефон (с указанием кода)">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Email">Адрес электронной почты</label>
+                    <input type="text" asp-for="Email" class="form-control" placeholder="Адрес электронной почты">
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Документ, удостоверяющий личность</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="CustomerDoc.Name">Наименование документа</label>
+                    <select class="select2-nosearch" asp-for="CustomerDoc.Name" data-value-value
+                            data-dictionary='{"dictionary":"FnsDocTypes", "default_value":"@Model.CustomerDoc.Name"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerDoc.Series">Серия</label>
+                    <input type="text" class="form-control" placeholder="Серия" asp-for="CustomerDoc.Series">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerDoc.Number">Номер</label>
+                    <input type="text" class="form-control" placeholder="Номер" asp-for="CustomerDoc.Number">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerDoc.IssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="CustomerDoc.IssueDate" type="text"
+                               class="form-control pickdate" placeholder="Дата выдачи">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label class="form-label" asp-for="CustomerDoc.Issuer">Кем выдан</label>
+                    <input type="text" class="form-control" placeholder="Кем выдан" asp-for="CustomerDoc.Issuer">
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">Сведения о государственной регистрации</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="RegOrganizationName">Наименование органа, осуществившего государственную регистрацию</label>
+                    <input type="text" class="form-control" placeholder="Наименование органа, осуществившего государственную регистрацию" asp-for="RegOrganizationName">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="RegNumber">Регистрационный номер</label>
+                    <input type="text" class="form-control" placeholder="Регистрационный номер" asp-for="RegNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="RegDate">Дата государственной регистрации</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="RegDate" type="text"
+                               class="form-control pickdate" placeholder="Дата государственной регистрации">
+                    </div>
+                </div>                
+            </div>
+            <hr />
+            <h5 class="my-2">Сведения о выданных лицензиях </h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="License.Name">Наименование документа</label>
+                    <input type="text" class="form-control" placeholder="Наименование документа" asp-for="License.Name">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="License.Issuer">Наименование органа, выдавшего документ</label>
+                    <input type="text" class="form-control" placeholder="Наименование органа, выдавшего документ" asp-for="License.Issuer">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="License.Number">Номер документа</label>
+                    <input type="text" class="form-control" placeholder="Номер документа" asp-for="License.Number">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="License.IssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="License.IssueDate" type="text"
+                               class="form-control pickdate" placeholder="Дата выдачи">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="License.EndDate">Дата окончания срока действия</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="License.EndDate" type="text"
+                               class="form-control pickdate" placeholder="Дата окончания срока действия">
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">Гражданско-правовой договор, заключенный с физическим лицом </h5>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="CivilContract.Number">Номер</label>
+                    <input type="text" class="form-control" placeholder="Номер" asp-for="CivilContract.Number">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="CivilContract.IssueDate">Дата заключения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="CivilContract.IssueDate" type="text"
+                               class="form-control pickdate" placeholder="Дата заключения">
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <label class="form-label" asp-for="CivilContract.EndDate">Срок действия</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="CivilContract.EndDate" type="text"
+                               class="form-control pickdate" placeholder="Срок действия">
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ActionType">Основной вид деятельности</label>
+                    <input type="text" class="form-control" placeholder="Основной вид деятельности" asp-for="ActionType">
+                </div>
+                <div class="col-12">
+                    <label class="form-label" asp-for="Okved2Code">Код по ОКВЭД2</label>
+                    <input type="text" class="form-control" placeholder="Код по ОКВЭД2" asp-for="Okved2Code">
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Адрес</h6>
+            <div class="row mb-1">
+                <div class="col-6">
+                    <label class="form-label" asp-for="ActionAddress.PostCode">Почтовый индекс</label>
+                    <input type="text" asp-for="ActionAddress.PostCode" class="form-control" placeholder="Почтовый индекс">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="ActionAddress.RegionCode">Субъект Российской Федерации</label>
+                    <select class="select2-nosearch" asp-for="ActionAddress.RegionCode" data-value-value
+                            data-dictionary='{"dictionary":"FnsRegionCodes", "default_value":"@Model.ActionAddress.RegionCode"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-6">
+                    <label class="form-label" asp-for="ActionAddress.City">(Город, область, иной населенный пункт)</label>
+                    <input type="text" asp-for="ActionAddress.City" class="form-control" placeholder="(Город, область, иной населенный пункт)">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="ActionAddress.Street">Улица/переулок/проспект</label>
+                    <input type="text" asp-for="ActionAddress.Street" class="form-control" placeholder="Улица/переулок/проспект">
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-4">
+                    <label class="form-label" asp-for="ActionAddress.House">Дом</label>
+                    <input type="text" asp-for="ActionAddress.House" class="form-control" placeholder="Дом">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="ActionAddress.Housing">Корпус</label>
+                    <input type="text" asp-for="ActionAddress.Housing" class="form-control" placeholder="Корпус">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="ActionAddress.Flat">Квартира</label>
+                    <input type="text" asp-for="ActionAddress.Flat" class="form-control" placeholder="Квартира">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="ActionPhone">Телефон (с указанием кода) </label>
+                    <input type="text" asp-for="ActionPhone" class="form-control" placeholder="Телефон (с указанием кода) ">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FnsDepartmentName">Наименование налогового органа, поставившего физическое лицо на учет</label>
+                    <input type="text" asp-for="FnsDepartmentName" class="form-control" placeholder="Наименование налогового органа, поставившего физическое лицо на учет">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Inn">ИНН</label>
+                    <input type="text" asp-for="Inn" class="form-control" placeholder="ИНН">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="CreditOrganizationName">Наименование кредитной организации</label>
+                    <input type="text" asp-for="CreditOrganizationName" class="form-control" placeholder="Наименование кредитной организации">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="CreditOrganizationAccount">Номер счета</label>
+                    <input type="text" asp-for="CreditOrganizationAccount" class="form-control" placeholder="Номер счета">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="Bik">БИК</label>
+                    <input type="text" asp-for="Bik" class="form-control" placeholder="БИК">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="InsuredRegistrationNumber">Регистрационный номер страхователя (Заполняется в случае регистрации в связи с изменением места жительства)</label>
+                    <input type="text" asp-for="InsuredRegistrationNumber" class="form-control" placeholder="Регистрационный номер страхователя ">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="RegReasonCode">Причина регистрации</label>
+                    <select class="select2-nosearch" asp-items="@regReasonList" asp-for="RegReasonCode"></select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="MethodResultCode">Способ получения уведомления</label>
+                    <select class="select2-nosearch" asp-items="@methodResultList" asp-for="MethodResultCode"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function() {
+        select2Init(additionalForm);
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('[name$="Inn"]').inputmask("9{12}", options);
+        additionalForm.find('[name$="Email"]').inputmask("email", options);
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        (function getDictionaries() {
+            let dicts = new Set();
+            $('[data-dictionary]').each(function() {
+                let $this = $(this);
+                let options = $this.data('dictionary');
+                if (!dicts.has(options.dictionary)) {
+                    dicts.add(options.dictionary);
+                    $.post(`/SmevBase/SmevGetDictionary`,
+                        {
+                            type: options.dictionary
+                        },
+                        function(dictionary) {
+                            if (dictionary.error) return;
+                            fillSelect(options.dictionary, dictionary);
+                        });
+                }
+            });
+        }());
+
+        function fillSelect(dictName, dictionary) {
+            $.each($(`[data-dictionary*='"${dictName}"']`),
+                function() {
+                    let $this = $(this);
+                    let items = dictionary;
+                    $this.empty();
+                    if (!$this.hasClass('required')) {
+                        $this.append(new Option('Не выбрано', ''));
+                    }
+                    if ($this.is('[data-value-value]')) {
+                        items.dictionary.forEach(function(item) {
+                            $this.append(new Option(item.value, item.value));
+                        });
+                    } else {
+                        items.dictionary.forEach(function(item) {
+                            $this.append(new Option(item.value, item.key));
+                        });
+                    }
+
+                    if ($this.data('dictionary').default_value) {
+                        let defVal = $this.data('dictionary').default_value;
+                        if (defVal) {
+                            $this.val(defVal).trigger('update');
+                            $this.attr('data-def', defVal);
+                        }
+                    } else {
+                        $this.val('').trigger('update');
+                    }
+                });
+        }
+
+        function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function() {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function() {
+                $(this).select2({
+                });
+            });
+        }
+    });
+</script>

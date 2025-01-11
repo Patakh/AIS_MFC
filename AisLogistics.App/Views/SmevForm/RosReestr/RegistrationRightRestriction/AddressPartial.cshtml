@@ -1,0 +1,241 @@
+@{
+    string id = ViewBag.Id;
+    string name = ViewBag.Name;
+    ViewBag.Id = null;
+    ViewBag.Name = null;
+}
+
+<div class="row align-items-end">
+
+    <div class="col-12">
+        <i class='bi bi-search'></i>
+        <label class="form-label" for="@(id)_RegAddressSearchFias">Поиск по ФИАС</label>
+        <input type="text" class="form-control" id="@(id)_RegAddressSearchFias"
+               data-clear-reg="" data-input-location="" data-location-model="RegAddress" data-full="true" value="">
+        <div class="input-group">
+            <ul class="list-group address-list">
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-12 d-none">
+        <label class="form-label" for="@(id)_FiasCode">ФИАС код</label>
+        <input type="text" class="form-control" id="@(id)_FiasCode" value="">
+    </div>
+
+    <div class="col-12 d-none">
+        <label class="form-label" for="@(id)_Region_Code">ФИАС код Региона</label>
+        <input type="text" class="form-control" id="@(id)_Region_Code" name="@(name).Region.Code" data-clean value="">
+    </div>
+
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class="col-3">
+                <select class="select2-nosearch" id="@(id)_Region_Type" name="@(name).Region.Type" data-dictionary='{"dictionary":"FiasRegionSocr", "default_Name":"Респ"}'></select>
+            </div>
+            <div class="col-9">
+                <label class="form-label" for="@(id)_Region_Name">Регион</label>
+                <input type="text" class="form-control required" oninput="changeAdrElement(@(id)_Region_Code)" id="@(id)_Region_Name" name="@(name).Region.Name" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 d-none">
+        <label class="form-label" for="@(id)_District_Code">ФИАС код Района</label>
+        <input type="text" class="form-control" id="@(id)_District_Code" name="@(name).District.Code" data-clean value="">
+    </div>
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class="col-3">
+                <select class="select2-nosearch" id="@(id)_District_Type" name="@(name).District.Type" data-dictionary='{"dictionary":"FiasAreaSocr", "default_Name":"р-н"}'></select>
+            </div>
+            <div class="col-9">
+                <label class="form-label" for="@(id)_District_Name">Район</label>
+                <input type="text" class="form-control" oninput="changeAdrElement(@(id)_District_Code)" id="@(id)_District_Name" name="@(name).District.Name" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 d-none">
+        <label class="form-label" for="@(id)_City_Code">ФИАС код Города</label>
+        <input type="text" class="form-control" id="@(id)_City_Code" name="@(name).City.Code" data-clean value="">
+    </div>
+
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class="col-3">
+                <select class="select2-nosearch" id="@(id)_City_Type" name="@(name).City.Type" data-dictionary='{"dictionary":"FiasCitySocr", "default_Name":"г"}'></select>
+            </div>
+
+            <div class="col-9">
+                <label class="form-label" for="@(id)_City_Name">Город</label>
+                <input type="text" class="form-control" oninput="changeAdrElement(@(id)_City_Code)" id="@(id)_City_Name" name="@(name).City.Name" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 d-none">
+        <label class="form-label" for="@(id)_UrbanDistrict_Code">ФИАС код Городского района</label>
+        <input type="text" class="form-control" id="@(id)_UrbanDistrict_Code" name="@(name).UrbanDistrict.Code" data-clean value="">
+    </div>
+
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class="col-3">
+                <select class="select2-nosearch" id="@(id)_UrbanDistrict_Type" name="@(name).UrbanDistrict.Type" data-dictionary='{"dictionary":"FiasCityAreaSocr", "default_Name":"р-н"}'></select>
+            </div>
+
+            <div class="col-9">
+                <label class="form-label" for="@(id)_UrbanDistrict_Name">Городской район</label>
+                <input type="text" class="form-control" oninput="changeAdrElement(@(id)_UrbanDistrict_Code)" id="@(id)_UrbanDistrict_Name" name="@(name).UrbanDistrict.Name" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 d-none">
+        <label class="form-label" for="@(id)_Locality_Code">ФИАС код Населенный пункта</label>
+        <input type="text" class="form-control" id="@(id)_Locality_Code" name="@(name).Locality.Code" data-clean value="">
+    </div>
+
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class="col-3">
+                <select class="select2-nosearch" id="@(id)_Locality_Type" name="@(name).Locality.Type" data-dictionary='{"dictionary":"FiasPlaceSocr", "default_Name":"с"}'></select>
+            </div>
+            <div class="col-9">
+                <label class="form-label" for="@(id)_Locality_Name">Населенный пункт</label>
+                <input type="text" class="form-control" oninput="changeAdrElement(@(id)_Locality_Code)" id="@(id)_Locality_Name" name="@(name).Locality.Name" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 d-none">
+        <label class="form-label" for="@(id)_Street_Code">ФИАС код Улицы</label>
+        <input type="text" class="form-control" id="@(id)_Street_Code" name="@(name).Street.Code" data-clean value="">
+    </div>
+
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class="col-3">
+                <select class="select2-nosearch" id="@(id)_Street_Type" name="@(name).Street.Type" data-dictionary='{"dictionary":"FiasStreetSocr", "default_Name":"ул"}'></select>
+            </div>
+
+            <div class="col-9">
+                <label class="form-label" for="@(id)_Street_Name">Улица</label>
+                <input type="text" class="form-control" oninput="changeAdrElement(@(id)_Street_Code)" id="@(id)_Street_Name" name="@(name).Street.Name" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class="col-3">
+                <select class="select2-nosearch" id="@(id)_House_Type" name="@(name).House.Type">
+                    <option value="д" selected>д</option>
+                    <option value="к">к</option>
+                    <option value="стр">стр</option>
+                    <option value="срж">срж</option>
+                    <option value="влд">влд</option>
+                    <option value="двлд">двлд</option>
+                    <option value="ГСК">ГСК</option>
+                    <option value="Гараж">гараж</option>
+                    <option value="казарма">казарма</option>
+                    <option value="уч-к">уч-к</option>
+                    <option value="бокс">бокс</option>
+                    <option value="в/ч">в/ч</option>
+                    <option value="блок">блок</option>
+                    <option value="литера">литера</option>
+                </select>
+            </div>
+            <div class="col-9">
+                <label class="form-label" for="@(id)_House_Value">Дом</label>
+                <input type="text" class="form-control" oninput="changeAdrElement(@(id)_House_Code)" id="@(id)_House_Value" name="@(name).House.Value" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class="col-3">
+                <select class="select2-nosearch" id="@(id)_Structure_Type" name="@(name).Structure.Type"> 
+                    <option value="к">к</option>
+                    <option value="влд">влд</option>
+                    <option value="д">д</option>
+                    <option value="двлд">двлд</option>
+                    <option value="кот">кот</option>
+                    <option value="ОНС">ОНС</option>
+                    <option value="пав">пав</option>
+                    <option value="соор">соор</option>
+                    <option value="стр">стр</option>
+                </select>
+            </div>
+            <div class="col-9">
+                <label class="form-label" for="@(id)_Structure_Value">Корпус</label>
+                <input type="text" class="form-control" name="@(name).Structure.Value" id="@(id)_Structure_Value" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class="col-3">
+                <select class="select2-nosearch" id="@(id)_Building_Type" name="@(name).Building.Type"> 
+                    <option value="стр">стр</option>
+                    <option value="влд">влд</option>
+                    <option value="д">д</option>
+                    <option value="двлд">двлд</option>
+                    <option value="зд">зд</option>
+                    <option value="к">к</option>
+                    <option value="кот">кот</option>
+                    <option value="ОНС">Квартира</option>
+                    <option value="пав">пав</option>
+                    <option value="соор">соор</option>
+                </select>
+            </div>
+            <div class="col-9">
+                <label class="form-label" for="@(id)_Building_Value">Строение</label>
+                <input type="text" class="form-control" name="@(name).Building.Value" id="@(id)_Building_Value" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="input-group align-items-end">
+            <div class="col-3">
+                <select class="select2-nosearch" id="@(id)_Apartment_Type" name="@(name).Apartment.Type">
+                    <option value="кв">Квартира</option>
+                    <option value="бокс">Бокс</option>
+                    <option value="ком">Комната</option>
+                    <option value="пом">Помещение</option>
+                </select>
+            </div>
+            <div class="col-9">
+                <label class="form-label" for="@(id)_Apartment_Value">Квартира</label>
+                <input type="text" class="form-control" name="@(name).Apartment.Value" id="@(id)_Apartment_Value" data-clean value="">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <label class="form-label" for="@(id)_PostalCode">Почтовый индекс</label>
+        <input type="text" class="form-control" name="@(name).PostalCode" id="@(id)_PostalCode" data-clean value="">
+
+    </div>
+
+    <div class="col-12">
+        <label class="form-label" for="@(id)_Other">Иное</label>
+        <input type="text" class="form-control" name="@(name).Other" id="@(id)_Other" data-clean value="">
+    </div>
+
+    <div class="col-6">
+        <label class="form-label" for="@(id)_Oktmo">ОКТМО</label>
+        <input type="text" class="form-control" name="@(name).Oktmo" id="@(id)_Oktmo" data-clean value="">
+    </div>
+
+    <div class="col-6">
+        <label class="form-label" for="@(id)_Okato">
+            ОКАТО
+        </label>
+        <input type="text" class="form-control" name="@(name).Okato" id="@(id)_Okato" data-clean value="">
+    </div>
+</div>

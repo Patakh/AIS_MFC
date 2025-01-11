@@ -1,0 +1,16 @@
+@using Microsoft.Extensions.Options;
+@using AisLogistics.App
+@using AisLogistics.App.TagHelpers
+@using AisLogistics.App.Models
+@using AisLogistics.App.Models.DTO
+@using AisLogistics.App.Models.DTO.Services
+@using AisLogistics.App.ViewModels
+@using AisLogistics.App.ViewModels.ModelBuilder
+@using AisLogistics.App.ViewModels.SelectListViewModel
+@using AisLogistics.App.Settings
+@using static AisLogistics.App.MessageDescription
+@addTagHelper *, WebOptimizer.Core
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, SmartBreadcrumbs
+@addTagHelper *, AisLogistics.App
+@inject IOptions<Settings> Options

@@ -1,0 +1,219 @@
+﻿@using AisLogistics.App.Models.DTO.Information
+@model InformationDetails
+<style>
+    .modal-header {
+        border-bottom:none !important;
+    }
+
+    .modal-header h5 {
+        font-weight: 700 !important;
+    }
+        b {
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 19px;
+        letter-spacing: 0.035em;
+        color: #172359;
+    }
+
+    .bg-employee {
+        background: #F9FAFB;
+    }
+
+    .modal-employeeFio {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 17px;
+        letter-spacing: 0.035em;
+        color: #B5B5B5;
+    }
+
+    .modal-text {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 17px;
+        letter-spacing: 0.035em;
+        color: #172359;
+    }
+
+    .modal-employeeJob {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 14px;
+        letter-spacing: 0.035em;
+        color: #B5B5B5;
+    }
+
+    .modal-annex {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 17px;
+        letter-spacing: 0.035em;
+        color: #172359;
+    }
+
+    .dateAdd {
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 14px;
+        letter-spacing: 0.035em;
+        color: #B5B5B5;
+    }
+
+    .statuse {
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 17px;
+        letter-spacing: 0.035em;
+        color: #FFFFFF;
+    }
+
+    .btn-grin {
+        background: #1CB92B;
+        border-radius: 2.59753px;
+        height: 35px;
+    }
+
+    .btn-read {
+        width: 161px;
+        height: 35px;
+        background: #FF2222;
+        border-radius: 2.59753px;
+    }
+
+    .topic-modal {
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 22px;
+        letter-spacing: 0.035em;
+        color: #172359;
+    }
+
+    .file-text
+    {
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 14px;
+        text-align: center;
+        letter-spacing: 0.035em;
+        color: #172359 ;
+    }
+/*   .modal-dialog-scrollable .modal-content {
+        max-height: 100%;
+        overflow: hidden;
+        position: fixed;
+        width: 46vw;
+        height: 45vh;
+        left: 27%;
+        top: 27% !important;
+        background: #FFFFFF;
+        border-radius: 3px;
+}
+
+    .modal-header, .modal-body {
+        padding-left: 36px !important;
+        padding-right: 29px !important;
+    } 
+    .modal-header{
+         
+     }
+
+    .modal-footer {
+        display: none;
+    } */
+
+    .pdf {
+        content: url("/assets/img/file/pdf.png") !important;
+    }
+
+    .png {
+        content: url("/assets/img/file/png.jpg") !important;
+    }
+
+    .word, .doc, .docx, .dotx, .dotm, docb {
+        content: url("/assets/img/file/word.jpg") !important;
+    }
+
+    .excel, .xlsx, .xls, .xlt, .xlm, .xll, .xla8, .xla5, xla_, .xlsm, .xltx, .xltm, .xlsb, .xla, .xlam, .xlw {
+        content: url("/assets/img/file/exsl.jpg") !important;
+    }
+
+    .file-icon {
+        width: 50px !important;
+        height: 65px !important;
+    }
+
+    .file-icon:hover {
+        color: #077EFA !important;
+    }
+
+    .badge-text {
+        background: #C8FFC7 !important;
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        color: #0D7D0B !important;
+    }
+</style>
+
+<fieldset>
+    <div class="row"> 
+        <div class="col-12"> 
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between bg-employee p-3">
+                        <div>
+                            <div class="b-s-14">@Model.EmployeeFio</div>
+                            <div class="r-l-12">@Model.EmployeeJob</div>
+                        </div>
+                        <div class="my-auto"> 
+                            <span class="badge badge-text">Ознакомлен</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="b-s-16">@Model.Topic</div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="m-s-14">@Model.Text</div>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-12">
+                    <div class="b-s-16">Приложения:</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    @if (Model.Files.Any())
+                    {
+                        <div class="row">
+                            @foreach (var item in Model.Files)
+                            {
+                                <a asp-action="DownloadBlank" asp-controller="Cases" asp-route-id="item.Id" asp-route-serviceId="item.ServiceId" target="_blank" class="col-2">
+                                    <div class="row justify-content-center">
+                                        <div class="col-5">
+                                            <div class="file-icon @item.FileExtensions.Substring(1)"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-12">
+                                            <p class="mb-1 file-text">@item.FileName@item.FileExtensions</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</fieldset>
+
+

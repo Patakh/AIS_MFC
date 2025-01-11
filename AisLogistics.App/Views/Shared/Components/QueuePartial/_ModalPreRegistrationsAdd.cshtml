@@ -1,0 +1,304 @@
+﻿@using AisLogistics.App.Models.Queue
+@model GetDatePreRegistrationModelDto
+
+@{
+    var Mfc = Model.MFC;
+    var idx = Model.MFC.OrderBy(m => m.Value).First().Value;
+    var Date = Model.Date.OrderBy(o => o.idx).ToList();
+    var StartTime = Model.StartTime.OrderBy(t => idx).ToList();
+    var StopTime = Model.StopTime.OrderBy(t => idx).ToList();
+}
+
+<form asp-controller="Queue" asp-action="PreRegistrationModelSave" id="sendingForm" method="post" role="form">
+    <fieldset>
+        <div class="row">
+
+            <div class="col-12 mb-4">
+                <label for="queue_id" class="form-label">Филиал</label>
+                @Html.DropDownList("queue_id", Mfc, new { @class = "select2", @id = "queue_id" })
+            </div>
+
+            <div class="col-12 mb-4">
+                <label for="date" class="form-label">Дата</label>
+                <select id="date" name="date" class="select2">
+                    @if (Model.Date.Any())
+                    {
+                        foreach (var item in Date)
+                        {
+                            <option value="@item.value" data-date-idx="@item.idx">@item.key</option>
+                        }
+                    }
+                </select>
+            </div>
+            
+            <div class="col-12 mb-4">
+                <label for="interval" class="form-label">Время</label>
+                <select id="interval" name="interval" class="select2">
+                    @if (Model.Date.Any() && Model.StartTime.Any())
+                    {
+                        for (int i = 0; i < Model.StartTime.Count; i++)
+                        {
+                            if (Model.StartTime[i].idx == Model.Date[0].idx)
+                            {
+                                <option value="@i">@Model.StartTime[i].value - @Model.StopTime[i].value</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="col-12 mb-4" style="display: none">
+                <label for="start_time" class="form-label">Время</label>
+                <select id="start_time" name="start_time">
+                    @if (Model.Date.Any() && Model.StartTime.Any())
+                    {
+                        foreach (var item in Model.StartTime.Where(t => t.idx == Model.Date[0].idx))
+                        {
+                            <option value="@item.value" data-time-idx="@item.idx">@item.value</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="col-12 mb-4" style="display: none">
+                <label for="stop_time" class="form-label">Время</label>
+                <select id="stop_time" name="stop_time">
+                    @if (Model.Date.Any() && Model.StopTime.Any())
+                    {
+                        foreach (var item in StopTime.Where(t => t.idx == Model.Date[0].idx))
+                        {
+                            <option value="@item.value">@item.value</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="col-12 mb-4">
+                <label for="fio" class="form-label">ФИО</label>
+                <input type="text" id="fio" name="fio" class="form-control" placeholder="ФИО" />
+            </div>
+
+            <div class="col-12 mb-4">
+                <label for="phone_number" class="form-label">Номер телефона</label>
+                <input type="tel" id="phone_number" name="phone_number" class="form-control" placeholder="Номер телефона" />
+            </div>
+
+            <div id="codeResponseBlock" class="col-12 mb-4" style="display: none">
+                <label for="codeResponse" class="form-label">Код подтверждения</label>
+                <input type="text" id="codeResponse" class="form-control fw-bold" placeholder="Код подтверждения" readonly />
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<script>
+    var mfc = @Json.Serialize(Model.MFC);
+    var date = @Json.Serialize(Model.Date);
+    var start_time = @Json.Serialize(Model.StartTime);
+    var stop_time = @Json.Serialize(Model.StopTime);
+    console.log(mfc);
+    console.log(date);
+    console.log(start_time);
+    console.log(stop_time);
+    $('#codeResponseBlock').hide();
+
+    $(function () {
+        $(".select2").select2({
+            dropdownParent: $("#mainModal")
+        });
+
+        $('#sendingForm #date').on('change', function () {
+            console.log($(this).val());
+            let idx = $(this).find('option:selected').data('date-idx');
+            console.log($(this).find('option:selected'));
+            let $interval = $("#interval");
+            let $start_time = $("#start_time");
+            let $stop_time = $("#stop_time");
+            $interval.empty();
+            $start_time.empty();
+            $stop_time.empty();
+            for (var i = 0; i < start_time.length; i++) {
+                if (start_time[i].idx == idx) {
+                    $interval.append(new Option(`${start_time[i].value} - ${stop_time[i].value}`, i));
+                    $start_time.append(new Option(start_time[i].value, start_time[i].value));
+                    $stop_time.append(new Option(stop_time[i].value, stop_time[i].value));
+                }
+            }
+
+            console.log(idx);
+            console.log(start_time);
+            console.log(stop_time);
+        });
+
+        $('#sendingForm #interval').on('change', function () {
+            console.log($(this).val());
+            const index = $(this).prop('selectedIndex');
+            // $(`#stop_time`).val(stop_time.find.value).trigger('change');
+            $(`#start_time option:eq(${index})`).prop('selected', true);
+            $(`#stop_time option:eq(${index})`).prop('selected', true);
+        });
+
+        $('#sendingForm #queue_id').on('change', function () {
+            let $date = $('#date');
+            let $interval = $('#interval');
+            let $start_time = $('#start_time');
+            let $stop_time = $('#stop_time');
+            $.ajax({
+                type: "GET",
+                url: 'Queue/GetTimesForPrerecord',
+                data: { officeId: $(this).val() },
+                beforeSend: () => {
+
+                    $date.empty();
+                    $date.prop("disabled", true);
+
+                    $interval.empty();
+                    $interval.prop("disabled", true);
+
+                    $start_time.empty();
+                    $start_time.prop("disabled", true);
+
+                    $stop_time.empty();
+                    $stop_time.prop("disabled", true);
+                },
+                success: (data) => {
+                    console.log(data);
+
+                    if (data != null) {
+                        date = data.date;
+                        start_time = data.startTime;
+                        stop_time = data.stopTime;
+
+                        data.date?.forEach(function (item) {
+                            $date.append($('<option>', {
+                                value: item.value,
+                                text: item.key,
+                                'data-date-idx': item.idx
+                            }));
+                        });
+                        console.log(date[0].idx);
+                        console.log(start_time);
+                        console.log(stop_time);
+                        for (var i = 0; i < start_time.length; i++) {
+                            if (start_time[i].idx == date[0].idx) {
+                                $interval.append($('<option>', {
+                                    value: i,
+                                    text: `${start_time[i].key} - ${stop_time[i].key}`
+                                }));
+                                $start_time.append($('<option>', {
+                                    value: start_time[i].value,
+                                    text: start_time[i].key
+                                }));
+                                $stop_time.append($('<option>', {
+                                    value: stop_time[i].value,
+                                    text: stop_time[i].key
+                                }));
+                            }
+                        }
+                    }
+                },
+                complete: () => {
+                    $date.prop("disabled", false);
+                    $interval.prop("disabled", false);
+                    $start_time.prop("disabled", false);
+                    $stop_time.prop("disabled", false);
+                }
+            });
+        });
+
+        $('#phone').inputmask("+7(999) 999-99-99", { clearIncomplete: true, showMaskOnHover: false });
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                locale: 'ru_RU',
+                localization: FormValidation.locales.ru_RU,
+                fields: {
+                    'service': {
+                        validators: {
+                            notEmpty: {
+
+                            }
+                        }
+                    },
+                    'queue_id': {
+                        validators: {
+                            notEmpty: {
+
+                            }
+                        }
+                    },
+                    'date': {
+                        validators: {
+                            notEmpty: {
+
+                            }
+                        }
+                    },
+                    'time': {
+                        validators: {
+                            notEmpty: {
+
+                            }
+                        }
+                    },
+                    'phone': {
+                        validators: {
+                            notEmpty: {
+
+                            }
+                        }
+                    },
+                    'fio': {
+                        validators: {
+                            notEmpty: {
+
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }).on('core.form.valid', function () {
+                var $form = $("#sendingForm");
+                $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $form.spinnerBtn("stop");
+                    },
+                    success: function (data) {
+                        console.log('preRegistration response');
+                        console.log(data);
+                        if (data == null || data.error?.message) {
+                            toastr['error']('Запись не создана', 'Ошибка', {
+                                closeButton: true,
+                                tapToDismiss: false,
+                                rtl: false
+                            });
+                        }
+                        else {
+                            $('#mainModal [type="submit"]').hide();
+                            $('#codeResponse').val(data.result);
+                            $('#codeResponseBlock').show();
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        toastr['error'](XMLHttpRequest.responseJSON.detail, 'Ошибка', {
+                            closeButton: true,
+                            tapToDismiss: false,
+                            rtl: false
+                        });
+                    }
+                });
+                return false;
+            });
+    });
+</script>

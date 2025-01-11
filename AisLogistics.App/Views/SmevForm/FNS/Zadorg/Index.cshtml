@@ -1,0 +1,189 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new GetFnsZadorgRequestData
+            {
+                DateData = DateTime.Today
+            };
+}
+
+<style>
+
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+</style>
+
+<div class="row g-3">
+    <div class="col-12 col-lg-10 mx-auto">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Персональные данные</div>
+        </div>
+    </div>
+</div>
+<div class="row g-3 justify-content-center">
+    <div class="col-lg-8">
+        <div class="row mb-3 align-items-end">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.ApplicantType">Тип заявителя</label>
+                <select class="form-select" asp-for="@request.ApplicantType">
+                    <option value="Fl">ФЛ</option>
+                    <option value="Ul">ЮЛ</option>
+                </select>
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.DateData">Дата, на которую запрашиваются сведения</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                    <input asp-for="@request.DateData" type="text" class="form-control pickadate" placeholder="Дата, на которую запрашиваются сведения">
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3" data-person>
+            <div class="col-12">
+                <label class="form-label">Заявители</label>
+                <select class="form-select select2-nosearch applicants">
+                    <option value="">Выберите заявителя</option>
+                    @for (int i = 0; i < applicants.Count; i++)
+                    {
+                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                    }
+                </select>
+            </div>
+            <div class="col-12" id="fl">
+                <div class="row">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request.Fio.LastName">Фамилия</label>
+                        <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Fio.LastName" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request.Fio.FirstName">Имя</label>
+                        <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Fio.FirstName">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request.Fio.SecondName">Отчество</label>
+                        <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Fio.SecondName">
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Inn">ИНН</label>
+                <input type="text" class="form-control required" placeholder="ИНН" asp-for="@request.Inn">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ShowErrorInputs() {
+    }
+
+    var applicants = @Json.Serialize(applicants);
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+
+                $(formContent).find('.required').each(function () {
+                    addValidation($(this));
+                });
+
+                select2Init($(formContent));
+
+                /* init datepicker */
+                $(".pickadate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                });
+
+                /* init inputmask */
+                $(".pickadate").inputmask("99.99.9999",
+                    {
+                        clearIncomplete: true,
+                        showMaskOnHover: false
+                    });
+                $(formContent).find('[name$="Inn"]').inputmask("999999999999",
+                    {
+                        clearIncomplete: true,
+                        showMaskOnHover: false
+                    });
+            }
+        };
+
+    $('select.applicants').each(function () {
+        $(this).on('change',
+            function () {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]').each(function () {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$=".LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$=".FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$=".SecondName"]').val(applicants[id].secondName);
+                    $block.find('[name$="Inn"]').val(applicants[id].inn);
+                }
+            });
+    });
+
+    $(formContent).find('[name$="ApplicantType"]').on('change', function () {
+        const options = { clearIncomplete: true, showMaskOnHover: false }
+        const fioBlock = $(formContent).find('#fl');
+        switch ($(this).val()) {
+            case 'Fl':
+                $(formContent).find('[name$="Inn"]').inputmask("999999999999", options);
+                visibilityBlock(fioBlock, false, false);
+                break;
+            case "Ul":
+                $(formContent).find('[name$="Inn"]').inputmask("9999999999", options);
+                visibilityBlock(fioBlock, true, true);
+                break;
+        }
+    });
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').hide();
+                } else {
+                    $block.hide();
+                }
+                break;
+            case false:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').show();
+                } else {
+                    $block.show();
+                }
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        removeValidation($(this));
+                    }
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                    if ($(this).hasClass('required')) {
+                        addValidation($(this));
+                    }
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    $(formContent).find('.applicants').val('0').trigger('change');
+
+</script>

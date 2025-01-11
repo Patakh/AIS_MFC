@@ -1,0 +1,503 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.PfrAppointMonthlyCashPaymentsModel
+@{  
+    IEnumerable<SelectListItem> recipientInformationList = new List<SelectListItem>
+    {
+        new("не выбрано", ""),
+        new("лично", "1"),
+        new("представитель", "2"),
+    };
+
+    IEnumerable<SelectListItem> methodResultList = new List<SelectListItem>
+    {
+        new("не выбрано", ""),
+        new("Через «Личный кабинет» на сайте ПФР", "1"),
+        new("Через Единый портал государственных", "2"),
+        new("Сообщение на электронную почту", "3"),
+        new("Сообщение на телефон", "4"),
+    };
+
+    IEnumerable<SelectListItem> secretQuestionList = new List<SelectListItem>
+    {
+        new("не выбрано", ""),
+        new("девичья фамилия матери", "1"),
+        new("кличка домашнего питомца", "2"),
+        new("номер школы, которую Вы закончили", "3"),
+        new("любимое блюдо", "4"),
+        new("Ваш любимый писатель", "5"),
+    };  
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+        <h5 class="my-2">Заявитель</h5>
+            <div class="row mb-3"> 
+                <div class="col-4">
+                    <label class="form-label" asp-for="Customer.Citizenship">Гражданство</label>
+                    <select class="select2-nosearch" asp-for="Customer.Citizenship" data-value-value
+                            data-dictionary='{"dictionary":"Oksm", "default_value":"@Model.Customer.Citizenship"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Customer.StayAddress">Адрес места пребывания</label>
+                    <input type="text" asp-for="Customer.StayAddress" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Customer.ActualResidenceAddress">Адрес фактического проживания</label>
+                    <input type="text" asp-for="Customer.ActualResidenceAddress" class="form-control">
+                </div>
+            </div> 
+            <hr />
+
+            <h5 class="my-2">Представитель</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative.StayAddress">Адрес места пребывания </label>
+                    <input type="text" asp-for="Representative.StayAddress" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative.ActualResidenceAddress">Адрес фактического проживания</label>
+                    <input type="text" asp-for="Representative.ActualResidenceAddress" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative.OrganizationLegalAddress">Юридический адрес организации</label>
+                    <input type="text" asp-for="Representative.OrganizationLegalAddress" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative.OrganizationLocation">Место нахождения организации</label>
+                    <input type="text" asp-for="Representative.OrganizationLocation" class="form-control">
+                </div>
+            </div> 
+            <hr />
+            <h6 class="my-2">Документ, подтверждающий полномочия представителя</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative.AuthorityDocName">Наименование документа</label>
+                    <select class="select2-nosearch" asp-for="Representative.AuthorityDocName" data-value-value
+                            data-dictionary='{"dictionary":"FnsDocTypes", "default_value":"@Model.Representative.AuthorityDocName"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-8">
+                    <label class="form-label" asp-for="Representative.AuthorityDocSeriesNumber">Серия, номер</label>
+                    <input type="text" asp-for="Representative.AuthorityDocSeriesNumber" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Representative.AuthorityDocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Representative.AuthorityDocIssueDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative.AuthorityDocIssuer">Кем выдан</label>
+                    <input type="text" asp-for="Representative.AuthorityDocIssuer" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="PaymentCaseLocation">Место нахождения выплатного дела</label>
+                    <input type="text" asp-for="PaymentCaseLocation" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="PersonCategory">Категория лица, имеющего право на ежемесячную денежную выплату</label>
+                    <select class="select2-nosearch" asp-for="PersonCategory">
+                        <option value="Участники Великой Отечественной Войны, ставшие инвалидами" />
+                        <option value="Участники Великой Отечественной войны" />
+                        <option value="Ветераны боевых действий" />
+                        <option value="Военнослужащие, проходившие военную службу в воинских частях, учреждениях, военно-учебных заведениях, не входивших в состав действующей армии, в период с 22 июня 1941 года по 3 сентября 1945 года не менее шести месяцев, военнослужащие, награжденные орденами или медалями СССР за службу в указанный период" />
+                        <option value="Лица, награжденные знаком &quot;Жителю блокадного Ленинград&quot;" />
+                        <option value="Лица, работавшие в период Великой Отечественной войны на объектах противовоздушной обороны, местной противовоздушной обороны, на строительстве оборонительных сооружений, военно-морских баз, аэродромов и других военных объектов в пределах тыловых границ действующих фронтов, операционных зон действующих флотов, на прифронтовых участках железных и автомобильных дорог, а также члены экипажей судов транспортного флота, интернированных в начале Великой Отечественной войны в портах других государств" />
+                        <option value="Члены семей погибших (умерших) инвалидов войны, участников Великой Отечественной войны и ветеранов боевых действий; члены семей погибших в Великой Отечественной войне лиц из числа личного состава групп самозащиты объектовых и аварийных команд местной противовоздушной обороны, а также члены семей погибших работников госпиталей и больниц города Ленинграда" />
+                        <option value="Дети-инвалиды" />
+                        <option value="Военнослужащие и лица рядового и начальствующего состава органов внутренних дел, Государственной противопожарной службы, учреждений и органов уголовно-исполнительной системы, ставших инвалидами вследствие ранения, контузии или увечья, полученных при исполнении обязанностей военной службы (служебных обязанностей)" />
+                        <option value="Бывшие несовершеннолетние узники концлагерей, гетто, других мест принудительного содержания, созданных фашистами и их союзниками в период второй мировой войны, признанные инвалидами вследствие общего заболевания, трудового увечья и других причин (за исключением лиц, инвалидность которых наступила вследствие их противоправных действий" />
+                        <option value="Бывшие несовершеннолетние узники концлагерей, гетто, других мест принудительного содержания, созданных фашистами и их союзниками в период второй мировой войны" />
+                        <option value="Инвалиды (I группа)" />
+                        <option value="Инвалиды (II группа)" />
+                        <option value="Инвалиды (III группа)" />
+                        <option value="Граждане, получившие или перенесшие лучевую болезнь и другие заболевания, связанные с радиационным воздействием вследствие чернобыльской катастрофы или с работами по ликвидации последствий катастрофы на Чернобыльской АЭС" />
+                        <option value="Инвалиды вследствие чернобыльской катастрофы" />
+                        <option value="Семьи, потерявшие кормильца из числа граждан, погибших в результате катастрофы на Чернобыльской АЭС, умерших вследствие лучевой болезни и других заболеваний, возникших в связи с чернобыльской катастрофой, а также семьи умерших инвалидов" />
+                        <option value="Участник ликвидации последствий катастрофы на Чернобыльской АЭС 1986-1987 г. г., &quot;укрытие&quot; 1988-1990 гг." />
+                        <option value="Семьи, в том числе вдовы (вдовцы) умерших участников ликвидации последствий катастрофы на Чернобыльской АЭС 1986-1987 гг., &quot; укрытие&quot;1988-1990 гг." />
+                        <option value="Рабочие и служащие, а также военнослужащие, лица начальствующего и рядового состава ОВД, Государственной противопожарной службы, получившие профессиональные заболевания, связанные с лучевым воздействием на работах в зоне отчуждения" />
+                        <option value="Граждане, эвакуированные (в том числе выехавшие добровольно) в 1986 году из зоны отчуждения, включая детей, в т.ч. детей, которые в момент эвакуации находились в состоянии внутриутробного развития" />
+                        <option value="Дети и подростки, страдающие болезнями вследствие ЧАЭС или обусловленными генетическими последствиями радиоактивного облучения одного из родителей" />
+                        <option value="Граждане, получившие лучевую болезнь, другие заболевания, включенные в перечень заболеваний, возникновение или обострение которых обусловлены воздействием радиации вследствие аварии в 1957 году на производственном объединении &quot;Маяк&quot; и сбросов радиоактивных отходов в реку Теча, граждане, ставшие инвалидами вследствие воздействия радиации вследствие аварии в 1957 году на производственном объединении &quot;Маяк&quot; и сбросов радиоактивных отходов в реку Теча" />
+                        <option value="Граждане, принимавшие в 1957 - 1958 годах непосредственное участие в работах по ликвидации последствий аварии в 1957 году на производственном объединении &quot;Маяк&quot; , а также граждане, занятые на работах по проведению защитных мероприятий и реабилитации радиоактивно загрязненных территорий вдоль реки Теча в 1949 - 1956 годах" />
+                        <option value="Граждане, эвакуированные (переселенные), а также добровольно выехавшие (с 29 сентября 1957 года по 31 декабря 1960 года) из населенных пунктов (в том числе эвакуированные (переселенные) в пределах населенных пунктов, где эвакуация (переселение) производилась частично), подвергшиеся радиоактивному загрязнению вследствие аварии в 1957 году на производственном объединении &quot;Маяк&quot; и сбросов радиоактивных отходов в реку Теча (выехавшие с 1949 года по 1962 год включительно), включая детей, в том числе детей, которые в момент эвакуации (переселения) находились в состоянии внутриутробного развития, а также военнослужащие, вольнонаемный состав войсковых частей и спецконтингент, эвакуированные в 1957 году из зоны радиоактивного загрязнения" />
+                        <option value="Семьи, потерявшие кормильца из числа граждан, получивших лучевую болезнь, другие заболевания, включенные в перечень заболеваний, возникновение или обострение которых обусловлены воздействием радиации вследствие аварии в 1957 году на производственном объединении &quot;Маяк&quot; и сбросов радиоактивных отходов в реку Теча, граждан, ставших инвалидами вследствие воздействия радиации вследствие аварии в 1957 году на производственном объединении &quot;Маяк&quot; и сбросов радиоактивных отходов в реку Теча, если смерть явилась следствием воздействия радиации в результате аварии в 1957 году на производственном объединении &quot;Маяк&quot; и сбросов радиоактивных отходов в реку Теча" />
+                        <option value="Граждане, проживавшие в 1949-1963 годах в населенных пунктах на территории РФ и за ее пределами, включенных в утверждаемые Правительством РФ перечни населенных пунктов, подвергшихся радиационному воздействию вследствие ядерных испытаний на Семипалатинском полигоне и получившие суммарную (накопленную) эффективную дозу облучения, превышающую 25 сЗв (бэр)" />
+                        <option value="Родители и жены погибших/умерших военнослужащих" />
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Law">в соответствии с Федеральным законом</label>
+                    <select class="select2-nosearch" asp-for="Law">
+                        <option value="от 12.01.1995 № 5-ФЗ  «О ветеранах»" />
+                        <option value="от 22.08.2004 №122-ФЗ «О внесении изменений в законодательные акты Российской Федерации и признании утратившими силу некоторых законодательных актов Российской Федерации в связи с принятием федеральных законов «О внесении изменений и дополнений в Федеральный закон «Об общих принципах организации законодательных (представительных) и исполнительных органов государственной власти субъектов Российской Федерации» и «Об общих принципах организации местного самоуправления в Российской Федерации»" />
+                        <option value="от 24.11.1995 №181-ФЗ «О социальной защите инвалидов в Российской Федерации»" />
+                        <option value="от 15.05.1991 № 1244-1 «О социальной защите граждан, подвергшихся воздействию радиации вследствие катастрофы на Чернобыльской АЭС»" />
+                        <option value="от 26.11.1998 №175-ФЗ «О социальной защите граждан Российской Федерации, подвергшихся воздействию радиации вследствие аварии в 1957 году на производственном объединении «Маяк» и сбросов радиоактивных отходов в реку Теча»" />
+                        <option value="от 10.01.2002 № 2-ФЗ «О социальных гарантиях гражданам, подвергшимся радиационному воздействию вследствие ядерных испытаний на Семипалатинском полигоне»" />
+                        <option value="от 15.01.1993 № 4301-1 «О статусе Героев Советского Союза, Героев Российской Федерации и полных кавалеров ордена Славы»" />
+                        <option value="от 09.01.1997 № 5-ФЗ «О предоставлении социальных гарантий Героям Социалистического Труда, Героям Труда Российской Федерации и полным кавалерам ордена Трудовой Славы»" />
+                        <option value="постановлением Верховного Совета Российской Федерации от 27.12.1991 № 2123-1 «О распространении действия Закона РСФСР «О социальной защите граждан, подвергшихся воздействию радиации вследствие катастрофы на Чернобыльской АЭС» на граждан из подразделений особого риска»" />
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="PfrDepartmentPayName">Наименование территориального органа ПФР, которым будет осуществляться ежемесячная денежная выплата</label>
+                    <input type="text" asp-for="PfrDepartmentPayName" class="form-control">
+                </div>
+            </div>
+            <h6 class="my-2">Сведения о документе, подтверждающем право гражданина на установление ежемесячной денежной выплаты</h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="DocConfirmRightName">Наименование документа</label>
+                    <input type="text" asp-for="DocConfirmRightName" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="DocConfirmRightSeries">Серия</label>
+                    <input type="text" asp-for="DocConfirmRightSeries" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="DocConfirmRightNumber">Номер</label>
+                    <input type="text" asp-for="DocConfirmRightNumber" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="DocConfirmRightIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DocConfirmRightIssueDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="DocConfirmRightIssuer">Кем выдан</label>
+                    <input type="text" asp-for="DocConfirmRightIssuer" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">Данные о других членах семьи Героя Советского Союза, Героя Российской Федерации или полного кавалера ордена Славы</h5>
+            <div id="otherFamilyMemberList" data-clone-list>
+                @for (var i = 0; i < Model.FamilyMembersList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Член семьи @(i + 1)</h6>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="FamilyMembersList[i].FIO">ФИО</label>
+                                        <input type="text" class="form-control" asp-for="FamilyMembersList[i].FIO">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="FamilyMembersList[i].BirthDate">Дата рождения</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="FamilyMembersList[i].BirthDate" type="text"
+                                               class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="FamilyMembersList[i].Kinship">Степень родства</label>
+                                        <input type="text" class="form-control" asp-for="FamilyMembersList[i].Kinship">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)">
+                                    <i class="bi bi-trash bx-md"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addOtherFamilyMembers">
+                        <i class="bi bi-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="RecipientInformationCode">Получатель информации о ходе и результатах рассмотрения заявления</label>
+                    <select class="select2-nosearch" asp-items="@recipientInformationList" asp-for="RecipientInformationCode"></select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="MethodResultCode">Способ информирования</label>
+                    <select class="select2-nosearch" asp-items="@methodResultList" asp-for="MethodResultCode"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="SecretQuestionCode">Секретный вопрос</label>
+                    <select class="select2-nosearch" asp-items="@secretQuestionList" asp-for="SecretQuestionCode"></select>
+                </div>
+              <div class="col-6">
+                    <label class="form-label" asp-for="SecretQuestionAnswer">Ответ на секретный вопрос</label>
+                    <input type="text" asp-for="SecretQuestionAnswer" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="SecretCode">Секретный код</label>
+                    <input type="text" asp-for="SecretCode" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="otherFamilyMember" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Член семьи 100</h6>
+        <div class="row mb-3 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="FamilyMembersList[0].FIO">ФИО</label>
+                        <input type="text" class="form-control" asp-for="FamilyMembersList[0].FIO">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label" asp-for="FamilyMembersList[0].BirthDate">Дата рождения</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="FamilyMembersList[0].BirthDate" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="FamilyMembersList[0].Kinship">Степень родства</label>
+                        <input type="text" class="form-control" asp-for="FamilyMembersList[0].Kinship">
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)">
+                    <i class="bi bi-trash bx-md"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+    var applicant = {
+        fio: $("#Customer_Fio"),
+        docSeriesNumber: $("#Customer_DocSeriesNumber"),
+        docType: $("#DocType"),
+        docIssueDate: $("#DocIssueDate"),
+        birthDate: $("#BirthDate"),
+        birthPlace: $("#BirthAddress"),
+        docIssuer: $("#DocIssuer"),
+        residenceAddress: $("#ResidenceAddress"),
+        residenceAddressp: $("#ResidenceAddressP")
+    };
+
+    $(function () {
+        additionalForm.find('#addOtherFamilyMembers').on('click', () => addForm('otherFamilyMemberList', 'otherFamilyMember'));
+         
+        originalBlock.find('[data-original]').each(function(_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        select2Init(additionalForm);
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        (function getDictionaries() {
+            let dicts = new Set();
+            $('[data-dictionary]').each(function() {
+                let $this = $(this);
+                let options = $this.data('dictionary');
+                if (!dicts.has(options.dictionary)) {
+                    dicts.add(options.dictionary);
+                    $.post(`/SmevBase/SmevGetDictionary`,
+                        {
+                            type: options.dictionary
+                        },
+                        function(dictionary) {
+                            if (dictionary.error) return;
+                            fillSelect(options.dictionary, dictionary);
+                        });
+                }
+            });
+        }());
+
+        function fillSelect(dictName, dictionary) {
+            $.each($(`[data-dictionary*='"${dictName}"']`),
+                function() {
+                    let $this = $(this);
+                    let items = dictionary;
+                    $this.empty();
+                    if (!$this.hasClass('required')) {
+                        $this.append(new Option('Не выбрано', ''));
+                    }
+                    if ($this.is('[data-value-value]')) {
+                        items.dictionary.forEach(function(item) {
+                            $this.append(new Option(item.value, item.value));
+                        });
+                    } else {
+                        items.dictionary.forEach(function(item) {
+                            $this.append(new Option(item.value, item.key));
+                        });
+                    }
+
+                    if ($this.data('dictionary').default_value) {
+                        let defVal = $this.data('dictionary').default_value;
+                        if (defVal) {
+                            $this.val(defVal).trigger('update');
+                            $this.attr('data-def', defVal);
+                        }
+                    } else {
+                        $this.val('').trigger('update');
+                    }
+                });
+        }       
+    });
+
+     function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function() {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function() {
+                $(this).select2({
+                });
+            });
+        }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function(index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `clone${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function() {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function() {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    function addForm(cloneListId, originalId) {
+        let $cloneList = additionalForm.find(`#${cloneListId}`);
+        let $original = originalBlock.find(`#${originalId}`);
+        let $cloneBlock = $original.clone(true);
+        let indexId = $cloneList.find('[data-clone]').length;
+        renameBlock($cloneBlock, indexId);
+        blockInit($cloneBlock);
+        $cloneList.find("select").each(function() {
+            $(this).select2('destroy');
+        });
+        $cloneList.append($cloneBlock);
+        select2Init($cloneList);
+    }
+
+    function blockInit($block) {
+        visibilityBlock($block, false, false);
+
+        $block.find("input").each(function() {
+                $(this).val("");
+            });
+
+        $block.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", { clearIncomplete: true, showMaskOnHover: false });
+    }
+</script>

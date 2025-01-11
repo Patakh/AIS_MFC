@@ -1,0 +1,60 @@
+﻿@using AisLogistics.App.Models.Reports;
+@model AisLogistics.App.ViewModels.Reports.ReportViewResponseModel
+@{
+    var data = Model?.DataList?.Cast<ReportReestrCountEmployees>();
+    int i = 0;
+    int received = 0;
+    int issued = 0;
+    int consultation = 0;
+}
+
+        @if (data != null && data.Any())
+        {
+            <div class="table-responsive table-responsive-report">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr style="vertical-align: middle;">
+                            <th rowspan="2" style="padding: 5px; width: 35px;">№</th>
+                            <th rowspan="2" style="padding: 5px;">Сотрудник</th>
+                            <th colspan="4" style="padding: 5px; text-align: center;">Количество</th>
+                        </tr>
+                        <tr>
+                            <th style="padding: 5px; width: 80px; text-align:center;">Принято</th>
+                            <th style="padding: 5px; width: 80px; text-align:center;">Выдано</th>
+                            <th style="padding: 5px; width: 80px; text-align:center;">Консул</th>
+                            <th style="padding: 5px; width: 80px; text-align:center;">Всего</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in data)
+                        {
+                            <tr class="r-s-12">
+                                <td style="padding: 5px;" scope="row">@(++i)</td>
+                                <td style="padding: 5px;">@item.out_employee_name</td>
+                                <td style="padding: 5px;text-align:center;">@(item.out_received_count)</td>
+                                <td style="padding: 5px;text-align:center;">@(item.out_issued_count)</td>
+                                <td style="padding: 5px;text-align:center;">@(item.out_consultation_count)</td>
+                                <td style="padding: 5px;text-align:center;">@(item.out_received_count + item.out_issued_count + item.out_consultation_count)</td>
+                            </tr>
+
+                            {
+                                received += item.out_received_count; issued += item.out_issued_count; consultation += item.out_consultation_count;
+                            }
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr class="b-s-12">
+                        <td colspan="2" style="padding: 5px; vertical-align: middle;">ИТОГО</td>
+                            <td style="padding: 5px;text-align:center;">@received</td>
+                            <td style="padding: 5px;text-align:center;">@issued</td>
+                            <td style="padding: 5px;text-align:center;">@consultation</td>
+                            <td style="padding: 5px;text-align:center;">@(received + issued + consultation)</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        }
+        else
+        {
+            <span class="text-muted">Нет данных</span>
+        }

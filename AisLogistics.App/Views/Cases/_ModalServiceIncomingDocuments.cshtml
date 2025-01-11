@@ -1,0 +1,125 @@
+﻿<section>
+    <div id="SearchCasesTransferDocument">
+        <div class="row">
+            <div class="col-md-3">
+                <label for="ProviderIdAdd" class="form-label">Поставщик</label>
+                <select id="ProviderIdAdd" asp-items="@ViewBag.Providers" class="form-select">
+                    <option value="">Не выбрано</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="ServiceIdAdd" class="form-label">Услуга</label>
+                <select id="ServiceIdAdd" class="form-select">
+                    <option value="">Не выбрано</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="DepartamentIdAdd" class="form-label">Подразделение</label>
+                <select id="DepartamentIdAdd" class="form-select">
+                    <option value="">Не выбрано</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end justify-content-end">
+                <button id="btnSearchCasesIncomingDocument" class="btn btn-primary">Найти</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div id="tableCasesIncomingDocument" style="height: 70vh;">
+                <div class="mt-5 h5 text-center">Выполните поиск</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+
+    $(function () {
+
+
+        $('button[type="submit"]').hide();
+
+        let office = $("#ProviderIdAdd"),
+            departament = $("#DepartamentIdAdd"),
+            service = $("#ServiceIdAdd");
+
+        office.select2({
+            dropdownParent: $("#mainModal"),
+            placeholder: "Орган власти",
+            language: 'ru'
+        });
+
+        departament.select2({
+            dropdownParent: $("#mainModal"),
+            placeholder: "Подразделение",
+            language: 'ru'
+        });
+
+        service.select2({
+            dropdownParent: $("#mainModal"),
+            placeholder: "Услуга",
+            language: 'ru'
+        });
+
+        office.change(function (e) {
+            let arr = [];
+            arr.push({ name: 'providersId', value: $(e.target).val() });
+            $.ajax({
+                type: "GET",
+                url: 'ReestrTransferDocuments/GetServicesForProviderDataJson',
+                data: arr,
+                beforeSend: () => {
+                    service.empty();
+                    service.prop("disabled", true);
+                    departament.empty();
+                    departament.prop("disabled", true);
+                },
+                success: (data) => {
+                    data.servicesList.forEach(function (item) {
+                        service.append($('<option>', {
+                            value: item.value,
+                            text: item.text
+                        }));
+                    });
+                    data.officesList.forEach(function (item) {
+                        departament.append($('<option>', {
+                            value: item.value,
+                            text: item.text
+                        }));
+                    });
+                },
+                complete: () => {
+                    service.prop("disabled", false);
+                    departament.prop("disabled", false);
+                    departament.append($('<option>', {
+                        value: "",
+                        text: "Не выбрано"
+                    }));
+
+                }
+            });
+        });
+
+        $('#btnSearchCasesIncomingDocument').on('click', function () {
+            $.ajax({
+                type: "Post",
+                url: "/Cases/IncomingDocumentsTable",
+                data: { providerId: office.val(), departamentId: departament.val(), serviceId: service.val() },
+                beforeSend: () => {
+                    $('button[type="submit"]').hide();
+                    $('#tableCasesIncomingDocument').empty()
+                    $.pageBlock();
+                },
+                complete: () => {
+                    $.unblockUI();
+                },
+                success: function (result) {
+                    $('#tableCasesIncomingDocument').append(result);
+                },
+                error: function (event) {
+                }
+            });
+        });
+    });
+</script>

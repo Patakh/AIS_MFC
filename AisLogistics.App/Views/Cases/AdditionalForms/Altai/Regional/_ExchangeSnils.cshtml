@@ -1,0 +1,221 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Regional.ExchangeSnils
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="SNILS">СНИЛС</label>
+                    <input type="text" asp-for="SNILS" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="Code">Код по ОКУД </label>
+                    <input type="text" asp-for="Code" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">Данные, указанные в страховом свидетельстве</h5>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="F">Фамилия</label>
+                    <input type="text" asp-for="F" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="I">Имя</label>
+                    <input type="text" asp-for="I" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="O">Отчество</label>
+                    <input type="text" asp-for="O" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <br />
+            <h5 class="my-2">Новые анкетные данные (указать только изменившиеся данные)</h5>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="F_Changed">Фамилия</label>
+                    <input type="text" asp-for="F_Changed" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="I_Changed">Имя</label>
+                    <input type="text" asp-for="I_Changed" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="O_Changed">Отчество</label>
+                    <input type="text" asp-for="O_Changed" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthDate_Changed">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="BirthDate_Changed" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="d-block form-label">Пол</label>
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="Gender_Changed" id="gender1" value="М">
+                        <label class="form-check-label" asp-for="Gender_Changed"><i class="bi bi-gender-male fs-6"></i> Мужской</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="Gender_Changed" id="gender2" value="Ж">
+                        <label class="form-check-label" asp-for="Gender_Changed"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                    </div>
+                </div>
+                <div class="col-9">
+                    <label class="form-label" asp-for="Phone_Changed">Телефоны (домашний и/или рабочий)</label>
+                    <input type="text" class="form-control" asp-for="Phone_Changed">
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Место рождения</h6>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthAddressCity_Changed">город (село, дер., …)</label>
+                    <input type="text" asp-for="BirthAddressCity_Changed" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthAddressDistrict_Changed">район</label>
+                    <input type="text" asp-for="BirthAddressDistrict_Changed" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthAddressArea_Changed">область (край, респ., …)</label>
+                    <input type="text" asp-for="BirthAddressArea_Changed" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="BirthAddressCountry_Changed">страна</label>
+                    <input type="text" asp-for="BirthAddressCountry_Changed" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-3">
+                    <label class="form-label" asp-for="Citizenship_Changed">Гражданство</label>
+                    <input type="text" asp-for="Citizenship_Changed" class="form-control">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="RegistrationAddress_Changed">Адрес регистрации</label>
+                    <input type="text" asp-for="RegistrationAddress_Changed" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="RegistrationAddressIndex_Changed">индекс</label>
+                    <input type="text" asp-for="RegistrationAddressIndex_Changed" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-9">
+                    <label class="form-label" asp-for="ResidenceAddress_Changed">Адрес места жительства</label>
+                    <input type="text" asp-for="ResidenceAddress_Changed" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="ResidenceAddressIndex_Changed">индекс</label>
+                    <input type="text" asp-for="ResidenceAddressIndex_Changed" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-5">
+                    <label class="form-label" asp-for="DocType_Changed">Документ, удостоверяющий личность</label>
+                    <select class="select2-nosearch" asp-for="DocType_Changed">
+                        <option value="Паспорт гражданина РФ">Паспорт гражданина РФ</option>
+                        <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                        <option value="Паспорт иностранного гражданина">Паспорт иностранного гражданина </option>
+                        <option value="Вид на жительство">Вид на жительство </option>
+                        <option value="Загранпаспорт гражданина РФ">Загранпаспорт гражданина РФ</option>
+                        <option value="Паспорт моряка">Паспорт моряка</option>
+                    </select>
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="DocSeries_Changed">Серия</label>
+                    <input type="text" class="form-control" asp-for="DocSeries_Changed">
+                </div>
+                <div class="col-2">
+                    <label class="form-label" asp-for="DocNumber_Changed">Номер</label>
+                    <input type="text" class="form-control" asp-for="DocNumber_Changed">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="DocIssueDate_Changed">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="DocIssueDate_Changed" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="DocIssuer_Changed">выдавший орган</label>
+                    <input type="text" class="form-control" asp-for="DocIssuer_Changed">
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+    var btnNext = $('.btn-next');
+
+    var applicant = {
+        lastName: $("#F"),
+        firstName: $("#I"),
+        secondName: $("#O"),
+        snils: $("#SNILS")
+    };
+    $(function() {
+        btnNext.on('click', function appContent() {
+            applicant.lastName.val($("#customer_LastName").val());
+            applicant.firstName.val($("#customer_FirstName").val());
+            applicant.secondName.val($("#customer_SecondName").val());
+            applicant.snils.val($("#customer_CustomerSnils").val());
+        });
+
+
+        additionalForm.find("select.select2-search").each(function() {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find("select.select2-nosearch").each(function() {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('#DocNumber_Changed').inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+        additionalForm.find('#DocSeries_Changed').inputmask("9999", { clearIncomplete: true, showMaskOnHover: false });
+        additionalForm.find('#SNILS').inputmask("999-999-99999", { clearIncomplete: true, showMaskOnHover: false });
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+    });
+
+    $('#DocType_Changed').on('change', function changeDoc() {
+        switch ($(this).val()) {
+            case 'Паспорт гражданина РФ':
+                additionalForm.find('#DocSeries_Changed').inputmask("9999", { clearIncomplete: true, showMaskOnHover: false });
+                break;
+            case 'Свидетельство о рождении':
+                additionalForm.find('#DocSeries_Changed').inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+                break;
+            default:
+                additionalForm.find('#DocSeries_Changed').inputmask("9999", { clearIncomplete: true, showMaskOnHover: false });
+                break;
+        };
+    });
+
+</script>

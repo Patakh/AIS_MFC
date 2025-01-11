@@ -1,0 +1,922 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new PfrAdv2RequestData
+            {
+                Fio = new(),
+                ChangeFio = new(),
+                IdentityDocument = new(),
+                ChangeLivingAddress = new PfrPostAddress
+                {
+                    Region = new(),
+                    Area = new(),
+                    City = new(),
+                    Settlement = new(),
+                    Street = new(),
+                    House = new(),
+                    Building = new(),
+                    Housing = new(),
+                    Flat = new()
+                },
+                ChangeRegAddress = new PfrPostAddress
+                {
+                    Region = new(),
+                    Area = new(),
+                    City = new(),
+                    Settlement = new(),
+                    Street = new(),
+                    House = new(),
+                    Building = new(),
+                    Housing = new(),
+                    Flat = new()
+                },
+                ChangeBirthPlace = new()
+            };
+
+    IEnumerable<SelectListItem> docTypeList = new List<SelectListItem>
+    {
+        new("Паспорт РФ", "PassportRf"),
+        new("Свидетельство о рождении", "SvedRozhRf"),
+        new("Паспорт моряка", "PassportSailor"),
+        new("Вид на жительство", "Residence"),
+        new("Иностранный паспорт", "PassportForeign"),
+        new("Прочий документ", "OtherDocument"),
+    };
+}
+
+<style>
+    #smev-data-form-content span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content div.lg-container {
+        position: relative;
+        z-index: 9999;
+    }
+
+    #smev-data-form-content .accordion-button {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content #listService {
+        font-size: 16px;
+    }
+
+        #smev-data-form-content #listService .select2-selection.select2-selection--single {
+            height: auto !important;
+        }
+
+        #smev-data-form-content #listService .select2-selection__rendered {
+            white-space: normal !important;
+        }
+
+    #smev-data-form-content ul.address-list {
+        width: 100%;
+        z-index: 1000;
+        position: absolute;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        background-clip: padding-box;
+    }
+
+    option {
+    }
+
+    #smev-data-form-content ul.address-list li {
+        padding: 6px;
+    }
+
+        #smev-data-form-content ul.address-list li:hover {
+            color: white;
+            background-color: #5a8dee;
+            cursor: pointer
+        }
+</style>
+
+<div class="row justify-content-center" id="smev_request">
+    <input type="hidden" asp-for="ServiceId" />
+    <div class="col-4">
+        <button type="button" class="btn btn-primary w-100" target onclick="getStatement()"><i class='bi bi-printer'></i>Распечатать заявление</button>
+    </div>
+    <div class="col-10">
+        <div class="row g-3">
+            <div class="col-12 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Персональные данные заявителя</div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center" data-person>
+            <div class="col-10">
+                <div class="row mb-1">
+                    <div class="col-12">
+                        <label class="form-label">Заявители</label>
+                        <select class="form-select select2-nosearch applicants">
+                            <option value="">Выберите заявителя</option>
+                            @for (int i = 0; i < applicants.Count; i++)
+                            {
+                                <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-12 mx-auto">
+                        <div class="fs-5 b-s-16">ФИО заявителя из текущего СНИЛС</div>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request.Fio.LastName">Фамилия</label>
+                        <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Fio.LastName" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request.Fio.FirstName">Имя</label>
+                        <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Fio.FirstName">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request.Fio.SecondName">Отчество</label>
+                        <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Fio.SecondName">
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-1">
+                    <div class="col-12 form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="checkChangeFio">
+                        <label class="form-check-label fs-5 b-s-16" for="checkChangeFio">Новое ФИО</label>
+                    </div>
+                    <div class="col-10" data-disabled>
+                        <div class="row mb-3">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.ChangeFio.LastName">Фамилия</label>
+                                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.ChangeFio.LastName" />
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.ChangeFio.FirstName">Имя</label>
+                                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.ChangeFio.FirstName">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.ChangeFio.SecondName">Отчество</label>
+                                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.ChangeFio.SecondName">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row mb-1">
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request.ChangeBirthDate">Дата рождения</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="@request.ChangeBirthDate" type="text" class="form-control pickadate" placeholder="Дата рождения">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <label class="d-block form-label mb-3">Пол</label>
+                        <div class="form-check form-check-inline mx-0">
+                            <input class="form-check-input" type="radio" asp-for="@request.ChangeGender" id="smevModel0_Gender1" value="0" checked="checked">
+                            <label class="form-check-label" for="smevModel0_Gender1"><i class="bi bi-gender-male fs-6"></i>Мужской</label>
+                        </div>
+                        <div class="form-check form-check-inline mx-0">
+                            <input class="form-check-input" type="radio" asp-for="@request.ChangeGender" id="smevModel0_Gender2" value="1">
+                            <label class="form-check-label" for="smevModel0_Gender2"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request.ApplicantMobile">Телефон</label>
+                        <input type="text" class="form-control" placeholder="Телефон" asp-for="@request.ApplicantMobile">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request.Snils">СНИЛС</label>
+                        <input type="text" class="form-control required snils" placeholder="СНИЛС" asp-for="@request.Snils">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="@request.ChangeCitizenshipType">Тип гражданства заявителя</label>
+                        <select class="select2-nosearch" asp-for="@request.ChangeCitizenshipType">
+                            <option value="Russian">Гражданин(-ка) РФ</option>
+                            <option value="Foreign"> Иностранный гражданин</option>
+                            <option value="None">Лицо без гражданства</option>
+                        </select>
+                    </div>
+                    <div class="col-4" id="citizenshipCountry" data-disabled>
+                        <label class="form-label" asp-for="@request.ChangeCitizenshipCountry">Гражданство</label>
+                        <select class="select2-search" asp-for="@request.ChangeCitizenshipCountry"
+                                data-dictionary='{"dictionary":"OksmCodes"}'>
+                        </select>
+                    </div>
+                </div>
+                <hr />
+                <div class="row justify-content-center">
+                    <div class="col-12 form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="checkChangeBirthPlace">
+                        <label class="form-check-label fs-5 b-s-16" for="checkChangeBirthPlace">Место рождения</label>
+                    </div>
+                    <div class="col-10" data-disabled>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <input class="form-check-input" type="checkbox" value="true" asp-for="@request.ChangeBirthPlace.IsSpecialBirthPlace">
+                                <label class="form-check-label b-s-16" asp-for="@request.ChangeBirthPlace.IsSpecialBirthPlace">
+                                    Особое место рождения
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.ChangeBirthPlace.Country">Страна</label>
+                                <select class="form-control select2-search" asp-for="@request.ChangeBirthPlace.Country" data-value-value
+                                        data-dictionary='{"dictionary":"OksmCodes"}'></select>
+                            </div>
+                            <div class="col-6" id="regionCode">
+                                <label class="form-label" asp-for="@request.ChangeBirthPlace.Region">Регион</label>
+                                <select class="form-control select2-search" asp-for="@request.ChangeBirthPlace.Region" data-value-value
+                                        data-dictionary='{"dictionary":"FnsRegionCodes"}'></select>
+                            </div>
+                            <div class="col-6" data-disabled id="regionName">
+                                <label class="form-label" asp-for="@request.ChangeBirthPlace.Region">Регион</label>
+                                <input type="text" class="form-control" placeholder="Регион" asp-for="@request.ChangeBirthPlace.Region">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.ChangeBirthPlace.Area">Район</label>
+                                <input type="text" class="form-control" placeholder="Район" asp-for="@request.ChangeBirthPlace.Area">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.ChangeBirthPlace.City">Город</label>
+                                <input type="text" class="form-control" placeholder="Город" asp-for="@request.ChangeBirthPlace.City">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row justify-content-center">
+                    <div class="col-12 form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="request_ChangeIdentitySign" name="request.ChangeIdentitySign" value="true">
+                        <label class="form-check-label fs-5 b-s-16" for="request_ChangeIdentitySign">Документ, удостоверяющий личность был изменен</label>
+                    </div>
+                </div>
+                <hr />
+                <div class="row justify-content-center">
+                    <div class="col-12 mx-auto">
+                        <div class="fs-5 b-s-16">Документ, удостоверяющий личность</div>
+                    </div>
+                    <div class="col-10">
+                        <label class="form-label" asp-for="@request.IdentityDocument.IdentityType">Тип документа</label>
+                        <select class="form-select select2-nosearch required" asp-for="@request.IdentityDocument.IdentityType"
+                                asp-items="@docTypeList">
+                        </select>
+                    </div>
+                    <div class="col-10">
+                        <div class="row">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.IdentityDocument.Series">Серия</label>
+                                <input type="text" class="form-control required" placeholder="Серия" asp-for="@request.IdentityDocument.Series">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.IdentityDocument.Number">Номер</label>
+                                <input type="text" class="form-control required" placeholder="Номер" asp-for="@request.IdentityDocument.Number">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.IdentityDocument.IssueDate">Дата выдачи</label>
+                                <div class="input-group input-group-merge">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-calendar3"></i>
+                                    </span>
+                                    <input asp-for="@request.IdentityDocument.IssueDate" type="text" class="form-control pickadate required" placeholder="Дата выдачи">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" asp-for="@request.IdentityDocument.IssuedBy">Кем выдан</label>
+                                <input type="text" class="form-control required" placeholder="Кем выдан" asp-for="@request.IdentityDocument.IssuedBy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row justify-content-center" id="birthAct" data-disabled>
+                    <div class="col-12 mx-auto">
+                        <div class="fs-5 b-s-16">Актовая запись о рождении</div>
+                    </div>
+                    <div class="col-10">
+                        <div class="row">
+                            <div class="col-12">
+                                <label class="form-label" asp-for="@request.BirthAct.ZagsName">Наименование ЗАГС</label>
+                                <select class="form-select select2-search required" asp-for="@request.BirthAct.ZagsName">
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.BirthAct.BirthActNumber">Номер</label>
+                                <input type="text" class="form-control required" asp-for="@request.BirthAct.BirthActNumber">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.BirthAct.BirthActDate">Дата</label>
+                                <div class="input-group input-group-merge">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-calendar3"></i>
+                                    </span>
+                                    <input asp-for="@request.BirthAct.BirthActDate" type="text" class="form-control pickadate required">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row justify-content-center">
+                    <div class="col-12 form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="checkChangeRegAddress">
+                        <label class="form-check-label fs-5 b-s-16" for="checkChangeRegAddress">Адрес регистрации</label>
+                    </div>
+                    <div class="row g-2" data-disabled Adress>
+                        <div class="row justify-content-center">
+                            <div class="col-11">
+                                <label class="form-label" for="ChangeRegAddresskladrSearch">Поиск по КЛАДР</label>
+                                <input type="search" class="form-control" id="ChangeRegAddresskladrSearch" placeholder="🔍 ПОИСК">
+                                <div class="input-group">
+                                    <ul class="list-group address-list">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-center" id="ChangeRegAddress">
+                            <div class="col-11">
+                                <div class="row align-items-end">
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="@request.ChangeRegAddress.PostIndex">Индекс</label>
+                                        <input type="text" class="form-control required" asp-for="@request.ChangeRegAddress.PostIndex">
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-3">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeRegAddress.Region.ShortName"
+                                                        data-dictionary='{"dictionary":"KladrRegionSocr"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-9">
+                                                <label class="form-label" asp-for="@request.ChangeRegAddress.Region.Name">Регион</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeRegAddress.Region.Name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-3">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeRegAddress.Area.ShortName"
+                                                        data-dictionary='{"dictionary":"KladrAreaSocr"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-9">
+                                                <label class="form-label" asp-for="@request.ChangeRegAddress.Area.Name">Район</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeRegAddress.Area.Name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-3">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeRegAddress.City.ShortName"
+                                                        data-dictionary='{"dictionary":"KladrCitySocr"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-9">
+                                                <label class="form-label" asp-for="@request.ChangeRegAddress.City.Name">Город</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeRegAddress.City.Name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-3">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeRegAddress.Settlement.ShortName"
+                                                        data-dictionary='{"dictionary":"KladrSettlementSocr"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-9">
+                                                <label class="form-label" asp-for="@request.ChangeRegAddress.Settlement.Name">Населенный пункт</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeRegAddress.Settlement.Name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-3">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeRegAddress.Street.ShortName"
+                                                        data-dictionary='{"dictionary":"KladrStreetSocr"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-9">
+                                                <label class="form-label" asp-for="@request.ChangeRegAddress.Street.Name">Улица</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeRegAddress.Street.Name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-6">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeRegAddress.House.ShortName"
+                                                        data-dictionary='{"dictionary":"KladrHouseSocr"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label" asp-for="@request.ChangeRegAddress.House.ShortName">Дом</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeRegAddress.House.Number">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-6">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeRegAddress.Building.ShortName"
+                                                        data-dictionary='{"dictionary":"KladrBuildingSocr"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label" asp-for="@request.ChangeRegAddress.Building.Number">Корпус</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeRegAddress.Building.Number">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-6">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeRegAddress.Housing.ShortName">
+                                                    <option value="стр">стр</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label" asp-for="@request.ChangeRegAddress.Housing.Number">Стороение</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeRegAddress.Housing.Number">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-6">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeRegAddress.Flat.ShortName"
+                                                        data-dictionary='{"dictionary":"KladrAppartmentSocr"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label" asp-for="@request.ChangeRegAddress.Flat.Number">Квартира</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeRegAddress.Flat.Number">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+
+                <div class="row justify-content-center">
+                    <div class="col-12 form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="checkChangeLivingAddress">
+                        <label class="form-check-label fs-5 b-s-16" for="checkChangeLivingAddress">Адрес проживания (фактический) заявителя</label>
+                        <p class="text-info m-0">заполняется в случае отличия от адреса регистрации</p>
+                    </div>
+
+                    <div class="row g-2" Adress data-disabled>
+                        <div class="row justify-content-center">
+                            <div class="col-11">
+                                <label class="form-label" for="ChangeLivingAddresskladrSearch">Поиск по КЛАДР</label>
+                                <input type="search" class="form-control" id="ChangeLivingAddresskladrSearch" placeholder="🔍 ПОИСК">
+                                <div class="input-group">
+                                    <ul class="list-group address-list">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center" id="ChangeLivingAddress">
+                            <div class="col-11">
+                                <div class="row align-items-end">
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="@request.ChangeLivingAddress.PostIndex">Индекс</label>
+                                        <input type="text" class="form-control required" asp-for="@request.ChangeLivingAddress.PostIndex">
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-3">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeLivingAddress.Region.ShortName"
+                                                        data-dictionary='{"dictionary":"KladrRegionSocr"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-9">
+                                                <label class="form-label" asp-for="@request.ChangeLivingAddress.Region.Name">Регион</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeLivingAddress.Region.Name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-3">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeLivingAddress.Area.ShortName"
+                                                        data-dictionary='{"dictionary":"KladrAreaSocr"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-9">
+                                                <label class="form-label" asp-for="@request.ChangeLivingAddress.Area.Name">Район</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeLivingAddress.Area.Name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-3">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeLivingAddress.City.ShortName"
+                                                        data-dictionary='{"dictionary":"KladrCitySocr"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-9">
+                                                <label class="form-label" asp-for="@request.ChangeLivingAddress.City.Name">Город</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeLivingAddress.City.Name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-3">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeLivingAddress.Settlement.ShortName"
+                                                        data-dictionary='{"dictionary":"KladrSettlementSocr"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-9">
+                                                <label class="form-label" asp-for="@request.ChangeLivingAddress.Settlement.Name">Населенный пункт</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeLivingAddress.Settlement.Name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-3">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeLivingAddress.Street.ShortName"
+                                                        data-dictionary='{"dictionary":"KladrStreetSocr"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-9">
+                                                <label class="form-label" asp-for="@request.ChangeLivingAddress.Street.Name">Улица</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeLivingAddress.Street.Name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-6">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeLivingAddress.House.ShortName"
+                                                        data-dictionary='{"dictionary":"KladrHouseSocr"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label" asp-for="@request.ChangeLivingAddress.House.ShortName">Дом</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeLivingAddress.House.Number">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-6">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeLivingAddress.Building.ShortName"
+                                                        data-dictionary='{"dictionary":"KladrBuildingSocr"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label" asp-for="@request.ChangeLivingAddress.Building.Number">Корпус</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeLivingAddress.Building.Number">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-6">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeLivingAddress.Housing.ShortName">
+                                                    <option value="стр">стр</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label" asp-for="@request.ChangeLivingAddress.Housing.Number">Стороение</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeLivingAddress.Housing.Number">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="input-group align-items-end">
+                                            <div class="col-6">
+                                                <select class="form-select select2-nosearch" asp-for="@request.ChangeLivingAddress.Flat.ShortName"
+                                                        data-dictionary='{"dictionary":"KladrAppartmentSocr"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label" asp-for="@request.ChangeLivingAddress.Flat.Number">Квартира</label>
+                                                <input type="text" class="form-control" asp-for="@request.ChangeLivingAddress.Flat.Number">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var applicants = @Json.Serialize(applicants);
+    var regionCode = @Json.Serialize(Options.Value.Region);
+    var formContent = document.getElementById("smev-data-form-content");
+    var smevForm = {
+        init: () => {
+
+            $('.form-check-input').on('change', function () {
+                visibilityBlock($(this).closest('.row').find('[data-disabled]'), !$(this).prop('checked'), !$(this).prop('checked'));
+
+                $(formContent).find('[Adress] option[value=""]').each(function () {
+                    $(this).remove();
+                })
+
+            });
+
+            //$(formContent).find('.tab-pane').each(function() {
+            //    new PerfectScrollbar($(this)[0], { useBothWheelAxes: false, suppressScrollX: true});
+            //});
+
+            //new Tagify(formContent.querySelector('[name$="PreviousNames"]'));
+
+            $('#smev_request').find('.required').each(function () {
+                addValidation($(this));
+            });
+
+            // скрытие блоков
+            $(formContent).find('[data-disabled]').each(function () {
+                visibilityBlock($(this), true, true);
+            });
+
+            getDictionaries();
+            select2Init($('#smev_request'));
+            addressSearchInit($('#smev_request'));
+
+            $(formContent).find('[data-value-value]').select2({
+                dropdownParent: $("#mainModal"),
+                tags: true
+            });
+
+            const options = { clearIncomplete: true, showMaskOnHover: false };
+
+            $(formContent).find('.snils').inputmask("999-999-999 99", options);
+            $(formContent).find('[name$="PostIndex"]').inputmask("999999", options);
+            $(formContent).find(".pickadate").datepicker({
+                language: "ru",
+                autoclose: true
+            }).inputmask("99.99.9999", options);
+
+            $(formContent).find('.applicants').val('0').trigger('change');
+        }
+    };
+
+    $.ajax({
+        url: '/SmevPfr/GetZags',
+        type: "GET",
+        success: function (data) {
+            data.sort((prev, next) => {
+                if (next.code.startsWith(`R${regionCode}`)) {
+                    return 1;
+                } else return -1;
+            });
+            $(formContent).find('[id$="ZagsName"]').append(`<option value="">Не выбрано</optin>`);
+            data.forEach(item => {
+                $(formContent).find('[id$="ZagsName"]').append(`<option value="${item.name}">${item.name}</optin>`);
+            });
+        }
+    });
+
+    var options = { clearIncomplete: true, showMaskOnHover: false };
+
+    $(formContent).find('#request_IdentityDocument_Series').inputmask("9999", options);
+    $(formContent).find('#request_IdentityDocument_Number').inputmask("999999", options);
+
+    $(formContent).find('#request_IdentityDocument_IdentityType').on('change', function () {
+        switch ($(this).val()) {
+            case 'PassportRf':
+                $(formContent).find('#request_IdentityDocument_Series').inputmask("9999", options);
+                $(formContent).find('#request_IdentityDocument_Number').inputmask("999999", options);
+                visibilityBlock($('#birthAct'), true, true);
+                break;
+            case 'SvedRozhRf':
+                $(formContent).find('#request_IdentityDocument_Series').inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", options });
+                $(formContent).find('#request_IdentityDocument_Number').inputmask("999999", options);
+                visibilityBlock($('#birthAct'), false, false);
+                break;
+            default:
+                $(formContent).find('#request_IdentityDocument_Series').inputmask("");
+                $(formContent).find('#request_IdentityDocument_Number').inputmask("");
+                visibilityBlock($('#birthAct'), true, true);
+                break;
+        }
+    });
+
+    $(formContent).find('#request_ChangeCitizenshipType').on('change', function () {
+        switch ($(this).val()) {
+            case 'Russian':
+            case 'None':
+                visibilityBlock($('#citizenshipCountry'), true, true);
+                break;
+            case 'Foreign':
+                visibilityBlock($('#citizenshipCountry'), false, false);
+                break;
+        }
+    });
+
+    $(formContent).find('[id$="kladrSearch"]').on('click', function () {
+        $(this).closest('[Adress]').find('.address-list').show(100);
+    });
+    $(formContent).find('[id$="kladrSearch"]').on('keyup', function () {
+        let block = $(this).closest('[Adress]');
+        $(this).next().children().show();
+        $(this).next().show();
+        if ($(this).val().length > 2) {
+            $.ajax({
+                url: '/SmevBase/KladrSearchAddress',
+                type: "GET",
+                data: { request: $(this).val() },
+                success: function (data) {
+                    let list = '';
+                    data.result.forEach((item, index) => {
+                        list += `<li data-index="${index}">${item.fullAddress}</li>`;
+                        block.find('.address-list').html(list);
+                    });
+                    block.find('.address-list li').on('click', function () {
+                        let resultAdress = data.result[$(this).attr('data-index')];
+
+                        block.find('[id$="kladrSearch"]').val(resultAdress.fullAddress);
+                        $(this).parent().hide(150);
+                        block.find('[name$="PostIndex"]').val(resultAdress.postIndex);
+                        block.find('[name$="ShortName"] option').removeAttr('data-select2-id');
+                        for (const key in resultAdress) {
+                            let nameInput = key[0].toUpperCase() + key.slice(1)
+                            let Selected = block.find(`[name$="${nameInput}.ShortName"] [value="${resultAdress[key + 'Socr']}"]`);
+                            block.find(`[name$="${nameInput}.ShortName"] option[value="${resultAdress[key + 'Socr']}"]`).remove();
+                            let Option = block.find(`[name$="${nameInput}.ShortName"]`).html();
+                            block.find(`[name$="${nameInput}.ShortName"]`).html(Selected).append(Option);
+                            block.find(`[name$="${nameInput}.Name"]`).val(resultAdress[key]);
+                        }
+                    })
+                }
+            });
+        } else {
+            block.find('.address-list').empty();
+        }
+    });
+
+
+
+    function ShowErrorInputs() {
+        for (let item of document.querySelectorAll('#smev_request input')) {
+            if (item.getAttribute('disabled') == null && item.classList.contains('required') && item.value == '') {
+
+                break;
+            }
+        }
+    }
+
+    $('select.applicants').each(function () {
+        $(this).on('change',
+            function () {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]').each(function () {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$="LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$="FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$="SecondName"]').val(applicants[id].secondName);
+                    $block.find('[name$="BirthDate"]').val(applicants[id].birthDate ? new Date(applicants[id].birthDate).toLocaleDateString() : '');
+                    $block.find('[name$="Address"]').val(applicants[id].address);
+                    $block.find('[name$="ApplicantMobile"]').val(applicants[id].phone);
+                    $block.find('[name$="Snils"]').val(applicants[id].snils);
+
+                    switch (applicants[id].documentTypeCode) {
+                        case '21':
+                            $(formContent).find('#request_IdentityDocument_IdentityType').val('PassportRf').trigger('change');
+                            break;
+                        case '3':
+                            $(formContent).find('#request_IdentityDocument_IdentityType').val('SvedRozhRf').trigger('change');
+                            break;
+                        case '26':
+                            $(formContent).find('#request_IdentityDocument_IdentityType').val('PassportSailor').trigger('change');
+                            break;
+                        case '12':
+                            $(formContent).find('#request_IdentityDocument_IdentityType').val('Residence').trigger('change');
+                            break;
+                        case '10':
+                            $(formContent).find('#request_IdentityDocument_IdentityType').val('PassportForeign').trigger('change');
+                            break;
+                        default:
+                            $(formContent).find('#request_IdentityDocument_IdentityType').val('OtherDocument').trigger('change');
+                            break;
+                    }
+
+                    $block.find('[name$="IdentityDocument.Series"]').val(applicants[id].documentSerial.replace(' ', ''));
+                    $block.find('[name$="IdentityDocument.Number"]').val(applicants[id].documentNumber);
+                    $block.find('[name$="IdentityDocument.IssueDate"]').val(applicants[id].documentIssueDate ? new Date(applicants[id].documentIssueDate).toLocaleDateString() : '');
+                    $block.find('[name$="IdentityDocument.IssuedBy"]').val(applicants[id].documentIssueBody);
+                    $block.find('[name$="IdentityDocument.IssueDivision"]').val(applicants[id].documentCode);
+                    switch (applicants[id].gender) {
+                        case 1:
+                            $block.find('[id$="Gender1"]').prop('checked', true);
+                            break;
+                        case 2:
+                            $block.find('[id$="Gender2"]').prop('checked', true);
+                            break;
+                    }
+                    $block.find('[name$="PostIndex"]').val(applicants[id].addressDetails.house.postalCode);
+                    $block.find('[id$="kladrSearch"]').val(applicants[id].fullAddress);
+                    $block.find('[name$="House.Name"]').val(applicants[id].addressDetails.house.houseNum);
+
+                    for (const key in applicants[id].addressDetails) {
+                        let nameInput = key[0].toUpperCase() + key.slice(1)
+                        if (!applicants[id].addressDetails[key].value == '') {
+                            if (applicants[id].addressDetails[key].shortName == $block.find(`[name$="${nameInput}.ShortName"] option:selected`).html()) {
+                                $block.find(`[name$="${nameInput}.ShortName"]`).prepend(new Option(applicants[id].addressDetails[key].shortName, applicants[id].addressDetails[key].shortName));
+                                $block.find(`[name$="${nameInput}.ShortName"] option:selected`).remove();
+                            }
+                            else {
+                                let Selected = $block.find(`[name$="${nameInput}.ShortName"] option:selected`).html();
+                                $block.find(`[name$="${nameInput}.ShortName"]`).prepend(new Option(applicants[id].addressDetails[key].shortName, applicants[id].addressDetails[key].shortName));
+                                $block.find(`[name$="${nameInput}.ShortName"] option:selected`).remove();
+                                $block.find(`[name$="${nameInput}.ShortName"]`).append(new Option(Selected, Selected));
+                            }
+                            $block.find(`[name$="${nameInput}.Name"]`).val(applicants[id].addressDetails[key].value);
+                        }
+                    }
+                }
+            });
+    });
+
+    function validInput() {
+        let isValid = true;
+        document.querySelectorAll('#smev_request input').forEach(item => {
+            if (item.getAttribute('disabled') == null && item.classList.contains('required') && item.value == '') {
+                item.classList.add('is-invalid');
+                console.log(item);
+                isValid = false;
+            }
+        });
+        console.log(isValid);
+        return isValid;
+    }
+
+    function getStatement() {
+        if (validInput()) {
+            let serializedata = $('#smev-create-wizard-form').serialize();
+
+            $.ajax({
+                url: '/SmevPfr/GetPfrAdv2Statement',
+                type: "POST",
+                data: serializedata,
+                beforeSend: function () {
+                    $.blockUI({
+                        message: '<h1><i class="ion ion-android-globe" style="padding-top: 1.55px;animation: spin 1s infinite linear;"></i> Выполняется запрос, подождите...</h1>',
+                        css: {
+                            border: 'none',
+                            padding: '15px',
+                            backgroundColor: '#000',
+                            '-webkit-border-radius': '10px',
+                            '-moz-border-radius': '10px',
+                            opacity: .5,
+                            color: '#fff'
+                        }
+                    });
+                },
+                success: function (data) {
+                    if (data != "") {
+                        if (data.error == "") {
+                            printPDF(data._document);
+                        }
+                        else {
+                            $.notifi("error", "Ошибка", data.error);
+                        }
+                    }
+                },
+                complete: function () {
+                    $.unblockUI();
+                }
+            });
+        }
+    };
+
+    $('#request_ChangeBirthPlace_Country').on('change', (event) => {
+        if (event.target.value == 'Россия') {
+            visibilityBlock($('#regionCode'), false, false);
+            visibilityBlock($('#regionName'), true, true);
+        } else {
+            visibilityBlock($('#regionName'), false, false);
+            visibilityBlock($('#regionCode'), true, true);
+        }
+    });
+</script>

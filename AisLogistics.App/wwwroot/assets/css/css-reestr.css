@@ -1,0 +1,120 @@
+﻿table tr {
+    cursor: pointer;
+}
+
+.case-check-column {
+    width: 5%;
+    max-width: 5%;
+}
+
+.case-dateAdd-column {
+/*    width: 0.6em;
+    max-width: 0.6em;*/
+    width: 200px;
+} 
+.case-customer-column {
+    width: 2.8em;
+    max-width: 2.8em;
+}
+.case-services-column {
+    width: 3.8em;
+    max-width: 3.8em;
+}
+.case-offices-column {
+    width: 3.5em;
+    max-width: 3.5em;
+}
+.case-currentEmployee-column {
+    width: 1.2em;
+    max-width: 1.2em;
+}
+.case-status-column {
+    width: 200px;
+/*    width: 1em;
+    max-width: 1em;*/
+}
+.case-stage-column {
+    width: 0.6em;
+    max-width: 0.6em;
+}
+
+.padding-left-1 {
+    padding-left: .625rem !important;
+}
+
+.padding-right-1 {
+    padding-right: .625rem !important;
+}
+.success, .danger, .warning {
+    padding: 4px 7px;
+    display:inline;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap
+}
+
+
+.card-body label {
+    text-transform: none;
+    font-weight: 500 !important;
+    font-size: 12px !important;
+    line-height: 14px !important;
+    letter-spacing: 0.035em !important;
+    color: #172359 !important;
+}
+.block {
+    background: #FFFFFF;
+    box-shadow: 0px 1px 11px rgba(0, 0, 0, 0.07);
+    border-radius: 2.59753px;
+}
+.name {
+    font-weight: 700 !important;
+    font-size: 12px !important;
+    line-height: 14px !important;
+    letter-spacing: 0.035em !important;
+    color: #172359 !important;
+}
+.bx-list-service {
+    content: url(/assets/svg/icons/list-service-active.svg) !important;
+}
+
+table.dataTable {
+    margin-top: 0 !important;
+}
+
+.table-fs {
+    font-size: 14px;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+ .select2-container--default .select2-selection, .form-control, .select2-search.select2-search--dropdown, .select2-search__field {
+    background-color: #F2F2F2 !important;
+    border: 1px solid #F2F2F2;
+}
+    .select2-search__field:focus-within {
+        background-color: #FFF !important;
+    }
+
+.select2-container--default.select2-container--focus .select2-selection, .select2-container--default.select2-container--open .select2-selection {
+    background-color: #fff !important;
+}
+
+.swall-html-content {
+    width: 100% !important;
+    text-align: left !important;
+    font-size: medium !important;
+}
+
+.swall-content-text {
+}
+
+.action-icon {
+    font-size: 25px;
+}
+
+.width-dropdownMenuCall {
+    width: 35rem;
+}

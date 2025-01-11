@@ -1,0 +1,174 @@
+﻿@using AisLogistics.App.Models.Queue
+
+<link rel="stylesheet" href="~/assets/css/queue-details.css" asp-append-version="true" />
+
+<style>
+    .fs-14 {
+        font-size: 14px;
+    }
+
+    .queue_wrapper {
+        margin: 0 2rem;
+    }
+
+    .scoreboard_wrapper {
+        display: flex;
+    }
+
+    .w-80 {
+        width: 80%;
+    }
+
+    .queue-list_wrapper ul.list-group {
+        max-height: 190px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+
+        .queue-list_wrapper ul.list-group::-webkit-scrollbar {
+            width: 5px;
+            background-color: #fff;
+        }
+
+        .queue-list_wrapper ul.list-group::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background-color: #077EFA;
+        }
+
+    .queue-list_wrapper .list-group-item:first-child {
+        padding-top: 0;
+    }
+
+    .bi-people-fill {
+        font-size: 1.85rem !important;
+    }
+</style>
+
+<div class="col-sm-auto col-auto header_notification me-4" id="electronicQueue">
+    <a id="queueDropdown" class="dropdown-toggle hidden-arrow"
+       href="javascript:void(0);"
+       data-bs-toggle="dropdown"
+       data-bs-auto-close="outside"
+       aria-expanded="false">
+        <i class="bi bi-people header-icon"></i>
+        <span class="badge rounded-pill badge-notification bg-danger" id="queueHeadCountAbon"></span>
+        <span class="fw-bold ms-2">
+            <span id="electronicQueueActiveNum">---</span>
+            <span id="electronicQueueActiveTime"></span>
+        </span>
+    </a>
+
+    <div class="dropdown-menu dropdown-menu-end dropdown-arrow dropdown-lg scoreboard-dropdown p-0" id="electronicQueueContent">
+        <div class="row my-3">
+            <div class="col-12 mb-3">
+                <div class="queue_wrapper">
+                    <div class="d-flex justify-content-between fs-14">
+                        <div class="text-muted">
+                           <span id="queueMyWindowNum">Окно</span>
+                        </div>
+                        <div style="display: none">
+                            <span id="queueActiveTime"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="queue_wrapper">
+                    <div class="w-80 mx-auto mb-3">
+                        <div class="d-flex justify-content-center">
+                            <!-- номер абонента -->
+                            <h1 class="text-primary" id="ticket_num">---</h1>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <input class="input" id="ticket_id" name="ticket_id" type="hidden">
+                        </div>
+                        <div class="d-flex flex-column">
+                            <input class="input" id="ticket_type" name="ticket_type" type="hidden">
+                        </div>
+                    </div>
+                    <div class="w-80 mx-auto mb-3" data-call>
+                        <div class="d-flex justify-content-center align-content-center mb-3">
+                            <div class="btn-group w-100" role="group">
+                                <button type="button" id="callNextTticketInQueue" class="btn btn-success shadow-none flex-grow-1 me-1" data-queue-next="0">Вызвать</button>
+                                <button type="button" class="btn btn-success shadow-none flex-grow-0 count-abon">
+                                    <i class="bi bi-list-ul"></i>
+                                    <span class="badge rounded-pill badge-notification bg-danger" id="ticketsInQueueCount"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-around align-content-center">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn shadow-none" id="transferedTickets" title="Переданные">
+                                    <i class="fs-5 bi bi-box-arrow-right"></i>
+                                    <span>Переданные</span>
+                                    <span class="badge rounded-pill badge-notification bg-danger" id="transferedTicketsCount"></span>
+                                </button>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn shadow-none" id="deferredTickets" title="Отложенные">
+                                    <i class="fs-5 bi bi-clock-history"></i>
+                                    <span>Отложенные</span>
+                                    <span class="badge rounded-pill badge-notification bg-danger" id="deferredTicketsCount"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-80 mx-auto mb-3" data-complete>
+                        <div class="d-flex justify-content-around align-content-center">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn shadow-none" id="transferTicket">Передать</button>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn shadow-none queue-deferred" id="postponeTicket">Отложить</button>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <button type="button" id="completeTicket" class="btn btn-danger shadow-none complete_ticket" data-queue-next="1">Завершить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="border-bottom">
+                </div>
+            </div>
+            <div class="col-12" id="scoreboardPredRegistrationBlock">
+                <div class="d-flex justify-content-around align-content-center">
+                    <button type="button" id="registration" class="btn shadow-none">Предварительная запись</button>
+                </div>
+                <div id="scoreboardPredRegistration" class="queue_wrapper" @* style="display: none;" *@>
+                    <div class="d-flex justify-content-around align-content-center">
+                        <button type="button" id="predRegistration" class="btn shadow-none w-50">Записать</button>
+                        <button type="button" id="cancelRegistration" class="btn shadow-none w-50">Отменить</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="border-bottom">
+                </div>
+            </div>
+            <div class="col-12" id="afterCallTicketBlock" style="display: none;">
+                <div class="d-flex justify-content-around align-content-center">
+                    <button type="button" id="takeTicketToWork" class="btn shadow-none text-success">Взять в работу</button>
+                    <button type="button" id="clientNotCome" class="btn shadow-none text-danger">Не явился</button>
+                </div>
+            </div>
+            <div class="col-12" id="scoreboard" style="display: none;">
+                <div class="queue_wrapper queue-list_wrapper">
+                    <div class="text-muted mb-2">Талоны:</div>
+                    <ul class="list-group list-group-flush"></ul>
+                </div>
+            </div>
+            <div class="col-12" id="scoreboardRedirectList" @* style="display: none;" *@>
+                <div class="queue_wrapper queue-list_wrapper">
+                    <div class="text-muted mb-2">Окна:</div>
+                    <ul class="list-group list-group-flush"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*<script src="~/assets/vendor/libs/jquery/jquery.js"></script>*@
+<script src="~/assets/js/pages/queue-details.js"></script>

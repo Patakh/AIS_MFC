@@ -1,0 +1,1143 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Regional.Service10Model
+
+@{
+    IEnumerable<SelectListItem> FamelyStatuse = new List<SelectListItem>
+    {
+        new("в браке никогда не состоял (не состояла)", "в браке никогда не состоял (не состояла)"),
+        new("состою в браке", "состою в браке"),
+        new("в разводе", "в разводе"),
+        new("вдовец (вдова)", "вдовец (вдова)"),
+    };
+    IEnumerable<SelectListItem> methodOplat = new List<SelectListItem>
+    {
+        new("Кредитную организацию", "1"),
+        new("Почтовое отделение", "2"),
+    };
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">Заявитель</h5>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.F">Фамилия</label>
+                    <input type="text" asp-for="Applicant.F" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.I">Имя</label>
+                    <input type="text" asp-for="Applicant.I" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.O">Отчество (при наличии)</label>
+                    <input type="text" asp-for="Applicant.O" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Applicant.BirthDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-8">
+                    <label class="form-label" asp-for="Applicant.SNILS">СНИЛС</label>
+                    <input type="text" asp-for="Applicant.SNILS" class="form-control">
+                </div>
+
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Applicant.BirthAddress">Место рождения </label>
+                    <input type="text" asp-for="Applicant.BirthAddress" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Applicant.ResidenceAddress">Адрес места жительства по месту постоянной регистрации или адрес места жительства по месту пребывания </label>
+                    <input type="text" asp-for="Applicant.ResidenceAddress" class="form-control">
+                </div>
+            </div>
+            <h6 class="my-2">Паспортные данные</h6>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.DocSeries">Серия</label>
+                    <input type="text" class="form-control" asp-for="Applicant.DocSeries">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.DocNumber">Номер</label>
+                    <input type="text" class="form-control" asp-for="Applicant.DocNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.DocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Applicant.DocIssueDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Applicant.DocIssuer">выдавший орган</label>
+                    <input type="text" class="form-control" asp-for="Applicant.DocIssuer">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Applicant.FamelyStatuse">Семейное положение </label>
+                    <select class="select2-nosearch" asp-items="@FamelyStatuse" asp-for="Applicant.FamelyStatuse"></select>
+                </div>
+            </div>
+            <h6 class="my-2">Реквизиты актовой записи о расторжении (заключении) брака</h6>
+            <div class="row mb-3">
+                <div class="col-8">
+                    <label class="form-label" asp-for="Applicant.NumberAct">номер актовой записи</label>
+                    <input type="text" class="form-control" asp-for="Applicant.NumberAct">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.DateAct">дата составления </label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Applicant.DateAct" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Applicant.OrgaAct">орган ЗАГС, где составлена актовая запис</label>
+                    <input type="text" class="form-control" asp-for="Applicant.OrgaAct">
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Реквизиты актовой записи о смерти супруга (супруги) </h6>
+            <div class="row mb-3">
+                <div class="col-8">
+                    <label class="form-label" asp-for="Applicant.NumberActRip">номер актовой записи</label>
+                    <input type="text" class="form-control" asp-for="Applicant.NumberActRip">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.DateActRip">дата составления </label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Applicant.DateActRip" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Applicant.OrgaActRip">орган ЗАГС, где составлена актовая запис</label>
+                    <input type="text" class="form-control" asp-for="Applicant.OrgaActRip">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-8">
+                    <label class="form-label" asp-for="Applicant.FioRip">ф. и. о. умершего</label>
+                    <input type="text" class="form-control" asp-for="Applicant.FioRip">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Applicant.DateRip">дата смерти </label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Applicant.DateRip" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <hr />
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="Applicant.PlaceWorked">Место работы </label>
+                    <input type="text" class="form-control" asp-for="Applicant.PlaceWorked">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="Applicant.INNWorke">ИНН работодателя </label>
+                    <input type="text" class="form-control" asp-for="Applicant.INNWorke">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Applicant.SumAlimetInfo">Сведения о сумме алиментов,полученных в период, за который рассчитывается среднедушевой доход семьи</label>
+                    <input type="text" class="form-control" asp-for="Applicant.SumAlimetInfo">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Applicant.FioInvalid">Фамилия, имя, отчество (при наличии), дата рождения, СНИЛС нетрудоспособного лица, закоторым осуществлялся уход в период расчета среднедушевого дохода семьи</label>
+                    <input type="text" class="form-control" asp-for="Applicant.FioInvalid">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <label class="d-block form-label">Менял (меняла) паспортгражданина Российской Федерации в период после рождения/усыновления/ установления опеки над ребенком (детьми), входящем в состав семьи </label>
+                <div class="col-4">
+
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="Applicant.SwiachPasport" value="1">
+                        <label class="form-check-label" asp-for="Applicant.SwiachPasport">Да</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="Applicant.SwiachPasport" value="2" checked="checked">
+                        <label class="form-check-label" asp-for="Applicant.SwiachPasport">Нет</label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <label class="d-block form-label">Освобожден (освобождена) из мест лишения свободы в период, за который рассчитывается среднедушевой доход семьи</label>
+                <div class="col-4">
+
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="Applicant.Osvabajden" value="1">
+                        <label class="form-check-label" asp-for="Applicant.Osvabajden">Да</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="Applicant.Osvabajden" value="2" checked="checked">
+                        <label class="form-check-label" asp-for="Applicant.Osvabajden">Нет</label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Applicant.OsvabajdenRegion">субъект Российской Федерации, в котором гражданин отбывал наказание</label>
+                    <input type="text" class="form-control" asp-for="Applicant.OsvabajdenRegion">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="Phone">Телефон</label>
+                    <input type="text" class="form-control" asp-for="Phone">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="Email">Email</label>
+                    <input type="text" class="form-control" asp-for="Email">
+                </div>
+            </div>
+
+            <hr />
+            <br />
+            <h5 class="my-2">Сведения о супруге</h5>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="ApplicantSuprug.F">Фамилия</label>
+                    <input type="text" asp-for="ApplicantSuprug.F" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="ApplicantSuprug.I">Имя</label>
+                    <input type="text" asp-for="ApplicantSuprug.I" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="ApplicantSuprug.O">Отчество (при наличии)</label>
+                    <input type="text" asp-for="ApplicantSuprug.O" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="ApplicantSuprug.BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="ApplicantSuprug.BirthDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+                <div class="col-8">
+                    <label class="form-label" asp-for="ApplicantSuprug.SNILS">СНИЛС</label>
+                    <input type="text" asp-for="ApplicantSuprug.SNILS" class="form-control">
+                </div>
+
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ApplicantSuprug.BirthAddress">Место рождения</label>
+                    <input type="text" asp-for="ApplicantSuprug.BirthAddress" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ApplicantSuprug.ResidenceAddress">Адрес места жительства по месту постоянной регистрации или адрес места жительства по месту пребывания </label>
+                    <input type="text" asp-for="ApplicantSuprug.ResidenceAddress" class="form-control">
+                </div>
+            </div>
+            <h6 class="my-2">Сведения о документе,удостоверяющем личность</h6>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="ApplicantSuprug.DocSeries">Серия</label>
+                    <input type="text" class="form-control" asp-for="ApplicantSuprug.DocSeries">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="ApplicantSuprug.DocNumber">Номер</label>
+                    <input type="text" class="form-control" asp-for="ApplicantSuprug.DocNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="ApplicantSuprug.DocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="ApplicantSuprug.DocIssueDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ApplicantSuprug.DocIssuer">выдавший орган</label>
+                    <input type="text" class="form-control" asp-for="ApplicantSuprug.DocIssuer">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ApplicantSuprug.FamelyStatuse">Семейное положение </label>
+                    <select class="select2-nosearch" asp-items="@FamelyStatuse" asp-for="ApplicantSuprug.FamelyStatuse"></select>
+                </div>
+            </div>
+
+            <h6 class="my-2">Реквизиты актовой записи о расторжении (заключении) брака</h6>
+            <div class="row mb-3">
+                <div class="col-8">
+                    <label class="form-label" asp-for="ApplicantSuprug.NumberAct">номер актовой записи</label>
+                    <input type="text" class="form-control" asp-for="ApplicantSuprug.NumberAct">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="ApplicantSuprug.DateAct">дата составления </label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="ApplicantSuprug.DateAct" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ApplicantSuprug.OrgaAct">орган ЗАГС, где составлена актовая запись</label>
+                    <input type="text" class="form-control" asp-for="ApplicantSuprug.OrgaAct">
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="ApplicantSuprug.PlaceWorked">Место работы </label>
+                    <input type="text" class="form-control" asp-for="ApplicantSuprug.PlaceWorked">
+                </div>
+                <div class="col-6">
+                    <label class="form-label" asp-for="ApplicantSuprug.INNWorke">ИНН работодателя </label>
+                    <input type="text" class="form-control" asp-for="ApplicantSuprug.INNWorke">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ApplicantSuprug.SumAlimetInfo">Сведения о сумме алиментов,полученных в период, за который рассчитывается среднедушевой доход семьи</label>
+                    <input type="text" class="form-control" asp-for="ApplicantSuprug.SumAlimetInfo">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ApplicantSuprug.FioInvalid">Фамилия, имя, отчество (при наличии), дата рождения, СНИЛС нетрудоспособного лица, закоторым осуществлялся уход в период расчета среднедушевого дохода семьи</label>
+                    <textarea class="form-control" asp-for="ApplicantSuprug.FioInvalid"></textarea>
+                </div>
+            </div>
+            <hr />
+
+            <div class="row mb-3">
+                <label class="d-block form-label">Освобожден (освобождена) из мест лишения свободы в период, за который рассчитывается среднедушевой доход семьи</label>
+                <div class="col-4">
+
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="ApplicantSuprug.Osvabajden" value="1">
+                        <label class="form-check-label" asp-for="ApplicantSuprug.Osvabajden">Да</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="ApplicantSuprug.Osvabajden" value="2" checked="checked">
+                        <label class="form-check-label" asp-for="ApplicantSuprug.Osvabajden">Нет</label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ApplicantSuprug.OsvabajdenRegion">субъект Российской Федерации, в котором гражданин отбывал наказание</label>
+                    <input type="text" class="form-control" asp-for="ApplicantSuprug.OsvabajdenRegion">
+                </div>
+            </div>
+            <hr />
+
+            <div class="row mb-3">
+                <label class="d-block form-label">В отношении супруга (супруги) применена мера пресечения в виде заключения под стражу</label>
+                <div class="col-4">
+
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="ApplicantSuprug.PrimenenoNacazanie" value="1">
+                        <label class="form-check-label" asp-for="ApplicantSuprug.PrimenenoNacazanie">Да</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="ApplicantSuprug.PrimenenoNacazanie" value="2" checked="checked">
+                        <label class="form-check-label" asp-for="ApplicantSuprug.PrimenenoNacazanie">Нет</label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <label class="d-block form-label">Отбывает наказание в виде лишения свободы</label>
+                <div class="col-4">
+
+                    <div class="form-check form-check-inline mt-2">
+                        <input class="form-check-input" type="radio" asp-for="ApplicantSuprug.Zakluchon" value="1">
+                        <label class="form-check-label" asp-for="ApplicantSuprug.Zakluchon">Да</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="ApplicantSuprug.Zakluchon" value="2" checked="checked">
+                        <label class="form-check-label" asp-for="ApplicantSuprug.Zakluchon">Нет</label>
+                    </div>
+                </div>
+            </div>
+            <hr />
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ApplicantSuprug.ZakluchonRegion">субъект Российской Федерации в котором гражданин отбывает наказание</label>
+                    <input type="text" class="form-control" asp-for="ApplicantSuprug.ZakluchonRegion">
+                </div>
+            </div>
+            <hr />
+            <br />
+            <h5 class="my-2">Сведения о детях</h5>
+            <br />
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedDocumentList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <h6 class="my-2 title"> Ребенок @(i+1)</h6>
+                        <div class="row mb-3 align-items-center">
+                            <div class="row mb-3">
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="AppliedDocumentList[i].FChild">Фамилия</label>
+                                    <input type="text" asp-for="AppliedDocumentList[i].FChild" class="form-control">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="AppliedDocumentList[i].IChild">Имя</label>
+                                    <input type="text" asp-for="AppliedDocumentList[i].IChild" class="form-control">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="AppliedDocumentList[i].OChild">Отчество (при наличии)</label>
+                                    <input type="text" asp-for="AppliedDocumentList[i].OChild" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="AppliedDocumentList[i].BirthDateChild">Дата рождения </label>
+                                    <div class="input-group input-group-merge">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-calendar3"></i>
+                                        </span>
+                                        <input asp-for="AppliedDocumentList[i].BirthDateChild" type="text"
+                                           class="form-control pickdate">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="AppliedDocumentList[i].Grajdan">Гражданство</label>
+                                    <input type="text" asp-for="AppliedDocumentList[i].Grajdan" class="form-control">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="AppliedDocumentList[i].SNILSChild">СНИЛС</label>
+                                    <input type="text" asp-for="AppliedDocumentList[i].SNILSChild" class="form-control">
+                                </div>
+                            </div>
+                            <h6 class="my-2">Реквизиты актовой записи о рождении</h6>
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <label class="form-label" asp-for="AppliedDocumentList[i].NumberActChild">номер</label>
+                                    <input type="text" asp-for="AppliedDocumentList[i].NumberActChild" class="form-control">
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label" asp-for="AppliedDocumentList[i].DateActChild"> дата составления </label>
+                                    <div class="input-group input-group-merge">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-calendar3"></i>
+                                        </span>
+                                        <input asp-for="AppliedDocumentList[i].DateActChild" type="text"
+                                           class="form-control pickdate">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="AppliedDocumentList[i].OrgaActChild">орган ЗАГС, где составлена актовая запись</label>
+                                    <input type="text" asp-for="AppliedDocumentList[i].OrgaActChild" class="form-control">
+                                </div>
+                            </div>
+                            <h6 class="my-2">Сведения о документе, удостоверяющем личность</h6>
+                            <div class="row mb-3">
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="AppliedDocumentList[i].DocSeriesChild">Серия</label>
+                                    <input type="text" class="form-control" asp-for="AppliedDocumentList[i].DocSeriesChild">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="AppliedDocumentList[i].DocNumberChild">Номер</label>
+                                    <input type="text" class="form-control" asp-for="AppliedDocumentList[i].DocNumberChild">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="AppliedDocumentList[i].DocIssueDateChild">Дата выдачи</label>
+                                    <div class="input-group input-group-merge">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-calendar3"></i>
+                                        </span>
+                                        <input asp-for="AppliedDocumentList[i].DocIssueDateChild" type="text"
+                                           class="form-control pickdate">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label class="form-label" asp-for="AppliedDocumentList[i].DocIssuerChild">выдавший орган</label>
+                                    <input type="text" class="form-control" asp-for="AppliedDocumentList[i].DocIssuerChild">
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row mb-3">
+                                <p class="d-block form-label">Заявитель является для ребенка</p>
+                                <div class="col-4">
+                                    <div class="form-check form-check-inline mt-2">
+                                        <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[i].Parent" checked="checked" value="1">
+                                        <label class="form-check-label" asp-for="AppliedDocumentList[i].Parent">родителем</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[i].Parent" value="2">
+                                        <label class="form-check-label" asp-for="AppliedDocumentList[i].Parent">опекуном</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row mb-3">
+                                <p class="d-block form-label">Обучается в общеобразовательном учреждении либо образовательном учреждении среднего профессионального или высшего образования по очной форме обучения</p>
+                                <div class="col-4">
+                                    <div class="form-check form-check-inline mt-2">
+                                        <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[i].CursUnivesyte" value="1">
+                                        <label class="form-check-label" asp-for="AppliedDocumentList[i].CursUnivesyte">Да</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[i].CursUnivesyte" checked="checked" value="2">
+                                        <label class="form-check-label" asp-for="AppliedDocumentList[i].CursUnivesyte">Нет</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr />
+                            <div class="row mb-3">
+                                <p class="d-block form-label">Освобожден (освобождена) из мест лишения свободы в период, за который рассчитывается среднедушевой доход семьи</p>
+                                <div class="col-4">
+
+                                    <div class="form-check form-check-inline mt-2">
+                                        <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[i].OsvabajdenChild" value="1">
+                                        <label class="form-check-label" asp-for="AppliedDocumentList[i].OsvabajdenChild">Да</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[i].OsvabajdenChild" checked="checked" value="2">
+                                        <label class="form-check-label" asp-for="AppliedDocumentList[i].OsvabajdenChild">Нет</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label class="form-label" asp-for="AppliedDocumentList[i].OsvabajdenRegionChild"> субъект Российской Федерации в котором гражданин отбывал наказани</label>
+                                    <input type="text" class="form-control" asp-for="AppliedDocumentList[i].OsvabajdenRegionChild">
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row mb-3">
+                                <p class="d-block form-label"> В отношении ребенка применены меры пресечения в виде заключения под стражу </p>
+                                <div class="col-4">
+
+                                    <div class="form-check form-check-inline mt-2">
+                                        <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[i].PrimenenoNacazanie" value="1">
+                                        <label class="form-check-label" asp-for="AppliedDocumentList[i].PrimenenoNacazanie">Да</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[i].PrimenenoNacazanie" checked="checked" value="2">
+                                        <label class="form-check-label" asp-for="AppliedDocumentList[i].PrimenenoNacazanie">Нет</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row mb-3">
+                                <p class="d-block form-label"> Отбывает наказание в виде лишения свободы </p>
+                                <div class="col-4">
+
+                                    <div class="form-check form-check-inline mt-2">
+                                        <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[i].ZakluchonChild" value="1">
+                                        <label class="form-check-label" asp-for="AppliedDocumentList[i].ZakluchonChild">Да</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[i].ZakluchonChild" checked="checked" value="2">
+                                        <label class="form-check-label" asp-for="AppliedDocumentList[i].ZakluchonChild">Нет</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label class="form-label" asp-for="AppliedDocumentList[i].ZakluchonRegionChild"> субъект Российской Федерации в котором гражданин отбывает наказание</label>
+                                    <input type="text" class="form-control" asp-for="AppliedDocumentList[i].ZakluchonRegionChild">
+                                </div>
+
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-2">
+                                    <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </div>
+                            <br />
+                            <hr />
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+            <br />
+            <h5 class="my-2">Сделайте отметку если одно или несколько из следующих утверждений о вас или членах вашей семьи является верным на момент подачи заявления</h5>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="InfoFamely0" value="0">
+                <label class="form-check-label" asp-for="InfoFamely0">       Члены вашей семьи проходят военную службу по призыву, являются военнослужащими, обучающимися в военных профессиональных организациях и военных образовательных организациях высшего образования и не заключившими контракт о прохождении военной службы.</label>
+            </div>
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="InfoFamely1" value="1">
+                <label class="form-check-label" asp-for="InfoFamely1">       Члены вашей семьи находятся на полном государственном обеспечении (за исключением детей, находящихся под опекой).</label>
+            </div>
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="InfoFamely2" value="2">
+                <label class="form-check-label" asp-for="InfoFamely2">       Члены вашей семьи находятся на принудительном лечении по решению суда.</label>
+            </div>
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="InfoFamely3" value="3">
+                <label class="form-check-label" asp-for="InfoFamely3">       На вас или членов вашей семьи зарегистрировано автотранспортное (мототранспортное) средство, выданное в рамках предоставления мер социальной поддержки уполномоченным органом субъекта Российской Федерации или муниципального образования.</label>
+            </div>
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="InfoFamely4" value="4">
+                <label class="form-check-label" asp-for="InfoFamely4">       Вы или члены вашей семьи имеют в собственности здания с назначением «жилое» и «жилое строение», помещения с назначением «жилое» и «жилое помещение», здания с назначением «жилой дом», земельные участки, выданные в рамках предоставления мер социальной поддержки уполномоченным органом субъекта Российской Федерации или муниципального образования.</label>
+            </div>
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="InfoFamely5" value="5">
+                <label class="form-check-label" asp-for="InfoFamely5">        Вы или члены вашей семьи имеют в собственности земельные участки, предоставленные в со- ответствии с Федеральным законом «Об особенностях предоставления гражданам земельных участков, находящихся в государственной или муниципальной собственности и расположенных на территориях субъектов Российской Федерации, входящих в состав Дальневосточного федерального округа, и о внесении изменений в отдельные законодательные акты Российской Федерации».</label>
+            </div>
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="InfoFamely6" value="6">
+                <label class="form-check-label" asp-for="InfoFamely6">        Вы или члены вашей семьи имеют в собственности жилое помещение (часть жилого дома; часть квартиры; комнату), занимаемое заявителем и (или) членом его семьи, страдающим тяжелой формой хронического заболевания, предусмотренного перечнем тяжелых форм хронических заболеваний, при которых невозможно совместное проживание граждан в одной квартире, установленным в соответствии с пунктом 4 части 1 статьи 51 Жилищного кодекса Российской Федерации уполномоченным Правительством Российской Федерации федеральным органом исполнительной власти.</label>
+            </div>
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="InfoFamely7" value="7">
+                <label class="form-check-label" asp-for="InfoFamely7">        Вы или члены вашей семьи имеют в собственности жилое помещение, признанное в установленном порядке непригодным для проживания.</label>
+            </div>
+            <hr />
+            <br />
+            <h5 class="my-2"> Сделайте отметку в соответствующем квадрате, если одно или  несколько из следующих утверждений о вас или членах вашей семьи является верным в период, за который рассчитывается среднедушевой доход семьи </h5>
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="SredneDokhode1" value="1">
+                <label class="form-check-label" asp-for="SredneDokhode1">       Вы или члены вашей семьи получали доходы, полученные от источников за пределами Российской Федерации.</label>
+            </div>
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="SredneDokhode2" value="2">
+                <label class="form-check-label" asp-for="SredneDokhode2">       Вы или члены вашей семьи младше 23 лет и обучались в общеобразовательном учреждении либо образовательном учреждении среднего профессионального или высшего образования по очной форме обучения и не получали стипендию.</label>
+            </div>
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="SredneDokhode3" value="3">
+                <label class="form-check-label" asp-for="SredneDokhode3">       Вы или члены вашей семьи получали стипендию, выплачиваемую лицам, обучающимся в профессиональных образовательных организациях и образовательных организациях высшего образования, аспирантам, обучающимся по очной форме по программам подготовки научных и научно-педагогических кадров, и лицам, обучающимся в духовных образовательных организациях, а также компенсационных выплат указанным категориям граждан в период их нахождения в академическом отпуске по медицинским показаниям.</label>
+            </div>
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="SredneDokhode4" value="4">
+                <label class="form-check-label" asp-for="SredneDokhode4">Вы или члены вашей семьи проходили военную службу по призыву.</label>
+            </div>
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="SredneDokhode5" value="5">
+                <label class="form-check-label" asp-for="SredneDokhode5">      Вы или члены вашей семьи получали ежемесячное пожизненное содержание судей, вышедших в отставку.</label>
+            </div>
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="SredneDokhode6" value="6">
+                <label class="form-check-label" asp-for="SredneDokhode6">       Вы или члены вашей семьи получали компенсации, выплачиваемые государственным органом или общественным объединением за время исполнения государственных или общественных обязанностей.</label>
+            </div>
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="SredneDokhode10" value="10">
+                <label class="form-check-label" asp-for="SredneDokhode10">       Вы или члены вашей семьи проходили лечение длительностью свыше 3 месяцев, вследствие чего временно не могли осуществлять трудовую деятельность.</label>
+            </div>
+
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="SredneDokhode7" value="7">
+                <label class="form-check-label" asp-for="SredneDokhode7">       Вы или члены вашей семьи получали доходы, полученные в рамках применения специального налогового режима «Налог на профессиональный доход».</label>
+            </div>
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="SredneDokhode8" value="8">
+                <label class="form-check-label" asp-for="SredneDokhode8">       Вы или члены вашей семьи получали единовременное пособие при увольнении с военной службы, службы в учреждениях и органах уголовно-исполнительной системы Российской Федерации, органах федеральной службы безопасности, органах государственной охраны, органах внутренних дел Российской Федерации, таможенных органах Российской Федерации, войсках национальной гвардии Российской Федерации, органах принудительного исполнения Российской Федерации, Главном управлении специальных программ Президента Российской Федерации, а также из иных органов, в которых законодательством Российской Федерации предусмотрено прохождение федеральной государственной службы, связанной с правоохранительной деятельностью.</label>
+            </div>
+            <hr />
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" asp-for="SredneDokhode9" value="9">
+                <label class="form-check-label" asp-for="SredneDokhode9">       Вы или члены вашей семьи получали пенсии для лиц, проходящих (проходивших) военную службу, службу в учреждениях и органах уголовно-исполнительной системы Российской Федерации, органах федеральной службы безопасности, органах государственной охраны, органах внутренних дел Российской Федерации, таможенных органах Российской Федерации, войсках национальной гвардии Российской Федерации, органах принудительного исполнения Российской Федерации, Главном управлении специальных программ Президента Российской Федерации, а также в иных органах, в которых законодательством Российской Федерации предусмотрено прохождение федеральной государственной службы, связанной с правоохранительной деятельностью.</label>
+            </div>
+            <hr />
+            <br />
+            <h5 class="my-2"> Cпособ выплаты</h5>
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="method_Oplat">выплачивать через:</label>
+                <select class="select2-nosearch" asp-items="@methodOplat" asp-for="method_Oplat"></select>
+            </div>
+        </div>
+        <div id="Kredit">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="NameCredit">Наименование кредитной организации</label>
+                    <select class="select2-nosearch" asp-for="NameCredit">
+                        <option value="ПАО «Сбербанк России»">ПАО «Сбербанк России»</option>
+                        <option value="АО «Россельхозбанк»">АО «Россельхозбанк»</option>
+                        <option value="ВТБ (ПАО)">ВТБ (ПАО)</option>
+                        <option value="ФО «Альфа-банк»">ФО «Альфа-банк»</option>
+                        <option value="ФО «Тинькофф Банк»">ФО «Тинькофф Банк»</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm">
+                    <label class="form-label" asp-for="BIK">БИК кредитной организации</label>
+                    <input type="text" asp-for="BIK" class="form-control">
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="KPP">КПП кредитной организации</label>
+                    <input type="text" asp-for="KPP" class="form-control">
+                </div>
+                <div class="col-sm">
+                    <label class="form-label" asp-for="PersonalAccount">Номер счета</label>
+                    <input type="text" asp-for="PersonalAccount" class="form-control">
+                </div>
+            </div>
+            </div>
+            <div id="Pochta" data-disabled>
+            <div class="row mb-3">
+                <div class="col-8">
+                    <label class="form-label" asp-for="Aress_Person">Адрес получателя</label>
+                    <input type="text" asp-for="Aress_Person" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Number_Pochta">Номер почтового отделения</label>
+                    <input type="text" asp-for="Number_Pochta" class="form-control">
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="originalBlock">
+    <div class="row mx-auto g-3" id="appliedDocument" data-id="" data-original>
+        <h6 class="my-2 title">Pебенок 0</h6>
+        <div class="row mb-3">
+            <div class="col-4">
+                <label class="form-label" asp-for="AppliedDocumentList[0].FChild">Фамилия</label>
+                <input type="text" asp-for="AppliedDocumentList[0].FChild" class="form-control">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="AppliedDocumentList[0].IChild">Имя</label>
+                <input type="text" asp-for="AppliedDocumentList[0].IChild" class="form-control">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="AppliedDocumentList[0].OChild">Отчество (при наличии)</label>
+                <input type="text" asp-for="AppliedDocumentList[0].OChild" class="form-control">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">
+                <label class="form-label" asp-for="AppliedDocumentList[0].BirthDateChild">Дата рождения </label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar3"></i>
+                    </span>
+                    <input asp-for="AppliedDocumentList[0].BirthDateChild" type="text"
+                           class="form-control pickdate">
+                </div>
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="AppliedDocumentList[0].Grajdan">Гражданство</label>
+                <input type="text" asp-for="AppliedDocumentList[0].Grajdan" class="form-control">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="AppliedDocumentList[0].SNILSChild">СНИЛС</label>
+                <input type="text" asp-for="AppliedDocumentList[0].SNILSChild" class="form-control">
+            </div>
+        </div>
+        <h6 class="my-2">Реквизиты актовой записи о рождении</h6>
+        <div class="row mb-3">
+            <div class="col-3">
+                <label class="form-label" asp-for="AppliedDocumentList[0].NumberActChild">номер</label>
+                <input type="text" asp-for="AppliedDocumentList[0].NumberActChild" class="form-control">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="AppliedDocumentList[0].DateActChild"> дата составления </label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar3"></i>
+                    </span>
+                    <input asp-for="AppliedDocumentList[0].DateActChild" type="text"
+                           class="form-control pickdate">
+                </div>
+            </div>
+            <div class="col-6">
+                <label class="form-label" asp-for="AppliedDocumentList[0].OrgaActChild">орган ЗАГС, где составлена актовая запись</label>
+                <input type="text" asp-for="AppliedDocumentList[0].OrgaActChild" class="form-control">
+            </div>
+        </div>
+        <h6 class="my-2">Сведения о документе, удостоверяющем личность</h6>
+        <div class="row mb-3">
+            <div class="col-4">
+                <label class="form-label" asp-for="AppliedDocumentList[0].DocSeriesChild">Серия</label>
+                <input type="text" class="form-control" asp-for="AppliedDocumentList[0].DocSeriesChild">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="AppliedDocumentList[0].DocNumberChild">Номер</label>
+                <input type="text" class="form-control" asp-for="AppliedDocumentList[0].DocNumberChild">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="AppliedDocumentList[0].DocIssueDateChild">Дата выдачи</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar3"></i>
+                    </span>
+                    <input asp-for="AppliedDocumentList[0].DocIssueDateChild" type="text"
+                           class="form-control pickdate">
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="AppliedDocumentList[0].DocIssuerChild">выдавший орган</label>
+                <input type="text" class="form-control" asp-for="AppliedDocumentList[0].DocIssuerChild">
+            </div>
+        </div>
+        <hr />
+        <div class="row mb-3">
+            <p class="d-block form-label">Заявитель является для ребенка</p>
+            <div class="col-4">
+                <div class="form-check form-check-inline mt-2">
+                    <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[0].Parent" checked="checked" value="1">
+                    <label class="form-check-label" asp-for="AppliedDocumentList[0].Parent">родителем</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[0].Parent" value="2">
+                    <label class="form-check-label" asp-for="AppliedDocumentList[0].Parent">опекуном</label>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row mb-3">
+            <p class="d-block form-label">Обучается в общеобразовательном учреждении либо образовательном учреждении среднего профессионального или высшего образования по очной форме обучения</p>
+            <div class="col-4">
+                <div class="form-check form-check-inline mt-2">
+                    <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[0].CursUnivesyte" value="1">
+                    <label class="form-check-label" asp-for="AppliedDocumentList[0].CursUnivesyte">Да</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[0].CursUnivesyte" checked="checked" value="2">
+                    <label class="form-check-label" asp-for="AppliedDocumentList[0].CursUnivesyte">Нет</label>
+                </div>
+            </div>
+        </div>
+        <hr />
+
+        <div class="row mb-3">
+            <p class="d-block form-label">Освобожден (освобождена) из мест лишения свободы в период, за который рассчитывается среднедушевой доход семьи</p>
+            <div class="col-4">
+
+                <div class="form-check form-check-inline mt-2">
+                    <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[0].OsvabajdenChild" value="1">
+                    <label class="form-check-label" asp-for="AppliedDocumentList[0].OsvabajdenChild">Да</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[0].OsvabajdenChild" checked="checked" value="2">
+                    <label class="form-check-label" asp-for="AppliedDocumentList[0].OsvabajdenChild">Нет</label>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="AppliedDocumentList[0].OsvabajdenRegionChild"> субъект Российской Федерации в котором гражданин отбывал наказани</label>
+                <input type="text" class="form-control" asp-for="AppliedDocumentList[0].OsvabajdenRegionChild">
+            </div>
+        </div>
+        <hr />
+        <div class="row mb-3">
+            <p class="d-block form-label"> В отношении ребенка применены меры пресечения в виде заключения под стражу </p>
+            <div class="col-4">
+
+                <div class="form-check form-check-inline mt-2">
+                    <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[0].PrimenenoNacazanie" value="1">
+                    <label class="form-check-label" asp-for="AppliedDocumentList[0].PrimenenoNacazanie">Да</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[0].PrimenenoNacazanie" checked="checked" value="2">
+                    <label class="form-check-label" asp-for="AppliedDocumentList[0].PrimenenoNacazanie">Нет</label>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row mb-3">
+            <p class="d-block form-label"> Отбывает наказание в виде лишения свободы </p>
+            <div class="col-4">
+
+                <div class="form-check form-check-inline mt-2">
+                    <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[0].ZakluchonChild" value="1">
+                    <label class="form-check-label" asp-for="AppliedDocumentList[0].ZakluchonChild">Да</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" asp-for="AppliedDocumentList[0].ZakluchonChild" checked="checked" value="2">
+                    <label class="form-check-label" asp-for="AppliedDocumentList[0].ZakluchonChild">Нет</label>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label" asp-for="AppliedDocumentList[0].ZakluchonRegionChild">субъект Российской Федерации в котором гражданин отбывает наказание</label>
+                <input type="text" class="form-control" asp-for="AppliedDocumentList[0].ZakluchonRegionChild">
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-2">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+        <br />
+        <hr />
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+    var btnNext = $('.btn-next');
+
+    var applicant = {
+        lastName: $("#Applicant_F"),
+        firstName: $("#Applicant_I"),
+        secondName: $("#Applicant_O"),
+        birthDate: $("#Applicant_BirthDate"),
+        snils: $("#Applicant_SNILS"),
+        phone: $("#Phone"),
+        email: $("#Email"),
+        docSeries: $("#Applicant_DocSeries"),
+        docNumber: $("#Applicant_DocNumber"),
+        docIssueDate: $("#Applicant_DocIssueDate"),
+        docIssuer: $("#Applicant_DocIssuer"),
+        birthPlace: $("#Applicant_BirthAddress"),
+        residenceAddress: $("#Applicant_ResidenceAddress")
+    };
+    $(function() {
+        btnNext.on('click', function appContent() {
+            applicant.lastName.val($("#customer_LastName").val());
+            applicant.firstName.val($("#customer_FirstName").val());
+            applicant.secondName.val($("#customer_SecondName").val());
+            applicant.birthDate.val($("#customer_DocumentBirthDate").val());
+            applicant.snils.val($("#customer_CustomerSnils").val());
+            applicant.docSeries.val($("#customer_DocumentSerial").val());
+            applicant.docNumber.val($("#customer_DocumentNumber").val());
+            applicant.docIssueDate.val($("#customer_DocumentIssueDate").val());
+            applicant.docIssuer.val($("#customer_DocumentIssueBody").val());
+            applicant.birthPlace.val($("#customer_DocumentBirthPlace").val());
+            applicant.residenceAddress.val($("#customer_CustomerAddressResidence").val());
+            applicant.phone.val($("#customer_CustomerPhone1").val());
+            applicant.email.val($("#customer_CustomerEmail").val());
+        });
+        originalBlock.find('[data-original]').each(function(_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find('[data-disabled]').each(function() {
+            visibilityBlock($(this), true, true);
+        });
+        additionalForm.find("select.select2-search").each(function() {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+      
+        additionalForm.find("select.select2-nosearch").each(function() {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('#Phone').inputmask("+7(999) 999-99-99", { clearIncomplete: true, showMaskOnHover: false });
+        additionalForm.find('#DocSeries').inputmask("9999", { clearIncomplete: true, showMaskOnHover: false });
+        additionalForm.find('#AppSNILS').inputmask("999-999-999 99", options);
+        additionalForm.find('#DocNumber').inputmask("999999", { clearIncomplete: true, showMaskOnHover: false });
+        additionalForm.find('#PersonalAccount').inputmask("9{20}", options);
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function() {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function() {
+                $(this).select2({
+                });
+            });
+        }
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.find("select").each(function() {
+                $(this).select2('destroy');
+            });
+            $cloneList.append($cloneBlock);
+            select2Init($cloneList);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input[type='text']").each(function() {
+                $(this).val("");
+            });
+        }
+    });
+
+    additionalForm.find('#method_Oplat').on('change',function methoOplat(){
+        if($(this).val()==='1'){
+            visibilityBlock(additionalForm.find('#Kredit'),false,false);
+            visibilityBlock(additionalForm.find('#Pochta'),true ,true);
+        }
+        if($(this).val()==='2'){
+            visibilityBlock(additionalForm.find('#Kredit'),true,true);
+            visibilityBlock(additionalForm.find('#Pochta'),false ,false);
+        }
+    })
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select').each(function() {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function() {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function(index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+    $(function() {
+            console.log(additionalForm.find('#method_Oplat').next('span').text());
+           if(additionalForm.find('#method_Oplat').next('span').text()==='Почтовое отделение'){
+                      visibilityBlock(additionalForm.find('#Kredit'), true, true);
+                      visibilityBlock(additionalForm.find('#Pochta'), false, false);
+           }
+           if(additionalForm.find('#method_Oplat').next('span').text()==='Кредитную организацию'){
+                      visibilityBlock(additionalForm.find('#Kredit'), false, false);
+                      visibilityBlock(additionalForm.find('#Pochta'), true, true);
+           }
+           })
+    
+    
+        
+</script>

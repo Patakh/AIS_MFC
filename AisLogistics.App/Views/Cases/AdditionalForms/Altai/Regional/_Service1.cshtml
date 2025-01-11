@@ -1,0 +1,236 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Regional.Service1Model
+@{
+    IEnumerable<SelectListItem> customerTypeList = new List<SelectListItem>
+    {
+        new("ЮЛ", "1"),
+        new("ИП", "2"),
+    };
+
+    IEnumerable<SelectListItem> targetList = new List<SelectListItem>
+    {
+        new("Выдача разрешения", "1"),
+        new("Ппереоформление разрешения", "2"),
+        new("Аннулирование разрешения", "3"),
+    };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">Заявитель</h5>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="CustomerType">Тип заявителя</label>
+                    <select class="select2-nosearch" asp-items="@customerTypeList" asp-for="CustomerType"></select>
+                </div>
+            </div>
+            <div id="ulBlock">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="UlName">Наименование</label>
+                        <input type="text" asp-for="UlName" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="UlShortName">Сокращенное/Фирменное наименование</label>
+                        <input type="text" asp-for="UlShortName" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="UlForm">Организационно-правовая форма</label>
+                        <input type="text" asp-for="UlForm" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="UlHeadFio">ФИО руководителя</label>
+                        <input type="text" asp-for="UlHeadFio" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div id="ipBlock">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="IpFio">ФИО</label>
+                        <input type="text" asp-for="IpFio" class="form-control">
+                    </div>
+                </div>
+                <h6 class="my-2">Паспортные данные</h6>
+                <div class="row mb-3">
+                    <div class="col-8">
+                        <label class="form-label" asp-for="IpDocSeriesNumber">Серия и номер</label>
+                        <input type="text" class="form-control" placeholder="Серия и номер" asp-for="IpDocSeriesNumber">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="IpDocIssueDate">Дата выдачи</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="IpDocIssueDate" type="text"
+                                   class="form-control pickdate" placeholder="Дата выдачи">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" asp-for="IpDocIssuer">Кем выдан</label>
+                        <input type="text" class="form-control" placeholder="Кем выдан" asp-for="IpDocIssuer">
+                    </div>
+                </div>
+            </div>
+             <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Ogrn">ОГРН (ОГРНИП)</label>
+                    <input type="text" asp-for="Ogrn" class="form-control">
+                </div>
+                <div class="col-8">
+                    <label class="form-label" asp-for="AdressOgrn">адрес места нахождения органа, осуществившего государственную регистрацию</label>
+                    <input type="text" asp-for="AdressOgrn" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Inn">ИНН</label>
+                    <input type="text" asp-for="Inn" class="form-control">
+                </div>
+            </div>
+            <h6 class="my-2">Свидетельство о постановке на учет в налоговом органе</h6>
+            <div class="row mb-3">
+                <div class="col-8">
+                    <label class="form-label" asp-for="FnsRegCertSeriesNumber">Серия и номер</label>
+                    <input type="text" class="form-control" placeholder="Серия и номер" asp-for="FnsRegCertSeriesNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="FnsRegDate">Дата</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="FnsRegDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="LegalAddress">Юридический адрес (почтовый индекс, для ЮЛ - юридический адрес, для ИП - адрес прописки)</label>
+                    <input type="text" asp-for="LegalAddress" class="form-control">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="MailingAddress">Почтовый адрес (почтовый индекс, место фактического нахождения ЮЛ (проживания ИП))</label>
+                    <input type="text" asp-for="MailingAddress" class="form-control">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Phone">Телефон</label>
+                    <input type="text" asp-for="Phone" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Fax">Факс</label>
+                    <input type="text" asp-for="Fax" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Email">E-mail</label>
+                    <input type="text" asp-for="Email" class="form-control">
+                </div>
+            </div>
+
+            <div class="row mb-3 align-items-end">
+                <div class="col-4">
+                    <label class="form-label" asp-for="TargetCode">Цель обращения</label>
+                    <select class="select2-nosearch" asp-items="@targetList" asp-for="TargetCode"></select>
+                </div>
+                <div class="col-5">
+                    <label class="form-label" asp-for="VehicleModel">Марка, модель ТС</label>
+                    <input type="text" asp-for="VehicleModel" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="VehicleRegSign">Государственный регистрационный знак</label>
+                    <input type="text" asp-for="VehicleRegSign" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function() {
+        select2Init(additionalForm);
+
+        let $ip = additionalForm.find('#ipBlock');
+        let $ul = additionalForm.find('#ulBlock');
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('[name$="Email"]').inputmask("email", options);
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        additionalForm.find('#CustomerType').on('change', function() {
+            visibilityBlock($ip, true, true);
+            visibilityBlock($ul, true, true);
+            switch ($(this).val()) {
+                case '1':
+                    visibilityBlock($ul, false, false);
+                    break;
+                case '2':
+                    visibilityBlock($ip, false, false);
+                    break;
+            }
+        });
+        additionalForm.find('#Phone').inputmask("+7(999) 999-99-99", { clearIncomplete: true, showMaskOnHover: false });
+       additionalForm.find('#Inn').inputmask("999999999999", { clearIncomplete: true, showMaskOnHover: false });
+
+        additionalForm.find('#CustomerType').trigger('change');
+
+        function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function() {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function() {
+                $(this).select2({
+                });
+            });
+        }
+
+        function visibilityBlock($block, hide, isDisabled) {
+            switch (hide) {
+                case true:
+                    $block.hide();
+                    break;
+                case false:
+                    $block.show();
+                    break;
+            }
+
+            switch (isDisabled) {
+                case true:
+                    $block.find('input, select').each(function() {
+                        $(this).prop('disabled', true);
+                    });
+                    break;
+                case false:
+                    $block.find('input, select').each(function() {
+                        $(this).prop('disabled', false);
+                    });
+                    $block.find('[data-disabled]').each(function() {
+                        visibilityBlock($(this), true, true);
+                    });
+                    break;
+            }
+        }
+    });
+</script>

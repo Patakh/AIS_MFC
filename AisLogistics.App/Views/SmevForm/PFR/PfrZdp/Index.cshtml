@@ -1,0 +1,1938 @@
+﻿@using SmevRouter
+@using Sentry
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new PfrZdpRequestData
+            {
+                Applicant = new PfrZdpApplicantType
+                {
+                    Fio = new FioType(),
+                    ActualStayAddress = new PfrPostAddress
+                    {
+                        Region = new(),
+                        City = new(),
+                        Area = new(),
+                        Street = new(),
+                        Building = new(),
+                        Settlement = new(),
+                        House = new()
+                    },
+                    BirthPlace = new PfrBirthPlace(),
+                    RegAddress = new PfrPostAddress
+                    {
+                        Region = new(),
+                        City = new(),
+                        Area = new(),
+                        Street = new(),
+                        Building = new(),
+                        Settlement = new(),
+                        House = new()
+                    },
+                    StayAddress = new PfrPostAddress
+                    {
+                        Region = new(),
+                        City = new(),
+                        Area = new(),
+                        Street = new(),
+                        Building = new(),
+                        Settlement = new(),
+                        House = new()
+                    }
+                },
+                DeliveryInfo = new PfrZdpDeliveryInfoType
+                {
+                    Address = new PfrPostAddress
+                    {
+                        Region = new(),
+                        City = new(),
+                        Area = new(),
+                        Street = new(),
+                        Building = new(),
+                        Settlement = new(),
+                        House = new()
+                    },
+                },
+                PreviousDeliveryInfo= new PfrZdpDeliveryInfoType
+                {
+                    Address = new PfrPostAddress
+                    {
+                        Region = new(),
+                        City = new(),
+                        Area = new(),
+                        Street = new(),
+                        Building = new(),
+                        Settlement = new(),
+                        House = new()
+                    }   
+                  
+                },
+                
+                Representative = new PfrZdpRepresentativeType
+                {
+                    Fio = new FioType(),
+                    ActualStayAddress = new PfrPostAddress
+                    {
+                        Region = new(),
+                        City = new(),
+                        Area = new(),
+                        Street = new(),
+                        Building = new(),
+                        Settlement = new(),
+                        House = new()
+                    },
+                    BirthPlace = new PfrBirthPlace(),
+                    IdentityDoc = new PfrIdentityDocument(),
+                    RegAddress = new PfrPostAddress
+                    {
+                        Region = new(),
+                        City = new(),
+                        Area = new(),
+                        Street = new(),
+                        Building = new(),
+                        Settlement = new(),
+                        House = new()
+                    },
+                    StayAddress = new PfrPostAddress
+                    {
+                        Region = new(),
+                        City = new(),
+                        Area = new(),
+                        Street = new(),
+                        Building = new(),
+                        Settlement = new(),
+                        House = new()
+                    }
+                }
+            };
+}
+<style>
+    #smev-data-form-content span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-request-tabContent .tab-pane {
+        height: 550px;
+    }
+
+    #smev-data-form-content div.lg-container {
+        position: relative;
+        z-index: 9999;
+    }
+
+    #smev-data-form-content .accordion-button {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content #listService {
+        font-size: 16px;
+    }
+
+        #smev-data-form-content #listService .select2-selection.select2-selection--single {
+            height: auto !important;
+        }
+
+        #smev-data-form-content #listService .select2-selection__rendered {
+            white-space: normal !important;
+        }
+
+    #smev-data-form-content ul.address-list {
+        width: 100%;
+        z-index: 1000;
+        position: absolute;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        background-clip: padding-box;
+    }
+option{
+
+}
+        #smev-data-form-content ul.address-list li {
+            padding: 6px;
+        }
+
+            #smev-data-form-content ul.address-list li:hover {
+                color: white;
+                background-color: #5a8dee;
+                cursor: pointer
+            }
+</style>
+
+<div class="row justify-content-center" id="smev_request">
+    <div class="col-10">
+        <ul class="nav nav-tabs nav-justified tabs-line mb-3" id="smev-request-tablist" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#smev-request-tab1" type="button">Заявитель</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#smev-request-tab3" type="button">Представитель</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#smev-request-tab5" type="button">Детали запроса</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="smev-request-tab-content">
+        <div class="tab-pane fade show active" id="smev-request-tab1" role="tabpanel" data-person>
+                     <div class="row g-3">
+                        <div class="col-12 mx-auto">
+                            <div class="divider text-start">
+                                <div class="divider-text fs-5 b-s-16">Персональные данные</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-10">
+                        <div class="row mb-1">
+                            <div class="col-12">
+                                <label class="form-label">Заявители</label>
+                                <select class="form-select select2-nosearch applicants">
+                                    <option value="">Выберите заявителя</option>
+                                    @for (int i = 0; i < applicants.Count; i++)
+                                    {
+                                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Applicant.Fio.LastName">Фамилия</label>
+                                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Applicant.Fio.LastName" />
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Applicant.Fio.FirstName">Имя</label>
+                                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Applicant.Fio.FirstName">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Applicant.Fio.SecondName">Отчество</label>
+                                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Applicant.Fio.SecondName">
+                            </div>
+                            <div class="col-4 mt-2">
+                                <label class="d-block form-label mb-3">Пол</label>
+                                <div class="form-check form-check-inline mx-0">
+                                    <input class="form-check-input" type="radio" asp-for="@request.Applicant.Gender" id="smevModel_Gender1" value="Male" checked="checked">
+                                    <label class="form-check-label" for="smevModel_Gender1"><i class="bi bi-gender-male fs-6"></i>Мужской</label>
+                                </div>
+                                <div class="form-check form-check-inline mx-0">
+                                    <input class="form-check-input" type="radio" asp-for="@request.Applicant.Gender" id="smevModel_Gender2" value="Female">
+                                    <label class="form-check-label" for="smevModel_Gender2"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.Applicant.BirthDate">Дата Рождения</label>
+                                <div class="input-group input-group-merge">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-calendar3"></i>
+                                    </span>
+                                    <input type="text" class="form-control pickdate required" placeholder="Дата рождения"
+                                           asp-for="@request.Applicant.BirthDate" value="">
+                                </div>
+                            </div>
+                            <div class="col-4 mt-2">
+                                <label class="form-label" asp-for="@request.Applicant.Snils">СНИЛС</label>
+                                <input type="text" class="form-control required" placeholder="СНИЛС" asp-for="@request.Applicant.Snils">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-12 mx-auto">
+                            <div class="divider text-start">
+                                <div class="divider-text fs-5 b-s-16">Место рождения</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-10">
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.Applicant.BirthPlace.Country">Стрна</label>
+                                <input type="text" class="form-control" placeholder="Стрна" asp-for="@request.Applicant.BirthPlace.Country" value="Российская Федерация">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.Applicant.BirthPlace.Region">Регион</label>
+                                 <input type="text" class="form-control" placeholder="Регион" asp-for="@request.Applicant.BirthPlace.Region">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.Applicant.BirthPlace.Area">Район</label>
+                                <input type="text" class="form-control" placeholder="Район" asp-for="@request.Applicant.BirthPlace.Area">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.Applicant.BirthPlace.City">Город</label>
+                                <input type="text" class="form-control" placeholder="Город" asp-for="@request.Applicant.BirthPlace.City">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-12 mx-auto">
+                            <div class="divider text-start">
+                                <div class="divider-text fs-5 b-s-16">Документ, удостоверяющий личность</div>
+                            </div>
+                        </div>
+                    </div>
+        <div class="col-10">
+        <div class="row mb-1 align-items-end">
+            <div class="col-6">
+                <label class="form-label" asp-for="@request.Applicant.IdentityDoc.IdentityType">Тип документа</label>
+                <select class="select2-nosearch" asp-for="@request.Applicant.IdentityDoc.IdentityType">
+                    <option value="PassportRf">Паспорт РФ</option>
+                    <option value="SvedRozhRf">Свидетельсво о рождении</option>
+                    <option value="PassportSailor">Паспорт моряка</option>
+                    <option value="Residence">Вид на жительство</option>
+                </select>
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Applicant.IdentityDoc.Series">Серия</label>
+                <input type="text" class="form-control required" placeholder="Серия"
+                       asp-for="@request.Applicant.IdentityDoc.Series">
+            </div>
+            <div class="col-3">
+                <label class="form-label" asp-for="@request.Applicant.IdentityDoc.Number">Номер</label>
+                <input type="text" class="form-control required" placeholder="Номер"
+                       asp-for="@request.Applicant.IdentityDoc.Number">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Applicant.IdentityDoc.IssueDate">Дата выдачи</label>
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar3"></i>
+                    </span>
+                    <input type="text" class="form-control pickdate required" placeholder="Дата выдачи"
+                           asp-for="@request.Applicant.IdentityDoc.IssueDate" value="">
+                </div>
+            </div>
+            <div class="col-8">
+                <label class="form-label" asp-for="@request.Applicant.IdentityDoc.IssuedBy">Орган выдачи</label>
+                <input type="text" class="form-control required" placeholder="Орган выдачи"
+                       asp-for="@request.Applicant.IdentityDoc.IssuedBy">
+            </div>
+        </div>
+        <div class="row g-2" Adress>
+            <div class="col-12 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Адрес</div>
+                </div>
+            </div>
+            <div class="row mb-2 justify-content-center">
+                <div class="col-10">
+                    <label class="form-label" for="ApplicantAddressType">Тип адреса</label>
+                    <select class="select2-nosearch" id="ApplicantAddressType">
+                        <option value="ActualStayAddress">Фактический адрес проживания</option>
+                        <option value="RegAddress">Адрес регистрации</option>
+                        <option value="StayAddress">Адрес пребывания</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-10">
+                    <div class="row justify-content-center">
+                        <div class="col-12">
+                            <label class="form-label" for="ApplicantkladrSearch">Поиск по КЛАДР</label>
+                            <input type="search" class="form-control" id="ApplicantkladrSearch" placeholder="🔍 ПОИСК">
+                            <div class="input-group">
+                                <ul class="list-group address-list">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row justify-content-center" id="ApplicantAddress">
+                <div class="col-12">
+                    <div class="row align-items-end">
+                        <div class="col-6">
+                            <label class="form-label" asp-for="@request.Applicant.ActualStayAddress.PostIndex">Индекс</label>
+                            <input type="text" class="form-control required" asp-for="@request.Applicant.ActualStayAddress.PostIndex">
+                        </div>
+                        <div class="col-6">
+                            <div class="input-group align-items-end">
+                                <div class="col-3">
+                                    <select class="form-select select2-nosearch"  asp-for="@request.Applicant.ActualStayAddress.Region.ShortName" 
+                                            data-dictionary='{"dictionary":"KladrRegionSocr"}'>
+                                    </select>
+                                </div>
+                                <div class="col-9">
+                                    <label class="form-label" asp-for="@request.Applicant.ActualStayAddress.Region.Name">Регион</label>
+                                    <input type="text" class="form-control" asp-for="@request.Applicant.ActualStayAddress.Region.Name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="input-group align-items-end">
+                                <div class="col-3">
+                                    <select class="form-select select2-nosearch"  asp-for="@request.Applicant.ActualStayAddress.Area.ShortName" 
+                                            data-dictionary='{"dictionary":"KladrAreaSocr"}'>
+                                    </select>
+                                </div>
+                                <div class="col-9">
+                                    <label class="form-label" asp-for="@request.Applicant.ActualStayAddress.Area.Name">Район</label>
+                                    <input type="text" class="form-control" asp-for="@request.Applicant.ActualStayAddress.Area.Name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="input-group align-items-end">
+                                <div class="col-3">
+                                    <select class="form-select select2-nosearch"  asp-for="@request.Applicant.ActualStayAddress.City.ShortName" 
+                                            data-dictionary='{"dictionary":"KladrCitySocr"}'>
+                                    </select>
+                                </div>
+                                <div class="col-9">
+                                    <label class="form-label" asp-for="@request.Applicant.ActualStayAddress.City.Name">Город</label>
+                                    <input type="text" class="form-control" asp-for="@request.Applicant.ActualStayAddress.City.Name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="input-group align-items-end">
+                                <div class="col-3">
+                                    <select class="form-select select2-nosearch"  asp-for="@request.Applicant.ActualStayAddress.Settlement.ShortName" 
+                                            data-dictionary='{"dictionary":"KladrSettlementSocr"}'>
+                                    </select>
+                                </div>
+                                <div class="col-9">
+                                    <label class="form-label" asp-for="@request.Applicant.ActualStayAddress.Settlement.Name">Населенный пункт</label>
+                                    <input type="text" class="form-control" asp-for="@request.Applicant.ActualStayAddress.Settlement.Name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="input-group align-items-end">
+                                <div class="col-3">
+                                    <select class="form-select select2-nosearch"  asp-for="@request.Applicant.ActualStayAddress.Street.ShortName" 
+                                            data-dictionary='{"dictionary":"KladrStreetSocr"}'>
+                                    </select>
+                                </div> 
+                                <div class="col-9">
+                                    <label class="form-label" asp-for="@request.Applicant.ActualStayAddress.Street.Name">Улица</label>
+                                    <input type="text" class="form-control" asp-for="@request.Applicant.ActualStayAddress.Street.Name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="input-group align-items-end">
+                                <div class="col-6">
+                                    <select class="form-select select2-nosearch" asp-for="@request.Applicant.ActualStayAddress.House.ShortName" 
+                                            data-dictionary='{"dictionary":"KladrHouseSocr"}'>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.Applicant.ActualStayAddress.House.ShortName">Дом</label>
+                                    <input type="text" class="form-control" asp-for="@request.Applicant.ActualStayAddress.House.Number">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="input-group align-items-end">
+                                <div class="col-6">
+                                    <select class="form-select select2-nosearch"  asp-for="@request.Applicant.ActualStayAddress.Building.ShortName" 
+                                            data-dictionary='{"dictionary":"KladrBuildingSocr"}'>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.Applicant.ActualStayAddress.Building.Number">Корпус</label>
+                                    <input type="text" class="form-control" asp-for="@request.Applicant.ActualStayAddress.Building.Number">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="input-group align-items-end">
+                                <div class="col-6">
+                                    <select class="form-select select2-nosearch" asp-for="@request.Applicant.ActualStayAddress.Housing.ShortName">
+                                        <option value="стр">стр</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.Applicant.ActualStayAddress.Housing.Number">Стороение</label>
+                                    <input type="text" class="form-control" asp-for="@request.Applicant.ActualStayAddress.Housing.Number">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="input-group align-items-end">
+                                <div class="col-6">
+                                    <select class="form-select select2-nosearch"  asp-for="@request.Applicant.ActualStayAddress.Flat.ShortName" 
+                                            data-dictionary='{"dictionary":"KladrAppartmentSocr"}'>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.Applicant.ActualStayAddress.Flat.Number">Квартира</label>
+                                    <input type="text" class="form-control" asp-for="@request.Applicant.ActualStayAddress.Flat.Number">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row g-2">
+            <div class="col-12 mx-auto">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Контактная информация</div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Applicant.Phone">Мобильный номер</label>
+                <input type="text" class="form-control required" placeholder="Мобильный номер" asp-for="@request.Applicant.Phone">
+            </div>
+            <div class="col-4">
+                <label class="form-label" asp-for="@request.Applicant.Email">E-mail</label>
+                <input type="text" class="form-control required" placeholder="E-mail" asp-for="@request.Applicant.Email">
+            </div>
+        </div>
+        </div>
+        </div>
+            <div class="tab-pane fade show" id="smev-request-tab3" role="tabpanel">
+                <div class="row justify-content-center mb-3" data-person>
+
+                    <div class="row justify-content-center">
+                        <div class="col-12 form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="checkDelegate" onchange="checkboxChange(this)">
+                            <label class="form-check-label fs-5 b-s-16" for="checkDelegate">Представитель</label>
+                        </div>
+                        <div data-disabled>
+                            <div class="row g-3">
+                                <div class="col-12 mx-auto">
+                                    <div class="divider text-start">
+                                        <div class="divider-text fs-5 b-s-16">Детали представителя</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center" >
+                                <div class="col-10">
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <label class="form-label" asp-for="@request.Representative.Type">Тип представителя</label>
+                                            <select class="form-select select2-nosearch" asp-for="@request.Representative.Type">
+                                                <option value="LegalRepresentative">Законный представитель несовершеннолетнего или недееспособного лица</option>
+                                                <option value="Confidant">Доверенное лицо</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="folm-label" asp-for="@request.Representative.Form">Кем приходиться представитель</label>
+                                            <select class="form-select select2-nosearch" asp-for="@request.Representative.Form">
+                                                <option value="Guardian">Опекун</option>
+                                                <option value="Trustee">Родитель</option>
+                                                <option value="AdoptiveParent">Усыновитель</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="row g-3">
+                            <div class="col-12 mx-auto">
+                                <div class="divider text-start">
+                                    <div class="divider-text fs-5 b-s-16">Персональные данные</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                        <div class="col-10">
+                            <label class="form-label">Заявители</label>
+                            <select class="form-select select2-nosearch applicants">
+                                <option value="">Выберите заявителя</option>
+                                @for (int i = 0; i < applicants.Count; i++)
+                                {
+                                    <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                                }
+                            </select>
+                        </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-10 mx-auto">
+                                <div class="row mb-1">
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="@request.Representative.Fio.LastName">Фамилия</label>
+                                        <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.Representative.Fio.LastName" />
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="@request.Representative.Fio.FirstName">Имя</label>
+                                        <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.Representative.Fio.FirstName">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="@request.Representative.Fio.SecondName">Отчество</label>
+                                        <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.Representative.Fio.SecondName">
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label" asp-for="@request.Representative.BirthDate">Дата рождения</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                            <input type="text" class="form-control pickdate required" placeholder="Дата рождения"
+                                                   asp-for="@request.Representative.BirthDate" value="">
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-12 mx-auto">
+                                        <div class="divider text-start">
+                                            <div class="divider-text fs-5 b-s-16">Документ, подтверждающий полномочия представител</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col-10">
+                                        <div class="row mb-1 align-items-end">
+                                            <div class="col-12">
+                                                <label class="form-label" asp-for="@request.Representative.PowerAttorneyName">Тип документа</label>
+                                               <input type="text" class="form-control" placeholder="Наименование документа" asp-for="@request.Representative.PowerAttorneyName">
+                                            </div>
+                                            <div class="col-6 mt-2">
+                                                <label class="form-label" asp-for="@request.Representative.PowerAttorneySeries">Серия</label>
+                                                <input type="text" class="form-control" placeholder="Серия"
+                                                       asp-for="@request.Representative.PowerAttorneySeries">
+                                            </div>
+                                            <div class="col-6 mt-2">
+                                                <label class="form-label" asp-for="@request.Representative.PowerAttorneyNumber">Номер</label>
+                                                <input type="text" class="form-control required" placeholder="Номер"
+                                                       asp-for="@request.Representative.PowerAttorneyNumber">
+                                            </div>
+                                            <div class="col-12 mt-2">
+                                                <label class="form-label" asp-for="@request.Representative.PowerAttorneyIssuedBy">Кем выдан документ</label>
+                                                <input type="text" class="form-control required" placeholder="Кем выдан документ"
+                                                       asp-for="@request.Representative.PowerAttorneyIssuedBy">
+                                            </div>
+                                            <div class="col-6 mt-2">
+                                                <label class="form-label" asp-for="@request.Representative.PowerAttorneyIssueDate">Дата выдачи</label>
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text">
+                                                        <i class="bi bi-calendar3"></i>
+                                                    </span>
+                                                    <input type="text" class="form-control pickdate required" placeholder="Дата выдачи"
+                                                           asp-for="@request.Representative.PowerAttorneyIssueDate" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col-6 mt-2" id="ConfirmDocumentValidToDate">
+                                                <label class="form-label" asp-for="@request.Representative.PowerAttorneyDateEnd">Дата окончания</label>
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text">
+                                                        <i class="bi bi-calendar3"></i>
+                                                    </span>
+                                                    <input type="text" class="form-control pickdate required" placeholder="Дата окончания"
+                                                           asp-for="@request.Representative.PowerAttorneyDateEnd" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-12 mx-auto">
+                                        <div class="divider text-start">
+                                            <div class="divider-text fs-5 b-s-16">Документ, удостоверяющий личность</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col-10">
+                                        <div class="row mb-1 align-items-end">
+                                            <div class="col-12">
+                                                <label class="form-label" asp-for="@request.Representative.IdentityDoc.IdentityType">Наименование</label>
+                                                <select class="select2-nosearch" asp-for="@request.Representative.IdentityDoc.IdentityType">
+                                                    <option value="PassportRf">Паспорт РФ</option>
+                                                    <option value="SvedRozhRf">Свидетельсво о рождении</option>
+                                                    <option value="PassportSailor">Паспорт моряка</option>
+                                                    <option value="Residence">Вид на жительство</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Representative.IdentityDoc.Series">Серия</label>
+                                                <input type="text" class="form-control" placeholder="Серия"
+                                                       asp-for="@request.Representative.IdentityDoc.Series">
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Representative.IdentityDoc.Number">Номер</label>
+                                                <input type="text" class="form-control required" placeholder="Номер"
+                                                       asp-for="@request.Representative.IdentityDoc.Number">
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label" asp-for="@request.Representative.IdentityDoc.IssueDate">Дата выдачи</label>
+                                                <div class="input-group input-group-merge">
+                                                    <span class="input-group-text">
+                                                        <i class="bi bi-calendar3"></i>
+                                                    </span>
+                                                    <input type="text" class="form-control pickdate required" placeholder="Дата выдачи"
+                                                           asp-for="@request.Representative.IdentityDoc.IssueDate" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col-9">
+                                                <label class="form-label" asp-for="@request.Representative.IdentityDoc.IssuedBy">Орган выдачи</label>
+                                                <input type="text" class="form-control required" placeholder="Орган выдачи"
+                                                       asp-for="@request.Representative.IdentityDoc.IssuedBy">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-12 mx-auto">
+                                        <div class="divider text-start">
+                                            <div class="divider-text fs-5 b-s-16">Место рождения</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col-10">
+                                        <div class="row mb-3  justify-content-center">
+                                            <div class="col-6">
+                                                <label class="form-label" asp-for="@request.Representative.BirthPlace.Country">Стрна</label>
+                                                <input type="text" class="form-control" placeholder="Стрна" asp-for="@request.Representative.BirthPlace.Country" value="Российская Федерация">
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label" asp-for="@request.Representative.BirthPlace.Region">Регион</label>
+                                                <input type="text" class="form-control" placeholder="Регион" asp-for="@request.Representative.BirthPlace.Region">
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label" asp-for="@request.Representative.BirthPlace.Area">Район</label>
+                                                <input type="text" class="form-control" placeholder="Район" asp-for="@request.Representative.BirthPlace.Area">
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label" asp-for="@request.Representative.BirthPlace.City">Город</label>
+                                                <input type="text" class="form-control" placeholder="Город" asp-for="@request.Representative.BirthPlace.City">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="row g-2" Adress>
+                                <div class="col-12 mx-auto">
+                                    <div class="divider text-start">
+                                        <div class="divider-text fs-5 b-s-16">Адрес</div>
+                                    </div>
+                                </div>
+                              
+                                <div class="row mb-2 justify-content-center">
+                                    <div class="col-10">
+                                        <label class="form-label" for="RepresentativeAddressType">Тип адреса</label>
+                                        <select class="select2-nosearch" id="RepresentativeAddressType">
+                                            <option value="ActualStayAddress">Фактический адрес проживания</option>
+                                            <option value="RegAddress">Адрес регистрации</option>
+                                            <option value="StayAddress">Адрес пребывания</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col-10">
+                                        <div class="row justify-content-center">
+                                            <div class="col-12">
+                                                <label class="form-label" for="RepresentativekladrSearch">Поиск по КЛАДР</label>
+                                                <input type="search" class="form-control" id="RepresentativekladrSearch" placeholder="🔍 ПОИСК">
+                                                <div class="input-group">
+                                                    <ul class="list-group address-list">
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center" id="RepresentativeAddress">
+                                    <div class="col-10">
+                                        <div class="row align-items-end">
+                                            <div class="col-6">
+                                                <label class="form-label" asp-for="@request.Representative.ActualStayAddress.PostIndex">Индекс</label>
+                                                <input type="text" class="form-control required" asp-for="@request.Representative.ActualStayAddress.PostIndex">
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="input-group align-items-end">
+                                                    <div class="col-3">
+                                                        <select class="form-select select2-nosearch"  asp-for="@request.Representative.ActualStayAddress.Region.ShortName" 
+                                                                data-dictionary='{"dictionary":"KladrRegionSocr"}'>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <label class="form-label" asp-for="@request.Representative.ActualStayAddress.Region.Name">Регион</label>
+                                                        <input type="text" class="form-control" asp-for="@request.Representative.ActualStayAddress.Region.Name">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="input-group align-items-end">
+                                                    <div class="col-3">
+                                                        <select class="form-select select2-nosearch"  asp-for="@request.Representative.ActualStayAddress.Area.ShortName" 
+                                                                data-dictionary='{"dictionary":"KladrAreaSocr"}'>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <label class="form-label" asp-for="@request.Representative.ActualStayAddress.Area.Name">Район</label>
+                                                        <input type="text" class="form-control" asp-for="@request.Representative.ActualStayAddress.Area.Name">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="input-group align-items-end">
+                                                    <div class="col-3">
+                                                        <select class="form-select select2-nosearch"  asp-for="@request.Representative.ActualStayAddress.City.ShortName" 
+                                                                data-dictionary='{"dictionary":"KladrCitySocr"}'>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <label class="form-label" asp-for="@request.Representative.ActualStayAddress.City.Name">Город</label>
+                                                        <input type="text" class="form-control" asp-for="@request.Representative.ActualStayAddress.City.Name">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="input-group align-items-end">
+                                                    <div class="col-3">
+                                                        <select class="form-select select2-nosearch"  asp-for="@request.Representative.ActualStayAddress.Settlement.ShortName" 
+                                                                data-dictionary='{"dictionary":"KladrSettlementSocr"}'>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <label class="form-label" asp-for="@request.Representative.ActualStayAddress.Settlement.Name">Населенный пункт</label>
+                                                        <input type="text" class="form-control" asp-for="@request.Representative.ActualStayAddress.Settlement.Name">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="input-group align-items-end">
+                                                    <div class="col-3">
+                                                        <select class="form-select select2-nosearch"  asp-for="@request.Representative.ActualStayAddress.Street.ShortName" 
+                                                                data-dictionary='{"dictionary":"KladrStreetSocr"}'>
+                                                        </select>
+                                                    </div> 
+                                                    <div class="col-9">
+                                                        <label class="form-label" asp-for="@request.Representative.ActualStayAddress.Street.Name">Улица</label>
+                                                        <input type="text" class="form-control" asp-for="@request.Representative.ActualStayAddress.Street.Name">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="input-group align-items-end">
+                                                    <div class="col-6">
+                                                        <select class="form-select select2-nosearch" asp-for="@request.Representative.ActualStayAddress.House.ShortName" 
+                                                                data-dictionary='{"dictionary":"KladrHouseSocr"}'>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label class="form-label" asp-for="@request.Representative.ActualStayAddress.House.ShortName">Дом</label>
+                                                        <input type="text" class="form-control" asp-for="@request.Representative.ActualStayAddress.House.Number">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="input-group align-items-end">
+                                                    <div class="col-6">
+                                                        <select class="form-select select2-nosearch"  asp-for="@request.Representative.ActualStayAddress.Building.ShortName" 
+                                                                data-dictionary='{"dictionary":"KladrBuildingSocr"}'>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label class="form-label" asp-for="@request.Representative.ActualStayAddress.Building.Number">Корпус</label>
+                                                        <input type="text" class="form-control" asp-for="@request.Representative.ActualStayAddress.Building.Number">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="input-group align-items-end">
+                                                    <div class="col-6">
+                                                        <select class="form-select select2-nosearch" asp-for="@request.Representative.ActualStayAddress.Housing.ShortName">
+                                                            <option value="стр">стр</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label class="form-label" asp-for="@request.Representative.ActualStayAddress.Housing.Number">Стороение</label>
+                                                        <input type="text" class="form-control" asp-for="@request.Representative.ActualStayAddress.Housing.Number">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="input-group align-items-end">
+                                                    <div class="col-6">
+                                                        <select class="form-select select2-nosearch"  asp-for="@request.Representative.ActualStayAddress.Flat.ShortName" 
+                                                                data-dictionary='{"dictionary":"KladrAppartmentSocr"}'>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label class="form-label" asp-for="@request.Representative.ActualStayAddress.Flat.Number">Квартира</label>
+                                                        <input type="text" class="form-control" asp-for="@request.Representative.ActualStayAddress.Flat.Number">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                <div class="row g-2">
+                                    <div class="col-12 mx-auto">
+                                        <div class="divider text-start">
+                                            <div class="divider-text fs-5 b-s-16">Контактная информация</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="@request.Representative.Phone">Мобильный номер</label>
+                                        <input type="text" class="form-control required" placeholder="Мобильный номер" asp-for="@request.Representative.Phone">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="@request.Representative.Email">E-mail</label>
+                                        <input type="text" class="form-control required" placeholder="E-mail" asp-for="@request.Representative.Email">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        <div class="tab-pane fade show" id="smev-request-tab5" role="tabpanel">
+            <div class="row g-2">
+                <div class="col-12 mx-auto">
+                    <div class="divider text-start">
+                        <div class="divider-text fs-5 b-s-16">Детали заявления</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-10">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.SprPfrDepartmentId">Сведения о территориальном органе Пенсионного фонда Российской Федерации, в который подается заявление</label>
+                        <select class="form-select select2-nosearch" asp-for="@request.SprPfrDepartmentId">
+                        </select>
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-12 mx-auto">
+                        <div class="divider text-start">
+                            <div class="divider-text fs-5 b-s-16">Сведения о доставки пенсии</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.DeliveryInfo.PlaceType">По какому месту доставлять пенсию</label>
+                        <select class="form-select select2-nosearch" asp-for="@request.DeliveryInfo.PlaceType">
+                            <option value="RegAddress">Место жительства</option>
+                            <option value="StayAddress">Адрес пребывания</option>
+                            <option value="ActualStayAddress">Фактический адрес проживания</option>
+                            <option value="OrganizationAddress">Адрес организации</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.DeliveryInfo.DeliveryDateStart">Дата начала доставки пенсии</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input type="text" class="form-control pickdate required" placeholder="Дата начала доставки пенсии"
+                                   asp-for="@request.DeliveryInfo.DeliveryDateStart" value="">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.DeliveryInfo.RecipientType">Кому доставляется пенсия</label>
+                        <select class="form-select select2-nosearch" asp-for="@request.DeliveryInfo.RecipientType">
+                            <option value="Pensioner">Пенсионер</option>
+                            <option value="Representative">Представитель</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.DeliveryInfo.DeliveryMethodType">Способ доставки пенсии</label>
+                        <select class="form-select select2-nosearch" asp-for="@request.DeliveryInfo.DeliveryMethodType">
+                            <option value="CreditOrganization" selected="selected">Кредитная организация</option>
+                            <option value="PostalOrganization">Почтовая организация</option>
+                            <option value="OtherOrganization">Другая организация</option>
+                        </select>
+                    </div>
+                </div>
+            <div class="row mb-2">
+                <div class="col-12">
+                    <label class="form-label" asp-for="@request.DeliveryInfo.HandingMethodType">Способ вручения пенсии</label>
+                    <select class="form-select select2-nosearch" asp-for="@request.DeliveryInfo.HandingMethodType">
+                        <option value="InHome">Путем вручения на дому</option>
+                        <option value="InOrganization">Путем вручения в кассе организации</option>
+                    </select>
+                </div>
+            </div>
+                <div class="row justify-content-center" id="DeliveryCreditOrganization">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.DeliveryInfo.OrganizationName">Наименование кредитной, либо иной организациии занимающаяся доставкой пенсии</label>
+                        <input type="text" class="form-control required" asp-for="@request.DeliveryInfo.OrganizationName">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.DeliveryInfo.AccountNumber">Номер счета получателя пенсии в указанной кредитной организации</label>
+                        <input type="text" class="form-control" asp-for="@request.DeliveryInfo.AccountNumber">
+                    </div>
+                </div>
+            <div class="row g-2" id="DeliveryInfo"  Adress >
+                <div class="row g-2">
+                    <div class="col-12 mx-auto">
+                        <div class="divider text-start">
+                            <div class="divider-text fs-5 b-s-16">Адрес, по которому должна доставляться пенсия</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div class="row justify-content-center">
+                            <div class="col-12">
+                                <label class="form-label" for="DeliveryInfokladrSearch">Поиск по КЛАДР</label>
+                                <input type="search" class="form-control" id="DeliveryInfokladrSearch" placeholder="🔍 ПОИСК">
+                                <div class="input-group">
+                                    <ul class="list-group address-list">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center" id="DeliveryInfoAddress">
+                    <div class="col-12">
+                        <div class="row align-items-end">
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.DeliveryInfo.Address.PostIndex">Индекс</label>
+                                <input type="text" class="form-control required" asp-for="@request.DeliveryInfo.Address.PostIndex">
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group align-items-end">
+                                    <div class="col-3">
+                                        <select class="form-select select2-nosearch"  asp-for="@request.DeliveryInfo.Address.Region.ShortName" 
+                                                data-dictionary='{"dictionary":"KladrRegionSocr"}'>
+                                        </select>
+                                    </div>
+                                    <div class="col-9">
+                                        <label class="form-label" asp-for="@request.DeliveryInfo.Address.Region.Name">Регион</label>
+                                        <input type="text" class="form-control" asp-for="@request.DeliveryInfo.Address.Region.Name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group align-items-end">
+                                    <div class="col-3">
+                                        <select class="form-select select2-nosearch"  asp-for="@request.DeliveryInfo.Address.Area.ShortName" 
+                                                data-dictionary='{"dictionary":"KladrAreaSocr"}'>
+                                        </select>
+                                    </div>
+                                    <div class="col-9">
+                                        <label class="form-label" asp-for="@request.DeliveryInfo.Address.Area.Name">Район</label>
+                                        <input type="text" class="form-control" asp-for="@request.DeliveryInfo.Address.Area.Name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group align-items-end">
+                                    <div class="col-3">
+                                        <select class="form-select select2-nosearch"  asp-for="@request.DeliveryInfo.Address.City.ShortName" 
+                                                data-dictionary='{"dictionary":"KladrCitySocr"}'>
+                                        </select>
+                                    </div>
+                                    <div class="col-9">
+                                        <label class="form-label" asp-for="@request.DeliveryInfo.Address.City.Name">Город</label>
+                                        <input type="text" class="form-control" asp-for="@request.DeliveryInfo.Address.City.Name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group align-items-end">
+                                    <div class="col-3">
+                                        <select class="form-select select2-nosearch"  asp-for="@request.DeliveryInfo.Address.Settlement.ShortName" 
+                                                data-dictionary='{"dictionary":"KladrSettlementSocr"}'>
+                                        </select>
+                                    </div>
+                                    <div class="col-9">
+                                        <label class="form-label" asp-for="@request.DeliveryInfo.Address.Settlement.Name">Населенный пункт</label>
+                                        <input type="text" class="form-control" asp-for="@request.DeliveryInfo.Address.Settlement.Name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group align-items-end">
+                                    <div class="col-3">
+                                        <select class="form-select select2-nosearch"  asp-for="@request.DeliveryInfo.Address.Street.ShortName" 
+                                                data-dictionary='{"dictionary":"KladrStreetSocr"}'>
+                                        </select>
+                                    </div> 
+                                    <div class="col-9">
+                                        <label class="form-label" asp-for="@request.DeliveryInfo.Address.Street.Name">Улица</label>
+                                        <input type="text" class="form-control" asp-for="@request.DeliveryInfo.Address.Street.Name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="input-group align-items-end">
+                                    <div class="col-6">
+                                        <select class="form-select select2-nosearch" asp-for="@request.DeliveryInfo.Address.House.ShortName" 
+                                                data-dictionary='{"dictionary":"KladrHouseSocr"}'>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="@request.DeliveryInfo.Address.House.ShortName">Дом</label>
+                                        <input type="text" class="form-control" asp-for="@request.DeliveryInfo.Address.House.Number">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="input-group align-items-end">
+                                    <div class="col-6">
+                                        <select class="form-select select2-nosearch"  asp-for="@request.DeliveryInfo.Address.Building.ShortName" 
+                                                data-dictionary='{"dictionary":"KladrBuildingSocr"}'>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="@request.DeliveryInfo.Address.Building.Number">Корпус</label>
+                                        <input type="text" class="form-control" asp-for="@request.DeliveryInfo.Address.Building.Number">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="input-group align-items-end">
+                                    <div class="col-6">
+                                        <select class="form-select select2-nosearch" asp-for="@request.DeliveryInfo.Address.Housing.ShortName">
+                                            <option value="стр">стр</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="@request.DeliveryInfo.Address.Housing.Number">Стороение</label>
+                                        <input type="text" class="form-control" asp-for="@request.DeliveryInfo.Address.Housing.Number">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="input-group align-items-end">
+                                    <div class="col-6">
+                                        <select class="form-select select2-nosearch"  asp-for="@request.DeliveryInfo.Address.Flat.ShortName" 
+                                                data-dictionary='{"dictionary":"KladrAppartmentSocr"}'>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="@request.DeliveryInfo.Address.Flat.Number">Квартира</label>
+                                        <input type="text" class="form-control" asp-for="@request.DeliveryInfo.Address.Flat.Number">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row justify-content-center mt-4">
+                <div class="col-12 form-check form-switch">
+                    <label class="form-check-label fs-5 b-s-16" for="PreviousDelivery">Сведения о доставке пенсии до заключения договора предусмотренного частью 14 статьи 21 Федерального закона от 28.12.2013 № 400-ФЗ «О страховых пенсиях».
+                        <small>Заполняется в случае выбора организации для доставки пенсии, с которой не заключен указанный договор (п.4 заявления)</small>
+                    </label>
+                    <input class="form-check-input" type="checkbox" id="PreviousDelivery">
+                </div>
+            </div>
+            <div class="row justify-content-center" id="PreviousDeliveryInfo" data-disabled>
+                <div class="col-12">
+                    <label class="form-label" asp-for="@request.PreviousDeliveryInfo.RecipientType">Кому доставляется пенсия</label>
+                    <select class="form-select select2-nosearch" asp-for="@request.PreviousDeliveryInfo.RecipientType">
+                        <option value="Pensioner">Пенсионер</option>
+                        <option value="Representative">Представитель</option>
+                    </select>
+                </div>
+                
+                <div class="col-12">
+                    <label class="form-label" asp-for="@request.PreviousDeliveryInfo.DeliveryMethodType">Способ доставки пенсии</label>
+                    <select class="form-select select2-nosearch" asp-for="@request.PreviousDeliveryInfo.DeliveryMethodType">
+                        <option value="CreditOrganization">Кредитная организация</option>
+                        <option value="PostalOrganization">Почтовая организация</option>
+                        <option value="OtherOrganization">Другая организация</option>
+                    </select>
+                    </select>
+                </div>
+                <div class="row justify-content-center" data-disabled id="PreviousCreditOrganization">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.PreviousDeliveryInfo.OrganizationName">Наименование кредитной, либо иной организациии занимающаяся доставкой пенсии</label>
+                        <input type="text" class="form-control required" asp-for="@request.PreviousDeliveryInfo.OrganizationName">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.PreviousDeliveryInfo.AccountNumber">Номер счета получателя пенсии в указанной кредитной организации</label>
+                        <input type="text" class="form-control" asp-for="@request.PreviousDeliveryInfo.AccountNumber">
+                    </div>
+                </div>
+                <div class="row justify-content-center" Adress id="PreviousDeliveryAddress">
+                    <div class="row g-2">
+                        <div class="col-12 mx-auto">
+                            <div class="divider text-start">
+                                <div class="divider-text fs-5 b-s-16">Адрес, по которому должна доставляться пенсия</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-12">
+                            <div class="row justify-content-center">
+                                <div class="col-12">
+                                    <label class="form-label" for="PreviousDeliverykladrSearch">Поиск по КЛАДР</label>
+                                    <input type="search" class="form-control" id="PreviousDeliverykladrSearch" placeholder="🔍 ПОИСК">
+                                    <div class="input-group">
+                                        <ul class="list-group address-list">
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="row align-items-end">
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.PreviousDeliveryInfo.Address.PostIndex">Индекс</label>
+                                <input type="text" class="form-control required" asp-for="@request.PreviousDeliveryInfo.Address.PostIndex">
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group align-items-end">
+                                    <div class="col-3">
+                                        <select class="form-select select2-nosearch"  asp-for="@request.PreviousDeliveryInfo.Address.Region.ShortName" 
+                                                data-dictionary='{"dictionary":"KladrRegionSocr"}'>
+                                        </select>
+                                    </div>
+                                    <div class="col-9">
+                                        <label class="form-label" asp-for="@request.PreviousDeliveryInfo.Address.Region.Name">Регион</label>
+                                        <input type="text" class="form-control" asp-for="@request.PreviousDeliveryInfo.Address.Region.Name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group align-items-end">
+                                    <div class="col-3">
+                                        <select class="form-select select2-nosearch"  asp-for="@request.PreviousDeliveryInfo.Address.Area.ShortName" 
+                                                data-dictionary='{"dictionary":"KladrAreaSocr"}'>
+                                        </select>
+                                    </div>
+                                    <div class="col-9">
+                                        <label class="form-label" asp-for="@request.PreviousDeliveryInfo.Address.Area.Name">Район</label>
+                                        <input type="text" class="form-control" asp-for="@request.PreviousDeliveryInfo.Address.Area.Name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group align-items-end">
+                                    <div class="col-3">
+                                        <select class="form-select select2-nosearch"  asp-for="@request.PreviousDeliveryInfo.Address.City.ShortName" 
+                                                data-dictionary='{"dictionary":"KladrCitySocr"}'>
+                                        </select>
+                                    </div>
+                                    <div class="col-9">
+                                        <label class="form-label" asp-for="@request.PreviousDeliveryInfo.Address.City.Name">Город</label>
+                                        <input type="text" class="form-control" asp-for="@request.PreviousDeliveryInfo.Address.City.Name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group align-items-end">
+                                    <div class="col-3">
+                                        <select class="form-select select2-nosearch"  asp-for="@request.PreviousDeliveryInfo.Address.Settlement.ShortName" 
+                                                data-dictionary='{"dictionary":"KladrSettlementSocr"}'>
+                                        </select>
+                                    </div>
+                                    <div class="col-9">
+                                        <label class="form-label" asp-for="@request.PreviousDeliveryInfo.Address.Settlement.Name">Населенный пункт</label>
+                                        <input type="text" class="form-control" asp-for="@request.PreviousDeliveryInfo.Address.Settlement.Name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group align-items-end">
+                                    <div class="col-3">
+                                        <select class="form-select select2-nosearch"  asp-for="@request.PreviousDeliveryInfo.Address.Street.ShortName" 
+                                                data-dictionary='{"dictionary":"KladrStreetSocr"}'>
+                                        </select>
+                                    </div> 
+                                    <div class="col-9">
+                                        <label class="form-label" asp-for="@request.PreviousDeliveryInfo.Address.Street.Name">Улица</label>
+                                        <input type="text" class="form-control" asp-for="@request.PreviousDeliveryInfo.Address.Street.Name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="input-group align-items-end">
+                                    <div class="col-6">
+                                        <select class="form-select select2-nosearch" asp-for="@request.PreviousDeliveryInfo.Address.House.ShortName" 
+                                                data-dictionary='{"dictionary":"KladrHouseSocr"}'>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="@request.PreviousDeliveryInfo.Address.House.ShortName">Дом</label>
+                                        <input type="text" class="form-control" asp-for="@request.PreviousDeliveryInfo.Address.House.Number">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="input-group align-items-end">
+                                    <div class="col-6">
+                                        <select class="form-select select2-nosearch"  asp-for="@request.PreviousDeliveryInfo.Address.Building.ShortName" 
+                                                data-dictionary='{"dictionary":"KladrBuildingSocr"}'>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="@request.PreviousDeliveryInfo.Address.Building.Number">Корпус</label>
+                                        <input type="text" class="form-control" asp-for="@request.PreviousDeliveryInfo.Address.Building.Number">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="input-group align-items-end">
+                                    <div class="col-6">
+                                        <select class="form-select select2-nosearch" asp-for="@request.PreviousDeliveryInfo.Address.Housing.ShortName">
+                                            <option value="стр">стр</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="@request.PreviousDeliveryInfo.Address.Housing.Number">Стороение</label>
+                                        <input type="text" class="form-control" asp-for="@request.PreviousDeliveryInfo.Address.Housing.Number">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="input-group align-items-end">
+                                    <div class="col-6">
+                                        <select class="form-select select2-nosearch"  asp-for="@request.PreviousDeliveryInfo.Address.Flat.ShortName" 
+                                                data-dictionary='{"dictionary":"KladrAppartmentSocr"}'>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="@request.PreviousDeliveryInfo.Address.Flat.Number">Квартира</label>
+                                        <input type="text" class="form-control" asp-for="@request.PreviousDeliveryInfo.Address.Flat.Number">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+           </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var applicants = @Json.Serialize(applicants);
+    var $formContent = $("#smev_request");
+    var $originalBlock = $('#originalBlock');
+    function ShowErrorInputs() { }
+    var smevForm = {
+        init: () => {
+            $originalBlock.find('[data-original]').each(function(_, item) {
+                renameBlock($(item), 100, true);
+                visibilityBlock($(item), true, true);
+
+            });
+           
+            //$('#addFamily').on('click', () => addForm('FamilyList', 'FamilyClone'));
+
+            $formContent.find('.required').each(function() {
+                addValidation($(this));
+            });
+
+            $formContent.find('[data-disabled]').each(function() {
+                visibilityBlock($(this), true, true);
+            });
+            visibilityBlock($('#SpouseBlock'), false, false);
+            select2Init($formContent);
+
+            let options = { clearIncomplete: true, showMaskOnHover: false }
+
+            $formContent.find('[name$="Snils"]').inputmask("999-999-999 99", options);
+            $formContent.find('[name$="IssueDivision"]').inputmask("999-999", options);
+            $formContent.find('[name$="PostIndex"]').inputmask("999999", options);
+          //  $formContent.find('[name$="Phone"]').inputmask("+7(999) 999-99-99", options);x
+            $formContent.find('[name$="Email"]').inputmask("email", options);
+
+            $formContent.find(".pickdate").datepicker({
+                language: "ru",
+                autoclose: true
+            }).inputmask("99.99.9999", options);
+            $formContent.find('#request_Applicant_IdentityDoc_Series').inputmask("99 99", options);
+            $formContent.find('#request_Applicant_IdentityDoc_Number').inputmask("999999", options);
+            $formContent.find('#request_Applicant_IdentityDoc_IdentityType').on('change', function() {
+                switch ($(this).val()) {
+                    case "PassportRf":
+                        $formContent.find('#request_Applicant_IdentityDoc_Series').inputmask("99 99", options);
+                        $formContent.find('#request_Applicant_IdentityDoc_Number').inputmask("999999", options);
+                        visibilityBlock($('#request_Applicant_IdentityDoc_IssueDivision').parent(), false, false);
+                        break;
+                    case "SvedRozhRf":
+                        $formContent.find('#request_Applicant_IdentityDoc_Series').inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", options });
+                        visibilityBlock($('#request_Applicant_IdentityDoc_IssueDivision').parent(), true, true);
+                        $formContent.find('#request_Applicant_IdentityDoc_Number').inputmask("999999", options);
+                        break;
+                    default:
+                        $formContent.find('#request_Applicant_IdentityDoc_Series').inputmask("", options);
+                        $formContent.find('#request_Applicant_IdentityDoc_Number').inputmask("", options);
+                        visibilityBlock($('#request_Applicant_IdentityDoc_IssueDivision').parent(), true, true);
+                        break;
+                };
+            })
+            $formContent.find('#request_Representative_IdentityDoc_Series').inputmask("99 99", options);
+            $formContent.find('#request_Representative_IdentityDoc_Number').inputmask("999999", options);
+            $formContent.find('#request_Representative_IdentityDoc_IdentityType').on('change', function() {
+                switch ($(this).val()) {
+                    case "PassportRf":
+                        $formContent.find('#request_Representative_IdentityDoc_Series').inputmask("99 99", options);
+                        $formContent.find('#request_Representative_IdentityDoc_Number').inputmask("999999", options);
+                        visibilityBlock($('#request_Representative_IdentityDoc_IssueDivision').parent(), false, false);
+                        break;
+                    case "SvedRozhRf":
+                        $formContent.find('#request_Representative_IdentityDoc_Series').inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", options });
+                        visibilityBlock($('#request_Representative_IdentityDoc_IssueDivision').parent(), true, true);
+                        $formContent.find('#request_Representative_IdentityDoc_Number').inputmask("999999", options);
+                        break;
+                    default:
+                        $formContent.find('#request_Representative_IdentityDoc_Series').inputmask("", options);
+                        $formContent.find('#request_Representative_IdentityDoc_Number').inputmask("", options);
+                        visibilityBlock($('#request_Representative_IdentityDoc_IssueDivision').parent(), true, true);
+                        break;
+                };
+            })
+
+            $.ajax({
+                url: '/SmevPfr/GetPfrDepartments',
+                type: "GET",
+                success: function(data) {
+                    data.forEach(item => {
+                        $formContent.find('#request_SprPfrDepartmentId').append(`<option value="${item.id}">${item.pfrName}</optin>`);
+                    })
+                }
+            });
+            (function getDictionaries() {
+                let dicts = new Set();
+                $('[data-dictionary]').each(function() {
+                    let $this = $(this);
+                    let options = $this.data('dictionary');
+                    if (!dicts.has(options.dictionary)) {
+                        dicts.add(options.dictionary);
+                        $.post(`/SmevBase/SmevGetDictionary`,
+                            {
+                                type: options.dictionary
+                            },
+                            function(dictionary) {
+                                fillSelect(options.dictionary, dictionary);
+                            });
+                    }
+                });
+            }());
+
+            function fillSelect(dictName, dictionary) {
+                $.each($(`[data-dictionary*='"${dictName}"']`),
+                    function() {
+                        let $this = $(this);
+                        let items = dictionary;
+                        $this.empty();
+                        if ($this.is('[data-value-value]')) {
+                            items.dictionary.forEach(function(item) {
+                                $this.append(new Option(item.value, item.value));
+                            });
+                        } else {
+                            items.dictionary.forEach(function(item) {
+                                $this.append(new Option(item.value, item.key));
+                            });
+                        }
+
+                        if (items.defaultKey != null) {
+                            $this.val(items.defaultKey).trigger('update');
+                            $this.attr('data-def', items.defaultKey);
+                        } else {
+                            let defVal = $this.data('dictionary').default_value;
+                            if (defVal) {
+                                $this.val(defVal).trigger('update');
+                                $this.attr('data-def', defVal);
+                            }
+                        }
+                    });
+            }
+
+        }
+    };
+
+
+    $formContent.find('[name$="CitizenshipType"]').on('change', function() {
+        switch ($(this).val()) {
+            case 'CitizenRf':
+                visibilityBlock($(this).parent().next(), true, true);
+                break;
+            case 'ForeignCitizen':
+                visibilityBlock($(this).parent().next(), false, false);
+                break;
+            case 'WithoutCitizenship':
+                visibilityBlock($(this).parent().next(), true, true);
+                break;
+        }
+    })
+    $('#originalBlock').find('[name$="CitizenshipType"]').on('change', function() {
+        switch ($(this).val()) {
+            case 'CitizenRf':
+                visibilityBlock($(this).parent().next(), true, true);
+                break;
+            case 'ForeignCitizen':
+                visibilityBlock($(this).parent().next(), false, false);
+                break;
+            case 'WithoutCitizenship':
+                visibilityBlock($(this).parent().next(), true, true);
+                break;
+        }
+    })
+
+    $formContent.find('#PreviousDelivery').on('change', function() {
+        if ($(this).is(':checked'))
+          {       
+              visibilityBlock($formContent.find('#PreviousDeliveryInfo'), false, false);
+         }
+             
+         if ($(this).is(':not(:checked)'))
+             { 
+                visibilityBlock($formContent.find('#PreviousDeliveryInfo'), true, true);
+           } 
+    })
+
+    $formContent.find('[name="request.PreviousDeliveryInfo.DeliveryMethodType"]').on('change', function() {
+        switch ($(this).val()) {
+            case 'PostalOrganization':
+                visibilityBlock($formContent.find('#PreviousDeliveryAddress'), false, false);
+                visibilityBlock($formContent.find('#PreviousCreditOrganization'), true, true);
+                break;
+            default:
+                visibilityBlock($formContent.find('#PreviousCreditOrganization'), false, false);
+                visibilityBlock($formContent.find('#PreviousDeliveryAddress'), true, true);
+                break;
+        }
+    })
+
+
+    $formContent.find('#request_Representative_ConfirmDocument_DocumentType').on('change', function() {
+        switch ($(this).val()) {
+            case 'AdoptionCertificate':
+                visibilityBlock($formContent.find('#ConfirmDocumentValidToDate'), true, true);
+                break;
+
+            case 'ChildBirthCerfificate':
+                visibilityBlock($formContent.find('#ConfirmDocumentValidToDate'), true, true);
+                break;
+
+            default:
+                visibilityBlock($formContent.find('#ConfirmDocumentValidToDate'), false, false);
+                break;
+        }
+    })
+
+
+    $('[id$="AddressType"]').on('change', function() {
+               let chageVal =$(this).val();
+               $(this).closest('[Adress]').find('[id$="Address"] input').each(function(){
+                   let nameEl = $(this).attr("name").split('.');
+                   let nameLastEl = '.'+nameEl[4];
+                   if(nameLastEl==='.undefined'){nameLastEl='';}
+                   let name = nameEl[0]+'.'+nameEl[1]+'.'+chageVal+'.'+nameEl[3]+nameLastEl;
+                   let id = name.replace('.','_');
+                   $(this).attr('name',`${name}`);
+                   $(this).attr('id',`${id}`);
+                   $(this).prev('label').attr('for',`${id}`);
+                   });
+    });
+       $formContent.find('[id$="kladrSearch"]').on('click',function (){
+                      $(this).closest('[Adress]').find('.address-list').show(100);
+                   });
+            $formContent.find('[id$="kladrSearch"]').on('keyup',function() {
+            let block = $(this).closest('[Adress]');
+            $(this).next().children().show();
+            $(this).next().show();
+            if($(this).val().length>2){
+            $.ajax({
+                url: '/SmevBase/KladrSearchAddress',
+                type: "GET",
+                data: {request : $(this).val()},
+                success: function(data) {
+                    let list ='';
+                    data.result.forEach((item, index) =>{
+                        list+=`<li data-index="${index}">${item.fullAddress}</li>`;
+                        block.find('.address-list').html(list);
+                    });
+                    block.find('.address-list li').on('click',function(){
+                   let resultAdress = data.result[$(this).attr('data-index')];
+                                       block.find('[id$="kladrSearch"]').val(resultAdress.fullAddress);
+                                       $(this).parent().hide(150);
+                                       block.find('[name$="PostIndex"]').val(resultAdress.postIndex);
+                                       block.find('[name$="ShortName"] option').removeAttr('data-select2-id');
+                                       
+                                       let regionSelected = block.find(`[name$="Region.ShortName"] [value="${resultAdress.regionSocr}"]`);
+                                       let areaSelected = block.find(`[name$="Area.ShortName"] [value="${resultAdress.areaSocr}"]`);
+                                       let citySelected = block.find(`[name$="City.ShortName"] [value="${resultAdress.citySocr}"]`);
+                                       let settlementSelected = block.find(`[name$="Settlement.ShortName"] [value="${resultAdress.settlementSocr}"]`);
+                                       let streetSelected = block.find(`[name$="Street.ShortName"] [value="${resultAdress.streetSocr}"]`);
+                                       
+                                       block.find(`[name$="Region.ShortName"] option[value="${resultAdress.regionSocr}"]`).remove();
+                                       block.find(`[name$="Area.ShortName"] option[value="${resultAdress.areaSocr}"]`).remove();
+                                       block.find(`[name$="City.ShortName"] option[value="${resultAdress.citySocr}"]`).remove();
+                                       block.find(`[name$="Settlement.ShortName"] option[value="${resultAdress.settlementSocr}"]`).remove();
+                                       block.find(`[name$="Street.ShortName"] option[value="${resultAdress.streetSocr}"]`).remove();
+                                        
+                                       let regionOption = block.find(`[name$="Region.ShortName"]`).html();
+                                       let areaOption = block.find(`[name$="Area.ShortName"]`).html();
+                                       let cityOption = block.find(`[name$="City.ShortName"]`).html();
+                                       let settlementOption = block.find(`[name$="Settlement.ShortName"]`).html();
+                                       let streetOption = block.find(`[name$="Street.ShortName"]`).html();
+                                       
+                                       block.find('[name$="Region.ShortName"]').html(regionSelected).append(regionOption);
+                                       block.find('[name$="Area.ShortName"]').html(areaSelected).append(areaOption);
+                                       block.find('[name$="City.ShortName"]').html(citySelected).append(cityOption);
+                                       block.find('[name$="Settlement.ShortName"]').html(settlementSelected).append(settlementOption);
+                                       block.find('[name$="Street.ShortName"]').html(streetSelected ).append(streetOption);
+                                     
+                                       block.find('[name$="Region.Name"]').val(resultAdress.region);
+                                       block.find('[name$="Area.Name"]').val(resultAdress.area);
+                                       block.find('[name$="City.Name"]').val(resultAdress.city);
+                                       block.find('[name$="Settlement.Name"]').val(resultAdress.settlement);
+                                       block.find('[name$="Street.Name"]').val(resultAdress.street);
+                })
+                }
+            });
+            }else{
+                block.find('.address-list').empty();
+            }
+            });
+                    
+   
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').hide();
+                } else {
+                    $block.hide();
+                }
+                break;
+            case false:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').show();
+                } else {
+                    $block.removeClass('d-none')
+                    $block.show();
+                }
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        removeValidation($(this));
+                    }
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                    if ($(this).hasClass('required')) {
+                        addValidation($(this));
+                    }
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    function renameAttach() {
+        let indexActive = 0;
+        $('#attachmentsBlock [data-attach]').each((index, item) => {
+            $(item).attr('data-attach', index);
+            $(item).find('[data-index]').html(index + 1);
+            $(item).find('input[type="text"]').each(function() {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexActive));
+            });
+            if ($(item).find('tr.active').length > 0) indexActive++;
+        });
+    }
+
+    function docRemove(el) {
+        el.closest('[data-attach]').remove();
+        renameAttach();
+    }
+
+    function ShowErrorInputs() {
+        for (let item of document.querySelectorAll('#smev_request input,select')) {
+            if (item.getAttribute('disabled') == null && item.classList.contains('required') && item.value == '') {
+                $('#smev_request').find(`button[data-bs-target="#${item.closest('.tab-pane').id}"]`).trigger('click');
+                break;
+            }
+        };
+    }
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `clone${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+
+        }
+
+        let $adrBlock = $cloneBlock.find('[data-address]');
+        if ($adrBlock.length > 0) {
+            $adrBlock.attr('data-address', $adrBlock.attr('data-address').replace(/\d+/, indexId));
+        }
+
+        $cloneBlock.find('input, select').each(function() {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function() {
+            if ($(this).is('[for]')) {
+                $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('span').each(function() {
+            if ($(this).is('[id]')) {
+                $(this).attr('id', $(this).attr('id').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('select').each(function() {
+            if ($(this).is('[id]')) {
+                $(this).attr('id', $(this).attr('id').replace(/\d+/, indexId));
+            }
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+            $(this).removeAttr('data-select2-id');
+        });
+    }
+
+    function renameParentBlock(cloneBlock, indexId) {
+        cloneBlock.id = `${cloneBlock.id}${indexId}`;
+        cloneBlock.querySelector('span').innerText = cloneBlock.querySelector('span').innerText.replace(/\d+/, 1 + indexId);
+
+        cloneBlock.querySelectorAll('input').forEach(item => {
+            item.id = item.id.replace(/ParentDataBlock\d+/, `ParentDataBlock${indexId}`);
+            item.name = item.name.replace(/ParentDataBlock\[\d+\]/, `ParentDataBlock[${indexId}]`);
+        });
+        cloneBlock.querySelectorAll('label').forEach(item => {
+            item.getAttribute('for') ? item.setAttribute('for', item.getAttribute('for').replace(/ParentDataBlock\d+/, `ParentDataBlock${indexId}`)) : void 0;
+        });
+        cloneBlock.querySelectorAll('select').forEach(item => {
+            item.id ? item.id = item.id.replace(/ParentDataBlock\d+/, `ParentDataBlock${indexId}`) : void 0;
+            item.name ? item.name = item.name.replace(/ParentDataBlock\[\d+\]/, `ParentDataBlock[${indexId}]`) : void 0;
+            item.hasAttribute('data-select2-id') ? item.removeAttribute('data-select2-id') : void 0;
+        });
+        return cloneBlock;
+    }
+   
+    function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+        let $cloneList = $formContent.find(`#${cloneListId}`);
+        Select2Destroy($cloneList);
+        let $original = $originalBlock.find(`#${originalId}`);
+        let $cloneBlock = $original.clone(true);
+        let indexId = $cloneList.find('[data-clone]').length;
+        renameBlock($cloneBlock, indexId);
+        blockInit($cloneBlock);
+        $cloneList.append($cloneBlock);
+        select2Init($cloneList);
+    }
+
+    function blockInit($block) {
+        visibilityBlock($block, false, false);
+        const options = { clearIncomplete: true, showMaskOnHover: false };
+
+        $block.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        $block.find('[name$="Snils"]').inputmask("999-999-999 99", options);
+        $block.find('[name$="Phone"]').inputmask("+7(999) 999-99-99", options);
+    }
+
+
+    function blockRemove(el, cloneListId) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        Select2Destroy($cloneList);
+        $cloneList.find('[data-clone]').each(function(index, item) {
+            renameBlock($(item), index);
+        });
+        select2Init($cloneList);
+    }
+
+    function select2Init($block) {
+        $block.find("select.select2-nosearch").each(function() {
+            $(this).select2({
+                dropdownParent: $("#mainModal"),
+                minimumResultsForSearch: Infinity
+            });
+        });
+
+        $block.find("select.select2-search").each(function() {
+            $(this).select2({
+                dropdownParent: $("#mainModal")
+            });
+        });
+    }
+
+    function Select2Destroy($block) {
+        $block.find('select').each((_, el) => {
+            if (el.parentNode.querySelector('span')) {
+                $(el).select2('destroy');
+                el.hasAttribute('data-select2-id') ? el.removeAttribute('data-select2-id') : void 0;
+                el.querySelectorAll('option').forEach(itemOption => itemOption.hasAttribute('data-select2-id') ? itemOption.removeAttribute('data-select2-id') : void 0)
+                if (el.parentNode.querySelector('span')) el.parentNode.querySelector('span').remove();
+            }
+        });
+    }
+
+    function checkboxChange(el) {
+        visibilityBlock($(el).closest('.row').find('[data-disabled]'), !$(el).prop('checked'), !$(el).prop('checked'));
+    }
+
+    function changeAddressMatch(el) {
+        let $clone = $(el).closest('[data-clone]').find('[data-child-adr]');
+        visibilityBlock($clone, el.checked, el.checked);
+    }
+
+   $('select.applicants').each(function() {
+        $(this).on('change',
+            function() {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                 $block.find('[type="text"]').each(function() {
+                     $(this).val('');
+                 });
+               if (id) {
+                    $block.find('[name$=".LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$=".FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$=".SecondName"]').val(applicants[id].secondName);
+
+                    let birthDate = new Date(applicants[id].birthDate);
+                    $block.find('[name$=".BirthDate"]').val(new Date(birthDate).toLocaleDateString());
+
+                    $block.find('[name$="BirthPlace"]').val(applicants[id].birthPlace);
+                    $block.find('[name$="Phone"]').val(applicants[id].phone);
+                    $block.find('[name$="Email"]').val(applicants[id].email);
+                    $block.find('[name$="Snils"]').val(applicants[id].snils);
+                    $block.find('[name$="Inn"]').val(applicants[id].inn);
+
+                    switch (applicants[id].gender) {
+                        case 1:
+                            $block.find('[id$="Gender1"]').prop('checked', true);
+                            break;
+                        case 2:
+                            $block.find('[id$="Gender2"]').prop('checked', true);
+                            break;
+                    }
+
+                    $block.find('[name$="IdentityDoc.Series"]').val(applicants[id].documentSerial.replace(' ', ''));
+                    $block.find('[name$="IdentityDoc.Number"]').val(applicants[id].documentNumber);
+                    $block.find('[name$="IdentityDoc.IssueDate"]').val(applicants[id].documentIssueDate ? new Date(applicants[id].documentIssueDate).toLocaleDateString() : '');
+                    $block.find('[name$="IdentityDoc.IssuedBy"]').val(applicants[id].documentIssueBody);
+                    $block.find('[name$="IdentityDoc.IssueDivision"]').val(applicants[id].documentCode);
+
+                    $block.find('[name$="PostIndex"]').val(applicants[id].addressDetails.house.postalCode);
+                 
+                    if(!applicants[id].addressDetails.region.value==''){
+                    if(applicants[id].addressDetails.region.shortName==$block.find('[name$="Region.ShortName"] option:selected').html())
+                     { 
+                        $block.find('[name$="Region.ShortName"]').prepend(new Option(applicants[id].addressDetails.region.shortName, applicants[id].addressDetails.region.shortName));
+                        $block.find('[name$="Region.ShortName"] option:selected').remove();
+                     }else{
+                       let regionSelected =  $block.find('[name$="Region.ShortName"] option:selected').html();
+                        $block.find('[name$="Region.ShortName"]').prepend(new Option(applicants[id].addressDetails.region.shortName, applicants[id].addressDetails.region.shortName));
+                        $block.find('[name$="Region.ShortName"] option:selected').remove();
+                        $block.find('[name$="Region.ShortName"]').append(new Option(regionSelected,regionSelected));
+                     }
+                    
+                    $block.find('[name$="Region.Name"]').val(applicants[id].addressDetails.region.value);
+                    }
+                    
+                    $block.find('[id$="kladrSearch"]').val(applicants[id].fullAddress);
+                    if(!applicants[id].addressDetails.area.value==''){
+                    if(applicants[id].addressDetails.area.shortName==$block.find('[name$="Area.ShortName"] option:selected').html())
+                    { 
+                      $block.find('[name$="Area.ShortName"] option:selected').remove();
+                     }else{
+                      let areaSelected = $block.find('[name$="Area.ShortName"] option:selected').html();
+                      $block.find('[name$="Area.ShortName"]').prepend(new Option(applicants[id].addressDetails.area.shortName,applicants[id].addressDetails.area.shortName));
+                      $block.find('[name$="Area.ShortName"] option:selected').remove();
+                      $block.find('[name$="Area.ShortName"]').append(new Option(areaSelected,areaSelected));
+                    }
+                    $block.find('[name$="Area.Name"]').val(applicants[id].addressDetails.area.value);
+                    }
+                    
+                    if(!applicants[id].addressDetails.city.value==''){
+                     if(applicants[id].addressDetails.city.shortName==$block.find('[name$="City.ShortName"] option:selected').html())
+                      {
+                         $block.find('[name$="City.ShortName"]').prepend(new Option(applicants[id].addressDetails.city.shortName,applicants[id].addressDetails.city.shortName));
+                         $block.find('[name$="City.ShortName"] option:selected').remove();
+                       }else{
+                    let citySelected =  $block.find('[name$="City.ShortName"] option:selected').html();
+                    $block.find('[name$="City.ShortName"]').prepend(new Option(applicants[id].addressDetails.city.shortName,applicants[id].addressDetails.city.shortName));
+                    $block.find('[name$="City.ShortName"] option:selected').remove();  
+                    $block.find('[name$="City.ShortName"]').append(new Option(citySelected,citySelected));
+                    }
+                    $block.find('[name$="City.Name"]').val(applicants[id].addressDetails.city.value);
+                     }
+                    
+                    
+                     if(!applicants[id].addressDetails.settlement.value==''){
+                    if(applicants[id].addressDetails.settlement.shortName==$block.find('[name$="Settlement.ShortName"] option:selected').html())
+                        {
+                          $block.find('[name$="Settlement.ShortName"]').prepend(new Option(applicants[id].addressDetails.settlement.shortName,applicants[id].addressDetails.settlement.shortName));
+                          $block.find('[name$="Settlement.ShortName"] option:selected').remove();
+                         }else{
+                    let settlementSelected =  $block.find('[name$="Settlement.ShortName"] option:selected').html();
+                    $block.find('[name$="Settlement.ShortName"]').prepend(new Option(applicants[id].addressDetails.settlement.shortName,applicants[id].addressDetails.settlement.shortName));
+                    $block.find('[name$="Settlement.ShortName"] option:selected').remove();  
+                    $block.find('[name$="Settlement.ShortName"]').append(new Option(settlementSelected,settlementSelected));
+                    }
+                    $block.find('[name$="Settlement.Name"]').val(applicants[id].addressDetails.settlement.value);
+                    }
+                     
+                    if(!applicants[id].addressDetails.street.value==''){
+                    if(applicants[id].addressDetails.street.shortName==$block.find('[name$="Street.ShortName"] option:selected').html())
+                       {
+                         $block.find('[name$="Street.ShortName"]').prepend(new Option(applicants[id].addressDetails.street.shortName,applicants[id].addressDetails.street.shortName));
+                         $block.find('[name$="Street.ShortName"] option:selected').remove();
+                      }else{
+                    let streetSelected =  $block.find('[name$="Street.ShortName"] option:selected').html();
+                    $block.find('[name$="Street.ShortName"]').prepend(new Option(applicants[id].addressDetails.street.shortName, applicants[id].addressDetails.street.shortName));
+                    $block.find('[name$="Street.ShortName"] option:selected').remove();  
+                    $block.find('[name$="Street.ShortName"]').append(new Option(streetSelected,streetSelected));
+                    }
+                    $block.find('[name$="Street.Name"]').val(applicants[id].addressDetails.street.value);
+                    }
+                    
+                    $block.find('[name$="House.Name"]').val(applicants[id].addressDetails.house.houseNum);
+                    
+                    let birthAdress = applicants[id].birthPlace.split(', ');
+                    $block.find('[name$="BirthPlace.Region"]').val(birthAdress[0]);
+                    $block.find('[name$="BirthPlace.Country"]').val('Российская Федерация');
+                    $block.find('[name$="BirthPlace.City"]').val(birthAdress[1]);
+                    $block.find('[name$="BirthPlace.Area"]').val(birthAdress[2]);
+                    
+                 }
+            });
+    });
+</script>

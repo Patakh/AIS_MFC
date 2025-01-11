@@ -1,0 +1,291 @@
+﻿@model _7_UFNS_R16001Model
+@{
+    IEnumerable<SelectListItem> response = new List<SelectListItem>
+    {
+        new ("выдать заявителю", "1"),
+        new ("выдать заявителю или лицу, действующему на основании доверенности", "2"),
+        new ("направить по почте", "2"),
+    };
+
+    IEnumerable<SelectListItem> applicantType = new List<SelectListItem>
+    {
+        new ("руководитель ликвидационной комиссии", "1"),
+        new ("ликвидатор", "2"),
+    };
+
+    IEnumerable<SelectListItem> personAuthenticatedSignature = new List<SelectListItem>
+    {
+        new ("нотариус", "1"),
+        new ("лицо, замещающее временно отсутствующего нотариуса", "2"),
+        new ("должностное лицо, уполномоченное на совершение нотариального действия", "3"),
+    };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h6 class="my-2">Сведения о юридическом лице, содержатиеся в Едином государственном реестре юридических лиц</h6>
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <label asp-for="LegalOGRN" class="form-label">ОГРН</label>
+                    <input asp-for="LegalOGRN" class="form-control" type="text">
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="LegalINN" class="form-label">ИНН</label>
+                    <input asp-for="LegalINN" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="LegalFullName" class="form-label">
+                        Полное наименование на русском языке
+                    </label>
+                    <input asp-for="LegalFullName" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="LegalRealizeDate">Дата публикации сообщения о принятом решении о ликвидации в органе печати</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="LegalRealizeDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <br />
+            <h5 class="my-2">Сведения о заявителе</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ApplicantType">Заявителем является</label>
+                    <select asp-items="@applicantType" class="form-select select2-nosearch" asp-for="ApplicantType"></select>
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">
+                Адрес места жительства в Российской Федерации (при отсутствии указывается место пребывания)
+            </h6>
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <label asp-for="AddressResidence.PostalIndex" class="form-label">Почтовый индекс</label>
+                    <input asp-for="AddressResidence.PostalIndex" class="form-control" type="text">
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="AddressResidence.SubjectRF" class="form-label">Субъект Российской Федерации</label>
+                    <select class="select2-search" asp-for="AddressResidence.SubjectRF" data-dictionary='{"dictionary":"FnsRegionCodes", "default_value":"@(string.IsNullOrEmpty(Model.AddressResidence.SubjectRF) ?  "" : Model.AddressResidence.SubjectRF)"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <label asp-for="AddressResidence.District.Type" class="form-label">Район (улус и т.п.)</label>
+                    <input asp-for="AddressResidence.District.Type" class="form-control" type="text">
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="AddressResidence.District.Name" class="form-label">Наименование района (улуса и т.п.)</label>
+                    <input asp-for="AddressResidence.District.Name" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <label asp-for="AddressResidence.Town.Type" class="form-label">Город (волость и т.п.)</label>
+                    <input asp-for="AddressResidence.Town.Type" class="form-control" type="text">
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="AddressResidence.Town.Name" class="form-label">Наименование города (волости и т.п.)</label>
+                    <input asp-for="AddressResidence.Town.Name" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <label asp-for="AddressResidence.Locality.Type" class="form-label">Населенный пункт (село и т.п.)</label>
+                    <input asp-for="AddressResidence.Locality.Type" class="form-control" type="text">
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="AddressResidence.Locality.Name" class="form-label">Наименование населенного пункта (села и т.п.)</label>
+                    <input asp-for="AddressResidence.Locality.Name" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <label asp-for="AddressResidence.Street.Type" class="form-label">Улица (проспект и т.п.)</label>
+                    <input asp-for="AddressResidence.Street.Type" class="form-control" type="text">
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="AddressResidence.Street.Name" class="form-label">Наименование улицы (проспекта и т.п.)</label>
+                    <input asp-for="AddressResidence.Street.Name" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <label asp-for="AddressResidence.House.Type" class="form-label">Дом (владение и т.п.)</label>
+                    <input asp-for="AddressResidence.House.Type" class="form-control" type="text">
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="AddressResidence.House.Name" class="form-label">Номер дома (владения и т.п.)</label>
+                    <input asp-for="AddressResidence.House.Name" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <label asp-for="AddressResidence.Body.Type" class="form-label">Корпус (строение и т.п.)</label>
+                    <input asp-for="AddressResidence.Body.Type" class="form-control" type="text">
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="AddressResidence.Body.Name" class="form-label">Номер корпуса (строения и т.п.)</label>
+                    <input asp-for="AddressResidence.Body.Name" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <label asp-for="AddressResidence.Flat.Type" class="form-label">Квартира (комната и т.п.)</label>
+                    <input asp-for="AddressResidence.Flat.Type" class="form-control" type="text">
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="AddressResidence.Flat.Name" class="form-label">Номер квартиры (комнаты и т.п.)</label>
+                    <input asp-for="AddressResidence.Flat.Name" class="form-control" type="text">
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">
+                Адрес места жительства в Российской Федерации (при отсутствии указывается место пребывания)
+            </h6>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="ForiginContryResidence">Страна гражданства иностранного гражданина</label>
+                    <select class="select2-search" asp-for="ForiginContryResidence" data-dictionary='{"dictionary":"OksmCodes", "default_value":"@(string.IsNullOrEmpty(Model.ForiginContryResidence) ?  "643" : Model.ForiginContryResidence)"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label asp-for="ForiginAddressResidence" class="form-label"> Адрес места жительства</label>
+                    <input asp-for="ForiginAddressResidence" class="form-control" type="text">
+                </div>
+            </div>
+            <br />
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Response">Результат</label>
+                    <select asp-items="@response" class="form-select select2-nosearch" asp-for="Response"></select>
+                </div>
+            </div>
+            <br />
+            <h6 class="my-2">
+                Сведения о лице, засвидетельствовавшем подлинность подписи заявителя в нотариальном порядке
+            </h6>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="PersonAuthenticatedSignatureTypeId"> Сведения о лице, засвидетельствовавшим подлинность подписи заявителя в нотариальном порядке</label>
+                    <select asp-items="@personAuthenticatedSignature" class="form-select select2-nosearch" asp-for="PersonAuthenticatedSignatureTypeId"></select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="PersonAuthenticatedSignatureINN" class="form-label">
+                        ИНН лица, засвидетельствовавшего подлинность подписи заявителя
+                    </label>
+                    <input asp-for="PersonAuthenticatedSignatureINN" class="form-control" type="text">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () {
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", { clearIncomplete: true, showMaskOnHover: false });
+
+        additionalForm.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        (function getDictionaries() {
+            let dicts = new Set();
+            $('[data-dictionary]').each(function () {
+                let $this = $(this);
+                let options = $this.data('dictionary');
+                if (!dicts.has(options.dictionary)) {
+                    dicts.add(options.dictionary);
+                    $.post(`/SmevBase/SmevGetDictionary`,
+                        {
+                            type: options.dictionary
+                        },
+                        function (dictionary) {
+                            if (dictionary.error) return;
+                            fillSelect(options.dictionary, dictionary);
+                        });
+                }
+            });
+        }());
+
+        function fillSelect(dictName, dictionary) {
+            $.each($(`[data-dictionary*='"${dictName}"']`),
+                function () {
+                    let $this = $(this);
+                    let items = dictionary;
+                    $this.empty();
+                    if (!$this.hasClass('required')) {
+                        $this.append(new Option('Не выбрано', ''));
+                    }
+                    if ($this.is('[data-value-value]')) {
+                        items.dictionary.forEach(function (item) {
+                            $this.append(new Option(item.value, item.value));
+                        });
+                    } else {
+                        items.dictionary.forEach(function (item) {
+                            $this.append(new Option(item.value, item.key));
+                        });
+                    }
+
+                    if ($this.data('dictionary').default_value) {
+                        let defVal = $this.data('dictionary').default_value;
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    } else {
+                        $this.val('').trigger('update');
+                    }
+                });
+        }
+    })
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

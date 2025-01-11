@@ -1,0 +1,630 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.Regional.AllowanceBirthUpbringingChildrenDeliveryMethodModel
+
+<style>
+    span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-request-tabContent .tab-pane {
+        height: 550px;
+    }
+
+    div.lg-container {
+        position: relative;
+        z-index: 9999;
+    }
+
+    .accordion-button {
+        background-color: #e5edfc !important;
+    }
+
+    #listService {
+        font-size: 16px;
+    }
+
+        #listService .select2-selection.select2-selection--single {
+            height: auto !important;
+        }
+
+        #listService .select2-selection__rendered {
+            white-space: normal !important;
+        }
+
+    ul.address-list {
+        display: none;
+        width: 100%;
+        z-index: 1000;
+        position: absolute;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        background-clip: padding-box;
+    }
+
+        ul.address-list li {
+            padding: 6px;
+        }
+
+            ul.address-list li:hover {
+                color: white;
+                background-color: #5a8dee;
+                cursor: pointer
+            }
+</style>
+<div id="additional-data-content">
+    <div class="row g-3 justify-content-center">
+        <div class="col-10">
+            <h5 class="my-2">Способ осуществления выплаты</h5>
+            <div class="row justify-content-center">
+                <div class="col-8 mx-auto">
+                    <div class="row justify-content-center mt-3">
+                        <div class="col-12">
+                            <label class="form-label" asp-for="Payment.Type">Ежемесячную выплату прошу выплачивать</label>
+                            <select class="select2-nosearch" asp-for="Payment.Type">
+                                <option value="krid">Через кредитную организацию</option>
+                                <option value="post">Через почтовое отправление</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mt-3" id="krid">
+                        <div class="col-12">
+                            <label class="form-label" asp-for="Payment.BankName">Наименование банка</label>
+                            <input type="text" class="form-control" asp-for="Payment.BankName">
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label" asp-for="Payment.BankBik">БИК</label>
+                            <input type="text" class="form-control" asp-for="Payment.BankBik">
+                        </div>
+                        <div class="col-8">
+                            <label class="form-label" asp-for="Payment.BankScore">Номер расчетного счета заявителя</label>
+                            <input type="text" class="form-control" asp-for="Payment.BankScore">
+                        </div>
+                    </div>
+                    <div class="row justify-content-center" id="post" data-disabled>
+                        <div data-block>
+                            <div class="col-12 mt-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" asp-for="Payment.BankAddressMatches">
+                                    <label class="form-label form-check-label" asp-for="Payment.BankAddressMatches">
+                                        Адрес получателя совпадает с адресом оказания услуги
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12" data-disabled-address>
+                                <label class="form-label" asp-for="Payment.Address.FullAddress">Адрес получателя</label>
+                                <input type="text" class="form-control" placeholder="🔍 Поиск по ГАР" data-address-search asp-for="Payment.Address.FullAddress">
+                                <div class="input-group">
+                                    <ul class="list-group address-list">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                       @*  <div class="col-12" id="postAddress">
+                            <div class="row mb-3 justify-content-center align-items-end" data-address>
+                                <div class="col-12">
+                                    <label class="form-label" asp-for="Payment.Address.FullAddress">Адрес получателя</label>
+                                    <input type="text" class="form-control" placeholder="🔍 Поиск по ГАР" data-address-search asp-for="Payment.Address.FullAddress">
+                                    <div class="input-group">
+                                        <ul class="list-group address-list">
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> *@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+    var options = { clearIncomplete: true, showMaskOnHover: false };
+    var btnNext = $('.btn-next');
+
+    var applicant = {
+        f: $("#Applicant_fio_LastName"),
+        i: $("#Applicant_fio_FirstName"),
+        o: $("#Applicant_fio_SecondName"),
+        birthDate: $("#Applicant_BirthDate"),
+        phone: $("#Applicant_Phone"),
+        SNILS: $("#Applicant_Snils"),
+        docSeries: $("#Applicant_Series"),
+        docNumber: $("#Applicant_Number"),
+        docIssueDate: $("#Applicant_IssuedDate"),
+        email: $("#Applicant_Email"),
+        docIssuer: $("#Applicant_IssuedBy"),
+        residenceAddress: $("#Applicant_Address_FullAddress"),
+        birthAddress: $("#Applicant_BirthPlace")
+    };
+    $(function () {
+        // btnNext.on('click', function appContent() {
+        //     applicant.f.val($("#customer_LastName").val());
+        //     applicant.i.val($("#customer_FirstName").val());
+        //     applicant.o.val($("#customer_SecondName").val());
+        //     applicant.birthDate.val($("#customer_DocumentBirthDate").val());
+        //     applicant.phone.val($("#customer_CustomerPhone1").val());
+        //     applicant.SNILS.val($("#customer_CustomerSnils").val());
+        //     applicant.docSeries.val($("#customer_DocumentSerial").val());
+        //     applicant.docNumber.val($("#customer_DocumentNumber").val());
+        //     applicant.email.val($("#customer_CustomerEmail").val());
+        //     applicant.docIssueDate.val($("#customer_DocumentIssueDate").val());
+        //     applicant.docIssuer.val($("#customer_DocumentIssueBody").val());
+        //     applicant.residenceAddress.val($("#customer_CustomerAddressResidence").val());
+        //     applicant.birthAddress.val($("#customer_DocumentBirthPlace").val());
+
+        //     let option = $("#customer_SDocumentsIdentityId option:selected").text();
+        //     option = option == "Паспорт гражданина РФ" ? "Паспорт гражданина Российской Федерации" : option;
+        //     let optionSelected = $("#Applicant_DocType option:selected").text();
+
+        //     if (option != optionSelected) {
+        //         $(`#Applicant_DocType option[value="${option}"]`).remove();
+        //         $(`#Applicant_DocType option:selected`).remove();
+        //         $("#Applicant_DocType").removeAttr('select2-id');
+        //         let allOtion = $("#Applicant_DocType").html();
+        //         $("#Applicant_DocType").empty();
+        //         $("#Applicant_DocType").append(new Option(option, option));
+        //         $("#Applicant_DocType").append(new Option(optionSelected, optionSelected));
+        //         $("#Applicant_DocType").append(allOtion);
+        //     }
+
+        //     const options = { clearIncomplete: true, showMaskOnHover: false };
+        // });
+        // originalBlock.find('[data-original]').each(function (_, item) {
+        //     renameBlock($(item), 100, true);
+        //     visibilityBlock($(item), true, true);
+        // });
+
+        $(additionalForm).find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        // additionalForm.find('#add_disabled_child').on('click', () => addForm('list-disabled-child', 'disabledChild'));
+        // additionalForm.find('#add_spouse_disabled_child').on('click', () => addForm('list-spouse-disabled-child', 'spouseDisabledChild'));
+        // additionalForm.find('#add_child').on('click', () => addForm('list-child', 'child'));
+        //additionalForm.find('#add_child').trigger('click');
+
+        select2Init(additionalForm);
+        // additionalForm.find('[name$="Inn"]').inputmask("9{10,12}", options);
+        // additionalForm.find('[name$="Snils"]').inputmask("9{3}-9{3}-9{3} 9{2}", options);
+        // additionalForm.find('[name$="Email"]').inputmask("email", options);
+        additionalForm.find('[name$="Bik"]').inputmask("9{9}", options);
+        additionalForm.find('[name$="BankScore"]').inputmask("9{20}", { clearIncomplete: false, showMaskOnHover: false });
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        (function getDictionaries() {
+            let dicts = new Set();
+            $('[data-dictionary]').each(function () {
+                let $this = $(this);
+                let options = $this.data('dictionary');
+                if (!dicts.has(options.dictionary)) {
+                    dicts.add(options.dictionary);
+                    $.post(`/SmevBase/SmevGetDictionary`,
+                        {
+                            type: options.dictionary
+                        },
+                        function (dictionary) {
+                            if (dictionary.error) return;
+                            fillSelect(options.dictionary, dictionary);
+                        });
+                }
+            });
+        }());
+
+        function fillSelect(dictName, dictionary) {
+            $.each($(`[data-dictionary*='"${dictName}"']`),
+                function () {
+                    let $this = $(this);
+                    let items = dictionary;
+                    $this.empty();
+                    if (!$this.hasClass('required')) {
+                        $this.append(new Option('Не выбрано', ''));
+                    }
+                    if ($this.is('[data-value-value]')) {
+                        items.dictionary.forEach(function (item) {
+                            $this.append(new Option(item.value, item.value));
+                        });
+                    } else {
+                        items.dictionary.forEach(function (item) {
+                            $this.append(new Option(item.value, item.key));
+                        });
+                    }
+
+                    if ($this.data('dictionary').default_value) {
+                        let defVal = $this.data('dictionary').default_value;
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    } else {
+                        $this.val('').trigger('update');
+                    }
+                });
+        }
+
+        var addresses = new Map();
+        $.each($('[data-address-search]'), function () {
+            var $input = $(this);
+            let $adrList = $input.closest('[data-address]').find('.address-list');
+            var url = '/SmevBase/GarSearchAddressExtended';
+            $input.keyup(garRequest).focusin(() => {
+                $adrList.show();
+            }).focusout(() => {
+                $adrList.delay(250).hide(0);
+            });
+        });
+
+        function garRequest(event) {
+            let $adrInput = $(event.target);
+            let $adrBlock = $adrInput.closest('[data-address]');
+            let $adrList = $adrBlock.find('.address-list');
+            let query = $adrInput.val();
+
+            addresses.clear();
+            if (query.length > 2) {
+                $.ajax({
+                    url: '/SmevBase/GarSearchAddressExtended',
+                    type: 'POST',
+                    data: { SearchText: query },
+                    success: function (data) {
+                        if (data.result.length > 0) {
+                            $adrList.empty();
+                            data.result.forEach((item, index) => {
+                                $('.address-list').append(`<li data-index='${index}'>${createAddressText(item)}</li>`);
+                                addresses.set(`${index}`, item);
+                            });
+                            $adrList.show();
+                        }
+                    }
+                });
+            } else {
+                $adrInput.parent('.location-control').removeClass('open');
+            }
+        }
+        if (additionalForm.find('[name="Applicant.AlimonyStatus"]').is(':checked')) {
+            visibilityBlock(additionalForm.find('[name$="Applicant.AlimonySum"]'), false, false);
+        }
+        if (additionalForm.find('[name="Spouse.AlimonyStatus"]').is(':checked')) {
+            visibilityBlock(additionalForm.find('[name$="Spouse.AlimonySum"]'), false, false);
+        }
+        let sum = 0;
+        additionalForm.find('[name$="AlimonySum"]').on('change', function () {
+            additionalForm.find('[name$="AlimonyStatus"]').each(function () {
+                sum += parseFloat($(this).val());
+            })
+            console.log(sum)
+            additionalForm.find('#ur').html(sum);
+        })
+        let summe = 0;
+        additionalForm.find('[name="AlimonySum"]').each(function () {
+            summe += parseFloat($(this).val());
+        })
+        additionalForm.find('#ur').html(summe);
+        function createAddressText(adr) {
+            let elements = [];
+
+            if (adr.region) {
+                elements.push(`${adr.region.shortName} ${adr.region.value}`);
+            }
+            if (adr.area) {
+                elements.push(`${adr.area.shortName} ${adr.area.value}`);
+            }
+            if (adr.city) {
+                elements.push(`${adr.city.shortName} ${adr.city.value}`);
+            }
+            if (adr.cityAndRuralSettlements) {
+                elements.push(`${adr.cityAndRuralSettlements.shortName} ${adr.cityAndRuralSettlements.value}`);
+            }
+            if (adr.intracityDistrict) {
+                elements.push(`${adr.intracityDistrict.shortName} ${adr.intracityDistrict.value}`);
+            }
+            if (adr.settlement) {
+                elements.push(`${adr.settlement.shortName} ${adr.settlement.value}`);
+            }
+            if (adr.street) {
+                elements.push(`${adr.street.shortName} ${adr.street.value}`);
+            }
+            if (adr.house) {
+                if (adr.house.houseNum) elements.push(`д ${adr.house.houseNum}`);
+                if (adr.house.buildNum) elements.push(`корп ${adr.house.buildNum}`);
+                if (adr.house.structNum) elements.push(`стр ${adr.house.structNum}`);
+            }
+            if (adr.room) {
+                elements.push(`кв ${adr.room.flatNumber}`);
+            }
+
+            return elements.join(', ');
+        }
+
+        $('.address-list').on('click',
+            function (event) {
+                let $selectedAdr = $(event.target);
+                let $adrBlock = $selectedAdr.closest('[data-address]');
+                let adrText = $selectedAdr.text();
+                $adrBlock.find('[id$="FullAddress"]').val(adrText);
+                clearForm($adrBlock);
+                fillAddress(addresses.get($selectedAdr.attr('data-index')), $selectedAdr);
+                $selectedAdr.closest('address-list').empty();
+            });
+
+        function fillAddress(adrData, $el) {
+            let $addressBlock = $el.closest('[data-address]');
+            let fullAddress = '';
+
+            if (adrData.city) {
+                $addressBlock.find('[id$="Town"]').val(adrData.city.value);
+            }
+
+            if (adrData.settlement) {
+                $addressBlock.find('[id$="Town"]').val(adrData.settlement.value);
+            }
+
+            if (adrData.street) {
+                $addressBlock.find('[id$="Street"]').val(adrData.street.value);
+            }
+
+            if (adrData.house) {
+                $addressBlock.find('[id$="House"]').val(adrData.house.houseNum);
+                $addressBlock.find('[id$="PostalCode"]').val(adrData.house.postalCode);
+                $addressBlock.find('[id$="Building"]').val(adrData.house.buildNum ?? adrData.house.structNum);
+            }
+
+            if (adrData.room) {
+                $addressBlock.find('[id$="Apartmen"]').val(adrData.room.flatNumber);
+            }
+        }
+
+        function clearForm($address) {
+            $address.find('[data-address-detail] input').val('');
+        }
+    });
+
+    function select2Init($block) {
+        $block.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity
+            });
+        });
+
+        $block.find("select.select2-search").each(function () {
+            $(this).select2({
+                // dropdownParent: $("#mainModal")
+            });
+        });
+    }
+    additionalForm.find("select.select2-search").each(function () {
+        $(this).select2({
+            //dropdownParent: $("#mainModal"),
+        });
+    });
+    function showAddress(el) {
+        $(el).closest('[data-address]').find('[data-address-detail]').toggleClass('d-none');
+        let $button = $(el).closest('[data-address]').find('i.fa');
+
+        if ($button.hasClass('fa-angle-right')) {
+            $button.removeClass('fa-angle-right');
+            $button.addClass('fa-angle-down');
+        } else {
+            $button.removeClass('fa-angle-down');
+            $button.addClass('fa-angle-right');
+        }
+    }
+
+    // function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+    //     let $cloneList = additionalForm.find(`#${cloneListId}`);
+    //     let $original = originalBlock.find(`#${originalId}`);
+    //     let $cloneBlock = $original.clone(true);
+    //     let indexId = $cloneList.find('[data-clone]').length;
+    //     console.log(indexId);
+    //     renameBlock($cloneBlock, indexId);
+    //     blockInit($cloneBlock);
+    //     $cloneList.append($cloneBlock);
+    // }
+
+    // function blockInit($block) {
+    //     visibilityBlock($block, false, false);
+
+    //     $block.find('input[type="text"]').each(function () {
+    //         $(this).val("");
+    //     });
+
+    //     $block.find('[name$="Snils"]').inputmask("9{3}-9{3}-9{3} 9{2}", options);
+    //     $block.find(".pickdate").datepicker({
+    //         language: "ru",
+    //         autoclose: true,
+    //     }).inputmask("99.99.9999", options);
+
+    //     $block.find('[name$="DocType"]').trigger('change');
+
+    //     $block.find('[data-block] [type="checkbox"]').each(function () {
+    //         $(this).on('change', function () {
+    //             let $block = $(this).closest('[data-block]');
+    //             let status = $(this).prop('checked');
+    //             visibilityBlock($block.find('[data-disabled]'), !status, !status);
+    //         });
+    //     });
+
+    //     select2Init($block);
+    // }
+
+    // function renameBlock($cloneBlock, indexId, initOriginal = false) {
+    //     if (!initOriginal) {
+    //         $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+    //         $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+    //         $cloneBlock.attr('data-id', indexId);
+    //         $cloneBlock.attr('data-clone', '');
+    //         $cloneBlock.removeAttr('data-original');
+    //     }
+
+    //     $cloneBlock.find('input, select, div').each(function () {
+    //         $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+    //         if ($(this).is('[name]')) {
+    //             $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+    //         }
+    //     });
+
+    //     $cloneBlock.find('label').each(function () {
+    //         $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+    //     });
+    // }
+    // additionalForm.find('#Payment_BankAddressMatches').on('change', function () {
+    //     if ($(this).is(':checked')) {
+    //         $("#Payment_Address_FullAddress").val($("#Applicant_Address_FullAddress").val());
+    //     };
+    //     if ($(this).is(':not(:checked)')) {
+    //         $("#Payment_Address_FullAddress").val($("#Payment_Address_FullAddress").attr('value'));
+    //     };
+    // });
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    // function blockRemove(el) {
+    //     let $cloneList = $(el).closest('[data-clone-list]');
+    //     el.closest('[data-clone]').remove();
+    //     $cloneList.find('[data-clone]').each(function (index, item) {
+    //         renameBlock($(item), index);
+    //     });
+    // }
+
+    additionalForm.find('#Payment_Type').on('change', function () {
+        visibilityBlock($('#krid'), true, true);
+        visibilityBlock($('#post'), true, true);
+        switch ($(this).val()) {
+            case 'krid':
+                visibilityBlock($('#krid'), false, false);
+                break;
+            case 'post':
+                visibilityBlock($('#post'), false, false);
+                break;
+        }
+    });
+
+
+    // function docTypeChange($el) {
+    //     let $docBlock = $el.closest('[data-doc]');
+    //     let docOptions = { clearIncomplete: true, showMaskOnHover: false };
+    //     let seriesMask = '';
+    //     let numberMask = '';
+    //     switch ($el.val()) {
+    //         case 'Паспорт гражданина Российской Федерации':
+    //             $docBlock.find('[name$="Series"]').inputmask("99 99", docOptions);
+    //             $docBlock.find('[name$="Number"]').inputmask("9{6}", docOptions);
+    //             break;
+    //         case 'Свидетельство о рождении':
+    //             $docBlock.find('[name$="Series"]').inputmask("", { regex: "^[XIVLMC]{1,4}-[А-ЯЁ]{2}$", clearIncomplete: true, showMaskOnHover: false });
+    //             $docBlock.find('[name$="Number"]').inputmask("9{6}", docOptions);
+    //             break;
+    //         default:
+    //             $docBlock.find('[name$="Series"]').inputmask("", docOptions);
+    //             $docBlock.find('[name$="Number"]').inputmask("", docOptions);
+    //             break;
+
+    //     }
+    // };
+
+
+    setTimeout(() => {
+        additionalForm.find('[name$="DocType"]').trigger('change');
+        additionalForm.find('#Payment_Type').trigger('change');
+        additionalForm.find('select').trigger('change');
+        additionalForm.find('[type="checkbox"]').trigger('change');
+    }, 4000);
+
+    // function AutoCompleteApplicantsValidation($el) {
+    //     let $block = $el.closest('[data-person]')
+    //     let serial = $block.find('[name$="Series"]').val();
+    //     let number = $block.find('[name$="Number"]').val();
+
+    //     switch ($block.find('[name$="DocType"]').val()) {
+    //         case 'Паспорт гражданина Российской Федерации':
+    //         case 'Свидетельство о рождении':
+    //             break;
+    //         default: return;
+    //     }
+
+    //     if (serial == '' || number == '') return;
+    //     else {
+    //         let data = findCustomerByDocumentAdditional(serial, number);
+    //         if (data == null) {
+    //             $block.find('input[type="text"]:not([name$="Series"], [name$="Number"])').val('');
+    //             return;
+    //         } else {
+    //             $block.find('[name$="LastName"]').val(data.lastName);
+    //             $block.find('[name$="FirstName"]').val(data.firstName);
+    //             $block.find('[name$="SecondName"]').val(data.secondName);
+    //             $block.find('[name$=".BirthDate"]').val(new Date(data.documentBirthDate).toLocaleDateString());
+    //             $block.find('[name$="IssuedDate"]').val(new Date(data.documentIssueDate).toLocaleDateString());
+    //             $block.find('[name$="IssuedBy"]').val(data.documentIssueBody);
+    //             $block.find('[name$="Snils"]').val(data.customerSnils);
+    //             $block.find('[name$="BirthPlace"]').val(data.documentBirthPlace);
+    //             $block.find('[name$="Phone"]').val(data.customerPhone1);
+    //             $block.find('[name$="Email"]').val(data.customerEmail);
+
+    //             $block.find('[name$="FullAddress"]').val(data.customerAddress);
+    //             if (data.addressDetails.city.value) {
+    //                 $block.find('[id$="Town"]').val(data.addressDetails.city.value);
+    //             } else {
+    //                 $block.find('[id$="Town"]').val(data.addressDetails.settlement.value);
+    //             }
+
+    //             $block.find('[id$="Street"]').val(data.addressDetails.street.value);
+    //             $block.find('[id$="House"]').val(data.addressDetails.house.houseNum);
+    //             $block.find('[id$="PostalCode"]').val(data.addressDetails.postalCode);
+    //             $block.find('[id$="Building"]').val(data.addressDetails.house.buildNum ?? data.addressDetails.house.structNum);
+    //             $block.find('[id$="Apartmen"]').val(data.addressDetails.room.value);
+
+    //             // switch (data.sDocumentsIdentityId) {
+    //             //     case 21:
+    //             //         $block.find('[name$="DocType"]').val('Паспорт гражданина Российской Федерации').trigger('change');
+    //             //         break;
+    //             //     case 3:
+    //             //         $block.find('[name$="DocType"]').val('Свидетельство о рождении').trigger('change');
+    //             //         break;
+    //             // }
+    //         }
+
+    //     }
+    // }
+
+    additionalForm.find('[data-block] [type="checkbox"]').each(function () {
+        $(this).on('change', function () {
+            let $block = $(this).closest('[data-block]');
+            let status = $(this).prop('checked');
+            visibilityBlock($block.find('[data-disabled]'), status, status);
+            visibilityBlock($block.find('[data-disabled-address]'), status, status);
+            visibilityBlock($block.find('[data-block]'), status, status);
+        });
+    });
+</script>

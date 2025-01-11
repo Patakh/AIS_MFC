@@ -1,0 +1,51 @@
+@{
+    string id = ViewBag.Id;
+    string name = ViewBag.Name ?? id.Replace('_', '.');
+    ViewBag.Id = null;
+    ViewBag.Name = null;
+}
+
+<div class="col-12">
+    <label class="form-label" for="@(id)_Country">Страна</label>
+    <select class="select2-search required" id="@(id).Country" name="@(name).Country"
+            data-dictionary='{"dictionary":"MvdAisOpvCountries"}' data-country>
+    </select>
+</div>
+<div class="col-6" data-auto>
+    <label class="form-label" for="@(id)_RegionName">Субъект</label>
+    <select class="select2-search required" id="@(id)_RegionName" name="@(name).RegionName"
+            data-dictionary='{"dictionary":"MvdAisOpvRegions"}'>
+    </select>
+</div>
+<div class="col-6 d-none" data-hand>
+    <label class="form-label" for="@(id)_RegionName">Субъект</label>
+    <input type="text" disabled class="form-control" placeholder="Субъект" id="@(id)_RegionName" name="@(name).RegionName">
+</div>
+<div class="col-6">
+    <label class="form-label" for="@(id)_District">Район</label>
+    <input type="text" class="form-control" placeholder="Район" id="@(id)_District" name="@(name).District">
+</div>
+<div class="col-6">
+    <label class="form-label" for="@(id)_Locality">Населенный пункт</label>
+    <input type="text" class="form-control" placeholder="Населенный пункт" id="@(id)_Locality" name="@(name).Locality">
+</div>
+<div class="col-6">
+    <label class="form-label" for="@(id)_Street">Улица</label>
+    <input type="text" class="form-control" placeholder="Улица" id="@(id)_Street" name="@(name).Street">
+</div>
+<div class="col-3">
+    <label class="form-label" for="@(id)_House">Дом</label>
+    <input type="text" class="form-control" placeholder="Дом" id="@(id)_House" name="@(name).House">
+</div>
+<div class="col-3">
+    <label class="form-label" for="@(id)_Housing">Корпус</label>
+    <input type="text" class="form-control" placeholder="Корпус" id="@(id)_Housing" name="@(name).Housing">
+</div>
+<div class="col-3">
+    <label class="form-label" for="@(id)_Building">Строение</label>
+    <input type="text" class="form-control" placeholder="Строение" id="@(id)_Building" name="@(name).Building">
+</div>
+<div class="col-3">
+    <label class="form-label" for="@(id)_Flat">Квартира</label>
+    <input type="text" class="form-control" placeholder="Квартира" id="@(id)_Flat" name="@(name).Flat">
+</div>

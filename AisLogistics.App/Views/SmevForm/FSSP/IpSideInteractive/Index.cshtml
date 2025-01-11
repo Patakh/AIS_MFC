@@ -1,0 +1,385 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new GetIpSideInteractiveRequestData
+            {
+                DebtorFlData = new FsspDebtorFlData
+                {
+                    Fio = new FioType()
+                },
+                DebtorUlData = new FsspDebtorUlData
+                {
+                    DirectorFio = new FioType()
+                }
+            };
+}
+
+<style>
+    #smev-data-form-content .applicants + span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+</style>
+
+<div class="container m-0 p-0" id="smev_request">
+    <div class="row justify-content-center g-3">
+        <div class="col-10">
+            <div class="divider text-start">
+                <div class="divider-text fs-5 b-s-16">Детали запроса</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-3">
+        <div class="col-4">
+            <label class="form-label" asp-for="@request.IpNumber">
+                Номер исполнительного производства
+            </label>
+            <input type="text" class="form-control required" placeholder="Номер исполнительного производства" asp-for="@request.IpNumber" />
+        </div>
+        <div class="col-4">
+            <label class="form-label" asp-for="@request.ContragentType">Тип заявителя</label>
+            <select class="form-select select2-nosearch required" asp-for="@request.ContragentType">
+                <option value="Fl">Физическое лицо</option>
+                <option value="Ul">Юридическое лицо</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-3" data-person id="flBlock">
+        <div class="col-12">
+            <div class="row justify-content-center mb-3">
+                <div class="col-8">
+                    <label class="form-label">Заявители</label>
+                    <select class="form-select select2-nosearch applicants">
+                        <option value="">Выберите заявителя</option>
+                        @for (int i = 0; i < applicants.Count; i++)
+                        {
+                            <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="row mb-1">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.DebtorFlData.Fio.LastName">Фамилия</label>
+                    <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.DebtorFlData.Fio.LastName" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.DebtorFlData.Fio.FirstName">Имя</label>
+                    <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.DebtorFlData.Fio.FirstName">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.DebtorFlData.Fio.SecondName">Отчество</label>
+                    <input type="text" class="form-control required" placeholder="Отчество" asp-for="@request.DebtorFlData.Fio.SecondName">
+                </div>
+                <div class="col-4 mt-3">
+                    <label class="form-label" asp-for="@request.DebtorFlData.BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="@request.DebtorFlData.BirthDate" type="text" class="form-control pickadate required" value="" placeholder="Дата">
+                    </div>
+                </div>
+                <div class="col-4 mt-3">
+                    <label class="d-block form-label">Пол</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="request.Declarant.Gender" id="Gender_Gender1" value="Male">
+                        <label class="form-check-label" for="Gender_Gender1"><i class="bi bi-gender-male fs-6"></i>Мужской</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="request.Declarant.Gender" id="Gender_Gender2" value="Female" checked="checked">
+                        <label class="form-check-label" for="Gender_Gender2"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                    </div>
+                </div>
+                <div class="col-4 mt-3">
+                    <label class="form-label" asp-for="@request.DebtorFlData.Snils">СНИЛС</label>
+                    <input type="text" class="form-control required" placeholder="СНИЛС" asp-for="@request.DebtorFlData.Snils">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-3" id="ulBlock" data-person data-disabled>
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Данные директора организации</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="row justify-content-center mb-3">
+                <div class="col-8">
+                    <label class="form-label">Заявители</label>
+                    <select class="form-select select2-nosearch applicants">
+                        <option value="">Выберите директора организации</option>
+                        @for (int i = 0; i < applicants.Count; i++)
+                        {
+                            <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="row mb-1">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.DebtorUlData.DirectorFio.LastName">Фамилия</label>
+                    <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.DebtorUlData.DirectorFio.LastName" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.DebtorUlData.DirectorFio.FirstName">Имя</label>
+                    <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.DebtorUlData.DirectorFio.FirstName">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.DebtorUlData.DirectorFio.SecondName">Отчество</label>
+                    <input type="text" class="form-control required" placeholder="Отчество" asp-for="@request.DebtorUlData.DirectorFio.SecondName">
+                </div>
+                <div class="col-4 mt-3">
+                    <label class="d-block form-label">Пол</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="request.DebtorUlData.DirectorGender" id="DirectorGender_Gender1" value="Male">
+                        <label class="form-check-label" for="DirectorGender_Gender1"><i class="bi bi-gender-male fs-6"></i>Мужской</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="request.DebtorUlData.DirectorGender" id="DirectorGender_Gender2" value="Female" checked="checked">
+                        <label class="form-check-label" for="DirectorGender_Gender2"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                    </div>
+                </div>
+                <div class="col-4 mt-3">
+                    <label class="form-label" asp-for="@request.DebtorUlData.DirectorSnils">СНИЛС</label>
+                    <input type="text" class="form-control required" placeholder="СНИЛС" asp-for="@request.DebtorUlData.DirectorSnils">
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <div class="divider text-start">
+                    <div class="divider-text fs-5 b-s-16">Данные организации</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="row mb-1">
+                <div class="col-9">
+                    <label class="form-label" asp-for="@request.DebtorUlData.LegalName">Наименование ЮЛ</label>
+                    <input type="text" class="form-control required" placeholder="Наименование ЮЛ" asp-for="@request.DebtorUlData.LegalName">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" asp-for="@request.DebtorUlData.LegalInn">ИНН</label>
+                    <input type="text" class="form-control required" placeholder="ИНН" asp-for="@request.DebtorUlData.LegalInn">
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.DebtorUlData.LegalOgrn">ОГРН</label>
+                    <input type="text" class="form-control required" placeholder="ОГРН" asp-for="@request.DebtorUlData.LegalOgrn">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.DebtorUlData.TrusteeDocNumber">Номер документа о назначении</label>
+                    <input type="text" class="form-control required" placeholder="Номер документа о назначении" asp-for="@request.DebtorUlData.TrusteeDocNumber">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="@request.DebtorUlData.TrusteeDocDate">Дата документа о назначении</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input asp-for="@request.DebtorUlData.TrusteeDocDate" type="text" class="form-control pickadate required" value="" placeholder="Дата документа о назначении">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+    function ShowErrorInputs() {
+    }
+    var applicants = @Json.Serialize(applicants);
+    var formContent = document.getElementById("smev-data-form-content"),
+        smevForm = {
+            init: () => {
+                $(formContent).find('.required').each(function () {
+                    addValidation($(this));
+                });
+
+                $(formContent).find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+
+                /* init datepicker */
+                $(formContent).find(".pickadate").datepicker({
+                    language: "ru",
+                    autoclose: true
+                });
+
+                let options = { clearIncomplete: true, showMaskOnHover: false };
+
+                /* init inputmask */
+                $(formContent).find(".pickadate").inputmask("99.99.9999", options);
+                $(formContent).find('[name$="Snils"]').inputmask("999-999-999 99", options);
+                $(formContent).find("#request_DebtorUlData_LegalInn").inputmask("9{10}", options);
+                $(formContent).find("#request_DebtorUlData_LegalOgrn").inputmask("9{13}", options);
+
+                $(formContent).find("select.select2-nosearch").each(function () {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal"),
+                        minimumResultsForSearch: Infinity
+                    });
+                });
+
+                $(formContent).find("select.select2-search").each(function () {
+                    $(this).select2({
+                        dropdownParent: $("#mainModal")
+                    });
+                });
+
+                $(formContent).find('[name$="ContragentType"]').on('change', function () {
+                    let options = { clearIncomplete: true, showMaskOnHover: false };
+                    switch ($(this).val()) {
+                        case 'Fl':
+                            visibilityBlock($('#ulBlock'), true, true);
+                            visibilityBlock($('#flBlock'), false, false);
+                            break;
+                        case 'Ul':
+                            visibilityBlock($('#flBlock'), true, true);
+                            visibilityBlock($('#ulBlock'), false, false);
+                            break;
+                    }
+                });
+            }
+        };
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').hide();
+                } else {
+                    $block.hide();
+                }
+                break;
+            case false:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').show();
+                } else {
+                    $block.show();
+                }
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        removeValidation($(this));
+                    }
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                    if ($(this).hasClass('required')) {
+                        addValidation($(this));
+                    }
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+    $('select.applicants').each(function () {
+        $(this).on('change',
+            function () {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                $block.find('[type="text"]').each(function () {
+                    $(this).val('');
+                });
+                if (id) {
+                    $block.find('[name$="LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$="FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$="SecondName"]').val(applicants[id].secondName);
+                    $block.find('[name$="BirthDate"]').val(applicants[id].birthDate ? new Date(applicants[id].birthDate).toLocaleDateString() : '');
+                    $block.find('[name$="Snils"]').val(applicants[id].snils);
+
+                    switch (applicants[id].gender) {
+                        case 1:
+                            $block.find('[id$="Gender1"]').prop('checked', true);
+                            break;
+                        case 2:
+                            $block.find('[id$="Gender2"]').prop('checked', true);
+                            break;
+                    }
+                }
+            });
+    });
+
+    (function getDictionaries() {
+        let dicts = new Set();
+        $('[data-dictionary]').each(function () {
+            let $this = $(this);
+            let options = $this.data('dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post(`/SmevBase/SmevGetDictionary`,
+                    {
+                        type: options.dictionary
+                    },
+                    function (dictionary) {
+                        fillSelect(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelect(dictName, dictionary) {
+        $.each($(`[data-dictionary*='"${dictName}"']`),
+            function () {
+                let $this = $(this);
+                let items = dictionary;
+                $this.empty();
+                if ($this.is('[data-value-value]')) {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.value));
+                    });
+                } else {
+                    items.dictionary.forEach(function (item) {
+                        $this.append(new Option(item.value, item.key));
+                    });
+                }
+
+                if (items.defaultKey != null) {
+                    $this.val(items.defaultKey).trigger('update');
+                    $this.attr('data-def', items.defaultKey);
+                } else {
+                    let defVal = $this.data('dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                }
+            });
+    }
+</script>

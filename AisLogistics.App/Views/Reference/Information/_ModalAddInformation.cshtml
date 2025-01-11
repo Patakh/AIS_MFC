@@ -1,0 +1,235 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.InformationModelDto
+
+<form asp-controller="Reference" asp-action="InformationSave" id="sendingForm" method="post" enctype="multipart/form-data" role="form">
+    <div class="form-body pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="DateStart">Дата начала</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input type="text" asp-for="DateStart" value="@DateTime.Now.ToString("dd.MM.yyyy")" class="form-control datepicker" placeholder="ДД.ММ.ГГГГ">
+                    </div>
+                </div>
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="DateStop">Дата окончания</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input type="text" asp-for="DateStop" class="form-control datepicker" placeholder="ДД.ММ.ГГГГ">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SInformationTypeId">Тип</label>
+                    <select asp-for="SInformationTypeId" asp-items="@ViewBag.InformationTypes" class="form-control">
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="InformationTopic">Тема</label>
+                    <input asp-for="InformationTopic" class="form-control" placeholder="Тема">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="InformationText">Текст</label>
+                    <textarea asp-for="InformationText" class="form-control char-textarea" rows="3" placeholder="Текст"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label">Получатели</label>
+                    <select asp-for="Offices" asp-items="@ViewBag.Offices" class="select2 form-select form-select-lg" multiple="multiple">
+                        <option selected value="@(default(Guid))">Все офисы</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+            <div class="col-12 mb-3">
+                <div id="dropFrm" enctype="multipart/form-data" data-toggle="dropzone" class="dropzone needsclick">
+                    <div class="dz-message needsclick">
+                        Перетащите файл сюда или нажмите, чтобы загрузить
+                    </div>
+                    <div class="fallback">
+                        <input name="AddedFiles" type="file" multiple />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function() {
+        $('#SInformationTypeId').select2({dropdownParent: $('#mainModal'), minimumResultsForSearch: -1});
+        
+        $('#Offices').select2(
+        { 
+             dropdownParent: $('#mainModal'),
+        }).on("select2:select", function(e) { 
+            var data = e.params.data;        
+            var selectedItem = data.id;
+            
+            if (selectedItem === '@(default(Guid))') {
+                $("#Offices").val(null).trigger("change");
+                $('#Offices option[value="'+ selectedItem +'"]').prop('selected', true);
+                $('#Offices').trigger('change.select2');
+            }
+            else{
+                $('#Offices option[value="@(default(Guid))"]').prop('selected', false);
+                $('#Offices').trigger('change.select2');
+            }
+        });
+
+        var $dateinputs = $('.datepicker');
+        $dateinputs.datepicker({
+            language: "ru",
+            autoclose: true,
+            format: 'dd.mm.yyyy'
+        });
+        $dateinputs.inputmask("datetime", { inputFormat: "dd.mm.yyyy", "clearIncomplete": true, showMaskOnHover: false, insertmode: true });
+
+        var previewTemplate = `<div class="dz-preview dz-file-preview"><div class="dz-details"><div class="dz-thumbnail"><img data-dz-thumbnail><span class="dz-nopreview">Просмотр недоступен</span><div class="dz-success-mark"></div><div class="dz-error-mark"></div><div class="dz-error-message"><span data-dz-errormessage></span></div><div class="progress"><div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-dz-uploadprogress><span class="progress-text"></span></div></div></div><div class="dz-filename" data-dz-name></div><div class="dz-size" data-dz-size></div></div></div>`;
+        var urlAction = "@Url.Action("InformationSave", "Reference")";
+
+        var dropzoneBasic = new Dropzone("#dropFrm", {
+            url: urlAction,
+            paramName: trickToPreventDropzoneAddSquareBracketsToMultipleUpload, //https://stackoverflow.com/a/65028939
+            autoProcessQueue: false,
+            autoDiscover: false,
+            previewTemplate: previewTemplate,
+            parallelUploads: 10,
+            maxFiles: 10,
+            maxFilesize: 15,
+            uploadMultiple: true,
+            addRemoveLinks: true,
+            dictRemoveFile: "Удалить",
+            dictCancelUpload: "Отменить",
+            init: function() {
+                var dropFrm = this;
+                $('#sendingForm').on("submit", function(e){
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    fv.validate()
+                    .then(function(status){
+                        if (status == 'Valid')
+                        {
+                            //dropFrm.processQueue();
+                            if (dropFrm.getQueuedFiles().length > 0) {
+                                dropFrm.processQueue();
+                            }
+                            else {
+                                // отправить форму без файлов
+                                var $form = $("#sendingForm");
+                                $.ajax({
+                                    type: $form.attr('method'),
+                                    url: urlAction,
+                                    data: $form.serialize(),
+                                    dataType: 'json',
+                                    beforeSend: () => {
+                                        $form.spinnerBtn("start");
+                                    },
+                                    complete: () => {
+                                        $table.DataTable().ajax.reload(null, false);
+                                        $form.spinnerBtn("stop");
+                                        $("#mainModal").modal('hide');
+                                    }
+                                });
+
+                                return false;
+                            }
+                        }
+                    });
+                });
+            },
+            sending: function(file, xhr, formData) {
+                
+            },
+            sendingmultiple: function(file, xhr, formData) {
+                $('#sendingForm').spinnerBtn("start");                
+
+                formData.append('Id', $('#Id').val());
+                formData.append('DateStart', $('#DateStart').val());
+                formData.append('DateStop', $('#DateStop').val());
+                formData.append('SInformationTypeId', $('#SInformationTypeId').val());
+                formData.append('InformationTopic', $('#InformationTopic').val());
+                formData.append('InformationText', $('#InformationText').val());
+
+                var offices = $("#Offices").select2('data');
+                for (var i = 0; i < offices.length; i++) {
+                    formData.append('Offices', offices[i].id);
+                }
+                //$('#Offices').select2('data')  //$('#Offices').find(":selected")
+                formData.append('ActionType', $("#ActionType").val());
+                formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
+            },
+            uploadprogress: function(file, progress, bytesSent) {
+                if (file.previewElement) {
+                    var progressElement = file.previewElement.querySelector("[data-dz-uploadprogress]");
+                    progressElement.style.width = progress + "%";
+                    progressElement.querySelector(".progress-text").textContent = progress + "%";
+                }
+            },
+            success: function(file, response) {
+                
+            },
+            complete: function(){
+                $table.DataTable().ajax.reload(null, false);
+                $('#sendingForm').spinnerBtn("stop");
+                $("#mainModal").modal('hide');
+            },
+            error: function(file, msg){
+                $('#sendingForm').spinnerBtn("stop");
+            },
+        });
+
+        function trickToPreventDropzoneAddSquareBracketsToMultipleUpload() {
+            return "AddedFiles";
+        }
+
+        const fv = FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    InformationTopic: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    InformationText: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    Offices: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            });
+    });
+</script>

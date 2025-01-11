@@ -1,0 +1,208 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.FssReceptionDocumentsModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">Руководитель (заместитель руководителя) органа контроля за уплатой страховых взносов</h5>
+            <div class="row mb-3">
+                <div class="col-5">
+                    <label class="form-label" asp-for="HeadPosition">Должность</label>
+                    <input type="text" asp-for="HeadPosition" class="form-control">
+                </div>
+                <div class="col-7">
+                    <label class="form-label" asp-for="HeadFio">ФИО</label>
+                    <input type="text" asp-for="HeadFio" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">Страхователь</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="InsurerName">Полное наименование организации (обособленного подразделения), фамилия, имя, отчество (при наличии) ИП, ФЛ</label>
+                    <input type="text" asp-for="InsurerName" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="SubordinationCode">Код подчиненности</label>
+                    <input type="text" asp-for="SubordinationCode" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Inn">ИНН</label>
+                    <input type="text" asp-for="Inn" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Kpp">КПП</label>
+                    <input type="text" asp-for="Kpp" class="form-control">
+                </div>
+                <div class="col-12">
+                    <label class="form-label" asp-for="Address">Адрес места нахождения организации (обособленного подразделения)/адрес постоянного места жительства индивидуального предпринимателя, физического лица</label>
+                    <input type="text" asp-for="Address" class="form-control">
+                </div>
+            </div>
+            <h6 class="my-2">Руководитель организации</h6>
+            <div class="row mb-3">
+                <div class="col-5">
+                    <label class="form-label" asp-for="InsurerHeadPosition">Должность</label>
+                    <input type="text" asp-for="InsurerHeadPosition" class="form-control">
+                </div>
+                <div class="col-7">
+                    <label class="form-label" asp-for="InsurerHeadFio">ФИО</label>
+                    <input type="text" asp-for="InsurerHeadFio" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="InsurerHeadPhone">Контактный телефон</label>
+                    <input type="text" asp-for="InsurerHeadPhone" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">Представитель</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative.Fio">ФИО</label>
+                    <input type="text" asp-for="Representative.Fio" class="form-control">
+                </div>
+            </div>            
+            <h6 class="my-2">Документ, удостоверяющий личность</h6>
+            <div class="row mb-1">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative.DocName">Наименование документа</label>
+                    <select class="select2-nosearch" asp-for="Representative.DocName" data-value-value
+                            data-dictionary='{"dictionary":"FnsDocTypes", "default_value":"@Model.Representative.DocName"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Representative.DocSeries">Серия</label>
+                    <input type="text" asp-for="Representative.DocSeries" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Representative.DocNumber">Номер</label>
+                    <input type="text" asp-for="Representative.DocNumber" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Representative.DocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Representative.DocIssueDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative.DocIssuer">Кем выдан</label>
+                    <input type="text" asp-for="Representative.DocIssuer" class="form-control">
+                </div>
+            </div>
+            <hr />
+            <h6 class="my-2">Документ, подтверждающий полномочия представителя</h6>
+            <div class="row mb-1">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative.AuthorityDocName">Наименование документа</label>
+                    <input type="text" asp-for="Representative.AuthorityDocName" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-4">
+                    <label class="form-label" asp-for="Representative.AuthorityDocSeries">Серия</label>
+                    <input type="text" asp-for="Representative.AuthorityDocSeries" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Representative.AuthorityDocNumber">Номер</label>
+                    <input type="text" asp-for="Representative.AuthorityDocNumber" class="form-control">
+                </div>
+                <div class="col-4">
+                    <label class="form-label" asp-for="Representative.AuthorityDocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="Representative.AuthorityDocIssueDate" type="text"
+                               class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function() {
+        select2Init(additionalForm);
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        additionalForm.find('[name$="Inn"]').inputmask("9{10,12}", options);
+        additionalForm.find('[name$="Email"]').inputmask("email", options);
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+        (function getDictionaries() {
+            let dicts = new Set();
+            $('[data-dictionary]').each(function() {
+                let $this = $(this);
+                let options = $this.data('dictionary');
+                if (!dicts.has(options.dictionary)) {
+                    dicts.add(options.dictionary);
+                    $.post(`/SmevBase/SmevGetDictionary`,
+                        {
+                            type: options.dictionary
+                        },
+                        function(dictionary) {
+                            if (dictionary.error) return;
+                            fillSelect(options.dictionary, dictionary);
+                        });
+                }
+            });
+        }());
+
+        function fillSelect(dictName, dictionary) {
+            $.each($(`[data-dictionary*='"${dictName}"']`),
+                function() {
+                    let $this = $(this);
+                    let items = dictionary;
+                    $this.empty();
+                    if (!$this.hasClass('required')) {
+                        $this.append(new Option('Не выбрано', ''));
+                    }
+                    if ($this.is('[data-value-value]')) {
+                        items.dictionary.forEach(function(item) {
+                            $this.append(new Option(item.value, item.value));
+                        });
+                    } else {
+                        items.dictionary.forEach(function(item) {
+                            $this.append(new Option(item.value, item.key));
+                        });
+                    }
+
+                    if ($this.data('dictionary').default_value) {
+                        let defVal = $this.data('dictionary').default_value;
+                        if (defVal) {
+                            $this.val(defVal).trigger('update');
+                            $this.attr('data-def', defVal);
+                        }
+                    } else {
+                        $this.val('').trigger('update');
+                    }
+                });
+        }
+
+        function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function() {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function() {
+                $(this).select2({
+                });
+            });
+        }
+    });
+</script>

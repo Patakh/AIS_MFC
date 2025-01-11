@@ -1,0 +1,521 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.KBR.Federal._46_ProvisionTechnicalFacilitiesDisabledModel
+@{
+    if (Model.TechReabilitationServiceList.Length == 0)
+         Model.TechReabilitationServiceList = new[] { new AisLogistics.App.Models.AdditionalForms.KBR.Federal._46_ProvisionTechnicalFacilitiesDisabledModel.TechReabilitationService() };
+
+    if (Model.AppliedDocumentList.Length == 0)
+        Model.AppliedDocumentList = new[] { new AisLogistics.App.Models.AdditionalForms.KBR.Federal._46_ProvisionTechnicalFacilitiesDisabledModel.AppliedDocument() };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">Перечень технических средств реабилитации, услуг с указанием вида обеспечения</h5>
+            <div id="techReabilitationServiceList" data-clone-list>
+                @for (int i = 0; i < Model.TechReabilitationServiceList.Count(); i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Документ @(i + 1)</h6>
+                        <div class="row mb-1">
+                            <div class="col-11">
+                                <label class="form-label" asp-for="TechReabilitationServiceList[i].Name">Наименование</label>
+                                <input type="text" class="form-control" asp-for="TechReabilitationServiceList[i].Name">
+                            </div>
+                            <div class="col-1 mt-4">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-4">
+                                <div class="form-check">
+                                    <input asp-for="TechReabilitationServiceList[i].ProvisionTypeId" id="@($"TechReabilitationServiceList{i}_1")" class="form-check-input" type="radio" value="1">
+                                    <label for="@($"TechReabilitationServiceList{i}1")" class="form-check-label">предоставление изделия, оказание услуги</label>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-check">
+                                    <input asp-for="TechReabilitationServiceList[i].ProvisionTypeId" id="@($"TechReabilitationServiceList{i}_2")" class="form-check-input" type="radio" value="2">
+                                    <label for="@($"TechReabilitationServiceList{i}2")" class="form-check-label">выплата компенсации расходов</label>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-check">
+                                    <input asp-for="TechReabilitationServiceList[i].ProvisionTypeId" id="@($"TechReabilitationServiceList{i}_3")" class="form-check-input" type="radio" value="3">
+                                    <label for="@($"TechReabilitationServiceList{i}3")" class="form-check-label">формирование электронного сертификата</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2 mt-5">
+                    <button type="button" class="btn btn-primary" id="addTechReabilitationService"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+
+            <h5 class="my-2">Способ перечисления компенсации за самостоятельно приобретенные изделия, оказанные услуги</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="TransferCompensationMethodId" id="TransferCompensationMethodId1" class="form-check-input" type="radio" value="1">
+                        <label for="TransferCompensationMethodId1" class="form-check-label">перечисление на счет, открытый в кредитной организации</label>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input asp-for="TransferCompensationMethodId" id="TransferCompensationMethodId2" class="form-check-input" type="radio" value="2">
+                        <label for="TransferCompensationMethodId2" class="form-check-label">почтовый перевод</label>
+                    </div>
+                    
+                    <div class="row" checkBlock>
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input asp-for="TransferCompensationMethodId" id="TransferCompensationMethodId3" class="form-check-input" type="radio" value="3">
+                                <label for="TransferCompensationMethodId3" class="form-check-label">перечисление на платежную карту</label>
+                            </div>
+                        </div>
+                        <div class="row mb-3 justify-content-end" checkBlockBody>
+                            <div class="col-11 mb-2">
+                                <label class="form-label" asp-for="TransferCompensationCardNumber">№ карты</label>
+                                <input type="text" class="form-control" asp-for="TransferCompensationCardNumber">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+
+            <h5 class="my-2">Обеспечение с использованием электронного сертификата</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ProvisionEelectronicCertificateCardNumber">№ платежной карты</label>
+                    <input type="text" class="form-control" asp-for="ProvisionEelectronicCertificateCardNumber">
+
+                    <div class="form-check">
+                        <input asp-for="ProvisionEelectronicCertificateNotified" class="form-check-input" type="checkbox" />
+                        <label asp-for="ProvisionEelectronicCertificateNotified" class="form-check-label">
+                            уведомлен о необходимости предоставления актуального номера платежной карты, являющейся
+                            национальным платежным инструментом, в случае ее замены
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="my-2">Сопровождение</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="AssistantRequired" id="AssistantRequired1" class="form-check-input" type="radio" value="false">
+                        <label for="AssistantRequired1" class="form-check-label">в сопровождении не нуждаюсь</label>
+                    </div>
+
+                    <div class="row" checkBlock>
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input asp-for="AssistantRequired" id="AssistantRequired2" class="form-check-input" type="radio" value="true">
+                                <label for="AssistantRequired2" class="form-check-label">в сопровождении нуждаюсь</label>
+                            </div>
+                        </div>
+                        <div class="row mb-3 justify-content-end" checkBlockBody>
+                            <div class="col-11 mb-2">
+                                <label class="form-label" asp-for="AssistantFullName">Фамилия, имя, отчество сопровождающего</label>
+                                <input type="text" class="form-control" asp-for="AssistantFullName">
+
+                                <h6 class="my-2">Документ, удостоверяющий личность сопровождающего</h6>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="AssistantDocumentName">наименование</label>
+                                        <input type="text" class="form-control" asp-for="AssistantDocumentName">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="AssistantDocumentSeries">серия</label>
+                                        <input type="text" class="form-control" asp-for="AssistantDocumentSeries">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="AssistantDocumentNumber">номер</label>
+                                        <input type="text" class="form-control" asp-for="AssistantDocumentNumber">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="AssistantDocumentDate">дата выдачи</label>
+                                        <input type="text" class="form-control" asp-for="AssistantDocumentDate">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="AssistantDocumentGivenBy">наименование органа, выдавшего документ</label>
+                                        <input type="text" class="form-control" asp-for="AssistantDocumentGivenBy">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="my-2">Проведение медико-технической экспертизы</h5>
+            <div class="row mb-3">
+                <h6 class="my-2">Желаемое место проведения медико-технической экспертизы</h6>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="MedicalExpertisePlaceId" id="MedicalExpertisePlaceId1" class="form-check-input" type="radio" value="1">
+                        <label for="MedicalExpertisePlaceId1" class="form-check-label">
+                            место осуществления приема территориальным органом Фонда социального страхования
+                            Российской Федерации
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input asp-for="MedicalExpertisePlaceId" id="MedicalExpertisePlaceId2" class="form-check-input" type="radio" value="2">
+                        <label for="MedicalExpertisePlaceId2" class="form-check-label">
+                            место пребывания заявителя вследствие затруднения в транспортировке технического средства
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input asp-for="MedicalExpertisePlaceId" id="MedicalExpertisePlaceId3" class="form-check-input" type="radio" value="3">
+                        <label for="MedicalExpertisePlaceId3" class="form-check-label">
+                            место пребывания заявителя вследствие состояния здоровья заявителя
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="my-2">
+                Перечень прилагаемых заявителем (инвалидом, ветераном) либо его законным или
+                уполномоченным представителем документов, необходимых для предоставления
+                государственной услуги
+            </h5>
+            <div id="appliedDocumentList" data-clone-list>
+                @for (var i = 0; i < Model.AppliedDocumentList.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Документ @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-6">
+                                <label class="form-label" asp-for="AppliedDocumentList[i].Name">Наименование</label>
+                                <input type="text" list="Docs" asp-for="AppliedDocumentList[i].Name" class="form-control">
+                                <datalist id="Docs">
+                                    <option value="Документ удостоверяющий личность">Документ удостоверяющий личность</option>
+                                    <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                                    <option value="Свидетельство о заключении брака">Свидетельство о заключении брака</option>
+                                    <option value="Свидетельство о расторжении брака">Свидетельство о расторжении брака</option>
+                                    <option value="Свидетельство об установлении отцовства">Свидетельство об установлении отцовства</option>
+                                    <option value="Расчётный счёт">Расчётный счёт</option>
+                                    <option value="Сберкнижка">Сберкнижка</option>
+                                    <option value="Трудовая книжка">Трудовая книжка</option>
+                                    <option value="Свидетельство о регистрации по месту жительства/пребывания">Свидетельство о регистрации по месту жительства/пребывания</option>
+                                    <option value="Удостоверение">Удостоверение</option>
+                                    <option value="Справка МСЭ">Справка МСЭ</option>
+                                    <option value="Ветеран труда РА">Ветеран труда РА</option>
+                                </datalist>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="AppliedDocumentList[i].NumdberOriginals">Количество Экземпяров</label>
+                                <input type="number" min="0" asp-for="AppliedDocumentList[i].NumdberOriginals" class="form-control" />
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" asp-for="AppliedDocumentList[i].NumdberCopies">Количество страниц</label>
+                                <input type="number" min="0" asp-for="AppliedDocumentList[i].NumdberCopies" class="form-control" />
+                            </div>
+                            <div class="col-1 mt-4">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2 mt-5">
+                    <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+
+            <h5 class="my-2">Обратная связь с заявителем</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <h6 class="my-2">Предпочтительный способ информирования заявителя</h6>
+                    <div class="form-check">
+                        <input asp-for="ApplicantInformingMethodId" id="ApplicantInformingMethodId1" class="form-check-input" type="radio" value="1">
+                        <label for="ApplicantInformingMethodId1" class="form-check-label">
+                            по домашнему телефону
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input asp-for="ApplicantInformingMethodId" id="ApplicantInformingMethodId2" class="form-check-input" type="radio" value="2">
+                        <label for="ApplicantInformingMethodId2" class="form-check-label">
+                            по мобильному телефону
+                        </label>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input asp-for="ApplicantInformingMethodId" id="ApplicantInformingMethodId3" class="form-check-input" type="radio" value="3">
+                        <label for="ApplicantInformingMethodId3" class="form-check-label">
+                            смс-информирование
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input asp-for="ApplicantInformingMethodId" id="ApplicantInformingMethodId4" class="form-check-input" type="radio" value="4">
+                        <label for="ApplicantInformingMethodId4" class="form-check-label">
+                            посредством почтовых отправлений
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input asp-for="ApplicantInformingMethodId" id="ApplicantInformingMethodId5" class="form-check-input" type="radio" value="5">
+                        <label for="ApplicantInformingMethodId5" class="form-check-label">
+                            по электронной почте
+                        </label>
+                    </div>
+                    
+                    <div class="row" checkBlock>
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input asp-for="ApplicantInformingMethodId" id="ApplicantInformingMethodId6" class="form-check-input" type="radio" value="6">
+                                <label for="ApplicantInformingMethodId6" class="form-check-label">
+                                    иным способом
+                                </label>
+                            </div>
+                            <div class="row mb-3 justify-content-end" checkBlockBody>
+                                <div class="col-11 mb-2">
+                                    <input type="text" class="form-control" asp-for="ApplicantInformingOtherMetodName">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="my-2">Способ направления заявителю результата предоставления государственной услуги</h6>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input asp-for="ApplicantSendingResultMethodId" id="ApplicantSendingResultMethodId1" class="form-check-input" type="radio" value="1">
+                                <label for="ApplicantSendingResultMethodId1" class="form-check-label">
+                                    вручить в территориальном органе Фонда социального страхования Российской Федерации
+                                </label>
+                            </div>
+
+                            <div class="form-check">
+                                <input asp-for="ApplicantSendingResultMethodId" id="ApplicantSendingResultMethodId2" class="form-check-input" type="radio" value="2">
+                                <label for="ApplicantSendingResultMethodId2" class="form-check-label">
+                                    вручить в многофункциональном центре предоставления государственных и муниципальных услуг
+                                    (при подаче заявления через многофункциональный центр предоставления государственных и муниципальных услуг)
+                                </label>
+                            </div>
+                            
+                            <div class="form-check">
+                                <input asp-for="ApplicantSendingResultMethodId" id="ApplicantSendingResultMethodId3" class="form-check-input" type="radio" value="3">
+                                <label for="ApplicantSendingResultMethodId3" class="form-check-label">направить по почте</label>
+                            </div>
+                            
+                            <div class="form-check">
+                                <input asp-for="ApplicantSendingResultMethodId" id="ApplicantSendingResultMethodId4" class="form-check-input" type="radio" value="4">
+                                <label for="ApplicantSendingResultMethodId4" class="form-check-label">
+                                    направить в форме электронного документа
+                                    (при направлении заявления через Единый портал государственных и муниципальных услуг (функций),
+                                    Личный кабинет получателя услуг на официальном сайте Фонда социального страхования Российской Федерации)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input asp-for="ApplicantSMSQualitySurveyConfirmed" class="form-check-input" type="checkbox" />
+                                <label asp-for="ApplicantSMSQualitySurveyConfirmed" class="form-check-label">
+                                    Подтверждаю согласие на участие в смс-опросе о качестве предоставления государственных
+                                    услуг (отметить при необходимости)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="appliedDocument" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Документ 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-6">
+                <label class="form-label" asp-for="AppliedDocumentList[0].Name">Наименование</label>
+                <input type="text" list="Docs" asp-for="AppliedDocumentList[0].Name" class="form-control" value="@string.Empty">
+                <datalist id="Docs">
+                    <option value="Документ удостоверяющий личность">Документ удостоверяющий личность</option>
+                    <option value="Свидетельство о рождении">Свидетельство о рождении</option>
+                    <option value="Свидетельство о заключении брака">Свидетельство о заключении брака</option>
+                    <option value="Свидетельство о расторжении брака">Свидетельство о расторжении брака</option>
+                    <option value="Свидетельство об установлении отцовства">Свидетельство об установлении отцовства</option>
+                    <option value="Расчётный счёт">Расчётный счёт</option>
+                    <option value="Сберкнижка">Сберкнижка</option>
+                    <option value="Трудовая книжка">Трудовая книжка</option>
+                    <option value="Свидетельство о регистрации по месту жительства/пребывания">Свидетельство о регистрации по месту жительства/пребывания</option>
+                    <option value="Удостоверение">Удостоверение</option>
+                    <option value="Справка МСЭ">Справка МСЭ</option>
+                    <option value="Ветеран труда РА">Ветеран труда РА</option>
+                </datalist>
+            </div>
+            <div class="col-2">
+                <label class="form-label" asp-for="AppliedDocumentList[0].NumdberOriginals">Количество Экземпяров</label>
+                <input type="number" min="0" asp-for="AppliedDocumentList[0].NumdberOriginals" class="form-control" value="0"/>
+            </div>
+            <div class="col-2">
+                <label class="form-label" asp-for="AppliedDocumentList[0].NumdberCopies">Количество страниц</label>
+                <input type="number" min="0" asp-for="AppliedDocumentList[0].NumdberCopies" class="form-control" value="0"/>
+            </div>
+            <div class="col-1 mt-4">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="g-3" id="techReabilitationService" data-id="" data-original>
+        <hr />
+        <h6 class="my-2 title">Документ 0</h6>
+        <div class="row mb-1">
+            <div class="col-11">
+                <label class="form-label" asp-for="TechReabilitationServiceList[0].Name">Наименование</label>
+                <input type="text" class="form-control" asp-for="TechReabilitationServiceList[0].Name" value="@string.Empty">
+            </div>
+            <div class="col-1 mt-4">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+        <div class="row mb-1 align-items-center">
+            <div class="col-4">
+                <div class="form-check">
+                    <input id="TechReabilitationServiceList1_a" class="form-check-input" type="radio" value="1">
+                    <label for="TechReabilitationServiceList1_a" class="form-check-label">предоставление изделия, оказание услуги</label>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-check">
+                    <input id="TechReabilitationServiceList1_b" class="form-check-input" type="radio" value="2">
+                    <label for="TechReabilitationServiceList1_b" class="form-check-label">выплата компенсации расходов</label>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-check">
+                    <input id="TechReabilitationServiceList1_c" class="form-check-input" type="radio" value="3">
+                    <label for="TechReabilitationServiceList1_c" class="form-check-label">формирование электронного сертификата</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+
+    $(function(){
+        additionalForm.find('[type="radio"], input[type="checkbox"]').on('click', function () {
+            togleFields();
+        });
+
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+        additionalForm.find('#addTechReabilitationService').on('click', () => addForm('techReabilitationServiceList', 'techReabilitationService'));
+
+        togleFields();
+    })
+
+    function togleFields() {
+        additionalForm.find('[checkBlock] input[type="radio"], [checkBlock] input[type="checkbox"]').each(function () {
+            let $block = $(this).closest('[checkBlock]');
+
+            if ($(this).is(':checked')) {
+                visibilityBlock($block.find('[checkBlockBody]'), false, false);
+            } else {
+                visibilityBlock($block.find('[checkBlockBody]'), true, true);
+            }
+        })
+    }
+
+    function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+        let $cloneList = additionalForm.find(`#${cloneListId}`);
+        let $original = originalBlock.find(`#${originalId}`);
+        let $cloneBlock = $original.clone(true);
+        let indexId = $cloneList.find('[data-clone]').length;
+        if (originalId === 'techReabilitationService') {
+            $cloneBlock.find('input[type="radio"]').each(function (_, item) {
+                $(item).attr('name', 'TechReabilitationServiceList[100].ProvisionTypeId');
+            });
+        }
+        renameBlock($cloneBlock, indexId);
+        blockInit($cloneBlock);
+        $cloneList.append($cloneBlock);
+    }
+
+    function blockInit($block) {
+        visibilityBlock($block, false, false);
+
+        $block.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+        });
+    }
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

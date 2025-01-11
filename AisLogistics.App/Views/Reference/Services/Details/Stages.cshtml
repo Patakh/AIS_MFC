@@ -1,0 +1,353 @@
+﻿@model ViewModelBuilder
+@{
+    string Id = ViewData["Id"]?.ToString() ?? string.Empty;
+}
+
+<style>
+    html:not([dir=rtl]) .border-end {
+        border-right: 1px solid #dee2e6 !important;
+    }
+
+    html:not([dir=rtl]) .border-end-0 {
+        border-right: none !important;
+    }
+
+    .table-poiter {
+        cursor: pointer;
+    }
+</style>
+
+<div class="row">
+    <div class="col-4 border-end">
+        <div class="row">
+            <div class="col-6">
+                @if (Model.IsVisibleDescription)
+                {
+                    <div class="b-s-14">@Model.ViewDescription</div>
+                }
+            </div>
+            <div class="col-6 pull-right">
+                @if (User.HasClaim(AccessKeyNames.ReferenceService, AccessKeyValues.Add))
+                {
+                    <div class="col-auto text-md-end">
+                        <a href="javascript:void(0);" data-btn-params='{"actionType":"@ActionType.Add", "serviceId" : "@Id" }' data-btn-type="add" data-for-table="@Model.TableName" class="r-a-14">
+                            <i class="bi bi-plus"></i> Добавить
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive mt-3">
+                    <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceService" class="directory_names-items table table-poiter"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="active-border" id="empty-table-stages">
+            <div class="p-3">
+                <div class="alert-custom" role="alert">
+                    <div class="b-s-16">Внимание</div>
+                    <div class="r-s-14">Выберите этап</div>
+                </div>
+            </div>
+        </div>
+        <div class="d-none" id="services-statges-content__wrapper">
+            <div class="row">
+                <div class="col-6 border-end">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="b-s-14">Роли</div>
+                        </div>
+                        <div class="col-6 pull-right">
+                            <div class="col-auto text-md-end">
+                                <a id="stage_role_add" href="javascript:void(0);" data-btn-params data-btn-type="add" data-for-table="service-stages-roles-table" class="r-a-14">
+                                    <i class="bi bi-plus"></i> Добавить
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive mt-3">
+                                <table id="service-stages-roles-table" data-action-add="/Reference/ServiceStageAddRole" data-action-remove="/Reference/ServiceStageRoleRemove" class="directory_names-items table"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 border-end-0">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="b-s-14">Следующий</div>
+                        </div>
+                        <div class="col-6 pull-right">
+                            <div class="col-auto text-md-end">
+                                <a id="stage_child_add" href="javascript:void(0);" data-btn-params data-btn-type ="add" data-for-table="service-stages-child-table" class="r-a-14">
+                                    <i class="bi bi-plus"></i> Добавить
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table-responsive mt-3">
+                                <table id="service-stages-child-table" data-action-add="/Reference/ServiceStageChangeModal" data-action-remove="/Reference/ServiceStageRemove" class="directory_names-items table"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $tableStages = $('#@(Model.TableName)');
+    $tableStagesRoles = $('#service-stages-roles-table');
+    $tableStagesChild = $('#service-stages-child-table');
+
+    $(document).ready(function () {
+        let isCanAddStages = $tableStages.is('[data-action-add]'),
+            isCanEditStages = $tableStages.is('[data-action-edit]'),
+            isCanRemoveStages = $tableStages.is('[data-action-remove]');
+
+        let serviceStageDetailsWrapperVisibility = {
+            show: () => {
+                $('#empty-table-stages').addClass("d-none");
+                $('#services-statges-content__wrapper').removeClass("d-none");
+
+                let selectedRow = $tableStages.DataTable().rows({ selected: true }).data()[0];
+                if (selectedRow != null) {
+                    let selectedId = selectedRow['id'];
+                    let objRole = { "id": `${selectedId}` };
+                    var paramsRole = JSON.stringify(objRole);
+                    $('#stage_role_add').attr('data-btn-params', paramsRole);
+                    let objChild = {"serviceId": '@Id', "parentId": `${selectedId}` };
+                    var paramsChild = JSON.stringify(objChild);
+                    $('#stage_child_add').attr('data-btn-params', paramsChild);
+                }
+
+                $tableStagesRoles.DataTable().ajax.reload();
+                $tableStagesChild.DataTable().ajax.reload();
+            },
+            hide: () => {
+                $('#empty-table-stages').removeClass("d-none");
+                $('#services-statges-content__wrapper').addClass("d-none");
+            }
+        };
+
+        $tableStages.DataTable({
+            sDom: "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            processing: true,
+            serverSide: true,
+            filter: false,
+            searching: false,
+            paging: false,
+            info: false,
+            select: {
+                info: false
+            },
+            ajax: {
+                url: $tableStages.data('action-table'),
+                type: "POST",
+                data: function (json) {
+                    return json.data;
+                }
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    orderable: false,
+                    data: "stageName",
+                    defaultContent: '',
+                },
+                {
+                    targets: -1,
+                    orderable: false,
+                    data: "id",
+                    defaultContent: '',
+                    width: "80px",
+                    className: 'text-end editor-edit',
+                }
+            ],
+            columns: [
+                {},
+                {},
+                {
+                    render: function (data, type, row) {
+                        return `${DeleteBtnStages({ "id": row.id })}`;
+                    }
+                }
+            ]
+        }).on('select', () => { serviceStageDetailsWrapperVisibility.show(); })
+          .on('deselect', () => { serviceStageDetailsWrapperVisibility.hide(); });
+
+        $tableStages.on("reload", () => {
+            serviceStageDetailsWrapperVisibility.hide();
+            $tableStages.DataTable().ajax.reload(null, false);
+        });
+
+        $tableStages.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+
+        $tableStagesRoles.DataTable({
+            sDom: "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            processing: true,
+            serverSide: true,
+            filter: false,
+            searching: false,
+            paging: false,
+            info: false,
+            ajax: {
+                url: '/Reference/GetServiceStageRolesDataJson',
+                type: "POST",
+                data: function (data) {
+                    let id = $tableStages.DataTable().rows({ selected: true }).data()[0];
+                    if (id != null)
+                        data.id = id['id'];
+                }
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    orderable: false,
+                    data: "roleName",
+                    defaultContent: '',
+                },
+                {
+                    targets: -1,
+                    orderable: false,
+                    data: "id",
+                    defaultContent: '',
+                    width: "80px",
+                    className: 'text-end editor-edit',
+                }
+            ],
+            columns: [
+                {},
+                {},
+                {
+                    render: function (data, type, row) {
+                        return `<a href="javascript:void(0);" class="btn btn-sm btn-icon text-danger" data-btn-params='{ "id": "${data}" }' data-btn-type="remove"  data-bs-toggle="tooltip" title="Удалить роль"><i class="bi bi-trash"></i></a>`;
+                    }
+                }
+            ]
+        });
+
+        $tableStagesRoles.on("reload", () => {
+            $tableStagesRoles.DataTable().ajax.reload(null, false);
+        });
+
+        $tableStagesRoles.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+
+        $tableStagesChild.DataTable({
+            sDom: "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            processing: true,
+            serverSide: true,
+            filter: false,
+            searching: false,
+            paging: false,
+            info: false,
+            ajax: {
+                url: '/Reference/GetServiceStagesDataJson',
+                type: "POST",
+                data: function (data) {
+                    data.id = '@Id';
+                    let rowId = $tableStages.DataTable().rows({ selected: true }).data()[0];
+                    if (rowId != null)
+                        data.parentId = rowId['id'];
+                }
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    orderable: false,
+                    data: 'stageName',
+                    defaultContent: '',
+                },
+                {
+                    targets: -1,
+                    orderable: false,
+                    data: "id",
+                    defaultContent: '',
+                    width: "80px",
+                    className: 'text-end editor-edit',
+                }
+            ],
+            columns: [
+                {},
+                {},
+                {
+                    render: function (data, type, row) {
+                        return `${DeleteBtnStages({ "id": data })}`;
+                    }
+                }
+            ]
+        });
+
+        $tableStagesChild.on("reload", () => {
+            $tableStagesChild.DataTable().ajax.reload(null, false);
+        });
+
+        $tableStagesChild.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        let DeleteBtnStages = (data) => {
+            var content = "";
+            if (isCanRemoveStages === true) {
+                var params = JSON.stringify(data);
+                content += `<a href="javascript:void(0);" class="btn btn-sm btn-icon text-danger" data-btn-params='${params}' data-btn-type="remove" data-bs-toggle="tooltip" title="Удалить">
+                            <i class="bi bi-trash"></i></a>`;
+            }
+            return content;
+        }
+    });
+</script>

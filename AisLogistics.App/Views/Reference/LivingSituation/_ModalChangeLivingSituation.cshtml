@@ -1,0 +1,73 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.LivingSituationModelDto
+
+<form asp-controller="Reference" asp-action="LivingSituationSave" id="sendingForm" method="post" role="form">
+    <div class="pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SituationName">Наименование</label>
+                    <input type="text" asp-for="SituationName" class="form-control" placeholder="Наименование" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="Commentt">Комментарий</label>
+                   <input type="text" asp-for="Commentt" class="form-control" placeholder="Комментарий">
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function() {
+        $('#sendingForm select').select2({ dropdownParent: $('#mainModal'), minimumResultsForSearch: -1 });
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    SituationName: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    } 
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }).on('core.form.valid', function() {
+            var $form = $("#sendingForm");
+            var actionType = $("#ActionType").val();
+            $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        if (typeof $table === 'undefined')
+                        {
+                            window.location.reload();
+                        }
+                        else
+                        {
+                            $table.DataTable().ajax.reload(null, false);
+                        }
+                        $form.spinnerBtn("stop");
+                        $("#mainModal").modal('hide');
+                    }
+                });
+            return false;
+        });
+    });
+</script>

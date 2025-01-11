@@ -1,0 +1,186 @@
+﻿@using SmevRouter
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var request = new FkExportQuittanceRequestData
+    {
+
+    };
+}
+<div class="row justify-content-center g-3">
+    <div class="col-10">
+        <div class="divider text-start">
+            <div class="divider-text fs-5 b-s-16">Детали запроса</div>
+        </div>
+    </div>
+</div>
+<div id="additional-data-content">
+    <div class="row g-3 justify-content-center">
+        <div id="appliedDocumentList" data-clone-list>
+            @for (var i = 0; i < 1; i++)
+            {
+                <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                    <div class="row mb-1 justify-content-center">
+                        <div class="col-8">
+                            <div class="g-3 row" id="clone0" data-id="0" data-clone">
+                                <div class="col-12">
+                                    <label class="form-label" asp-for="@request.SupplierBillId[i]">Уникальный идентификатор начисления (УИН)</label>
+                                    <input type="text" class="form-control required" placeholder="Уникальный идентификатор начисления (УИН)" asp-for="@request.SupplierBillId[i]">
+                                </div>
+                            </div>
+                        </div>
+                       <div class="col-1 mt-4">
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="row justify-content-center mt-1">
+            <div class="col-2">
+                <button type="button" class="btn btn-primary" id="addAppliedDocument"><i class="bi bi-plus"></i></button>
+            </div>
+        </div>
+        <hr />
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3  justify-content-center" id="appliedDocument" data-id="" data-original>
+        <div class="row mb-1 justify-content-center">
+            <div class="col-8">
+                <div class="g-3 row justify-content-center" id="clone0" data-id="0" data-clone">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.SupplierBillId[0]">Уникальный идентификатор начисления (УИН)</label>
+                        <input type="text" class="form-control required" placeholder="Уникальный идентификатор начисления (УИН)" asp-for="@request.SupplierBillId[0]">
+                    </div>
+                </div>
+            </div>
+            <div class="col-1 mt-4">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock');
+    
+    function ShowErrorInputs() {
+    }
+    var formContent = document.getElementById("smev-data-form-content");
+    var smevForm = {
+        init: () => {
+           additionalForm.find('.required').each(function() {
+                addValidation($(this));
+            });
+        }
+    };
+
+     function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    $(function() {
+        originalBlock.find('[data-original]').each(function(_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('#addAppliedDocument').on('click', () => addForm('appliedDocumentList', 'appliedDocument'));
+
+        additionalForm.find('[data-disabled]').each(function() {
+            visibilityBlock($(this), true, true);
+        });
+        let options = { clearIncomplete: true, showMaskOnHover: false }
+            $(formContent).find('[name^="request"]').inputmask("9{25}", options);
+
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.find("select").each(function() {
+                $(this).select2('destroy');
+            });
+            $cloneList.append($cloneBlock);
+            select2Init($cloneList);
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("input[type='text']").each(function() {
+                $(this).val("");
+            });
+            $($block).find('.required').each(function() {
+                addValidation($(this));
+            });
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `${$cloneBlock.attr("id")}${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function() {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function() {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function(index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function() {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function() {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

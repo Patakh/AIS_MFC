@@ -1,0 +1,549 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    var requestModel = Model.Model as ArchiveCaseDetailsDto;
+    var firstStage = requestModel.Stages.FirstOrDefault();
+    var lastStage = requestModel.Stages.LastOrDefault();
+
+    var statusColor = requestModel.Info.Status.Id switch {
+        0 => "bg-label-warning",
+        1 => "bg-label-success",
+        2 => "bg-label-secondary",
+        4 => "bg-label-secondary",
+        5 => "bg-label-danger",
+        6 => "bg-label-warning",
+        _ => string.Empty
+    };
+}
+
+<style>
+    .table-smev tr {
+        cursor: pointer;
+    }
+</style>
+
+<!-- User Profile Content -->
+<div class="row">
+    <div class="col-xl-3 col-lg-4 col-md-4">
+        <!-- About Case -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <small class="text-muted text-uppercase">Обращение</small>
+                <ul class="list-unstyled mb-4">
+                    <li class="d-flex align-items-center"><span class="b-s-16">@requestModel.Info.Name</span></li>
+                    <li class="d-flex align-items-center"><span class="small">@requestModel.Info.Office</span></li>
+                    <li class="d-flex align-items-center"><span class="small text-muted">от @requestModel.Info.DateAdd.ToShortDateString()</span></li>
+                    <li class="d-flex align-items-center"><span class="b-s-16 mx-1">Статус:</span> <span class="badge @statusColor">@requestModel.Info.Status.Name</span></li>
+                   @* <li class="d-flex align-items-center"><span class="b-s-16 mx-1">Этап:</span> <span class="badge bg-label-success">@lastStage.Name</span></li>*@
+                </ul>
+                <small class="text-muted text-uppercase">Принял</small>
+                <ul class="list-unstyled mb-4">
+                    <li class="d-flex align-items-center"><i class="bi bi-person"></i><span>@firstStage.EmployeeCurrent.Name</span></li>
+                    <li class="d-flex align-items-center"><span class="small text-muted">@firstStage.EmployeeCurrent.Job</span></li>
+                </ul>
+                <small class="text-muted text-uppercase">Исполнил</small>
+                <ul class="list-unstyled">
+                    <li class="d-flex align-items-center"><i class="bi bi-person"></i><span>@lastStage.EmployeeCurrent.Name</span></li>
+                    <li class="d-flex align-items-center"><span class="small text-muted">@lastStage.EmployeeCurrent.Job</span></li>
+                </ul>
+            </div>
+        </div>
+        <!--/ About User -->
+        <!-- Case Overview -->
+@*        <div class="card mb-4">
+            <div class="card-body">
+                <small class="text-muted text-uppercase">Overview</small>
+                <ul class="list-unstyled mt-3 mb-0">
+                    <li class="d-flex align-items-center mb-3"><i class="bi bi-check2"></i><span class="b-s-16 mx-2">Task Compiled:</span> <span>13.5k</span></li>
+                    <li class="d-flex align-items-center mb-3"><i class='bi bi-funnel'></i><span class="b-s-16 mx-2">Projects Compiled:</span> <span>146</span></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-person"></i><span class="b-s-16 mx-2">Connections:</span> <span>897</span></li>
+                </ul>
+            </div>
+        </div>*@
+        <!--/ Case Overview -->
+    </div>
+    <div class="col-xl-9 col-lg-8 col-md-8">
+        <div class="accordion accordion-header-primary" id="accordionArchive">
+            <div class="card accordion-item shadow active">
+                <h2 class="accordion-header d-flex align-items-center">
+                    <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#accordionArchive-customer" aria-expanded="true">
+                        <i class="bi bi-person me-2"></i>
+                        Заявители
+                    </button>
+                </h2>
+
+                <div id="accordionArchive-customer" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                         <div class="table-responsive mt-3">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Тип</th>
+                                <th>ФИО</th>
+                                <th>Адрес</th>
+                                <th>Телефон</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            @foreach (var item in requestModel.Customers)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="text-truncate">
+                                                @if (item.SubjectCustomerType == SubjectCustomerType.Physical)
+                                                {
+                                                    <span class="badge bg-label-primary" data-bs-toggle="tooltip" title="Физическое лицо">ФЛ</span>
+                                                }
+                                                @if (item.SubjectCustomerType == SubjectCustomerType.Legal)
+                                                {
+                                                    <span class="badge bg-label-secondary" data-bs-toggle="tooltip" title="Юридическое лицо">ЮР</span>
+                                                }
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            @if (item.SubjectCustomerType == SubjectCustomerType.Physical)
+                                            {
+                                                <span class="">@item.Name</span>
+                                                <small class="text-muted">@item.BirthDate?.ToShortDateString()</small>
+                                            }
+                                            @if (item.SubjectCustomerType == SubjectCustomerType.Legal)
+                                            {
+                                                <span class="">@($"{@item.LastName} {@item.FirstName} {@item.SecondName}")</span>
+                                                <small class="text-muted">@item.Name</small>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="text-truncate">@(item.Address ?? "-")</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="text-truncate">@(item.Phone ?? "-")</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card accordion-item shadow">
+                <h2 class="accordion-header d-flex align-items-center">
+                    <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionArchive-document" aria-expanded="false">
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        Документы
+                    </button>
+                </h2>
+                <div id="accordionArchive-document" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        @if (requestModel.Documents.Any())
+                        {
+                            <div class="table-responsive mt-3">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Документ</th>
+                                            <th>Сотрудник.</th>
+                                            <th>Дата</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                        @foreach (var documents in requestModel.Documents.GroupBy(g => g.DocumentId))
+                                        {
+                                            <tr>
+                                                <td colspan="4" class="h6">@documents.First().DocumentName</td>
+                                            </tr>
+                                            @foreach (var item in documents)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex flex-column">
+                                                            <div class="text-truncate">@($"{item.Name}{item.Extension}")</div>
+                                                            <small class="text-truncate"><span>@(item.Size / 1024) КБ</span></small>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex flex-column">
+                                                            <span class="text-truncate">@item.EmployeeAdd.Name</span>
+                                                            <small class="text-truncate text-muted">@item.EmployeeAdd.Job</small>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex flex-column">
+                                                            <span class="text-truncate">@item.DateAdd.ToShortDateString()</span>
+                                                            <small class="text-truncate text-muted">@item.DateAdd.ToShortTimeString()</small>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        @if (item.IsViewing)
+                                                        {
+                                                            <a asp-action="DownloadFile" asp-route-id="@item.Id" class="btn btn-sm btn-icon viewing-file" data-bs-toggle="tooltip" title="Просмотр" data-sub-html="@item.DocumentName</br>@item.Name"><i class="bi bi-eye"></i></a>
+                                                        }
+
+                                                        <a asp-action="DownloadFile" asp-route-id="@item.Id" asp-route-type="@DocumentType.ServiceDocument" target="_blank" class="btn btn-sm btn-icon" data-bs-toggle="tooltip" title="Скачать"><i class="bi bi-download"></i></a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-primary m-0" role="alert">Нет данных</div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="card accordion-item shadow">
+                <h2 class="accordion-header d-flex align-items-center">
+                    <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionArchive-result" aria-expanded="false">
+                        <i class="bi bi-journal-check me-2"></i>
+                        Результаты
+                    </button>
+                </h2>
+                <div id="accordionArchive-result" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        @if (requestModel.Results.Any())
+                        {
+                            <div class="table-responsive mt-3">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Документ</th>
+                                            <th>Сотрудник.</th>
+                                            <th>Дата</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                        @foreach (var documents in requestModel.Results.GroupBy(g => g.DocumentId))
+                                        {
+                                            <tr>
+                                                <td colspan="4" class="h6">@documents.First().DocumentName</td>
+                                            </tr>
+                                            @foreach (var item in documents)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex flex-column">
+                                                            <div class="text-truncate">@($"{item.Name}{item.Extension}")</div>
+                                                            <small class="text-truncate"><span>@(item.Size / 1024) КБ</span></small>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex flex-column">
+                                                            <span class="text-truncate">@item.EmployeeAdd.Name</span>
+                                                            <small class="text-truncate text-muted">@item.EmployeeAdd.Job</small>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex flex-column">
+                                                            <span class="text-truncate">@item.DateAdd.ToShortDateString()</span>
+                                                            <small class="text-truncate text-muted">@item.DateAdd.ToShortTimeString()</small>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        @if (item.IsViewing)
+                                                        {
+                                                            <a asp-action="DownloadFile" asp-route-id="@item.Id" class="btn btn-sm btn-icon viewing-file" data-bs-toggle="tooltip" title="Просмотр" data-sub-html="@item.DocumentName</br>@item.Name"><i class="bi bi-eye"></i></a>
+                                                        }
+
+                                                        <a asp-action="DownloadFile" asp-route-id="@item.Id" asp-route-type="@DocumentType.ServiceDocumentResult" target="_blank" class="btn btn-sm btn-icon" data-bs-toggle="tooltip" title="Скачать"><i class="bi bi-download"></i></a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-primary m-0" role="alert">Нет данных</div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="card accordion-item shadow">
+                <h2 class="accordion-header d-flex align-items-center">
+                    <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionArchive-smev" aria-expanded="false">
+                        <i class="bi bi-globe2 me-2"></i>
+                        СМЭВ
+                    </button>
+                </h2>
+                <div id="accordionArchive-smev" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        @if (requestModel.Smev.Any())
+                        {
+                            <div class="table-responsive mt-3">
+                                <table class="table table-sm table-hover table-smev">
+                                    <thead>
+                                        <tr>
+                                            <th>Запрос</th>
+                                            <th>Сотрудник</th>
+                                            <th>Дата</th>
+                                            <th>Статус</th>
+                                            <th>Действия</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0 table-hover">
+                                        @foreach (var item in requestModel.Smev)
+                                        {
+                                            <tr data-smev-request-id="@item.Id">
+                                                <td>
+                                                    <div class="d-flex flex-column">
+                                                        <span class="">@item.Name</span>
+                                                        <small class="text-muted">@item.Provider</small>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex flex-column">
+                                                        <span class="text-truncate">@item.EmployeeAdd.Name</span>
+                                                        <small class="text-truncate text-muted">@item.EmployeeAdd.Job</small>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex flex-column">
+                                                        <small class="text-truncate" data-bs-toggle="tooltip" title="Дата отправки">@item.DateCreate.ToShortDateString()</small>
+                                                        <small class="text-truncate" data-bs-toggle="tooltip" title="Дата ответа">@item.DateResponse.ToShortDateString()</small>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <smev-status status="@item.Status"></smev-status>
+                                                </td>
+                                                <td class="text-end">
+                                                    @*<a asp-controller="SmevBase" asp-action="GetArchiveSmevDetailsModal" asp-route-id="@item.Id" data-btn-type="modal" class="btn btn-sm btn-icon" data-bs-toggle="tooltip" title="Подробнее">
+                                                        <i class="bi bi-info-circle"></i>
+                                                    </a>*@
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-primary m-0" role="alert">Нет данных</div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="card accordion-item shadow">
+                <h2 class="accordion-header d-flex align-items-center">
+                    <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionArchive-comment" aria-expanded="false">
+                        <i class="bi bi-chat-dots me-2"></i>
+                        Комментарии
+                    </button>
+                </h2>
+                <div id="accordionArchive-comment" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        @if (requestModel.Comments.Any())
+                        {
+                            <div class="table-responsive mt-3">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Комментарий</th>
+                                            <th>Сотрудник</th>
+                                            <th>Дата</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                        @foreach (var item in requestModel.Comments)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @item.Comment
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex flex-column">
+                                                        <span class="text-truncate">@item.EmployeeAdd.Name</span>
+                                                        <small class="text-truncate text-muted">@item.EmployeeAdd.Job</small>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex flex-column">
+                                                        <span class="text-truncate">@item.DateAdd.ToShortDateString()</span>
+                                                        <small class="text-truncate text-muted">@item.DateAdd.ToShortTimeString()</small>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-primary m-0" role="alert">Нет данных</div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="card accordion-item shadow">
+                <h2 class="accordion-header d-flex align-items-center">
+                    <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionArchive-stage" aria-expanded="false">
+                        <i class="bi bi-shuffle me-2"></i>
+                        Этапы
+                    </button>
+                </h2>
+                <div id="accordionArchive-stage" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <div class="table-responsive mt-3">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Этап</th>
+                                        <th>Текущий сотр.</th>
+                                        <th>Фактический сотр.</th>
+                                        <th>Дата</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                    @foreach (var item in requestModel.Stages)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex flex-column">
+                                                    <div class="text-truncate">@item.Name</div>
+                                                    <small class="text-truncate"><days count="item.Days ?? 0" data-bs-toggle="tooltip" title="Дней на этапе"></days></small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-truncate">@item.EmployeeCurrent.Name</span>
+                                                    <small class="text-truncate text-muted">@item.EmployeeCurrent.Job</small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-truncate">@item.EmployeeAdd.Name</span>
+                                                    <small class="text-truncate text-muted">@item.EmployeeAdd.Job</small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex flex-column">
+                                                    <small class="text-truncate" data-bs-toggle="tooltip" title="Дата начала этапа">@item.DateAdd.ToShortDateString()</small>
+                                                    @if (item.DateFact.HasValue)
+                                                    {
+                                                        <small class="text-truncate" data-bs-toggle="tooltip" title="Фактическая дата окончания этапа">@(item.DateFact?.ToShortDateString() ?? "-")</small>
+                                                    }
+                                                    else
+                                                    {
+                                                        <small class="text-truncate" data-bs-toggle="tooltip" title="Регламентная дата окончания этапа">@(item.DateReg?.ToShortDateString() ?? "-")</small>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card accordion-item shadow">
+                <h2 class="accordion-header d-flex align-items-center">
+                    <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionArchive-audit" aria-expanded="false">
+                        <i class="bi bi-git me-2"></i>
+                        Действия
+                    </button>
+                </h2>
+                <div id="accordionArchive-audit" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        @if (requestModel.Audits.Any())
+                        {
+                            <ul class="timeline ms-2 mb-0">
+                                @foreach (var item in requestModel.Audits)
+                                {
+                                    <li class="timeline-item timeline-item-transparent">
+                                        <span class="timeline-point timeline-point-primary"></span>
+                                        <div class="timeline-event">
+                                            <div class="timeline-header mb-1">
+                                                <h6 class="mb-0 fw-normal">@item.Changed.Description</h6>
+                                                <small class="text-muted">@item.DateAdd.ToLongDateString() @item.DateAdd.ToShortTimeString()</small>
+                                            </div>
+                                            <div class="d-flex flex-wrap">
+                                                <div class="avatar me-3">
+                                                    <span class="avatar-initial rounded-circle">@item.Employee.NameBadge</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">@item.Employee.Name</h6>
+                                                    <span>@item.Employee.Job</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <div class="alert alert-primary m-0" role="alert">Нет данных</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ User Profile Content -->
+@section Scripts
+{
+    <script>
+        $(function() {
+            const $dynamicGallery = document.getElementById('accordionArchive');
+            $dynamicGallery.addEventListener('lgBeforeOpen', (event) => {
+                $('[data-bs-toggle="tooltip"], .tooltip').tooltip("hide");
+            });
+            const dynamicGallery = lightGallery($dynamicGallery, {
+                selector: '.viewing-file'
+            });
+
+            $("[data-smev-request-id]").on('click', function (e) {
+                let th = e.currentTarget;
+                let id = $(th).data('smev-request-id');
+                $.ajax({
+                    url: '/SmevBase/GetArchiveSmevDetailsModal',
+                    type: 'POST',
+                    data: { id: id },
+                    beforeSend: () => {
+                        $.pageBlock();
+                    },
+                    complete: () => {
+                        $.unblockUI();
+                    },
+                    success: function (content) {
+                        $('#mainModal').html(content).modal('show');
+                    },
+                    error: function (event) {
+                        //toastr['error'](event.responseText, 'Ошибка', {
+                        //    closeButton: true,
+                        //    tapToDismiss: false,
+                        //    rtl: false
+                        //});
+                    }
+                });
+            });
+        });
+    </script>
+}

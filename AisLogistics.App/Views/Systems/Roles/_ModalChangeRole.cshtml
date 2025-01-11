@@ -1,0 +1,118 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using AisLogistics.App.Data
+@model Dictionary<string, AccessKeyName>
+@inject RoleManager<ApplicationRole> RoleManager
+@{
+    var role = ViewBag.Role as ApplicationRole;
+    var roleClaims = RoleManager.GetClaimsAsync(role).Result;
+}
+
+<form asp-controller="Systems" asp-action="RoleSave" id="sendingForm" method="post" role="form">
+    <fieldset class="p-3">
+        <input type="hidden" name="Id" id="Id" value="@role.Id" />
+        <div class="row">
+            <div class="col-12 mb-4">
+                <label class="form-label" for="Name">Наименование</label>
+                <input type="text" name="Name" id="Name" value="@role.Name" class="form-control" placeholder="Наименование" tabindex="-1" />
+            </div>
+            <div class="col-12">
+                <h4 class="mt-2">Разрешения</h4>
+                <div class="table-responsive mt-3">
+                    <table class="table table-flush-spacing table-sm mt-0">
+                        <tbody>
+                            @foreach (var groupItems in Model.GroupBy(g => g.Value.AccessGroup))
+                            {
+                                <tr>
+                                    <td colspan="6">
+                                        <b>@groupItems.Key</b>
+                                    </td>
+                                </tr>
+                                @foreach (var item in groupItems)
+                                {
+                                    var accessClaims = roleClaims.Where(s => s.Type == item.Value.AccessName).ToArray();
+                                    <tr>
+                                        <td>@item.Value.AccessDescription</td>
+                                        <td>
+                                            @if (item.Value.AccessView)
+                                            {
+                                                <div class="form-check">
+                                                    @Html.CheckBox("viewName[" + item.Value.AccessName + "]", accessClaims.Any(s => s.Value == AccessKeyValues.View), new { id = $"{item.Value.AccessName}_{AccessKeyValues.View}", @class="form-check-input" })
+                                                    <label for="@($"{item.Value.AccessName}_{AccessKeyValues.View}")" class="form-check-label">Просмотр</label>
+                                                </div>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Value.AccessAdd)
+                                            {
+                                                <div class="form-check">
+                                                    @Html.CheckBox("addName[" + item.Value.AccessName + "]", accessClaims.Any(s => s.Value == AccessKeyValues.Add), new { id = $"{item.Value.AccessName}_{AccessKeyValues.Add}", @class="form-check-input" })
+                                                    <label for="@($"{item.Value.AccessName}_{AccessKeyValues.Add}")" class="form-check-label">Добавление</label>
+                                                </div>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Value.AccessEdit)
+                                            {
+                                                <div class="form-check">
+                                                    @Html.CheckBox("editName[" + item.Value.AccessName + "]", accessClaims.Any(s => s.Value == AccessKeyValues.Edit), new { id = $"{item.Value.AccessName}_{AccessKeyValues.Edit}", @class="form-check-input" })
+                                                    <label for="@($"{item.Value.AccessName}_{AccessKeyValues.Edit}")" class="form-check-label">Изменение</label>
+                                                </div>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Value.AccessRemove)
+                                            {
+                                                <div class="form-check">
+                                                    @Html.CheckBox("removeName[" + item.Value.AccessName + "]", accessClaims.Any(s => s.Value == AccessKeyValues.Remove), new { id = $"{item.Value.AccessName}_{AccessKeyValues.Remove}", @class="form-check-input" })
+                                                    <label for="@($"{item.Value.AccessName}_{AccessKeyValues.Remove}")" class="form-check-label">Удаление</label>
+                                                </div>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<script>
+    $(document).ready(function () {
+        const fv = FormValidation.formValidation(document.getElementById('sendingForm'), {
+            locale: 'ru_RU',
+            localization: FormValidation.locales.ru_RU,
+            fields: {
+                Name: {
+                    validators: {
+                        notEmpty: {}
+                    }
+                }
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                autoFocus: new FormValidation.plugins.AutoFocus(),
+                submitButton: new FormValidation.plugins.SubmitButton()
+            }
+        }).on('core.form.valid', (event) => {
+            var $form = $(event.formValidation.form);
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                dataType: 'json',
+                beforeSend: () => {
+                    $form.spinnerBtn("start");
+                },
+                complete: () => {
+                    $table.DataTable().ajax.reload(null, false);
+                    $form.spinnerBtn("stop");
+                    $("#mainModal").modal('hide');
+                }
+            });
+        });
+    });
+</script>

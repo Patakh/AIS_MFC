@@ -1,0 +1,258 @@
+﻿@using AisLogistics.App.Models.DTO.Systems
+@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+}
+
+<style>
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .active_test {
+        border-left: 3px solid #5a8dee !important;
+    }
+
+    .Test_Wrapper {
+        height: 50rem;
+    }
+
+    .test-table_Wrapper {
+        height: 100%;
+    }
+
+    .TestEmployees_Wrapper {
+        height: 43rem;
+    }
+
+    .Test-menu-column {
+
+    }
+
+    .table-test {
+        margin: 0 !important;
+    }
+
+        .table-test td {
+            padding: 0 !important;
+        }
+
+    table.dataTable {
+        margin-top: 0 !important;
+    }
+
+</style>
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-4">
+                    <div class="mb-3">
+                        <div class="">
+                            <div class="row">
+                                <div class="col-12">
+                                    <a asp-controller="Systems" asp-action="TestChangeModalAdd" class="btn btn-primary w-100" data-btn-type="modal" data-bs-toggle="tooltip">Добавить</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Test_Wrapper" id="Test_Wrapper">
+                        <div class="table-responsive">
+                            <table id="@Model.TableName" data-action-table="@Model.TableMethodAction" class="table table-test table-no-border mt-0"></table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div class="card active-border" id="empty-table">
+                        <div class="card-body">
+                            <div class="alert-custom" role="alert">
+                                <div class="b-s-16">Внимание</div>
+                                <div class="r-s-14">Выберите тест</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card test-table_Wrapper d-none">
+                        <div class="card-header">
+                            <div class="card-title b-s-18 mb-0" id="card_title"></div>
+                        </div>
+                        <span class="border-bottom"></span>
+                        <div class="card-body pt-0">
+                            <div class="table-responsive mt-3 TestEmployees_Wrapper" id="TestEmployees_Wrapper"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        const $table = $('#@(Model.TableName)');
+        const showTable = () => {
+            $("#empty-table").hide();
+            $(".test-table_Wrapper").removeClass("d-none");
+        };
+        const hiddenTable = () => {
+            $("#empty-table").show();
+            $(".test-table_Wrapper").addClass("d-none");
+        };
+
+        $(document).ready(function () {
+
+            $table.DataTable({
+                sDom: "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-12'p>>",
+                processing: true,
+                serverSide: true,
+                ordering: false,
+                filter: true,
+                searchDelay: 1500,
+                ajax: {
+                    url: $table.data('action-table'),
+                    type: "POST",
+                    datatype: "json"
+                },
+                columns: [
+                    {
+                        title: '',
+                        name: 'test',
+                        render: function (data, type, row) {
+
+                            let countDirections = row.directions.length;
+                            let nameDirections = row.directions.toString();
+
+                            let content = `<div data-test-id="${row.id}" class="card cursor-pointer mb-3">
+                                                                <div class="card-body fs-12">
+                                                                    <div class="d-flex justify-content-between mb-1">
+                                                                        <div id="test_number" data-test-number="${row.number}" class="b-s-14">Тест № ${row.number} от ${row.dateAdd} г.</div>
+                                                                    </div>
+                                                                    <dl class="row mb-0">
+                                                                            <dt class="col-sm-4 r-s-12">Наименование:</dt><dd class="col-sm-8 r-l-12">${row.name}</dd>
+                                                                    </dl>
+                                                                    <dl class="row mb-0">
+                                                                            <dt class="col-sm-4 r-s-12">Количество вопросов:</dt><dd class="col-sm-8 r-l-12">${row.countQuestions}</dd>
+                                                                    </dl>
+                                                                    <dl class="row mb-0">
+                                                                            <dt class="col-sm-4 r-s-12">Время на прохождения:</dt><dd class="col-sm-8 r-l-12">${row.countTime}</dd>
+                                                                    </dl>
+                                                                    <dl class="row mb-0">
+                                                                                <dt class="col-sm-4 r-s-12">Количество направлений:</dt><dd class="col-sm-8 r-l-12" >
+                                                                                        ${countDirections}
+                                                                                            <span class='text-primary' data-bs-toggle="tooltip" title="${nameDirections}">
+                                                                                                <i class="bi bi-info-circle"></i>
+                                                                                            </span>
+                                                                                </dd>
+                                                                    </dl>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-sm-4 r-s-12">Количество сотрудников:</dt><dd class="col-sm-8 r-l-12">${row.countDoneEmployees}/${row.countEmployees}</dd>
+                                                                    </dl>
+                                                                    <dl class="row mb-0">
+                                                                        <dt class="col-sm-4 r-s-12">Cформировал:</dt><dd class="col-sm-8 r-l-12">${row.employeesFioAdd}</dd>
+                                                                    </dl>
+                                                                </div>
+                                                            </div>`;
+
+                            return content;
+                        }
+                    },
+                ]
+            }).on('click', '[data-test-id]', function (e) { testView(e) })
+                .on('click', '[data-edit-test]', function (e) { transferEdit(e) })
+                .on('click', '[data-print-test]', function (e) { trasferPrint(e) })
+                .on('click', '[data-download-test]', function (e) { transferDownload(e) });
+
+            $('#selectOfficeFilter').select2({
+                language: "ru",
+            }).on('change', function () {
+                $table.DataTable().ajax.reload();
+                return false;
+            });
+
+            new PerfectScrollbar("#Test_Wrapper");
+
+            function testView(e) {
+                $('[data-test-id]').removeClass('active_transfer');
+                $(e.currentTarget).addClass('active_transfer');
+
+                let id = $(e.currentTarget).data('test-id');
+
+                let text = $(e.currentTarget).find('[data-test-number]').text();
+                $.ajax({
+                    url: '/Systems/TestChangeSidebarView',
+                    type: 'POST',
+                    data: { id: id },
+                    beforeSend: () => {
+                        $.pageBlock();
+                    },
+                    complete: () => {
+                        $.unblockUI();
+                        showTable();
+                    },
+                    success: function (content) {
+                        $('#card_title').html(text);
+                        $('#TestEmployees_Wrapper').empty();
+                        $('#TestEmployees_Wrapper').html(content);
+                    }
+                });
+            };
+
+            function transferEdit(e) {
+                let th = e.currentTarget;
+                e.stopPropagation();
+                let id = $(th).parents('[data-test-id]').data('test-id');
+
+                $.ajax({
+                    url: '/ReestrTestDocuments/TestDocumentsChangeModalEdit',
+                    type: 'POST',
+                    data: { id: id },
+                    beforeSend: () => {
+                        $.pageBlock();
+                    },
+                    complete: () => {
+                        $.unblockUI();
+                    },
+                    success: function (content) {
+                        $('#mainModal').html(content).modal('show');
+                    }
+                });
+            };
+
+            function trasferPrint(e) {
+                let th = e.currentTarget;
+                e.stopPropagation();
+                let id = $(th).parents('[data-test-id]').data('test-id');
+
+                $.ajax({
+                    url: '/ReestrTestDocuments/TestDocumentsPrint',
+                    type: 'POST',
+                    data: { id: id },
+                    beforeSend: () => {
+                        $.pageBlock();
+                    },
+                    complete: () => {
+                        $.unblockUI();
+                    },
+                    success: function (data) {
+                        printPDF(data);
+                    }
+                });
+            };
+
+            function transferDownload(e) {
+                let th = e.currentTarget;
+                e.stopPropagation();
+                let id = $(th).parents('[data-test-id]').data('test-id');
+
+                let url = '@Url.Action("TestDocumentsDownload", "ReestrTestDocuments")/?id=' + id;
+                window.open(url, "_blank");
+            };
+
+        });
+    </script>
+}
+
+
+
+

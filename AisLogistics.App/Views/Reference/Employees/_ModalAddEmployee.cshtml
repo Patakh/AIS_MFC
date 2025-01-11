@@ -1,0 +1,328 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.EmployeeAddModelDto
+
+<form asp-controller="Reference" asp-action="EmployeeAddSave" id="sendingForm" method="post" role="form">
+    <div class="pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeePersonalNumber">Табельный номер</label>
+                    <input type="text" asp-for="EmployeePersonalNumber" class="form-control" placeholder="Табельный номер">
+                </div>
+            </div>
+
+             <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="EmployeeName">ФИО</label>
+                    <input type="text" asp-for="EmployeeName" maxlength="70" class="form-control" placeholder="ФИО" required>
+                </div>
+            </div>
+
+             <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeePhone">Номер телефона</label>
+                    <input type="text" asp-for="EmployeePhone" class="form-control" placeholder="Номер телефона">
+                </div>
+            </div>
+
+             <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeeEmail">Почта</label>
+                    <input type="text" asp-for="EmployeeEmail" class="form-control" placeholder="Почта">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SOfficesId">Офис</label>
+                    <select asp-for="SOfficesId" asp-items="@ViewBag.Offices" class="form-control">
+                        <option disabled selected value="">Не задано</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SEmployeesJobPositionId">Должность</label>
+                    <select asp-for="SEmployeesJobPositionId" asp-items="@ViewBag.Jobs" class="form-control no-search">
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeeIntensity">Интенсивность</label>
+                    <input type="text" min="0" asp-for="EmployeeIntensity" class="form-control" placeholder="Интенсивность">
+                </div>
+
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeeRate">Ставка</label>
+                    <input type="text" min="0" asp-for="EmployeeRate" class="form-control" placeholder="Ставка">
+                </div>
+            </div>
+
+           <div class="row">
+                <div class="col-12 mb-3 b-s-14">
+                    Документ удостоверяющий личность
+                </div>
+           </div>
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeeDocSerial">Серия</label>
+                    <input type="text" asp-for="EmployeeDocSerial" class="form-control" placeholder="Серия">
+                </div>
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeeDocNumber">Номер</label>
+                    <input type="text" asp-for="EmployeeDocNumber" class="form-control" placeholder="Номер">
+                </div>
+            </div>
+
+   
+            <div class="row">
+                <div class="col-4 mb-3">
+                    <label class="form-label" asp-for="EmployeeDocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input type="text" asp-for="EmployeeDocIssueDate" class="form-control datepick" placeholder="ДД.ММ.ГГГГ">
+                    </div>
+                </div>
+                <div class="col-8 mb-3">
+                    <label class="form-label" asp-for="EmployeeDocIssuePlace">Кем выдан</label>
+                    <input type="text" asp-for="EmployeeDocIssuePlace" class="form-control" placeholder="Кем выдан">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-4 mb-3">
+                    <label class="form-label" asp-for="EmployeeDocBirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input type="text" asp-for="EmployeeDocBirthDate" class="form-control datepick" placeholder="ДД.ММ.ГГГГ">
+                    </div>
+                </div>
+                <div class="col-8 mb-3">
+                    <label class="form-label" asp-for="EmployeeDocBirthPlace">Место рождения</label>
+                    <input type="text" asp-for="EmployeeDocBirthPlace" class="form-control" placeholder="Место рождения">
+                </div>
+            </div>
+
+             <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeeSnils">СНИЛС</label>
+                    <input type="text" asp-for="EmployeeSnils" class="form-control" placeholder="СНИЛС">
+                </div>
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeeInn">ИНН</label>
+                    <input type="text" asp-for="EmployeeInn" class="form-control" placeholder="ИНН">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeeCertificateNumber">Номер сертификата</label>
+                    <input type="text" asp-for="EmployeeCertificateNumber" class="form-control" placeholder="Номер сертификата">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SEmployeesStatusId">Статус</label>
+                    <select asp-for="SEmployeesStatusId" asp-items="@ViewBag.Statuses" class="form-control no-search">
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SRolesExecutorId">Роль исполнителя</label>
+                    <select asp-for="SRolesExecutorId" asp-items="@ViewBag.RolesExecutor" class="form-control">
+                        <option disabled selected value="">Не задано</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 form-check mb-3">
+                    <label class="form-check-label ms-1" asp-for="IsExecution">Исполнение</label>
+                    <input type="checkbox" asp-for="IsExecution" class="form-check-input ms-1">
+                </div>
+                <div class="col-6 form-check mb-3">
+                    <label class="form-check-label ms-1" asp-for="IsActive">Активность</label>
+                    <input type="checkbox" asp-for="IsActive" class="form-check-input ms-1">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="Login">Логин</label>
+                    <input type="text" asp-for="Login" class="form-control" placeholder="Логин">
+                </div>
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="Password">Пароль</label>
+                    <input type="text" asp-for="Password" class="form-control" placeholder="Пароль">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="RoleId">Роль</label>
+                    <select asp-for="RoleId" asp-items="@ViewBag.Roles" class="form-control no-search"></select>
+                </div>
+            </div>
+
+            
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="DateStart">Дата начала</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input type="text" asp-for="DateStart" value="@DateTime.Now" class="form-control datepick" placeholder="ДД.ММ.ГГГГ">
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function() {
+        document.querySelectorAll('#sendingForm select').forEach(item => {
+            if (item.classList.contains('no-search')) {
+                $(item).select2({ dropdownParent: $('#mainModal'), minimumResultsForSearch: -1 });
+                return;
+            }
+            $(item).select2({ dropdownParent: $('#mainModal') });
+        });
+
+        var numericValidator = {
+            validators: {
+                numeric: {
+                    message: 'Укажите число',
+                    thousandsSeparator: '',
+                    decimalSeparator: '@Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator',
+                },
+            },
+        };
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    SOfficesId: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    EmployeeIntensity: numericValidator,
+                    EmployeeRate: numericValidator,
+                    EmployeeName: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    EmployeeEmail: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            },
+                            emailAddress: {
+                                message: 'Поле не является email адресом',
+                            },
+                        },
+                    },
+                    EmployeeSnils: {
+                        validators: {
+                            checkSnils: {
+                                message: 'Неверно указан СНИЛС'
+                            }
+                        }
+                    },
+                    Login: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    Password: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            },
+                            stringLength: {
+                                min: 6,
+                                message: 'Пароль должен содержать не менее 6 символов'
+                            }
+                        }
+                    },
+                    RoleId: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }).on('core.form.valid', function() {
+            var $form = $("#sendingForm");
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                dataType: 'json',
+                beforeSend: () => {
+                    $form.spinnerBtn("start");
+                },
+                complete: () => {
+                    if (typeof $table === 'undefined')
+                    {
+                        window.location.reload();
+                    }
+                    else
+                    {
+                        $table.DataTable().ajax.reload(null, false);
+                    }
+                    $form.spinnerBtn("stop");
+                    $("#mainModal").modal('hide');
+                }
+            });
+            return false;
+        });
+
+        $('#DateStart').datepicker({
+            language: "ru",
+            autoclose: true,
+            format: 'dd.mm.yyyy',
+            startDate: '-0d',
+        });
+
+        var dateinputs = $('#sendingForm .datepick');
+        dateinputs.datepicker({
+            language: "ru",
+            autoclose: true,
+            format: 'dd.mm.yyyy',
+        });
+
+        var defOpts = { clearIncomplete: true, showMaskOnHover: false };
+        $('#EmployeePhone').inputmask("+7 (999) 999-99-99", defOpts);
+        $('#EmployeeEmail').inputmask("email", defOpts);
+        $("#EmployeeDocSerial").inputmask("99 99", defOpts);
+        $("#EmployeeDocNumber").inputmask("999999", defOpts);
+        $("#EmployeeSnils").inputmask("999-999-999 99", defOpts);
+        $('#EmployeeInn').inputmask("9999999999", defOpts);
+        //dateinputs.inputmask("dd.mm.yyyy", defOpts);
+        dateinputs.inputmask("datetime", { inputFormat: "dd.mm.yyyy", "clearIncomplete": true, showMaskOnHover: false, insertmode: true });
+    });
+</script>

@@ -1,0 +1,165 @@
+﻿@model ViewModelBuilder
+@{
+    string Id = ViewData["Id"]?.ToString() ?? string.Empty;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                @if (Model.IsVisibleDescription)
+                {
+                    <div class="b-s-14">@Model.ViewDescription</div>
+                }
+            </div>
+
+            <div class="col-6 pull-right">
+                @if (User.HasClaim(AccessKeyNames.ReferenceService, AccessKeyValues.Add))
+                {
+                    <div class="col-auto text-md-end">
+                        <a href="javascript:void(0);" data-btn-params='{"actionType":"@ActionType.Add", "serviceId" : "@Id" }' data-btn-type="add" data-for-table="@Model.TableName" class="r-a-14">
+                            <i class="bi bi-plus"></i> Добавить
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive mt-3">
+                    <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceService" class="directory_names-items table table-striped"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    tableBlancs = $('#@(Model.TableName)');
+
+    $(document).ready(function () {
+        let isCanAddBlancs = tableBlancs.is('[data-action-add]'),
+            isCanEditBlancs = tableBlancs.is('[data-action-edit]'),
+            isCanRemoveBlancs = tableBlancs.is('[data-action-remove]');
+
+        tableBlancs.DataTable({
+            sDom: "<'row me-5 pe-1'<'col-sm-12 col-md-8 'f>>" +
+                "<'row'<'col-sm-12'tr>>",
+            processing: true,
+            serverSide: true,
+            filter: true,
+            searching: false,
+            ajax: {
+                url: tableBlancs.data('action-table'),
+                type: "POST",
+                datatype: "json",
+                dataSrc: function (json) {
+                    return json.data;
+                }
+            },
+            initComplete: function () {
+                  
+            },
+            columnDefs: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    targets: 1,
+                    title: 'Процедура',
+                    orderable: false
+                },
+                {
+                    targets: 2,
+                    title: 'Файл',
+                    orderable: false
+                },
+                {
+                    targets: 3,
+                    title: 'Сотрудник',
+                    orderable: false
+                },
+                {
+                    targets: 4,
+                    title: 'Комментарий',
+                    orderable: false
+                },
+                {
+                    targets: -1,
+                    title: 'Действия',
+                    data: "id",
+                    width: "115px",
+                    className: 'text-center editor-edit',
+                    sorting: false,
+                    orderable: false
+                }
+            ],
+            columns: [
+                {},
+                {
+                    data: "procedureName"
+                },
+                {
+                    render: function (data, type, row) {
+                        return `<span>${row.fileName}</span>
+                                ${row.fileExpansion === null ? '' : '<br /><small>' + row.fileExpansion + '</small>'}
+                                ${row.fileSize === null ? '' : '<br /><small>' + row.fileSize + ' КБ' + '</small>'}`;
+                    }
+                },
+                {
+                    data: "employeesFioAdd"
+                },
+                {
+                    data: "commentt"
+                },
+                {
+                    render: function (data, type, row) {
+                        let content = "";
+                        content += DownloadBtnBlancs(data);
+                        if (row.sServicesId != null) {
+                            if (isCanEditBlancs === true)
+                                content += EditBtnBlancs({ "id": data, "actionType": 1, "serviceId": "@Id" });
+                            if (isCanRemoveBlancs === true)
+                                content += DeleteBtnBlancs({ "id": data });
+                        }
+                        return content;
+                    }
+                }
+            ]
+        });
+
+        tableBlancs.on("reload", () => {
+            tableBlancs.DataTable().ajax.reload(null, false);
+        });
+
+        tableBlancs.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        let DownloadBtnBlancs = (data) => {
+            return `<a href="/Reference/ServiceBlancDownload?id=${data}" target="_blank" data-btn-type="download" data-bs-toggle="tooltip" title="Скачать" class="btn btn-sm btn-icon text-success">
+                    <i class="bi bi-download"></i></a>`;
+        }
+
+        let EditBtnBlancs = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="edit" data-bs-toggle="tooltip" title="Изменить" class="btn btn-sm btn-icon text-body">
+                    <i class="bi bi-pencil-square"></i></a>`;
+        }
+
+        let DeleteBtnBlancs = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-service-remove-btn-type data-bs-toggle="tooltip" title="Удалить" class="btn btn-sm btn-icon text-danger">
+                    <i class="bi bi-trash"></i></a>`;
+        }
+    });
+</script>

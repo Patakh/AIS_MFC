@@ -1,0 +1,2065 @@
+﻿@using SmevRouter
+@using Sentry
+@model AisLogistics.App.ViewModels.Cases.SmevCreateResponseModel
+@{
+    var applicants = Model.GetApplicants();
+    var request = new GetDealsRegistrationRightRestrictionRequestData
+            {
+                StatementOwner = new EgrnStatementOwner
+                {
+                    Owners = new[]
+                                                                                                                                                                                                                                                                                                                                                                                             {
+                 new EgrnOwner
+                 {
+                    Contractor = new EgrnContractor(),
+                    Country = new EgrnCountry
+                    {
+                        ContactInfo = new EgrnContactInfo{
+                            PostalAddress = new EgrnAddress
+                            {
+                                AdditionalElement = new EgrnAddressFieldType(),
+                                Apartment = new EgrnAddressApartmentField(),
+                                Autonomy = new EgrnAddressFieldType(),
+                                Building = new EgrnAddressHouseField(),
+                                City = new EgrnAddressFieldType(),
+                                District = new EgrnAddressFieldType(),
+                                Locality = new EgrnAddressFieldType(),
+                                Region =new EgrnAddressFieldType(),
+                                Street = new EgrnAddressFieldType(),
+                                Structure = new EgrnAddressHouseField(),
+                                SubordinateElement = new EgrnAddressFieldType(),
+                                UrbanDistrict = new EgrnAddressFieldType()
+                            }
+                        }
+                    },
+                    Notary = new EgrnNotary
+                    {
+                        Fio = new FioType()
+                    },
+                    Organization = new EgrnOrganization
+                    {
+                        Address = new EgrnAddress
+                        {
+                                AdditionalElement = new EgrnAddressFieldType(),
+                                Apartment = new  EgrnAddressApartmentField(),
+                                Autonomy = new EgrnAddressFieldType(),
+                                Building = new EgrnAddressHouseField(),
+                                City = new EgrnAddressFieldType(),
+                                District = new EgrnAddressFieldType(),
+                                Locality = new EgrnAddressFieldType(),
+                                Region =new EgrnAddressFieldType(),
+                                Street = new EgrnAddressFieldType(),
+                                Structure = new EgrnAddressHouseField(),
+                                SubordinateElement = new EgrnAddressFieldType(),
+                                UrbanDistrict = new EgrnAddressFieldType()
+                        },
+                        ContactInfo = new EgrnContactInfo{
+                            PostalAddress = new EgrnAddress
+                            {
+                                AdditionalElement = new EgrnAddressFieldType(),
+                                Apartment = new EgrnAddressApartmentField(),
+                                Autonomy = new EgrnAddressFieldType(),
+                                Building = new EgrnAddressHouseField(),
+                                City = new EgrnAddressFieldType(),
+                                District = new EgrnAddressFieldType(),
+                                Locality = new EgrnAddressFieldType(),
+                                Region =new EgrnAddressFieldType(),
+                                Street = new EgrnAddressFieldType(),
+                                Structure = new EgrnAddressHouseField(),
+                                SubordinateElement = new EgrnAddressFieldType(),
+                                UrbanDistrict = new EgrnAddressFieldType()
+                            }
+                        },
+                        ForeignOrgParams = new  EgrnForeignOrgParams()
+                    },
+                    Other = new EgrnOtherOwner(),
+                    Person = new EgrnPerson
+                    {
+                       Address = new EgrnAddress
+                        {
+                                AdditionalElement = new EgrnAddressFieldType(),
+                                Apartment = new  EgrnAddressApartmentField(),
+                                Autonomy = new EgrnAddressFieldType(),
+                                Building = new EgrnAddressHouseField(),
+                                City = new EgrnAddressFieldType(),
+                                District = new EgrnAddressFieldType(),
+                                Locality = new EgrnAddressFieldType(),
+                                Region =new EgrnAddressFieldType(),
+                                Street = new EgrnAddressFieldType(),
+                                Structure = new EgrnAddressHouseField(),
+                                SubordinateElement = new EgrnAddressFieldType(),
+                                UrbanDistrict = new EgrnAddressFieldType()
+                        },
+                        ContactInfo = new EgrnContactInfo{
+                            PostalAddress = new EgrnAddress
+                            {
+                                AdditionalElement = new EgrnAddressFieldType(),
+                                Apartment = new EgrnAddressApartmentField(),
+                                Autonomy = new EgrnAddressFieldType(),
+                                Building = new EgrnAddressHouseField(),
+                                City = new EgrnAddressFieldType(),
+                                District = new EgrnAddressFieldType(),
+                                Locality = new EgrnAddressFieldType(),
+                                Region =new EgrnAddressFieldType(),
+                                Street = new EgrnAddressFieldType(),
+                                Structure = new EgrnAddressHouseField(),
+                                SubordinateElement = new EgrnAddressFieldType(),
+                                UrbanDistrict = new EgrnAddressFieldType()
+                            }
+                        },
+                        Citizenship = new EgrnCitizenship(),
+                        Fio = new FioType(),
+                        PersonPreviousData = new EgrnPersonPreviousData
+                        {
+                            Fios = new[]
+                            {
+                              new FioType(),
+                            },
+                            Addresses = new[]
+                            {
+                                new EgrnAddress
+                               {
+                                   AdditionalElement = new EgrnAddressFieldType(),
+                                Apartment = new EgrnAddressApartmentField(),
+                                Autonomy = new EgrnAddressFieldType(),
+                                Building = new EgrnAddressHouseField(),
+                                City = new EgrnAddressFieldType(),
+                                District = new EgrnAddressFieldType(),
+                                Locality = new EgrnAddressFieldType(),
+                                Region =new EgrnAddressFieldType(),
+                                Street = new EgrnAddressFieldType(),
+                                Structure = new EgrnAddressHouseField(),
+                                SubordinateElement = new EgrnAddressFieldType(),
+                                UrbanDistrict = new EgrnAddressFieldType()
+                               }
+                            }
+                        }
+                    },
+                    PreviligedPerson = new EgrnPreviligedPerson(),
+                    Representative = new EgrnRepresentative
+                      {
+                        Subject = new EgrnOwner
+                        {
+                            Person = new EgrnPerson
+                    {
+                       Address = new EgrnAddress
+                        {
+                                AdditionalElement = new EgrnAddressFieldType(),
+                                Apartment = new  EgrnAddressApartmentField(),
+                                Autonomy = new EgrnAddressFieldType(),
+                                Building = new EgrnAddressHouseField(),
+                                City = new EgrnAddressFieldType(),
+                                District = new EgrnAddressFieldType(),
+                                Locality = new EgrnAddressFieldType(),
+                                Region =new EgrnAddressFieldType(),
+                                Street = new EgrnAddressFieldType(),
+                                Structure = new EgrnAddressHouseField(),
+                                SubordinateElement = new EgrnAddressFieldType(),
+                                UrbanDistrict = new EgrnAddressFieldType()
+                        },
+                        ContactInfo = new EgrnContactInfo{
+                            PostalAddress = new EgrnAddress
+                            {
+                                AdditionalElement = new EgrnAddressFieldType(),
+                                Apartment = new EgrnAddressApartmentField(),
+                                Autonomy = new EgrnAddressFieldType(),
+                                Building = new EgrnAddressHouseField(),
+                                City = new EgrnAddressFieldType(),
+                                District = new EgrnAddressFieldType(),
+                                Locality = new EgrnAddressFieldType(),
+                                Region =new EgrnAddressFieldType(),
+                                Street = new EgrnAddressFieldType(),
+                                Structure = new EgrnAddressHouseField(),
+                                SubordinateElement = new EgrnAddressFieldType(),
+                                UrbanDistrict = new EgrnAddressFieldType()
+                            }
+                        },
+                        Citizenship = new EgrnCitizenship(),
+                        Fio = new FioType(),
+                        PersonPreviousData = new EgrnPersonPreviousData
+                        {
+                            Fios = new[]
+                            {
+                              new FioType(),
+                            },
+                            Addresses = new[]
+                            {
+                                new EgrnAddress
+                               {
+                                   AdditionalElement = new EgrnAddressFieldType(),
+                                Apartment = new EgrnAddressApartmentField(),
+                                Autonomy = new EgrnAddressFieldType(),
+                                Building = new EgrnAddressHouseField(),
+                                City = new EgrnAddressFieldType(),
+                                District = new EgrnAddressFieldType(),
+                                Locality = new EgrnAddressFieldType(),
+                                Region =new EgrnAddressFieldType(),
+                                Street = new EgrnAddressFieldType(),
+                                Structure = new EgrnAddressHouseField(),
+                                SubordinateElement = new EgrnAddressFieldType(),
+                                UrbanDistrict = new EgrnAddressFieldType()
+                               }
+                            }
+                        }
+                    },
+                        }
+                    },
+                    RfSubject = new EgrnRfSubject
+                    {
+                        ContactInfo = new EgrnContactInfo{
+                            PostalAddress = new EgrnAddress
+                            {
+                                AdditionalElement = new EgrnAddressFieldType(),
+                                Apartment = new EgrnAddressApartmentField(),
+                                Autonomy = new EgrnAddressFieldType(),
+                                Building = new EgrnAddressHouseField(),
+                                City = new EgrnAddressFieldType(),
+                                District = new EgrnAddressFieldType(),
+                                Locality = new EgrnAddressFieldType(),
+                                Region =new EgrnAddressFieldType(),
+                                Street = new EgrnAddressFieldType(),
+                                Structure = new EgrnAddressHouseField(),
+                                SubordinateElement = new EgrnAddressFieldType(),
+                                UrbanDistrict = new EgrnAddressFieldType()
+                            }
+                        }
+                    }
+                 }
+             }
+                },
+                StatementDetails = new EgrnStatementDetails
+                {
+                    CadastralAction = new[]
+                                                                                                                                                                                                                                                                                                                                                                                            {
+                new EgrnCadastralAction
+                {
+                    CadastralNumber = new[]
+                    {
+                        new EgrnEnclosingObjectCadastralNumber()
+                    }
+                }
+            },
+                    CombinedAction = new EgrnCombinedAction
+                    {
+                        CadastralAction = new[]
+                                                                                                                                                                                                                                                                                                                                                                                                {
+                   new EgrnCadastralAction
+                   {
+                       CadastralNumber = new[]
+                       {
+                           new EgrnEnclosingObjectCadastralNumber()
+                       }
+                   }
+                },
+                        RightAction = new EgrnRealEstateRightAction()
+                    }
+                },
+                RealEstates = new[]
+                                                                                                                                                                                                                                                                                                                                                                                {
+                      new EgrnRealEstate
+                      {
+                            Addresses =new[]
+                            {
+                              new EgrnAddress
+                              {
+                                AdditionalElement = new EgrnAddressFieldType(),
+                                Apartment = new  EgrnAddressApartmentField(),
+                                Autonomy = new EgrnAddressFieldType(),
+                                Building = new EgrnAddressHouseField(),
+                                City = new EgrnAddressFieldType(),
+                                District = new EgrnAddressFieldType(),
+                                Locality = new EgrnAddressFieldType(),
+                                Region =new EgrnAddressFieldType(),
+                                Street = new EgrnAddressFieldType(),
+                                Structure = new EgrnAddressHouseField(),
+                                SubordinateElement = new EgrnAddressFieldType(),
+                                UrbanDistrict = new EgrnAddressFieldType()
+                              }
+                            },
+                            Notes = new[]
+                            {
+                                new EgrnRealEstateNote
+                                {
+                                    Pik = new[]
+                                    {
+                                       new EgrnObjectPik{
+                                            Addresses = new[]
+                                               {
+                                              new EgrnAddress
+                              {
+                                AdditionalElement = new EgrnAddressFieldType(),
+                                Apartment = new  EgrnAddressApartmentField(),
+                                Autonomy = new EgrnAddressFieldType(),
+                                Building = new EgrnAddressHouseField(),
+                                City = new EgrnAddressFieldType(),
+                                District = new EgrnAddressFieldType(),
+                                Locality = new EgrnAddressFieldType(),
+                                Region =new EgrnAddressFieldType(),
+                                Street = new EgrnAddressFieldType(),
+                                Structure = new EgrnAddressHouseField(),
+                                SubordinateElement = new EgrnAddressFieldType(),
+                                UrbanDistrict = new EgrnAddressFieldType()
+                              }
+                            }
+                                       }
+                                    },
+                                    PropertyNote = new EgrnPropertyNote()
+                                }
+                            }
+                      }
+                }
+            };
+    IEnumerable<SelectListItem> ownerType = new List<SelectListItem>
+    {
+        new("Физическое лицо", "Person"),
+        new("Российское юридическое лицо", "Organization"),
+        new("Иностранное юридическое лицо", "OrganizationIn"),
+        new("Уполномоченное лицо: нотариус, судебный пристав-исполнитель и прочие", "PreviligedPerson"),
+        new("Субъект РФ", "RfSubject"),
+        new("РФ или иное государство", "Country"),
+         new("ФОИВ, РОИВ, ОМСУ", "Other1"),
+    };
+}
+<style>
+    #smev-data-form-content span .select2-selection.select2-selection--single {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-request-tabContent .tab-pane {
+        height: 550px;
+    }
+
+    #smev-data-form-content div.lg-container {
+        position: relative;
+        z-index: 9999;
+    }
+
+    #smev-data-form-content .accordion-button {
+        background-color: #e5edfc !important;
+    }
+
+    #smev-data-form-content #listService {
+        font-size: 16px;
+    }
+
+        #smev-data-form-content #listService .select2-selection.select2-selection--single {
+            height: auto !important;
+        }
+
+        #smev-data-form-content #listService .select2-selection__rendered {
+            white-space: normal !important;
+        }
+
+    #smev-data-form-content ul.address-list {
+        display: none;
+        width: 100%;
+        z-index: 1000;
+        position: absolute;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+        background-clip: padding-box;
+    }
+
+        #smev-data-form-content ul.address-list li {
+            padding: 6px;
+        }
+
+            #smev-data-form-content ul.address-list li:hover {
+                color: white;
+                background-color: #5a8dee;
+                cursor: pointer
+            }
+</style>
+
+<div class="row justify-content-center" id="smev_request">
+    <div class="col-10">
+        <ul class="nav nav-tabs nav-justified tabs-line mb-3" id="smev-request-tablist" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#smev-request-tab1" type="button">Заявитель</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#smev-request-tab2" type="button">Обьект недвижимости</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#smev-request-tab3" type="button">Оплата</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#smev-request-tab4" type="button">Детали запроса</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#smev-request-tab5" type="button">Документы</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="smev-request-tab-content">
+            <div class="tab-pane fade show active" id="smev-request-tab1" role="tabpanel">
+                <div class="row justify-content-center mb-3">
+                    <div class="col-12 mx-auto">
+                        <div class="fs-5 b-s-16">Заявители</div>
+                    </div>
+                    <div id="OwnersList" data-clone-list>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-1">
+                        <button type="button" class="btn btn-primary" id="addOwners"><i class="bi bi-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade show" id="smev-request-tab2" role="tabpanel">
+                <div class="row justify-content-center mb-3">
+                    <div class="col-12 mx-auto">
+                        <div class="fs-5 b-s-16">Обьект недвижимости</div>
+                    </div>
+                    <div id="EgrnRealEstateList" data-clone-list>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-1">
+                        <button type="button" class="btn btn-primary" id="addEgrnRealEstate"><i class="bi bi-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade show" id="smev-request-tab3" role="tabpanel">
+                <div class="row justify-content-center">
+                    <div class="col-4">
+                        <label class="form-label" for="Prepayment">Выберите способ оплаты</label>
+                        <select class="select2-search" id="Prepayment">
+                            <option value="Uin">Оплата по УИН</option>
+                            <option value="Prepayment">Оплата по предоплате</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row justify-content-end" id="PrepaymentDoc" data-disabled>
+                    <div class="col-12">
+                        <button type="button" class="btn btn-outline-secondary buttons_height lh-1" onclick="getServiceDocuments()">
+                            ОБНОВИТЬ
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary buttons_height lh-1" data-upload-type="Desktop">
+                            ЗАГР
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary buttons_height lh-1" data-upload-type="Scan">
+                            СКАН
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade show" id="smev-request-tab4" role="tabpanel">
+                <h6>Действия</h6>
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.StatementDetails.RightAction.RightKindCode">Вид права</label>
+                        <select class="select2-search required" asp-for="@request.StatementDetails.RightAction.RightKindCode"
+                                data-dictionary='{"dictionary":"RosReestrEgrnRight"}'>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div class="form-check form-check-inline mx-0 me-2">
+                            <input class="form-check-input" type="radio" name="request.StatementDetails.RightAction.DealCode" id="DealCode_1" checked="checked" value="454002001000">
+                            <label class="form-check-label" for="DealCode_1">Договор аренды</label>
+                        </div>
+                        <div class="form-check form-check-inline mx-0">
+                            <input class="form-check-input" type="radio" name="request.StatementDetails.RightAction.DealCode" id="DealCode_2" value="454003000000">
+                            <label class="form-check-label" for="DealCode_2">Договор участия в долевом строительстве</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-6 mb-3">
+                        <label class="form-label" asp-for="@request.StatementDetails.CombinedAction.RightAction.SharePartNumerator">Доля. Чиститель</label>
+                        <input type="number" class="form-control" placeholder="Доля. Чиститель" asp-for="@request.StatementDetails.CombinedAction.RightAction.SharePartNumerator">
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label" asp-for="@request.StatementDetails.CombinedAction.RightAction.SharePartDenominator">Доля. Знаменатель</label>
+                        <input type="number" class="form-control" placeholder="Доля. Знаменатель" asp-for="@request.StatementDetails.CombinedAction.RightAction.SharePartDenominator" />
+                    </div>
+                    <div class="col-12 form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" name="request.StatementDetails.CombinedAction.RightAction.ShareOfAppartmentBuilding" id="request_StatementDetails_CombinedAction_RightAction_ShareOfAppartmentBuilding" value="true">
+                        <label class="form-check-label fs-5 b-s-16" for="request_StatementDetails_CombinedAction_RightAction_ShareOfAppartmentBuilding">Признак того, что в заявлении регистрируется доля в праве общей собственности на общее имущество в многоквартирном доме</label>
+                    </div>
+                    <div class="col-12 form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="request.StatementDetails.CombinedAction.RightAction.ShareNoRights" id="request_StatementDetails_CombinedAction_RightAction_ShareNoRights" value="true">
+                        <label class="form-check-label fs-5 b-s-16" for="request_StatementDetails_CombinedAction_RightAction_ShareNoRights">Регистрация доли в праве общей долевой собственности, возникновение которой не связано с государственной регистрацией права</label>
+                    </div>
+                </div>
+                <hr />
+                <h6>Регион направления запроса</h6>
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.RegionCode">Регион направления запроса</label>
+                        <select class="select2-search required" asp-for="@request.RegionCode"
+                                data-dictionary='{"dictionary":"RosReestrEgrnRegionsRf", "default_value":"04"}'>
+                        </select>
+                    </div>
+                </div>
+                <hr />
+                <h6>Для удостоверения проведенной государственной регистрации права собственности прошу выдать документ</h6>
+                <div class="row justify-content-center">
+                    <div class="col-12 form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="request.IssueEgrnStatement" id="request_IssueEgrnStatement" value="true">
+                        <label class="form-check-label fs-5 b-s-16" for="request_IssueEgrnStatement">Выдать выписку из ЕГРН об основных характеристиках и зарегистрированных правах на объект недвижимости</label>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade show" id="smev-request-tab5" role="tabpanel">
+                <div class="row justify-content-center">
+                    <div class="row justify-content-end">
+                        <div class="col-12">
+                            <button type="button" class="btn btn-outline-secondary buttons_height lh-1" onclick="getServiceDocuments()">
+                                ОБНОВИТЬ
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary buttons_height lh-1" data-upload-type="Desktop">
+                                ЗАГР
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary buttons_height lh-1" data-upload-type="Scan">
+                                СКАН
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <table id="attachmentsBlock" class="table table-hover table-striped" style="table-layout: fixed">
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-10" id="noDocuments" style="display:none">
+                        <div class="alert alert-primary" role="alert">
+                            <h6 class="alert-heading mb-1">Нет документов</h6>
+                            <span>Добавьте файлы к услуге</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="originalBlock">
+    <div class="g-3" id="OwnersClone" data-original>
+        <hr />
+        <div class="row align-items-center">
+            <div class="col-11">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div class="row mb-1">
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].OwnerType">Тип заявителя</label>
+                                <select class="select2-search required" asp-for="@request.StatementOwner.Owners[0].OwnerType" asp-items="@ownerType">
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].DeclarantKindCode">Категория подателей заявления</label>
+                                <select class="select2-search required" asp-for="@request.StatementOwner.Owners[0].DeclarantKindCode"
+                                        data-dictionary='{"dictionary":"RosReestrEgrnDeclarantKind"}'>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center" data-person id="Person" Owners>
+                    <div class="col-12">
+                        <label class="form-label">Заявители</label>
+                        <select class="select2-nosearch applicants">
+                            <option value="">Выберите заявителя</option>
+                            @for (int i = 0; i < applicants.Count; i++)
+                            {
+                                <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <div class="row mb-1">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Person.Fio.LastName">Фамилия</label>
+                                <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.StatementOwner.Owners[0].Person.Fio.LastName" />
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Person.Fio.FirstName">Имя</label>
+                                <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.StatementOwner.Owners[0].Person.Fio.FirstName">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Person.Fio.SecondName">Отчество</label>
+                                <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.StatementOwner.Owners[0].Person.Fio.SecondName">
+                            </div>
+                            <div class="col-8">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Person.BirthPlace">Место рождения</label>
+                                <input type="text" class="form-control" placeholder="Место рождения" asp-for="@request.StatementOwner.Owners[0].Person.BirthPlace">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Person.Snils">СНИЛС</label>
+                                <input type="text" class="form-control required" placeholder="СНИЛС" asp-for="@request.StatementOwner.Owners[0].Person.Snils">
+                            </div>
+                            <div class="col-4">
+                                <label class="d-block form-label mb-3">Пол</label>
+                                <div class="form-check form-check-inline mx-0 me-2">
+                                    <input class="form-check-input" type="radio" name="request.StatementOwner.Owners[0].Person.Gender" id="StatementOwner_Person_Gender_one" value="Male" checked="checked">
+                                    <label class="form-check-label" for="StatementOwner_Person_Gender_one"><i class="bi bi-gender-male fs-6"></i>Мужской</label>
+                                </div>
+                                <div class="form-check form-check-inline mx-0">
+                                    <input class="form-check-input" type="radio" name="request.StatementOwner.Owners[0].Person.Gender" id="StatementOwner_Person_Gender_two" value="Female">
+                                    <label class="form-check-label" for="StatementOwner_Person_Gender_two"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Person.BirthDate">Дата Рождения</label>
+                                <div class="input-group input-group-merge">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-calendar3"></i>
+                                    </span>
+                                    <input type="text" class="form-control pickdate" placeholder="Дата рождения"
+                                           asp-for="@request.StatementOwner.Owners[0].Person.BirthDate" value="">
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Person.Citizenship.CountryCode">Гражданство</label>
+                                <select class="select2-search" asp-for="@request.StatementOwner.Owners[0].Person.Citizenship.CountryCode"
+                                        data-dictionary='{"dictionary":"OksmCodes"}'>
+                                </select>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row justify-content-center">
+                            <div class="col-12 mx-auto">
+                                <div class="fs-6 b-s-16">Документ, удостоверяющий личность</div>
+                            </div>
+                            <div class="col-12">
+                                <div class="row mb-1 align-items-end">
+                                    <div class="col-8">
+                                        <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Person.DocCode">Наименование</label>
+                                        <select class="select2-search required" asp-for="@request.StatementOwner.Owners[0].Person.DocCode"
+                                                data-dictionary='{"dictionary":"RosReestrEgrnIdentityDocuments"}'>
+                                        </select>
+                                    </div>
+                                    <div class="col-2">
+                                        <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Person.DocSeries">Серия</label>
+                                        <input type="text" class="form-control" placeholder="Серия"
+                                               asp-for="@request.StatementOwner.Owners[0].Person.DocSeries">
+                                    </div>
+                                    <div class="col-2">
+                                        <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Person.DocNumber">Номер</label>
+                                        <input type="text" class="form-control required" placeholder="Номер"
+                                               asp-for="@request.StatementOwner.Owners[0].Person.DocNumber">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row ms-1">
+                            <div class="col-12 form-check form-switch mt-3">
+                                <input class="form-check-input" type="checkbox" name="request.StatementOwner.Owners[0].BenefitCategoryCode" id="request_StatementOwner_Owners_0_BenefitCategoryCode" value="true">
+                                <label class="form-check-label fs-6 b-s-16" for="request_StatementOwner_Owners_0_BenefitCategoryCode">Я отношусь к льготной категории</label>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row justify-content-center">
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Person.ContactInfo.EMail">E-mail</label>
+                                <input type="text" class="form-control" placeholder="E-mail"
+                                       asp-for="@request.StatementOwner.Owners[0].Person.ContactInfo.EMail">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Person.ContactInfo.PhoneNumber">Мобильный номер</label>
+                                <input type="text" class="form-control required" placeholder="Мобильный номер"
+                                       asp-for="@request.StatementOwner.Owners[0].Person.ContactInfo.PhoneNumber">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center mt-2" data-address="request_StatementOwner_Owners0_Person_ContactInfo_PostalAddress">
+                            <div class="col-12 mx-auto">
+                                <div class="fs-6 b-s-16">Почтовый адрес</div>
+                            </div>
+                            <div>
+                                <div class="row justify-content-center">
+                                    <div class="col-12">
+                                        @{
+                                            ViewBag.Id = "Person_StatementOwner_Owners0_Person_ContactInfo_PostalAddress";
+                                            ViewBag.Name = "StatementOwner.Owners[0].Person.ContactInfo.PostalAddress";
+                                        }
+                                        @Html.Partial("~/Views/SmevForm/RosReestr/RegistrationRightRestriction/AddressPartial.cshtml")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center" data-person id="Organization" data-disabled owners>
+                    <div class="col-12">
+                        <div class="col-12">
+                            <label class="form-label">Заявители</label>
+                            <select class="select2-nosearch applicants">
+                                <option value="">Выберите заявителя</option>
+                                @for (int i = 0; i < applicants.Count; i++)
+                                {
+                                    <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <div class="row mb-1">
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Organization.NativeOrgParams.Inn">ИНН</label>
+                                    <input type="text" class="form-control required" placeholder="ИНН" asp-for="@request.StatementOwner.Owners[0].Organization.NativeOrgParams.Inn" />
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Organization.NativeOrgParams.Ogrn">ОГРН</label>
+                                    <input type="text" class="form-control required" placeholder="ОГРН" asp-for="@request.StatementOwner.Owners[0].Organization.NativeOrgParams.Ogrn">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Organization.NativeOrgParams.RegDate">Дата регистрации</label>
+                                    <div class="input-group input-group-merge">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-calendar3"></i>
+                                        </span>
+                                        <input type="text" class="form-control pickdate" placeholder="Дата регистрации"
+                                               asp-for="@request.StatementOwner.Owners[0].Organization.NativeOrgParams.RegDate" value="">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Organization.Name">Наименование</label>
+                                    <input type="text" class="form-control" placeholder="Наименование" asp-for="@request.StatementOwner.Owners[0].Organization.Name">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Organization.Kpp">Kpp</label>
+                                    <input type="text" class="form-control" placeholder="Kpp" asp-for="@request.StatementOwner.Owners[0].Organization.Kpp">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Organization.ContactInfo.EMail">E-mail</label>
+                                    <input type="text" class="form-control" placeholder="E-mail"
+                                           asp-for="@request.StatementOwner.Owners[0].Organization.ContactInfo.EMail">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Organization.ContactInfo.PhoneNumber">Мобильный номер</label>
+                                    <input type="text" class="form-control required" placeholder="Мобильный номер"
+                                           asp-for="@request.StatementOwner.Owners[0].Organization.ContactInfo.PhoneNumber">
+                                </div>
+                            </div>
+                            <div class="row justify-content-center mt-2" data-address="request_StatementOwner_Owners0_Organization_ContactInfo_PostalAddress">
+                                <div class="col-12 mx-auto">
+                                    <div class="fs-6 b-s-16">Почтовый адрес</div>
+                                </div>
+                                <div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-12">
+                                            @{
+                                                ViewBag.Id = "Organization_StatementOwner_Owners0_Organization_ContactInfo_PostalAddress";
+                                                ViewBag.Name = "StatementOwner.Owners[0].Organization.ContactInfo.PostalAddress";
+                                            }
+                                            @Html.Partial("~/Views/SmevForm/RosReestr/RegistrationRightRestriction/AddressPartial.cshtml")
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center" data-person id="OrganizationIn" data-disabled owners>
+                    <div class="col-12">
+                        <div class="col-12">
+                            <label class="form-label">Заявители</label>
+                            <select class="select2-nosearch applicants">
+                                <option value="">Выберите заявителя</option>
+                                @for (int i = 0; i < applicants.Count; i++)
+                                {
+                                    <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <div class="row mb-1">
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Organization.ForeignOrgParams.CountryCode">Код страны регистрации</label>
+                                    <input type="text" class="form-control" placeholder="Код страны регистрации" asp-for="@request.StatementOwner.Owners[0].Organization.ForeignOrgParams.CountryCode" />
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Organization.ForeignOrgParams.CountryCode">КИО</label>
+                                    <input type="text" class="form-control required" placeholder="КИО" asp-for="@request.StatementOwner.Owners[0].Organization.ForeignOrgParams.CountryCode">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Organization.ForeignOrgParams.RegDate">Дата регистрации</label>
+                                    <div class="input-group input-group-merge">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-calendar3"></i>
+                                        </span>
+                                        <input type="text" class="form-control pickdate" placeholder="Дата регистрации"
+                                               asp-for="@request.StatementOwner.Owners[0].Organization.ForeignOrgParams.RegDate" value="">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Organization.ForeignOrgParams.RegNumber">Номер регистрации</label>
+                                    <input type="text" class="form-control" placeholder="Номер регистрации" asp-for="@request.StatementOwner.Owners[0].Organization.ForeignOrgParams.RegNumber">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Organization.Name">Наименование</label>
+                                    <input type="text" class="form-control" placeholder="Наименование" asp-for="@request.StatementOwner.Owners[0].Organization.Name">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Organization.Kpp">Kpp</label>
+                                    <input type="text" class="form-control" placeholder="Kpp" asp-for="@request.StatementOwner.Owners[0].Organization.Kpp">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Organization.ContactInfo.EMail">E-mail</label>
+                                    <input type="text" class="form-control" placeholder="E-mail"
+                                           asp-for="@request.StatementOwner.Owners[0].Organization.ContactInfo.EMail">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Organization.ContactInfo.PhoneNumber">Мобильный номер</label>
+                                    <input type="text" class="form-control required" placeholder="Мобильный номер"
+                                           asp-for="@request.StatementOwner.Owners[0].Organization.ContactInfo.PhoneNumber">
+                                </div>
+                            </div>
+                            <div class="row justify-content-center mt-2" data-address="request_StatementOwner_Owners0_Organization_ContactInfo_PostalAddress">
+                                <div class="col-12 mx-auto">
+                                    <div class="fs-6 b-s-16">Почтовый адрес</div>
+                                </div>
+                                <div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-12">
+                                            @{
+                                                ViewBag.Id = "OrganizationIn_StatementOwner_Owners0_Organization_ContactInfo_PostalAddress";
+                                                ViewBag.Name = "StatementOwner.Owners[0].Organization.ContactInfo.PostalAddress";
+                                            }
+                                            @Html.Partial("~/Views/SmevForm/RosReestr/RegistrationRightRestriction/AddressPartial.cshtml")
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center" data-person id="PreviligedPerson" data-disabled owners>
+                    <div class="col-12">
+                        <div class="col-12">
+                            <label class="form-label">Заявители</label>
+                            <select class="select2-nosearch applicants">
+                                <option value="">Выберите заявителя</option>
+                                @for (int i = 0; i < applicants.Count; i++)
+                                {
+                                    <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <div class="row mb-1">
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.Fio.LastName">Фамилия</label>
+                                    <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.Fio.LastName" />
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.Fio.FirstName">Имя</label>
+                                    <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.Fio.FirstName">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.Fio.SecondName">Отчество</label>
+                                    <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.Fio.SecondName">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.Snils">СНИЛС</label>
+                                    <input type="text" class="form-control required" placeholder="СНИЛС" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.Snils">
+                                </div>
+                                <div class="col-4">
+                                    <label class="d-block form-label mb-3">Пол</label>
+                                    <div class="form-check form-check-inline mx-0 me-2">
+                                        <input class="form-check-input" type="radio" name="request.StatementOwner.Owners[0].PreviligedPerson.Gender" id="StatementOwner_PreviligedPerson_Gender_one" value="Male" checked="checked">
+                                        <label class="form-check-label" for="StatementOwner_Person_Gender_one"><i class="bi bi-gender-male fs-6"></i>Мужской</label>
+                                    </div>
+                                    <div class="form-check form-check-inline mx-0">
+                                        <input class="form-check-input" type="radio" name="request.StatementOwner.Owners[0].PreviligedPerson.Gender" id="StatementOwner_PreviligedPerson_Gender_two" value="Female">
+                                        <label class="form-check-label" for="StatementOwner_PreviligedPerson_Gender_two"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.BirthDate">Дата Рождения</label>
+                                    <div class="input-group input-group-merge">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-calendar3"></i>
+                                        </span>
+                                        <input type="text" class="form-control pickdate" placeholder="Дата рождения"
+                                               asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.BirthDate" value="">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.Citizenship.CountryCode">Гражданство</label>
+                                    <select class="select2-search" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.Citizenship.CountryCode"
+                                            data-dictionary='{"dictionary":"OksmCodes"}'>
+                                    </select>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row justify-content-center">
+                                <div class="col-12 mx-auto">
+                                    <div class="fs-6 b-s-16">Документ, удостоверяющий личность</div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row mb-1 align-items-end">
+                                        <div class="col-8">
+                                            <label class="form-label" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.DocCode">Наименование</label>
+                                            <select class="select2-search required" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.DocCode"
+                                                    data-dictionary='{"dictionary":"RosReestrEgrnIdentityDocuments"}'>
+                                            </select>
+                                        </div>
+                                        <div class="col-2">
+                                            <label class="form-label" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.DocSeries">Серия</label>
+                                            <input type="text" class="form-control" placeholder="Серия"
+                                                   asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.DocSeries">
+                                        </div>
+                                        <div class="col-2">
+                                            <label class="form-label" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.DocNumber">Номер</label>
+                                            <input type="text" class="form-control required" placeholder="Номер"
+                                                   asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.DocNumber">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row justify-content-center">
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.ContactInfo.EMail">E-mail</label>
+                                    <input type="text" class="form-control" placeholder="E-mail"
+                                           asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.ContactInfo.EMail">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.ContactInfo.PhoneNumber">Мобильный номер</label>
+                                    <input type="text" class="form-control required" placeholder="Мобильный номер"
+                                           asp-for="@request.StatementOwner.Owners[0].PreviligedPerson.ContactInfo.PhoneNumber">
+                                </div>
+                            </div>
+                            <div class="row justify-content-center mt-2" data-address="request_StatementOwner_Owners0_PreviligedPerson_ContactInfo_PostalAddress">
+                                <div class="col-12 mx-auto">
+                                    <div class="fs-6 b-s-16">Почтовый адрес</div>
+                                </div>
+                                <div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-12">
+                                            @{
+                                                ViewBag.Id = "PreviligedPerson_StatementOwner_Owners0_PreviligedPerson_ContactInfo_PostalAddress";
+                                                ViewBag.Name = "StatementOwner.Owners[0].PreviligedPerson.ContactInfo.PostalAddress";
+                                            }
+                                            @Html.Partial("~/Views/SmevForm/RosReestr/RegistrationRightRestriction/AddressPartial.cshtml")
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center" data-person id="Other1" data-disabled owners>
+                    <div class="col-12">
+                        <div class="col-12">
+                            <label class="form-label">Заявители</label>
+                            <select class="select2-nosearch applicants">
+                                <option value="">Выберите заявителя</option>
+                                @for (int i = 0; i < applicants.Count; i++)
+                                {
+                                    <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <div class="row mb-1">
+                                <div class="col-12">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Other.Name">Наименование</label>
+                                    <input type="text" class="form-control" placeholder="Наименование" asp-for="@request.StatementOwner.Owners[0].Other.Name">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Other.Inn">ИНН</label>
+                                    <input type="text" class="form-control required" placeholder="ИНН" asp-for="@request.StatementOwner.Owners[0].Other.Inn">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Other.Kpp">Kpp</label>
+                                    <input type="text" class="form-control" placeholder="Kpp" asp-for="@request.StatementOwner.Owners[0].Other.Kpp">
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Other.Ogrn">ОГРН</label>
+                                    <input type="text" class="form-control =" placeholder="ОГРН" asp-for="@request.StatementOwner.Owners[0].Other.Ogrn">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Other.ContactInfo.EMail">E-mail</label>
+                                    <input type="text" class="form-control" placeholder="E-mail"
+                                           asp-for="@request.StatementOwner.Owners[0].Other.ContactInfo.EMail">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Other.ContactInfo.PhoneNumber">Мобильный номер</label>
+                                    <input type="text" class="form-control required" placeholder="Мобильный номер"
+                                           asp-for="@request.StatementOwner.Owners[0].Other.ContactInfo.PhoneNumber">
+                                </div>
+                            </div>
+                            <div class="row justify-content-center mt-2" data-address="request_StatementOwner_Owners0_Organization_ContactInfo_PostalAddress">
+                                <div class="col-12 mx-auto">
+                                    <div class="fs-6 b-s-16">Почтовый адрес</div>
+                                </div>
+                                <div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-12">
+                                            @{
+                                                ViewBag.Id = "Other1_StatementOwner_Owners0_Organization_ContactInfo_PostalAddress";
+                                                ViewBag.Name = "StatementOwner.Owners[0].Organization.ContactInfo.PostalAddress";
+                                            }
+                                            @Html.Partial("~/Views/SmevForm/RosReestr/RegistrationRightRestriction/AddressPartial.cshtml")
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center" data-person id="RfSubject" data-disabled owners>
+                    <div class="col-12">
+                        <label class="form-label">Заявители</label>
+                        <select class="select2-nosearch applicants">
+                            <option value="">Выберите заявителя</option>
+                            @for (int i = 0; i < applicants.Count; i++)
+                            {
+                                <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <div class="row mb-1">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].RfSubject.RfSubjectCode">Регион направления запроса</label>
+                                <select class="select2-search" asp-for="@request.StatementOwner.Owners[0].RfSubject.RfSubjectCode"
+                                        data-dictionary='{"dictionary":"RosReestrEgrnRegionsRf", "default_value":"05"}'>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Other.ContactInfo.EMail">E-mail</label>
+                                <input type="text" class="form-control" placeholder="E-mail"
+                                       asp-for="@request.StatementOwner.Owners[0].Other.ContactInfo.EMail">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Other.ContactInfo.PhoneNumber">Мобильный номер</label>
+                                <input type="text" class="form-control required" placeholder="Мобильный номер"
+                                       asp-for="@request.StatementOwner.Owners[0].Other.ContactInfo.PhoneNumber">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center" data-person id="Country" data-disabled owners>
+                    <div class="col-12">
+                        <label class="form-label">Заявители</label>
+                        <select class="select2-nosearch applicants">
+                            <option value="">Выберите заявителя</option>
+                            @for (int i = 0; i < applicants.Count; i++)
+                            {
+                                <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <div class="row mb-1">
+                            <div class="col-4">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Country.CountryCode">Страна</label>
+                                <select class="select2-search" asp-for="@request.StatementOwner.Owners[0].Country.CountryCode"
+                                        data-dictionary='{"dictionary":"RosReestrEgrnCountry"}'>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Country.ContactInfo.EMail">E-mail</label>
+                                <input type="text" class="form-control" placeholder="E-mail"
+                                       asp-for="@request.StatementOwner.Owners[0].Country.ContactInfo.EMail">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Country.ContactInfo.PhoneNumber">Мобильный номер</label>
+                                <input type="text" class="form-control required" placeholder="Мобильный номер"
+                                       asp-for="@request.StatementOwner.Owners[0].Country.ContactInfo.PhoneNumber">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center mt-2">
+                    <div class="col-12 form-check form-switch">
+                        <input class="form-check-input form-check-input my-3 ms-1" type="checkbox" id="checkDelegate" onchange="checkboxChange(this)">
+                        <label class="form-check-label fs-5 b-s-16 mt-2 ms-2" for="checkDelegate">Представитель</label>
+                    </div>
+                    <div data-disabled>
+                        <div class="row mb-1">
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Representative.Subject.OwnerType">Тип заявителя</label>
+                                <select class="select2-search required" asp-for="@request.StatementOwner.Owners[0].Representative.Subject.OwnerType">
+                                    <option value="Person">Физическое лицо</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Representative.Subject.DeclarantKindCode">Категория подателей заявления</label>
+                                <select class="select2-search required" asp-for="@request.StatementOwner.Owners[0].Representative.Subject.DeclarantKindCode"
+                                        data-dictionary='{"dictionary":"RosReestrEgrnDeclarantKind"}'>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center" data-person id="Subject" Owners>
+                            <div class="col-12">
+                                <label class="form-label">Заявители</label>
+                                <select class="select2-nosearch applicants">
+                                    <option value="">Выберите заявителя</option>
+                                    @for (int i = 0; i < applicants.Count; i++)
+                                    {
+                                        <option value="@i">@applicants[i].LastName @applicants[i].FirstName @applicants[i].SecondName</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <div class="row mb-1">
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Person.Fio.LastName">Фамилия</label>
+                                        <input type="text" class="form-control required" placeholder="Фамилия" asp-for="@request.StatementOwner.Owners[0].Person.Fio.LastName" />
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Person.Fio.FirstName">Имя</label>
+                                        <input type="text" class="form-control required" placeholder="Имя" asp-for="@request.StatementOwner.Owners[0].Person.Fio.FirstName">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Person.Fio.SecondName">Отчество</label>
+                                        <input type="text" class="form-control" placeholder="Отчество" asp-for="@request.StatementOwner.Owners[0].Person.Fio.SecondName">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Person.Snils">СНИЛС</label>
+                                        <input type="text" class="form-control required" placeholder="СНИЛС" asp-for="@request.StatementOwner.Owners[0].Person.Snils">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="d-block form-label mb-3">Пол</label>
+                                        <div class="form-check form-check-inline mx-0 me-2">
+                                            <input class="form-check-input" type="radio" name="request.StatementOwner.Owners[0].Representative.Subject.Person.Gender" id="StatementOwner_Representative_Person_Gender_one" value="Male" checked="checked">
+                                            <label class="form-check-label" for="StatementOwner_Representative_Person_Gender_one"><i class="bi bi-gender-male fs-6"></i>Мужской</label>
+                                        </div>
+                                        <div class="form-check form-check-inline mx-0">
+                                            <input class="form-check-input" type="radio" name="request.StatementOwner.Owners[0].Representative.Subject.Person.Gender" id="StatementOwner_Representative_Person_Gender_two" value="Female">
+                                            <label class="form-check-label" for="StatementOwner_Representative_Person_Gender_two"><i class="bi bi-gender-female fs-6"></i>Женский</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Representative.Subject.Person.BirthDate">Дата Рождения</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input type="text" class="form-control pickdate" placeholder="Дата рождения"
+                                                   asp-for="@request.StatementOwner.Owners[0].Representative.Subject.Person.BirthDate" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Representative.Subject.Person.Citizenship.CountryCode">Гражданство</label>
+                                        <select class="select2-search" asp-for="@request.StatementOwner.Owners[0].Representative.Subject.Person.Citizenship.CountryCode"
+                                                data-dictionary='{"dictionary":"OksmCodes"}'>
+                                        </select>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row justify-content-center">
+                                    <div class="col-12 mx-auto">
+                                        <div class="fs-6 b-s-16">Документ, удостоверяющий личность</div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="row mb-1 align-items-end">
+                                            <div class="col-8">
+                                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Representative.Subject.Person.DocCode">Наименование</label>
+                                                <select class="select2-search required" asp-for="@request.StatementOwner.Owners[0].Representative.Subject.Person.DocCode"
+                                                        data-dictionary='{"dictionary":"RosReestrEgrnIdentityDocuments"}'>
+                                                </select>
+                                            </div>
+                                            <div class="col-2">
+                                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Representative.Subject.Person.DocSeries">Серия</label>
+                                                <input type="text" class="form-control" placeholder="Серия"
+                                                       asp-for="@request.StatementOwner.Owners[0].Representative.Subject.Person.DocSeries">
+                                            </div>
+                                            <div class="col-2">
+                                                <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Representative.Subject.Person.DocNumber">Номер</label>
+                                                <input type="text" class="form-control required" placeholder="Номер"
+                                                       asp-for="@request.StatementOwner.Owners[0].Representative.Subject.Person.DocNumber">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row justify-content-center">
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Representative.Subject.Person.ContactInfo.EMail">E-mail</label>
+                                        <input type="text" class="form-control" placeholder="E-mail"
+                                               asp-for="@request.StatementOwner.Owners[0].Representative.Subject.Person.ContactInfo.EMail">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="@request.StatementOwner.Owners[0].Representative.Subject.Person.ContactInfo.PhoneNumber">Мобильный номер</label>
+                                        <input type="text" class="form-control required" placeholder="Мобильный номер"
+                                               asp-for="@request.StatementOwner.Owners[0].Representative.Subject.Person.ContactInfo.PhoneNumber">
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center mt-2" data-address="request_StatementOwner_Owners0_Representative_Subject_Person_ContactInfo_PostalAddress">
+                                    <div class="col-12 mx-auto">
+                                        <div class="fs-6 b-s-16">Почтовый адрес</div>
+                                    </div>
+                                    <div>
+                                        <div class="row justify-content-center">
+                                            <div class="col-12">
+                                                @{
+                                                    ViewBag.Id = "StatementOwner_Owners0_Representative_Subject_Person_ContactInfo_PostalAddress";
+                                                    ViewBag.Name = "StatementOwner.Owners[0].Representative.Subject.Person.ContactInfo.PostalAddress";
+                                                }
+                                                @Html.Partial("~/Views/SmevForm/RosReestr/RegistrationRightRestriction/AddressPartial.cshtml")
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash bx-sm"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="g-3" id="EgrnRealEstateClone" data-original>
+        <hr />
+        <div class="row align-items-center">
+            <div class="col-11">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="@request.RealEstates[0].ObjectTypeCode">Тип объекта недвижимости</label>
+                        <select class="select2-search required" asp-for="@request.RealEstates[0].ObjectTypeCode"
+                                data-dictionary='{"dictionary":"RosReestrEgrnObjectTypes"}'>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="@request.RealEstates[0].CadastralNumberType">Тип кадастрового номера</label>
+                        <select class="select2-search" asp-for="@request.RealEstates[0].CadastralNumberType">
+                            <option value="CadastralNumber" selected="">Кадастровый номер</option>
+                            <option value="ConditionalNumber">Условный или инвентарный номер</option>
+                            <option value="OldCadastralNumber">Ранее присвоенный кадастровый номер</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="@request.RealEstates[0].CadastralNumber">Кадастровый, условный или инвентарный номер</label>
+                        <input type="text" class="form-control" placeholder="Кадастровый, условный или инвентарный номер"
+                               asp-for="@request.RealEstates[0].CadastralNumber">
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label" asp-for="@request.RealEstates[0].PhysicalProperties[0].TypeCode">"Вид характеристики ОН: длина, площадь и т.д."</label>
+                        <select class="select2-search" asp-for="@request.RealEstates[0].PhysicalProperties[0].TypeCode">
+                            <option value="Area" selected="">Площадь</option>
+                        </select>
+                    </div>
+
+                    <div class="col-3">
+                        <label class="form-label" asp-for="@request.RealEstates[0].PhysicalProperties[0].UnitTypeCode">Еденица измерения</label>
+                        <select class="select2-search" asp-for="@request.RealEstates[0].PhysicalProperties[0].UnitTypeCode" data-dictionary='{"dictionary":"RosReestrEgrnUnitType", "default_value":"012002001000"}'>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" asp-for="@request.RealEstates[0].PhysicalProperties[0].Value">Значение</label>
+                        <input type="text" class="form-control required" placeholder="Значение"
+                               asp-for="@request.RealEstates[0].PhysicalProperties[0].Value">
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-2" data-address="request_RealEstates_0_Addresses">
+                    <div class="col-12 mx-auto">
+                        <div class="fs-6 b-s-16">Адрес обьекта недвижимости</div>
+                    </div>
+                    <div>
+                        <div class="row justify-content-center">
+                            <div class="col-12">
+                                @{
+                                    ViewBag.Id = "request_RealEstates_0_Addresses";
+                                    ViewBag.Name = "RealEstates[0].Addresses[0].";
+                                }
+                                @Html.Partial("~/Views/SmevForm/RosReestr/RegistrationRightRestriction/AddressPartial.cshtml")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash bx-sm"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    var applicants = @Json.Serialize(applicants);
+    var $formContent = $("#smev_request");
+    var $originalBlock = $('#originalBlock');
+    var documentId;
+    var smevForm = {
+        init: () => {
+            fileUploadInit($formContent);
+            $originalBlock.find('[data-original]').each(function (_, item) {
+                renameBlock($(item), 100, true);
+                visibilityBlock($(item), true, true);
+
+            });
+            addForm('OwnersList', 'OwnersClone');
+            $('#addOwners').on('click', () => addForm('OwnersList', 'OwnersClone'));
+
+            addForm('EgrnRealEstateList', 'EgrnRealEstateClone');
+            $('#addEgrnRealEstate').on('click', () => addForm('EgrnRealEstateList', 'EgrnRealEstateClone'));
+
+            $formContent.find('.required').each(function () {
+                addValidation($(this));
+            });
+
+            $formContent.find('[id^="ServiceCode"]').on('change', function () {
+                if ($(this).val() == '02' || $(this).val() == '04') {
+                    visibilityBlock($('#PaymentData'), true, true);
+                    $formContent.find('#checkReceivingPaymentData').prop('checked', false);
+                }
+            })
+            $formContent.find('[data-disabled]').each(function () {
+                visibilityBlock($(this), true, true);
+            });
+            visibilityBlock($('#PaymentData'), false, false);
+            visibilityBlock($('#SpouseBlock'), false, false);
+            select2Init($formContent);
+            let options = { clearIncomplete: true, showMaskOnHover: false }
+
+            $formContent.find('[name$="Snils"]').inputmask("999-999-999 99", options);
+            $formContent.find('[name$=".Inn"]').inputmask("9{12}", options);
+            $formContent.find('[name$="BankInn"]').inputmask("9{10}", options);
+            $formContent.find('[name$="Phone"]').inputmask("+7(999) 999-99-99", options);
+            $formContent.find('[name$="EMail"]').inputmask("email", options);
+
+            $formContent.find(".pickdate").datepicker({
+                language: "ru",
+                autoclose: true
+            }).inputmask("99.99.9999", options);
+
+            (function getDictionaries() {
+                let dicts = new Set();
+                $('[data-dictionary]').each(function () {
+                    let $this = $(this);
+                    let options = $this.data('dictionary');
+                    if (!dicts.has(options.dictionary)) {
+                        dicts.add(options.dictionary);
+                        $.post(`/SmevBase/SmevGetDictionary`,
+                            {
+                                type: options.dictionary
+                            },
+                            function (dictionary) {
+                                fillSelect(options.dictionary, dictionary);
+                            });
+                    }
+                });
+            }());
+
+            function fillSelect(dictName, dictionary) {
+                $.each($(`[data-dictionary*='"${dictName}"']`),
+                    function () {
+                        let $this = $(this);
+                        let items = dictionary;
+                        $this.empty();
+                        if (!$this.hasClass('required')) {
+                            $this.append(new Option('Не выбран', ''));
+                        }
+                        if ($this.hasClass('not-empty')) {
+                            $this.append(new Option('Не выбран', ''));
+                        }
+                        if ($this.is('[data-value-value]')) {
+                            items.dictionary.forEach(function (item) {
+                                $this.append(new Option(item.value, item.value));
+                            });
+                        } else {
+                            items.dictionary.forEach(function (item) {
+                                $this.append(new Option(item.value, item.key));
+                            });
+                        }
+
+                        if (items.defaultKey != null) {
+                            $this.val(items.defaultKey).trigger('update');
+                            $this.attr('data-def', items.defaultKey);
+                        } else {
+                            let defVal = $this.data('dictionary').default_value;
+                            if (defVal) {
+                                $this.val(defVal).trigger('update');
+                                $this.attr('data-def', defVal);
+                            }
+                        }
+                    });
+            }
+
+        }
+    };
+
+    getServiceDocuments();
+
+    $('#Prepayment').on('change', function () {
+        if ($(this).val() == 'Prepayment')
+            visibilityBlock($('#PrepaymentDoc'), false, false);
+        else
+            visibilityBlock($('#PrepaymentDoc'), true, true);
+    })
+
+    $('[name$="OwnerType"]').on('change', function () {
+        let $block = $(this).closest('[data-clone]');
+        visibilityBlock($block.find('[owners]'), true, true);
+        visibilityBlock($block.find(`#${$(this).val()}`), false, false);
+    })
+
+    function getServiceDocuments() {
+        $.ajax({
+            url: '/Cases/ServiceDocumentsJson',
+            type: "POST",
+            async: false,
+            data: { id: $('#ServiceId').val() },
+            success: function (data) {
+                $('#attachmentsBlock tbody').empty();
+                const fileTypes = ['.PDF', '.JPEG', '.JPG']
+                documentId = data[0].id;
+                let k = 0;
+                data.forEach(doc =>
+                    doc.files.forEach(file => {
+                        if (fileTypes.includes(file.extension.toUpperCase())) {
+                            k++;
+                            //let docTypes = $('<select>');
+                            //docTypes.attr('data-dictionary', '{"dictionary":"MvdAisOpvAttachmentTypeCodesChild", "default_value":"02"}')
+                            //docTypes.addClass('required');
+                            //docTypes.addClass('form-select');
+
+                            let container = $('<div class="my-3">');
+                            container.attr('data-attach', k - 1);
+                            let tr = $('<tr>');
+                            tr.addClass('align-middle');
+                            tr.append(`<td data-index class="px-2" style="width: 1%;">${k}.</td>`);
+                            tr.append(`<td data-name class="px-2">${file.name}${file.extension}</td>`);
+                            //tr.append(`<td class="px-2" style="width: 40%;">${docTypes[0].outerHTML}</td>`);
+                            tr.append(`<td class="px-2" style="width: 10%;">${(file.size / 1024).toFixed(2)} кБ</td>`);
+                            tr.append(`<td class="px-2" style="width: 1%;"><a class="btn btn-sm btn-icon viewing-file" data-bs-toggle="tooltip" title="" data-sub-html="${file.name}${file.extension}" href="/SmevBase/DownloadFile/${file.id}" data-bs-original-title="Просмотр" aria-label="Просмотр"><i class="bi bi-eye"></i></a></td>`);
+                            //tr.append(`<td class="px-2" style="width: 1%;"><i onclick="docMove('up', this)" role="button" class='bi bi-chevron-up btn-link'></i><i onclick="docMove('down', this)" role="button" class='bi bi-chevron-down btn-link'></i></td>`);
+                            tr.append(`<td class="px-2" style="width: 1%;"><i onclick="docRemove(this)" role="button" class='bi bi-trash'></i></td>`);
+                            tr.append(`<td class="px-2" style="width: 1%;"><input class="form-check-input" type="checkbox" checked></td>`);
+
+                            let trHide = $('<tr class="active" style="display: none;">');
+                            trHide.append(`<td style="width: 1%;"><input type="text" name="request.Attachments[${k - 1}].FileName" value="${file.id}"></td>`);
+                            trHide.append(`<td style="width: 1%;"><input type="text" name="request.Attachments[${k - 1}].IsFtpReference" value="true"></td>`);
+
+                            container.append(tr);
+                            container.append(trHide);
+                            $('#attachmentsBlock tbody').append(container);
+                        }
+                    }))
+
+                $('#attachmentsBlock').find('[type="checkbox"]').each(function () {
+                    $(this).on('change', function (event) {
+                        let trHide = event.target.closest('tr').nextSibling;
+                        switch (event.target.checked) {
+                            case false:
+                                $(trHide).removeClass('active');
+                                visibilityBlock($(trHide), true, true);
+                                break;
+                            case true:
+                                $(trHide).addClass('active');
+                                visibilityBlock($(trHide), true, false);
+                        }
+                        renameAttach();
+                    });
+                });
+
+                if (data.length == 0) $formContent.find('#noDocuments').show();
+
+                const dynamicGallery = document.getElementById('smev-request-tab5');
+                dynamicGallery.addEventListener('lgBeforeOpen', (event) => {
+                    $(dynamicGallery).find('[data-bs-toggle="tooltip"], .tooltip').tooltip("hide");
+                });
+                lightGallery(dynamicGallery, {
+                    selector: '.viewing-file',
+                    escKey: false
+                });
+            }
+        });
+    }
+
+    function changeAddInfoParentType(el) {
+        switch (el.value) {
+            case "SecondParentDied":
+                visibilityBlock($(el).closest('[id^="ParentClone"]').find('[data-marriage]'), false, false);
+                break;
+            default:
+                disabledBlok($(el).closest('[id^="ParentClone"]').find('[data-marriage]'), true, true);
+        }
+    }
+
+
+    function changeChildBorn(el) {
+        let foreignDocBlock = document.querySelectorAll('.ChildBornForeignDocs');
+        switch (el.value) {
+            case 'AuthorityForeign':
+                foreignDocBlock.forEach(item => disabledBlok(item, false));
+                break;
+            default:
+                foreignDocBlock.forEach(item => disabledBlok(item, true));
+        }
+    }
+
+    function ChangeBankType(value) {
+        let bankOrganizationData = document.getElementById('BankOrganizationData');
+        let postOfficeData = document.getElementById('PostOfficeData');
+        switch (value) {
+            case '0':
+                visibilityBlock($(bankOrganizationData), false, false);
+                visibilityBlock($(postOfficeData), true, true);
+                break;
+            case '1':
+                visibilityBlock($(bankOrganizationData), true, true);
+                visibilityBlock($(postOfficeData), false, false);
+                break;
+        }
+    }
+
+    $('.address-list').on('click',
+        function (event) {
+            let $selectedAdr = $(event.target);
+            let $adrBlock = $selectedAdr.closest('[data-address]');
+            let adrText = $selectedAdr.text();
+            $adrBlock.find('[id$="RegAddressSearchFias"]').val(adrText);
+            clearForm($adrBlock);
+            fillAddress(addresses.get($selectedAdr.attr('data-index')), $selectedAdr);
+            $formContent.find('.address-list').hide(100);
+        });
+
+    function fillAddress(adrData, $el) {
+        let $addressBlock = $el.closest('[data-address]');
+        let fullAddress = '';
+        console.log(adrData)
+        console.log($addressBlock.find('[id$="_FiasCode"]'))
+        $addressBlock.find('[id$="_FiasCode"]').val(adrData.room?.objectGuid ?? adrData.house?.objectGuid ?? adrData.street?.objectGuid);
+
+        if (adrData.region) {
+            $addressBlock.find('[id$="_Region_Type"]').find('[option]').each(function () {
+                if ($(this).html() == adrData.region.shortName) $addressBlock.find('[id$="_Region_Type"]').val(adrData.region.shortName).trigger('change');
+            })
+
+            $addressBlock.find('[id$="_Region_Code"]').val(adrData.region.objectGuid);
+            $addressBlock.find('[id$="_Region_Name"]').val(adrData.region.value);
+        }
+
+        if (adrData.area) {
+
+            $addressBlock.find('[id$="_District_Type"]').find('[option]').each(function () {
+                if ($(this).html() == adrData.area.shortName) $addressBlock.find('[id$="_District_Type"]').val(adrData.area.shortName).trigger('change');
+            })
+            $addressBlock.find('[id$="_District_Code"]').val(adrData.area.objectGuid);
+            $addressBlock.find('[id$="_District_Name"]').val(adrData.area.value);
+        }
+
+        if (adrData.city) {
+            $addressBlock.find('[id$="_City_Type"]').find('[option]').each(function () {
+                if ($(this).html() == adrData.city.shortName) $addressBlock.find('[id$="_City_Type"]').val(adrData.city.shortName).trigger('change');
+            })
+            $addressBlock.find('[id$="_City_Code"]').val(adrData.city.objectGuid);
+            $addressBlock.find('[id$="_City_Name"]').val(adrData.city.value);
+        }
+
+        if (adrData.intracityDistrict) {
+            $addressBlock.find('[id$="_UrbanDistrict_Type"]').find('[option]').each(function () {
+                if ($(this).html() == adrData.intracityDistrict.shortName) $addressBlock.find('[id$="_UrbanDistrict_Type"]').val(adrData.intracityDistrict.shortName).trigger('change');
+            })
+            $addressBlock.find('[id$="_UrbanDistrict_Code"]').val(adrData.intracityDistrict.objectGuid);
+            $addressBlock.find('[id$="_UrbanDistrict_Name"]').val(adrData.intracityDistrict.value);
+        }
+
+        if (adrData.settlement) {
+            $addressBlock.find('[id$="_Locality_Type"]').find('[option]').each(function () {
+                if ($(this).html() == adrData.settlement.shortName) $addressBlock.find('[id$="_Locality_Type"]').val(adrData.settlement.shortName).trigger('change');
+            })
+            $addressBlock.find('[id$="_Locality_Code"]').val(adrData.settlement.objectGuid);
+            $addressBlock.find('[id$="_Locality_Name"]').val(adrData.settlement.value);
+        }
+
+        if (adrData.street) {
+            $addressBlock.find('[id$="_Street_Type"]').val(adrData.street.shortName).trigger('change');
+            $addressBlock.find('[id$="_Street_Code"]').val(adrData.street.objectGuid);
+            $addressBlock.find('[id$="_Street_Name"]').val(adrData.street.value);
+        }
+
+        if (adrData.house) {
+            $addressBlock.find('[id$="_House_Value"]').val(adrData.house.houseNum);
+        }
+        if (adrData.house?.buildNum) {
+            $addressBlock.find('[id$="_Structure_Value"]').val(adrData.house.buildNum);
+        }
+
+        if (adrData.house?.structNum) {
+            $addressBlock.find('[id$="_Building_Value"]').val(adrData.house.structNum);
+        }
+        if (adrData.house?.postalCode) {
+            $addressBlock.find('[id$="_PostalCode"]').val(adrData.house.postalCode);
+        }
+        if (adrData.room?.flatNumber) {
+            $addressBlock.find('[id$="_Apartment_Value"]').val(adrData.room.flatNumber);
+        }
+
+    }
+
+    function clearForm($address) {
+        $address.find('[data-clean]').each(function () { $(this).val('') });
+    }
+
+    function newCheckEvent(el) {
+        if (el.checked) {
+            disabledBlok(el, false);
+            if (el.id === 'pay') document.getElementById('BankInfoType').onchange();
+        } else disabledBlok(el, true);
+    }
+
+    function identityDocChange(el) {
+        let blockDoc = el.closest('fieldset');
+        let blockAct = blockDoc.closest('[data-clone]').querySelector('[data-child-act]');
+        switch (el.value) {
+            case "1":
+                $(blockAct).addClass('d-none');
+                $(blockDoc).find('input[id$="CodePodr"]').attr('disabled', false);
+                $(blockDoc).find('input[id$="CodePodr"]').addClass('required');
+                break;
+            case "4":
+                $(blockAct).removeClass('d-none');
+                if (!$(blockAct).find('.act').is(':checked')) {
+                    $(blockAct).find('.act').click();
+                }
+                $(blockDoc).find('input[id$="CodePodr"]').removeClass('required');
+                $(blockDoc).find('input[id$="CodePodr"]').attr('disabled', true);
+                break;
+        }
+    }
+
+    function changeBank(el) {
+        switch (el.value) {
+            case 'ПАО Сбербанк России':
+                $formContent.find('[name$=BankBik]').val('048405602');
+                $formContent.find('[name$=BankInn]').val('7707083893');
+                break;
+            case 'АО «Россельхозбанк»':
+                $formContent.find('[name$=BankBik]').val('040173733');
+                $formContent.find('[name$=BankInn]').val('7725114488');
+                break;
+        }
+    }
+
+    function hidingblock(blockId, tid, status) { //Функция запускается при клике ПОКАЗАТЬ
+        if (!tid) {
+            tid = blockId.id.split('_');
+            tid.pop();
+            tid = tid.join('_');
+            tid = tid + '_';
+        }
+        blockId?.querySelectorAll('input')?.forEach(item => {
+            item.value != '' ? item.classList.add('custom-input-value') : item.classList.remove('custom-input-value');
+        });
+        status ? blockId.classList.remove('d-none') : blockId.classList.toggle('d-none');
+        disableAddress('[data-disable-address]');
+        document.querySelector(`#${tid}Apartmen_Valuee`) ? document.querySelector(`#${tid}Apartmen_Valuee`).removeAttribute('disabled') : void 0;
+        document.querySelector(`#${tid}Apartmen_Typee`) ? document.querySelector(`#${tid}Apartmen_Typee`).removeAttribute('disabled') : void 0;
+    };
+
+    function addValidation($el) {
+        SmevDataFormValidation.addField($el.attr('name'),
+            {
+                validators: {
+                    notEmpty: {}
+                }
+            });
+        SmevDataFormValidation.elements[$el.attr('name')] = [$el[0]];
+        $el.addClass('required');
+    }
+
+    function removeValidation($el) {
+        if ($el.attr('name') in SmevDataFormValidation.fields) {
+            SmevDataFormValidation.removeField($el.attr('name'));
+        }
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').hide();
+                } else {
+                    $block.hide();
+                }
+                break;
+            case false:
+                if ($block.hasClass('accordion')) {
+                    $block.find('.accordion-body').show();
+                } else {
+                    $block.removeClass('d-none')
+                    $block.show();
+                }
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    if ($(this).attr('name') in SmevDataFormValidation.fields) {
+                        removeValidation($(this));
+                    }
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                    if ($(this).hasClass('required')) {
+                        addValidation($(this));
+                    }
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    function renameAttach() {
+        let indexActive = 0;
+        $('#attachmentsBlock [data-attach]').each((index, item) => {
+            $(item).attr('data-attach', index);
+            $(item).find('[data-index]').html(index + 1);
+            $(item).find('input[type="text"]').each(function () {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexActive));
+            });
+            if ($(item).find('tr.active').length > 0) indexActive++;
+        });
+    }
+
+    function docRemove(el) {
+        el.closest('[data-attach]').remove();
+        renameAttach();
+    }
+
+    function ShowErrorInputs() {
+        for (let item of document.querySelectorAll('#smev_request input,select')) {
+            if (item.getAttribute('disabled') == null && item.classList.contains('required') && item.value == '') {
+                $('#smev_request').find(`button[data-bs-target="#${item.closest('.tab-pane').id}"]`).trigger('click');
+                break;
+            }
+        };
+    }
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.attr("id", `clone${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        let $adrBlock = $cloneBlock.find('[data-address]');
+        if ($adrBlock.length > 0) {
+            $adrBlock.attr('data-address', $adrBlock.attr('data-address').replace(/\d+/, indexId));
+        }
+
+        $cloneBlock.find('input, select').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            if ($(this).is('[for]')) {
+                $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('span').each(function () {
+            if ($(this).is('[id]')) {
+                $(this).attr('id', $(this).attr('id').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('select').each(function () {
+            if ($(this).is('[id]')) {
+                $(this).attr('id', $(this).attr('id').replace(/\d+/, indexId));
+            }
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+            $(this).removeAttr('data-select2-id');
+        });
+    }
+
+    function renameParentBlock(cloneBlock, indexId) {
+        cloneBlock.id = `${cloneBlock.id}${indexId}`;
+        cloneBlock.querySelector('span').innerText = cloneBlock.querySelector('span').innerText.replace(/\d+/, 1 + indexId);
+
+        cloneBlock.querySelectorAll('input').forEach(item => {
+            item.id = item.id.replace(/ParentDataBlock\d+/, `ParentDataBlock${indexId}`);
+            item.name = item.name.replace(/ParentDataBlock\[\d+\]/, `ParentDataBlock[${indexId}]`);
+        });
+        cloneBlock.querySelectorAll('label').forEach(item => {
+            item.getAttribute('for') ? item.setAttribute('for', item.getAttribute('for').replace(/ParentDataBlock\d+/, `ParentDataBlock${indexId}`)) : void 0;
+        });
+        cloneBlock.querySelectorAll('select').forEach(item => {
+            item.id ? item.id = item.id.replace(/ParentDataBlock\d+/, `ParentDataBlock${indexId}`) : void 0;
+            item.name ? item.name = item.name.replace(/ParentDataBlock\[\d+\]/, `ParentDataBlock[${indexId}]`) : void 0;
+            item.hasAttribute('data-select2-id') ? item.removeAttribute('data-select2-id') : void 0;
+        });
+        return cloneBlock;
+    }
+
+    function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+        let $cloneList = $formContent.find(`#${cloneListId}`);
+        Select2Destroy($cloneList);
+        let $original = $originalBlock.find(`#${originalId}`);
+        let $cloneBlock = $original.clone(true);
+        let indexId = $cloneList.find('[data-clone]').length;
+        renameBlock($cloneBlock, indexId);
+        blockInit($cloneBlock);
+        $cloneList.append($cloneBlock);
+        select2Init($cloneList);
+    }
+
+    function select2Init($block) {
+        $block.find("select.select2-nosearch").each(function () {
+            $(this).select2({
+                dropdownParent: $("#mainModal"),
+                minimumResultsForSearch: Infinity
+            });
+        });
+
+        $block.find("select.select2-search").each(function () {
+            $(this).select2({
+                dropdownParent: $("#mainModal")
+            });
+        });
+    }
+
+    function Select2Destroy($block) {
+        $block.find('select').each((_, el) => {
+            if (el.parentNode.querySelector('span')) {
+                $(el).select2('destroy');
+                el.hasAttribute('data-select2-id') ? el.removeAttribute('data-select2-id') : void 0;
+                el.querySelectorAll('option').forEach(itemOption => itemOption.hasAttribute('data-select2-id') ? itemOption.removeAttribute('data-select2-id') : void 0)
+                if (el.parentNode.querySelector('span')) el.parentNode.querySelector('span').remove();
+            }
+        });
+    }
+
+    function blockInit($block) {
+        visibilityBlock($block, false, false);
+        const options = { clearIncomplete: true, showMaskOnHover: false };
+
+        $block.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        $block.find('[name$="Snils"]').inputmask("999-999-999 99", options);
+        $block.find('[name$="PhoneNumber"]').inputmask("+7(999) 999-99-99", options);
+        $block.find('[name$="Email"]').inputmask("email", options);
+    }
+
+    var addresses = new Map();
+
+    $.each($('[data-input-location]'), function () {
+        var $input = $(this);
+        let $adrList = $input.closest('[data-address]').find('.address-list');
+        var url = '/SmevBase/GarSearchAddressExtended';
+        $input.keyup(garRequest).focusin(() => {
+            $adrList.show();
+        }).focusout(() => {
+            $adrList.delay(250).hide(0);
+        });
+    });
+
+    function garRequest(event) {
+        let $adrInput = $(event.target);
+        let $adrBlock = $adrInput.closest('[data-address]');
+        let $adrList = $adrBlock.find('.address-list');
+        let query = $adrInput.val();
+
+        addresses.clear();
+        if (query.length > 2) {
+            $.ajax({
+                url: '/SmevBase/GarSearchAddressExtended',
+                type: 'POST',
+                data: { request: { SearchText: query } },
+                success: function (data) {
+                    if (data.result?.length) {
+                        $adrList.empty();
+                        data.result.forEach((item, index) => {
+                            $('.address-list').append(`<li data-index='${index}'>${createAddressText(item)}</li>`);
+                            addresses.set(`${index}`, item);
+
+                        });
+                        $adrList.show();
+                    }
+                }
+            });
+        } else {
+            $adrInput.parent('.location-control').removeClass('open');
+        }
+    }
+
+    function createAddressText(adr) {
+        let elements = [];
+        if (adr.region) {
+            elements.push(`${adr.region.shortName} ${adr.region.value}`);
+        }
+        if (adr.area) {
+            elements.push(`${adr.area.shortName} ${adr.area.value}`);
+        }
+        if (adr.city) {
+            elements.push(`${adr.city.shortName} ${adr.city.value}`);
+        }
+        if (adr.cityAndRuralSettlements) {
+            elements.push(`${adr.cityAndRuralSettlements.shortName} ${adr.cityAndRuralSettlements.value}`);
+        }
+        if (adr.intracityDistrict) {
+            elements.push(`${adr.intracityDistrict.shortName} ${adr.intracityDistrict.value}`);
+        }
+        if (adr.settlement) {
+            elements.push(`${adr.settlement.shortName} ${adr.settlement.value}`);
+        }
+        if (adr.street) {
+            elements.push(`${adr.street.shortName} ${adr.street.value}`);
+        }
+        if (adr.house) {
+            elements.push(`д. ${adr.house.houseNum}`);
+        }
+        if (adr.buildNum) {
+            elements.push(`корп ${adr.buildNum}`);
+        }
+        if (adr.structNum) {
+            elements.push(`стр ${adr.structNum}`);
+        }
+        if (adr.room) {
+            elements.push(`кв ${adr.room.flatNumber}`);
+        }
+
+        return elements.join(', ');
+    }
+
+    function changeAdrElement(id) {
+        id.value = '';
+        let parent = id.closest('[data-address]');
+        fullAddressRefresh(parent);
+    }
+
+    function fullAddressRefresh(el) {
+        let $addressBlock = $(el).closest('[data-address]');
+        let fullAddress = '';
+
+        if ($addressBlock.find('[id$="Region_Value"]').val()) {
+            fullAddress += `, ${$addressBlock.find('[id$="RegionType"]').val()} ${$addressBlock.find('[id$="Region_Value"]').val()}`;
+        }
+
+        if ($addressBlock.find('[id$="_Area_Value"]').val()) {
+            fullAddress += `, ${$addressBlock.find('[id$="AreaType"]').val()} ${$addressBlock.find('[id$="_Area_Value"]').val()}`;
+        }
+
+        if ($addressBlock.find('[id$="City_Value"]').val()) {
+            fullAddress += `, ${$addressBlock.find('[id$="CityType"]').val()} ${$addressBlock.find('[id$="City_Value"]').val()}`;
+        }
+
+        if ($addressBlock.find('[id$="CityArea_Value"]').val()) {
+            fullAddress += `, ${$addressBlock.find('[id$="CityAreaType"]').val()} ${$addressBlock.find('[id$="CityArea_Value"]').val()}`;
+        }
+
+        if ($addressBlock.find('[id$="Place_Value"]').val()) {
+            fullAddress += `, ${$addressBlock.find('[id$="PlaceType"]').val()} ${$addressBlock.find('[id$="Place_Value"]').val()}`;
+        }
+
+        if ($addressBlock.find('[id$="Street_Value"]').val()) {
+            fullAddress += `, ${$addressBlock.find('[id$="StreetType"]').val()} ${$addressBlock.find('[id$="Street_Value"]').val()}`;
+        }
+
+        if ($addressBlock.find('[id$="House_Value"]').val()) {
+            fullAddress += `,  ${$addressBlock.find('[id$="HouseType"]').val()} ${$addressBlock.find('[id$="House_Value"]').val()}`;
+        }
+
+        $addressBlock.find('[id$="RegAddressSearchFias"]').val(fullAddress.replace(new RegExp('^, '), ''));
+    }
+
+    function blockRemove(el, cloneListId) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function checkboxChange(el) {
+        visibilityBlock($(el).closest('.row').find('[data-disabled]'), !$(el).prop('checked'), !$(el).prop('checked'));
+    }
+
+    function changeAddressMatch(el) {
+        let $clone = $(el).closest('[data-clone]').find('[data-child-adr]');
+        visibilityBlock($clone, el.checked, el.checked);
+    }
+
+    $('select.applicants').each(function () {
+        $(this).on('change',
+            function () {
+                let id = $(this).val();
+                let $block = $(this).closest('[data-person]');
+                if (id) {
+                    $block.find('[name$=".LastName"]').val(applicants[id].lastName);
+                    $block.find('[name$=".FirstName"]').val(applicants[id].firstName);
+                    $block.find('[name$=".SecondName"]').val(applicants[id].secondName);
+
+                    let birthDate = new Date(applicants[id].birthDate);
+                    $block.find('[name$=".BirthDate"]').val(new Date(birthDate).toLocaleDateString());
+
+                    $block.find('[name$="BirthPlace"]').val(applicants[id].birthPlace);
+                    $block.find('[name$="PhoneNumber"]').val(applicants[id].phone);
+                    $block.find('[name$="EMail"]').val(applicants[id].email);
+                    $block.find('[name$="Snils"]').val(applicants[id].snils);
+                    $block.find('[name$="Inn"]').val(applicants[id].inn);
+                    $block.find('[name$="FullAddress"]').val(applicants[id].address);
+
+                    switch (applicants[id].gender) {
+                        case 1:
+                            $block.find('[id$="Gender_one"]').prop('checked', true);
+                            break;
+                        case 2:
+                            $block.find('[id$="Gender_two"]').prop('checked', true);
+                            break;
+                    }
+
+                    switch (applicants[id].documentTypeCode) {
+                        case '21':
+                            $block.find('[name$="Person.DocCode"]').val('008001001000').trigger('change'); //Паспорт гражданина РФ
+                            break;
+                        case '3':
+                            $block.find('[name$="Person.DocCode"]').val('008001011000').trigger('change'); //Свидетельство о рождении
+                            break;
+                        case '26':
+                            $block.find('[name$="Person.DocCode"]').val('008001007000').trigger('change'); //Паспорт моряка
+                            break;
+                        case '24':
+                            $block.find('[name$="Person.DocCode"]').val('008001004000').trigger('change'); //Загранпаспорт гражданина РФ
+                            break;
+                        case '10':
+                            $block.find('[name$="Person.DocCode"]').val('008001003000').trigger('change'); //Паспорт иностранного гражданина
+                            break;
+                    }
+
+                    $block.find('[name$=".Person.DocSeries"]').val(applicants[id].documentSerial.replace(' ', ''));
+                    $block.find('[name$=".Person.DocNumber"]').val(applicants[id].documentNumber.replace(' ', ''));
+                }
+            });
+    });
+</script>

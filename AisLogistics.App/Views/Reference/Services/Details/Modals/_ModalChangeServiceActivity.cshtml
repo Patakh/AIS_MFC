@@ -1,0 +1,112 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.ServiceActivityModelDto
+@{
+    //DateTime maxDate = (DateTime)ViewBag.MaxDate;
+}
+
+<form asp-controller="Reference" asp-action="ServiceActivitySave" id="sendingForm" method="post" role="form">
+    <div class="form-body pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.SServicesId)
+
+
+             <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label"  asp-for="OffisesId">МФЦ</label>
+                    <select asp-for="OffisesId" asp-items="ViewBag.Offices" class="form-control"></select>
+                </div>
+
+             </div>
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="DateStart">Дата начала</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input type="text" asp-for="DateStart" value="@DateTime.Now.ToString("dd.MM.yyyy")" class="form-control" placeholder="ДД.ММ.ГГГГ">
+                    </div>
+                </div>
+
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="DateStop">Дата окончания</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input type="text" asp-for="DateStop" value="" class="form-control" placeholder="ДД.ММ.ГГГГ">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="Commentt">Комментарий</label>
+                    <textarea asp-for="Commentt" class="form-control char-textarea" rows="3" placeholder="Комментарий"></textarea>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    $(function(){
+        $('#sendingForm select').select2({
+            dropdownParent: $('#mainModal'), 
+            closeOnSelect: false
+        });
+
+        var $dateStartinput = $('#DateStart');
+        $dateStartinput.datepicker({
+            language: "ru",
+            autoclose: true,
+            startDate: '-0d',
+            dateFormat: 'dd.mm.yyyy',
+        });
+        $dateStartinput.inputmask("datetime", { inputFormat: "dd.mm.yyyy", "clearIncomplete": true, showMaskOnHover: false, insertmode: true });
+
+        var $dateStoptinput = $('#DateStop');
+        $dateStoptinput.datepicker({
+            language: "ru",
+            autoclose: true,
+            startDate: '-0d',
+            format: 'dd.mm.yyyy',
+        });
+        $dateStoptinput.inputmask("datetime", { inputFormat: "dd.mm.yyyy", "clearIncomplete": true, showMaskOnHover: false, insertmode: true });
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    Commentt: {
+                        validators: {
+                            stringLength: {
+                                max: 255,
+                                message: '@MessageDescription.CommentLengthOutOfRange'
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }) .on('core.form.valid', function() {
+            var $form = $("#sendingForm");
+            $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $table.DataTable().ajax.reload(null, false);
+                        $tableActivities.DataTable().ajax.reload(null, false);
+                        $form.spinnerBtn("stop");
+                        $("#mainModal").modal('hide');
+                    }
+                });
+            return false;
+        });
+    });
+</script>

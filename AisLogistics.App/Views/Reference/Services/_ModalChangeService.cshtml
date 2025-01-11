@@ -1,0 +1,251 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.ServiceModelDto
+
+<form asp-controller="Reference" asp-action="ServiceSave" id="sendingForm" method="post" role="form">
+    <div class="pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="ServiceMnemo">Мнемоника услуги</label>
+                    <input type="text" asp-for="ServiceMnemo" maxlength="10" class="form-control" placeholder="Мнемоника услуги" required>
+                </div>
+            </div>
+
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ServiceName">Наименование</label>
+                    <textarea asp-for="ServiceName" maxlength="1500" class="form-control" placeholder="Наименование" rows="3" required></textarea>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ServiceNameSmall">Краткое наименование услуги</label>
+                    <input type="text" asp-for="ServiceNameSmall" maxlength="1500" class="form-control" placeholder="Краткое наименование услуги" required>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ServiceNameSite">Наименование для сайта</label>
+                    <input type="text" asp-for="ServiceNameSite" maxlength="1500" class="form-control" placeholder="Наименование для сайта">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label"  asp-for="SOfficesId">Орган власти</label>
+                    <select asp-for="SOfficesId" asp-items="ViewBag.Offices" class="form-control" required> 
+                        <option disabled selected value="">Не задано</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="SServicesTypeId">Тип услуги</label>
+                    <select asp-for="SServicesTypeId" asp-items="ViewBag.ServiceType" class="form-control" required>
+                          <option disabled selected value="">Не задано</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label"  asp-for="SServicesInteractionId">Способ взаимодействия</label>
+                    <select asp-for="SServicesInteractionId" asp-items="ViewBag.ServicesInteraction" class="form-control" required>
+                         <option disabled selected value="">Не задано</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ServicePosition">Расположение услуги</label>
+                    <select asp-for="ServicePosition" asp-items="Html.GetEnumSelectList<ServicePositionType>()" class="form-control" placeholder="Расположение услуги">
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="LegalAct">Реквизиты НПА</label>
+                    <input type="text" asp-for="LegalAct" class="form-control" placeholder="Реквизиты НПА">
+                </div>
+            </div>
+
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ServiceDescription">Описание</label>
+                    <textarea asp-for="ServiceDescription" class="form-control char-textarea" rows="3" placeholder="Описание подуслуги"></textarea>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label"  asp-for="LivingSituationId">Жизненые ситуации</label>
+                    <select asp-for="LivingSituationId" asp-items="ViewBag.Catalog" class="form-control" multiple> </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label"  asp-for="HashtagId">Хэштеги</label>
+                    <select asp-for="HashtagId" asp-items="ViewBag.Hashtag" class="form-control" multiple> </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="FrguServiceId">Идентификатор ФРГУ</label>
+                    <input type="text" asp-for="FrguServiceId" maxlength="30" class="form-control" placeholder="Идентификатор ФРГУ">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="FrguName">Наименование ФРГУ</label>
+                    <input type="text" asp-for="FrguName" maxlength="1000" class="form-control" placeholder="Наименование ФРГУ">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label" asp-for="TimeStorage">Срок хранения документов</label>
+                    <input type="text" asp-for="TimeStorage" maxlength="1000" class="form-control" placeholder="Срок хранения документов">
+                </div>
+            </div>
+          
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <input type="checkbox" asp-for="IsReportSelect" class="checkbox" placeholder="Вывод в отчетах">
+                    <label class="form-label" asp-for="IsReportSelect">Вывод в отчетах</label>
+                </div>
+                <div class="col-6">
+                    <input type="checkbox" asp-for="IsTariffEdit" class="checkbox" placeholder="Возможность редактирования тарифа">
+                    <label class="form-label" asp-for="IsTariffEdit">Возможность редактирования тарифа</label>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <input type="checkbox" asp-for="IasMkgu" class="checkbox" placeholder="Участие услуги в ИАС МКГУ">
+                    <label class="form-label" asp-for="IasMkgu">Участие услуги в ИАС МКГУ</label>
+                </div>
+                <div class="col-6">
+                    <input type="checkbox" asp-for="IsPlan" class="checkbox" placeholder="Учитывать в плане">
+                    <label class="form-label" asp-for="IsPlan">Учитывать в плане</label>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <input type="checkbox" asp-for="IsIssueAuthority" class="checkbox">
+                    <label class="form-label" asp-for="IsIssueAuthority">Выдача в ОИВ</label>
+                </div>
+                <div class="col-6">
+                    <input type="checkbox" asp-for="IsMessage" class="checkbox">
+                    <label class="form-label" asp-for="IsMessage">Отправка сообщений</label>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <input type="checkbox" asp-for="IsUploadingSite" class="checkbox">
+                    <label class="form-label" asp-for="IsUploadingSite">Выгрузка для сайта</label>
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function() {
+        $('#sendingForm select').select2({ dropdownParent: $('#mainModal')});
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    ServiceMnemo: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    ServiceName: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    ServiceNameSmall: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    ServicePosition: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    SServicesInteractionId: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    SOfficesId: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    SServicesTypeId: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }).on('core.form.valid', function() {
+            var $form = $("#sendingForm");
+            var actionType = $("#ActionType").val();
+            $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $table.DataTable().ajax.reload(null, false);
+                        $updateInfo();
+                        $form.spinnerBtn("stop");
+                        $("#mainModal").modal('hide');
+                    }
+                });
+            return false;
+        });
+    });
+</script>

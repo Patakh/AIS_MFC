@@ -1,0 +1,182 @@
+﻿@using AisLogistics.App.ViewModels.Home
+@model ViewModelBuilder
+@{
+    ViewData["Title"] = Model.ViewTitle; ;
+    var responseData = Model.Model as HomeViewModel;
+    var i = 1;
+}
+<link rel="stylesheet" href="~/assets/css/home-details.css" />
+<link rel="stylesheet" type="text/css" href="~/assets/vendor/libs/slick/slick.css">
+
+
+<section>
+    <div class="row m-0">
+        <div class="col-12 p-0">
+            <p class="head-info mb-2">Информация</p>
+            <div class="card">
+                <div class="card-body p-0">
+                    @if (responseData?.Information is not null && responseData.Information.Count>0)
+                    {
+                        <div class="d-flex" id="information_list">
+                            @foreach (var item in responseData.Information)
+                            {
+                                <a asp-action="InformationDetailsModal" asp-controller="Home" asp-route-id="@item.Id" class="my-3 text-bodyrow info-item" data-btn-type="modal" data-bs-toggle="tooltip">
+                                    <div class="row m-2">
+                                        <div class="col-6">
+                                            <span class="type">@item.Type</span>
+                                        </div>
+                                        <div class="col-6 pe-3 text-end">
+                                            <span class="ms-auto">
+                                                <small class="dateAdd">@item.DateAdd.ToLongDateString()</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row col-12 m-2 mb-0">
+                                        <div class="topic">@item.Topic</div>
+                                    </div>
+                                    <div class="row col-12 m-2 mt-0 text-block">
+                                        <span class="text mt-2">@item.Text</span>
+                                    </div>
+                                    <div class="row m-2 mt-3">
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <span class="employeeFio">
+                                                @item.EmployeeFio
+                                            </span>
+                                            <span class="employeeJob">
+                                                @item.EmployeeJob
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+
+                                i++;
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-muted w-100 text-center">
+                            <span>Нет данных</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-lg-8 col-md-12 col-sm-12">
+            <p class="head-info mb-2">Топ сотрудников за @DateTime.Now.AddDays(-1).ToString("Y")</p>
+            <div class="info card" id="content-datatable">
+                <div class="table-responsive card-body p-0">
+                    <table id="@Model.TableName" data-action-table="@Model.TableMethodAction" class="table mt-0" style="margin-top: 0!important;"></table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-12 col-sm-12">
+            <p class="head-info mb-2">Заметки</p>
+            <div class="info card overflow-auto w-100" id="notes_list">
+                <div class="card-body p-0">
+                    @if (responseData?.Notes is not null && responseData.Notes.Count>0)
+                    {
+                        @foreach (var item in responseData.Notes)
+                        {
+                            <a asp-action="Details" asp-controller="Cases" asp-route-id="@item.DCasesId" target="_blank" class="row w-100 notes-item m-0 p-4">
+                                <div class="col-6">
+                                    <p class="casesId mb-1">#@item.DCasesId</p>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <span class="reminder"> Напомнить:</span> <span class="dateReminder"> @(item.DateReminder.HasValue ? item.DateReminder.Value.ToShortDateString() : string.Empty)</span>
+                                </div>
+                                <div class="row col-12 pb-1 ps-4 applicantName">
+                                    @item.ApplicantName
+                                </div>
+                                <div class="col-12 noteText mt-1">
+                                    @item.NoteText
+                                </div>
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/assets/vendor/libs/slick/slick.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const $table = $('#@(Model.TableName)');
+            $table.DataTable({
+                sDom: "<'row'<'col-sm-12 col-md-12'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                processing: true,
+                serverSide: true,
+                searching: false,
+                info: false,
+                paging: false,
+                filter: true,
+                order: [],
+                "sScrollY": 550,
+                searchDelay: 1500,
+                ajax: {
+                    url: $table.data('action-table'),
+                    type: "POST",
+                    datatype: "json",
+                    dataSrc: function (json) {
+                        return json.data;
+                    }
+                },
+                initComplete: function () {
+                },
+                columns: [
+                    {
+                        title: `Место`,
+                        orderable: false,
+                        data: "positionId"
+                    },
+                    {
+                        title: `ФИО`,
+                        sWidth: '45%',
+                        orderable: false,
+                        render: function (data, type, row) {
+                            return row.employeeName + `<p class="offices mt-1 mb-2">${row.officessName}</p>`;
+                        }
+                    },
+                    {
+                        title: `Принято`,
+                        className: 'total',
+                        orderable: true,
+                        data: "receivedCount"
+                    },
+                    {
+                        title: `Выдано`,
+                        className: 'total',
+                        orderable: true,
+                        data: "issuedCount"
+                    },
+                    {
+                        title: `Консультация`,
+                        className: 'total',
+                        orderable: true,
+                        data: "consultationCount"
+                    },
+                    {
+                        title: `Всего`,
+                        orderable: true,
+                        className: 'total',
+                        data: "employeePoint"
+                    }
+                ]
+            });
+            $('#information_list').slick({
+                infinite: false,
+                prevArrow: '<button class="slick-prev p-0 left-button" aria-label="Previous" type="button"><div class="my-auto"><i class="bi bi-chevron-left"></i></div></button>',
+                nextArrow: '<button class="slick-next p-0 right-button" aria-label="Next" type="button"><div class="my-auto"><i class="bi bi-chevron-right"></i></div></button>',
+                slideWidth: '250px'
+            });
+        })
+    </script>
+}

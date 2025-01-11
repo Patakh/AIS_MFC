@@ -1,0 +1,265 @@
+﻿@model _49_7_RefusalReceiveAssignedPensionModel
+<style>
+    .form-check {
+        margin-left: 10px;
+    }
+
+        .form-check label {
+            padding-left: 10px;
+        }
+</style>
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h5 class="my-2">Заявитель</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Citizenship">принадлежность к гражданству</label>
+                    <input type="text" class="form-control" asp-for="Citizenship">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="ValidityPeriodDocument">Срок действия документа удостоверяющего личность</label>
+                    <input type="text" class="form-control" asp-for="ValidityPeriodDocument">
+                </div>
+            </div>
+            <h5 class="my-2">Представитель</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="Representative">Тип</label>
+                    <select class="select2-nosearch" asp-for="Representative">
+                        <option value="">Не выбрано</option>
+                        <option value="законный представитель несовершеннолетнего или недееспособного лица">законный представитель несовершеннолетнего или недееспособного лица</option>
+                        <option value="организация, на которую возложено исполнение обязанностей опекуна или попечителя">организация, на которую возложено исполнение обязанностей опекуна или попечителя</option>
+                        <option value="доверенное лицо">доверенное лицо</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="GuardianOrganization">наименование организации, на которую возложено исполнение обязанностей опекуна или попечителя</label>
+                    <input type="text" class="form-control" asp-for="GuardianOrganization">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="LocationAddressGuardianOrganization">адрес места нахождения организации</label>
+                    <input type="text" class="form-control" asp-for="LocationAddressGuardianOrganization">
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-12">
+                    <div>Прошу прекратить выплату</div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="TypePayment.TypeOne">
+                        <label class="form-check-label" asp-for="TypePayment.TypeOne">страховой пенсии по старости, фиксированной выплаты к указанной страховой пенсии</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="TypePayment.TypeTwo">
+                        <label class="form-check-label" asp-for="TypePayment.TypeTwo">страховой пенсии по инвалидности, фиксированной выплаты к указанной страховой пенсии</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="TypePayment.TypeThree">
+                        <label class="form-check-label" asp-for="TypePayment.TypeThree">страховой пенсии по случаю потери кормильца, фиксированной выплаты к указанной страховой пенсии</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="TypePayment.TypeFour">
+                        <label class="form-check-label" asp-for="TypePayment.TypeFour">страховой пенсии по старости</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="TypePayment.TypeFive">
+                        <label class="form-check-label" asp-for="TypePayment.TypeFive">доли страховой пенсии по старости</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="TypePayment.TypeSix">
+                        <label class="form-check-label" asp-for="TypePayment.TypeSix">накопительной пенсии</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="TypePayment.TypeSeven">
+                        <label class="form-check-label" asp-for="TypePayment.TypeSeven">пенсии за выслугу лет по государственному пенсионному обеспечению</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="TypePayment.TypeEight">
+                        <label class="form-check-label" asp-for="TypePayment.TypeEight">пенсии по старости по государственному пенсионному обеспечению</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="TypePayment.TypeNine">
+                        <label class="form-check-label" asp-for="TypePayment.TypeNine">пенсии по инвалидности по государственному пенсионному обеспечению</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="TypePayment.TypeTen">
+                        <label class="form-check-label" asp-for="TypePayment.TypeTen">пенсии по случаю потери кормильца по государственному пенсионному обеспечению</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="TypePayment.TypeEvelen">
+                        <label class="form-check-label" asp-for="TypePayment.TypeEvelen">социальной пенсии по старости</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="TypePayment.TypeTwelve">
+                        <label class="form-check-label" asp-for="TypePayment.TypeTwelve">социальной пенсии по инвалидности</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="TypePayment.TypeThirteen">
+                        <label class="form-check-label" asp-for="TypePayment.TypeThirteen">социальной пенсии по случаю потери кормильца</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="TypePayment.TypeFourteen">
+                        <label class="form-check-label" asp-for="TypePayment.TypeFourteen">пенсии, предусмотренной Законом Российской Федерации от 19 апреля 1991 г. N 1032-1 "О занятости населения в Российской Федерации"</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="TypePayment.TypeFifteen">
+                        <label class="form-check-label" asp-for="TypePayment.TypeFifteen">пенсии по старости, предусмотренной Законом Российской Федерации от 15 мая 1991 г. N 1244-1 "О социальной защите граждан, подвергшихся воздействию радиации вследствие катастрофы на Чернобыльской АЭС"</label>
+                    </div>
+                    <div class="" checkBlock>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" asp-for="TypePayment.TypeSixteen">
+                            <label class="form-check-label" asp-for="TypePayment.TypeSixteen">Иное</label>
+                        </div>
+                        <div class="ms-3 ps-4" checkBlockBody>
+                            <label class="form-label" asp-for="PleaseStopBARELY">дополнительный выбор</label>
+                            <input type="text" class="form-control" asp-for="PleaseStopBARELY">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h6 class="my-2">при наличии такого выбора гражданина</h6>
+            <div class="row mb-2" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="TypeNotification.NotificationTypeOne" class="form-check-input" type="checkbox" />
+                        <label asp-for="TypeNotification.NotificationTypeOne" class="form-check-label">
+                            направить уведомление, подтверждающее факт и дату приема территориальным органом Пенсионного фонда Российской Федерации настоящего заявления и
+                            представленных мною документов, на адрес электронной почты
+                        </label>
+                    </div>
+                </div>
+                <div class="row mb-3 justify-content-end" checkBlockBody>
+                    <div class="col-11 mb-2">
+                        <label class="form-label" asp-for="TypeNotification.EmailOne">адрес электронной почты гражданина</label>
+                        <input type="text" class="form-control" asp-for="TypeNotification.EmailOne">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2" checkBlock>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="TypeNotification.NotificationTypeTwo" class="form-check-input" type="checkbox" />
+                        <label asp-for="TypeNotification.NotificationTypeTwo" class="form-check-label">осуществлять информирование о ходе предоставления государственной услуги путем передачи текстовых сообщений</label>
+                    </div>
+                    <div class="row mb-3 justify-content-end" checkBlockBody>
+                        <div class="row mb-2 justify-content-end" checkBlock>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input asp-for="TypeNotification.NotificationTransmitionMethod" id="NotificationTransmitionMethod1" class="form-check-input" type="radio" value="1">
+                                    <label for="NotificationTransmitionMethod1" class="form-check-label">на адрес электронной почты</label>
+                                </div>
+                            </div>
+                            <div class="row mb-3 justify-content-end" checkBlockBody>
+                                <div class="col-11 mb-2">
+                                    <label class="form-label" asp-for="TypeNotification.EmailTwo">адрес электронной почты гражданина</label>
+                                    <input type="text" class="form-control" asp-for="TypeNotification.EmailTwo">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2 justify-content-end" checkBlock>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input asp-for="TypeNotification.NotificationTransmitionMethod" id="NotificationTransmitionMethod2" class="form-check-input" type="radio" value="2">
+                                    <label for="NotificationTransmitionMethod2" class="form-check-label">на абонентский номер устройства подвижной радиотелефонной связи</label>
+                                </div>
+                            </div>
+                            <div class="row mb-3 justify-content-end" checkBlockBody>
+                                <div class="col-11 mb-2">
+                                    <label class="form-label" asp-for="TypeNotification.SubscriberNumber">абонентский номер гражданина</label>
+                                    <input type="text" class="form-control" asp-for="TypeNotification.SubscriberNumber">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () {
+
+        additionalForm.find("select.select2-search").each(function () {
+            $(this).select2({
+                //dropdownParent: $("#mainModal"),
+            });
+        });
+
+        additionalForm.find('select.select2-nosearch').each(function () {
+            $(this).select2({
+                minimumResultsForSearch: Infinity,
+            })
+        });
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        togleFields()
+    });
+
+    additionalForm.find('[type="radio"], input[type="checkbox"]').on('click', function () {
+        togleFields();
+    });
+
+
+    additionalForm.find("#TypePayment_TypeSixteen").on('click', function () {
+        togleFields();
+    });
+
+    function togleFields() {
+        additionalForm.find('[checkBlock] input[type="radio"], [checkBlock] input[type="checkbox"]').each(function () {
+            let $block = $(this).closest('[checkBlock]');
+
+            if ($(this).is(':checked')) {
+                visibilityBlock($block.find('[checkBlockBody]'), false, false);
+            } else {
+                visibilityBlock($block.find('[checkBlockBody]'), true, true);
+            }
+        })
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+</script>

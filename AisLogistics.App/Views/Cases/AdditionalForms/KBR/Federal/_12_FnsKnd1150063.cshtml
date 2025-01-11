@@ -1,0 +1,1004 @@
+﻿@model _12_FnsKnd1150063Model
+@{
+    IEnumerable<SelectListItem> urgency = new List<SelectListItem> {
+        new ("бессрочно", "1"),
+        new ("срок ограничен", "2")
+    };
+
+    IEnumerable<SelectListItem> TransportTaxTypeList = new List<SelectListItem> {
+        new ("не выбрано", ""),
+        new ("автомобиль легковой", "01"),
+        new ("автомобиль грузовой", "02"),
+        new ("автобус", "03"),
+        new ("мотоцикл", "04"),
+        new ("мотороллер", "05"),
+        new ("снегоход", "06"),
+        new ("трактор", "07"),
+        new ("мотосани", "08"),
+        new ("вертолет", "09"),
+        new ("самолет", "10"),
+        new ("теплоход", "11"),
+        new ("яхта", "12"),
+        new ("катер", "13"),
+        new ("гидроцикл", "14"),
+        new ("моторная лодка", "15"),
+        new ("иное", "16"),
+    };
+
+    IEnumerable<SelectListItem> realEstateType = new List<SelectListItem> {
+        new ("жилой дом", "1"),
+        new ("квартира", "2"),
+        new ("комната", "3"),
+        new ("гараж", "4"),
+        new ("хозяйственное строение или сооружение", "5"),
+        new ("жилое строение", "6"),
+        new ("садовый дом", "7"),
+        new ("иной объект", "8"),
+    };
+
+    IEnumerable<SelectListItem> numberType = new List<SelectListItem> {
+        new ("кадастровый номер", "1"),
+        new ("условный номер", "2"),
+        new ("инвентарный номер", "3"),
+    };
+
+    IEnumerable<SelectListItem> methodInforming = new List<SelectListItem>
+    {
+        new ("лично в налоговом органе , через который подано настоящее заявление", "1"),
+        new ("по почте по имеющемуся у налогового органа адресу налогоплательщика", "2"),
+        new ("по телекоммуникационным каналам связи через оператора электронного документооборота", "3"),
+        new ("в многофункциональном центре предоставления государственных и муниципальных услуг (далее — МФЦ), через который подано настоящее заявление, для чего выражаю согласие на передачу мне документов, составляющих налоговую тайну, на бумажном носителе через МФЦ", "4"),
+    };
+}
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="CodeFNS">Налоговый орган</label>
+                    <select class="form-select select2-search required" asp-for="CodeFNS"
+                            data-fns-dictionary='{"dictionary":"null", "default_value":"@(Model.CodeFNS  == null || string.IsNullOrEmpty(Model.CodeFNS) ?  "" : Model.CodeFNS)"}'>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <label class="form-label" asp-for="MethodInforming">Способ информирования</label>
+                    <select class="select2-nosearch" asp-items="@methodInforming" asp-for="MethodInforming"></select>
+                </div>
+            </div>
+            <h5 class="my-2">Предоставить налоговую льготу по транспортному налогу:</h5>
+            <div id="TransportTaxList" data-clone-list>
+                @for (var i = 0; i < Model.TransportTaxList?.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Транспортное средство @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-1">
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="TransportTaxList[i].Type">Вид транспортного средства</label>
+                                        <select class="select2-nosearch" asp-items="@TransportTaxTypeList" asp-for="TransportTaxList[i].Type"></select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="TransportTaxList[i].Model">Марка (модель)</label>
+                                        <input type="text" class="form-control" placeholder="Марка (модель)" asp-for="TransportTaxList[i].Model">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label" asp-for="TransportTaxList[i].RegSign">Государственный регистрационный знак (номер)</label>
+                                        <input type="text" class="form-control" placeholder="Государственный регистрационный знак (номер)" asp-for="TransportTaxList[i].RegSign">
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="TransportTaxList[i]!.BenefitPeriodUrgency">Срок предоставления налоговой льготы</label>
+                                        <select asp-items="@urgency" class="form-select select2-nosearch" asp-for="TransportTaxList[i]!.BenefitPeriodUrgency"></select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="TransportTaxList[i]!.BenefitPeriodBeginDate">С</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="TransportTaxList[i]!.BenefitPeriodBeginDate" type="text"
+                                                   class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="TransportTaxList[i]!.BenefitPeriodEndDate">По</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="TransportTaxList[i]!.BenefitPeriodEndDate" type="text"
+                                                   class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                </div>
+                                <h6 class="my-2">Право на налоговую льготу подтверждается следующим документом</h6>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="TransportTaxList[i]!.DocumentName">Полное наименование документа</label>
+                                        <input type="text" class="form-control" asp-for="TransportTaxList[i]!.DocumentName">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-8">
+                                        <label class="form-label" asp-for="TransportTaxList[i]!.DocumentIssuer">Полное наименование органа (организации), выдавшего документ</label>
+                                        <input type="text" class="form-control" asp-for="TransportTaxList[i]!.DocumentIssuer">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="TransportTaxList[i]!.DocumentIssuerDate">Дата составления документа</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="TransportTaxList[i]!.DocumentIssuerDate" type="text" class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="TransportTaxList[i]!.DocumentPeriodUrgency">Период действия документа</label>
+                                        <select asp-items="@urgency" class="form-select select2-nosearch" asp-for="TransportTaxList[i]!.DocumentPeriodUrgency"></select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="TransportTaxList[i]!.DocumentPeriodBeginDate">С</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="TransportTaxList[i]!.DocumentPeriodBeginDate" type="text"
+                                                   class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="TransportTaxList[i]!.DocumentPeriodEndDate">По</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="TransportTaxList[i]!.DocumentPeriodEndDate" type="text"
+                                                   class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="TransportTaxList[i]!.DocumentSeriesNumber">
+                                            Серия и номер документа
+                                        </label>
+                                        <input type="text" class="form-control" asp-for="TransportTaxList[i]!.DocumentSeriesNumber">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash bx-md"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addTransportTax"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">Предоставить налоговую льготу по земельному налогу:</h5>
+            <div id="LandTaxList" data-clone-list>
+                @for (var i = 0; i < Model.LandTaxList?.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Земельный участок @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="LandTaxList[i].CadastralNumber">Кадастровый номер земельного участка</label>
+                                        <input type="text" class="form-control" asp-for="LandTaxList[i].CadastralNumber">
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="LandTaxList[i]!.BenefitPeriodUrgency">Срок предоставления налоговой льготы</label>
+                                        <select asp-items="@urgency" class="form-select select2-nosearch" asp-for="LandTaxList[i]!.BenefitPeriodUrgency"></select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="LandTaxList[i]!.BenefitPeriodBeginDate">С</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="LandTaxList[i]!.BenefitPeriodBeginDate" type="text"
+                                                   class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="LandTaxList[i]!.BenefitPeriodEndDate">По</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="LandTaxList[i]!.BenefitPeriodEndDate" type="text"
+                                                   class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                </div>
+                                <h6 class="my-2">Право на налоговую льготу подтверждается следующим документом</h6>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="LandTaxList[i]!.DocumentName">Полное наименование документа</label>
+                                        <input type="text" class="form-control" asp-for="LandTaxList[i]!.DocumentName">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-8">
+                                        <label class="form-label" asp-for="LandTaxList[i]!.DocumentIssuer">Полное наименование органа (организации), выдавшего документ</label>
+                                        <input type="text" class="form-control" asp-for="LandTaxList[i]!.DocumentIssuer">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="LandTaxList[i]!.DocumentIssuerDate">Дата составления документа</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="LandTaxList[i]!.DocumentIssuerDate" type="text" class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="LandTaxList[i]!.DocumentPeriodUrgency">Период действия документа</label>
+                                        <select asp-items="@urgency" class="form-select select2-nosearch" asp-for="LandTaxList[i]!.DocumentPeriodUrgency"></select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="LandTaxList[i]!.DocumentPeriodBeginDate">С</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="LandTaxList[i]!.DocumentPeriodBeginDate" type="text"
+                                                   class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="LandTaxList[i]!.DocumentPeriodEndDate">По</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="LandTaxList[i]!.DocumentPeriodEndDate" type="text"
+                                                   class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="LandTaxList[i]!.DocumentSeriesNumber">
+                                            Серия и номер документа
+                                        </label>
+                                        <input type="text" class="form-control" asp-for="LandTaxList[i]!.DocumentSeriesNumber">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash bx-md"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addLandTax"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+            <hr />
+            <h5 class="my-2">Предоставить налоговую льготу по налогу на имущество физических лиц:</h5>
+            <div id="RealEstateTaxList" data-clone-list>
+                @for (var i = 0; i < Model.RealEstateTaxList?.Length; i++)
+                {
+                    <div class="g-3" id="clone@(i)" data-id="@i" data-clone>
+                        <hr />
+                        <h6 class="my-2 title">Объект недвижимости @(i + 1)</h6>
+                        <div class="row mb-1 align-items-center">
+                            <div class="col-11">
+                                <div class="row mb-1">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="RealEstateTaxList[i].Type">Вид объекта недвижимого имущества</label>
+                                        <select class="select2-nosearch" asp-items="@realEstateType" asp-for="RealEstateTaxList[i].Type"></select>
+                                    </div>
+                                </div>
+                                <div class="row mb-1">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="RealEstateTaxList[i].NumberType">Номер объекта недвижимого имущества</label>
+                                        <select class="select2-nosearch" asp-items="@numberType" asp-for="RealEstateTaxList[i].NumberType"></select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="RealEstateTaxList[i]!.Number">Номер</label>
+                                        <input type="text" class="form-control" asp-for="RealEstateTaxList[i]!.Number">
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="RealEstateTaxList[i]!.BenefitPeriodUrgency">Срок предоставления налоговой льготы</label>
+                                        <select asp-items="@urgency" class="form-select select2-nosearch" asp-for="RealEstateTaxList[i]!.BenefitPeriodUrgency"></select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="RealEstateTaxList[i]!.BenefitPeriodBeginDate">С</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="RealEstateTaxList[i]!.BenefitPeriodBeginDate" type="text"
+                                                   class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="RealEstateTaxList[i]!.BenefitPeriodEndDate">По</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="RealEstateTaxList[i]!.BenefitPeriodEndDate" type="text"
+                                                   class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                </div>
+                                <h6 class="my-2">Право на налоговую льготу подтверждается следующим документом</h6>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="RealEstateTaxList[i]!.DocumentName">Полное наименование документа</label>
+                                        <input type="text" class="form-control" asp-for="RealEstateTaxList[i]!.DocumentName">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-8">
+                                        <label class="form-label" asp-for="RealEstateTaxList[i]!.DocumentIssuer">Полное наименование органа (организации), выдавшего документ</label>
+                                        <input type="text" class="form-control" asp-for="RealEstateTaxList[i]!.DocumentIssuer">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" asp-for="RealEstateTaxList[i]!.DocumentIssuerDate">Дата составления документа</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="RealEstateTaxList[i]!.DocumentIssuerDate" type="text" class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="RealEstateTaxList[i]!.DocumentPeriodUrgency">Период действия документа</label>
+                                        <select asp-items="@urgency" class="form-select select2-nosearch" asp-for="RealEstateTaxList[i]!.DocumentPeriodUrgency"></select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="RealEstateTaxList[i]!.DocumentPeriodBeginDate">С</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="RealEstateTaxList[i]!.DocumentPeriodBeginDate" type="text"
+                                                   class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="form-label" asp-for="RealEstateTaxList[i]!.DocumentPeriodEndDate">По</label>
+                                        <div class="input-group input-group-merge">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar3"></i>
+                                            </span>
+                                            <input asp-for="RealEstateTaxList[i]!.DocumentPeriodEndDate" type="text"
+                                                   class="form-control pickdate">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label" asp-for="RealEstateTaxList[i]!.DocumentSeriesNumber">
+                                            Серия и номер документа
+                                        </label>
+                                        <input type="text" class="form-control" asp-for="RealEstateTaxList[i]!.DocumentSeriesNumber">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash bx-md"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary" id="addRealEstateTax"><i class="bi bi-plus"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="originalBlock">
+    <div class="g-3" id="TransportTax" data-original>
+        <hr />
+        <h6 class="my-2 title">Транспортное средство 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-11">
+                <div class="row mb-1">
+                    <div class="col-6">
+                        <label class="form-label" asp-for="TransportTaxList[0]!.Type">Вид транспортного средства</label>
+                        <select class="select2-nosearch" asp-items="@TransportTaxTypeList" asp-for="TransportTaxList[0]!.Type"></select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label" asp-for="TransportTaxList[0]!.Model">Марка (модель)</label>
+                        <input type="text" class="form-control" placeholder="Марка (модель)" asp-for="TransportTaxList[0]!.Model">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" asp-for="TransportTaxList[0]!.RegSign">Государственный регистрационный знак (номер)</label>
+                        <input type="text" class="form-control" placeholder="Государственный регистрационный знак (номер)" asp-for="TransportTaxList[0]!.RegSign">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="TransportTaxList[0]!.BenefitPeriodUrgency">Срок предоставления налоговой льготы</label>
+                        <select asp-items="@urgency" class="form-select select2-nosearch" asp-for="TransportTaxList[0]!.BenefitPeriodUrgency"></select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="TransportTaxList[0]!.BenefitPeriodBeginDate">С</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="TransportTaxList[0]!.BenefitPeriodBeginDate" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="TransportTaxList[0]!.BenefitPeriodEndDate">По</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="TransportTaxList[0]!.BenefitPeriodEndDate" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                </div>
+                <h6 class="my-2">Право на налоговую льготу подтверждается следующим документом</h6>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="TransportTaxList[0]!.DocumentName">Полное наименование документа</label>
+                        <input type="text" class="form-control" asp-for="TransportTaxList[0]!.DocumentName">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-8">
+                        <label class="form-label" asp-for="TransportTaxList[0]!.DocumentIssuer">Полное наименование органа (организации), выдавшего документ</label>
+                        <input type="text" class="form-control" asp-for="TransportTaxList[0]!.DocumentIssuer">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="TransportTaxList[0]!.DocumentIssuerDate">Дата составления документа</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="TransportTaxList[0]!.DocumentIssuerDate" type="text" class="form-control pickdate">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="TransportTaxList[0]!.DocumentPeriodUrgency">Период действия документа</label>
+                        <select asp-items="@urgency" class="form-select select2-nosearch" asp-for="TransportTaxList[0]!.DocumentPeriodUrgency"></select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="TransportTaxList[0]!.DocumentPeriodBeginDate">С</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="TransportTaxList[0]!.DocumentPeriodBeginDate" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="TransportTaxList[0]!.DocumentPeriodEndDate">По</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="TransportTaxList[0]!.DocumentPeriodEndDate" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="TransportTaxList[0]!.DocumentSeriesNumber">
+                            Серия и номер документа
+                        </label>
+                        <input type="text" class="form-control" asp-for="TransportTaxList[0]!.DocumentSeriesNumber">
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash bx-md"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="g-3" id="LandTax" data-original>
+        <hr />
+        <h6 class="my-2 title">Земельный участок 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-11">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="LandTaxList[0]!.CadastralNumber">Кадастровый номер земельного участка</label>
+                        <input type="text" class="form-control" asp-for="LandTaxList[0]!.CadastralNumber">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="LandTaxList[0]!.BenefitPeriodUrgency">Срок предоставления налоговой льготы</label>
+                        <select asp-items="@urgency" class="form-select select2-nosearch" asp-for="LandTaxList[0]!.BenefitPeriodUrgency"></select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="LandTaxList[0]!.BenefitPeriodBeginDate">С</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="LandTaxList[0]!.BenefitPeriodBeginDate" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="LandTaxList[0]!.BenefitPeriodEndDate">По</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="LandTaxList[0]!.BenefitPeriodEndDate" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                </div>
+                <h6 class="my-2">Право на налоговую льготу подтверждается следующим документом</h6>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="LandTaxList[0]!.DocumentName">Полное наименование документа</label>
+                        <input type="text" class="form-control" asp-for="LandTaxList[0]!.DocumentName">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-8">
+                        <label class="form-label" asp-for="LandTaxList[0]!.DocumentIssuer">Полное наименование органа (организации), выдавшего документ</label>
+                        <input type="text" class="form-control" asp-for="LandTaxList[0]!.DocumentIssuer">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="LandTaxList[0]!.DocumentIssuerDate">Дата составления документа</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="LandTaxList[0]!.DocumentIssuerDate" type="text" class="form-control pickdate">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="LandTaxList[0]!.DocumentPeriodUrgency">Период действия документа</label>
+                        <select asp-items="@urgency" class="form-select select2-nosearch" asp-for="LandTaxList[0]!.DocumentPeriodUrgency"></select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="LandTaxList[0]!.DocumentPeriodBeginDate">С</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="LandTaxList[0]!.DocumentPeriodBeginDate" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="LandTaxList[0]!.DocumentPeriodEndDate">По</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="LandTaxList[0]!.DocumentPeriodEndDate" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="LandTaxList[0]!.DocumentSeriesNumber">
+                            Серия и номер документа
+                        </label>
+                        <input type="text" class="form-control" asp-for="LandTaxList[0]!.DocumentSeriesNumber">
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash bx-md"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="g-3" id="RealEstateTax" data-original>
+        <hr />
+        <h6 class="my-2 title">Объект недвижимости 0</h6>
+        <div class="row mb-1 align-items-center">
+            <div class="col-11">
+                <div class="row mb-1">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="RealEstateTaxList[0].Type">Вид объекта недвижимого имущества</label>
+                        <select class="select2-nosearch" asp-items="@realEstateType" asp-for="RealEstateTaxList[0].Type"></select>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="RealEstateTaxList[0].NumberType">Номер объекта недвижимого имущества</label>
+                        <select class="select2-nosearch" asp-items="@numberType" asp-for="RealEstateTaxList[0].NumberType"></select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="RealEstateTaxList[0]!.Number">Номер</label>
+                        <input type="text" class="form-control" asp-for="RealEstateTaxList[0]!.Number">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="RealEstateTaxList[0]!.BenefitPeriodUrgency">Срок предоставления налоговой льготы</label>
+                        <select asp-items="@urgency" class="form-select select2-nosearch" asp-for="RealEstateTaxList[0]!.BenefitPeriodUrgency"></select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="RealEstateTaxList[0]!.BenefitPeriodBeginDate">С</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="RealEstateTaxList[0]!.BenefitPeriodBeginDate" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="RealEstateTaxList[0]!.BenefitPeriodEndDate">По</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="RealEstateTaxList[0]!.BenefitPeriodEndDate" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                </div>
+                <h6 class="my-2">Право на налоговую льготу подтверждается следующим документом</h6>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="RealEstateTaxList[0]!.DocumentName">Полное наименование документа</label>
+                        <input type="text" class="form-control" asp-for="RealEstateTaxList[0]!.DocumentName">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-8">
+                        <label class="form-label" asp-for="RealEstateTaxList[0]!.DocumentIssuer">Полное наименование органа (организации), выдавшего документ</label>
+                        <input type="text" class="form-control" asp-for="RealEstateTaxList[0]!.DocumentIssuer">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" asp-for="RealEstateTaxList[0]!.DocumentIssuerDate">Дата составления документа</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="RealEstateTaxList[0]!.DocumentIssuerDate" type="text" class="form-control pickdate">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="RealEstateTaxList[0]!.DocumentPeriodUrgency">Период действия документа</label>
+                        <select asp-items="@urgency" class="form-select select2-nosearch" asp-for="RealEstateTaxList[0]!.DocumentPeriodUrgency"></select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="RealEstateTaxList[0]!.DocumentPeriodBeginDate">С</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="RealEstateTaxList[0]!.DocumentPeriodBeginDate" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label" asp-for="RealEstateTaxList[0]!.DocumentPeriodEndDate">По</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text">
+                                <i class="bi bi-calendar3"></i>
+                            </span>
+                            <input asp-for="RealEstateTaxList[0]!.DocumentPeriodEndDate" type="text"
+                                   class="form-control pickdate">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <label class="form-label" asp-for="RealEstateTaxList[0]!.DocumentSeriesNumber">
+                            Серия и номер документа
+                        </label>
+                        <input type="text" class="form-control" asp-for="RealEstateTaxList[0]!.DocumentSeriesNumber">
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-danger" onclick="blockRemove(this)"><i class="bi bi-trash bx-md"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+    var originalBlock = $('#originalBlock'); 
+    var regionCode = @Json.Serialize(Options.Value.Region);
+
+    $(function () {
+        originalBlock.find('[data-original]').each(function (_, item) {
+            renameBlock($(item), 100, true);
+            visibilityBlock($(item), true, true);
+        });
+
+        additionalForm.find('#addTransportTax').on('click', () => addForm('TransportTaxList', 'TransportTax'));
+        additionalForm.find('#addLandTax').on('click', () => addForm('LandTaxList', 'LandTax'));
+        additionalForm.find('#addRealEstateTax').on('click', () => addForm('RealEstateTaxList', 'RealEstateTax'));
+
+        additionalForm.find('[data-disabled]').each(function () {
+            visibilityBlock($(this), true, true);
+        });
+
+        select2Init(additionalForm);
+         
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+
+
+        (function getDictionaries() {
+            let dicts = new Set();
+            $('[data-dictionary]').each(function () {
+                let $this = $(this);
+                let options = $this.data('dictionary');
+                if (!dicts.has(options.dictionary)) {
+                    dicts.add(options.dictionary);
+                    $.post(`/SmevBase/SmevGetDictionary`,
+                        {
+                            type: options.dictionary
+                        },
+                        function (dictionary) {
+                            if (dictionary.error) return;
+                            fillSelect(options.dictionary, dictionary);
+                        });
+                }
+            });
+        }());
+
+        function fillSelect(dictName, dictionary) {
+            $.each($(`[data-dictionary*='"${dictName}"']`),
+                function () {
+                    let $this = $(this);
+                    let items = dictionary;
+                    $this.empty();
+                    if (!$this.hasClass('required')) {
+                        $this.append(new Option('Не выбрано', ''));
+                    }
+                    if ($this.is('[data-value-value]')) {
+                        items.dictionary.forEach(function (item) {
+                            $this.append(new Option(item.value, item.value));
+                        });
+                    } else {
+                        items.dictionary.forEach(function (item) {
+                            $this.append(new Option(item.value, item.key));
+                        });
+                    }
+
+                    if ($this.data('dictionary').default_value) {
+                        let defVal = $this.data('dictionary').default_value;
+                        if (defVal) {
+                            $this.val(defVal).trigger('update');
+                            $this.attr('data-def', defVal);
+                        }
+                    } else {
+                        $this.val('').trigger('update');
+                    }
+                });
+        }
+
+        function addForm(cloneListId, originalId) { //Динамическое добавление Принимает (Куда Откуда)
+            let $cloneList = additionalForm.find(`#${cloneListId}`);
+            let $original = originalBlock.find(`#${originalId}`);
+            let $cloneBlock = $original.clone(true);
+            let indexId = $cloneList.find('[data-clone]').length;
+            renameBlock($cloneBlock, indexId);
+            blockInit($cloneBlock);
+            $cloneList.find("select").each(function () {
+                $(this).select2('destroy');
+            });
+            $cloneList.append($cloneBlock);
+            select2Init($cloneList);
+        }
+
+        function select2Init($block) {
+            $block.find("select.select2-nosearch").each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: Infinity
+                });
+            });
+
+            $block.find("select.select2-search").each(function () {
+                $(this).select2({
+                });
+            });
+        }
+
+        function blockInit($block) {
+            visibilityBlock($block, false, false);
+
+            $block.find("select").each(function () {
+                $(this).prop("selectedIndex", 0).trigger('change');
+            });
+
+            $block.find("input").each(function () {
+                $(this).val("");
+            });
+            select2Init($block);
+            $block.find(".pickdate").datepicker({
+                language: "ru",
+                autoclose: true
+            }).inputmask("99.99.9999", options);
+        }
+    });
+
+    function renameBlock($cloneBlock, indexId, initOriginal = false) {
+        if (!initOriginal) {
+            $cloneBlock.find('.title').text($cloneBlock.find('.title').text().replace(/\d+/, indexId + 1));
+            $cloneBlock.attr("id", `clone${indexId}`);
+            $cloneBlock.attr('data-id', indexId);
+            $cloneBlock.attr('data-clone', '');
+            $cloneBlock.removeAttr('data-original');
+        }
+
+        $cloneBlock.find('input, select, div').each(function () {
+            $(this).attr('id', $(this).attr('id')?.replace(/\d+/, indexId));
+            if ($(this).is('[name]')) {
+                $(this).attr('name', $(this).attr('name').replace(/\d+/, indexId));
+            }
+        });
+
+        $cloneBlock.find('label').each(function () {
+            $(this).attr('for', $(this).attr('for').replace(/\d+/, indexId));
+        });
+    }
+
+    function blockRemove(el) {
+        let $cloneList = $(el).closest('[data-clone-list]');
+        el.closest('[data-clone]').remove();
+        $cloneList.find('[data-clone]').each(function (index, item) {
+            renameBlock($(item), index);
+        });
+    }
+
+    function rightDocChange(el) {
+        let $clone = $(el).closest('[data-clone]');
+        let $rightDocOther = $clone.find('[id^="rightDocOther"]');
+        switch ($(el).val()) {
+            case '5': visibilityBlock($rightDocOther, false, false);
+                break;
+            default: visibilityBlock($rightDocOther, true, true);
+        }
+    }
+
+    function TransportTaxTypeChange(el) {
+        let $clone = $(el).closest('[data-clone]');
+        let $typeOther = $clone.find('[id^="typeOther"]');
+        switch ($(el).val()) {
+            case '16': visibilityBlock($typeOther, false, false);
+                break;
+            default: visibilityBlock($typeOther, true, true);
+        }
+    }
+
+    function visibilityBlock($block, hide, isDisabled) {
+        switch (hide) {
+            case true:
+                $block.hide();
+                break;
+            case false:
+                $block.show();
+                break;
+        }
+
+        switch (isDisabled) {
+            case true:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', true);
+                });
+                break;
+            case false:
+                $block.find('input, select').each(function () {
+                    $(this).prop('disabled', false);
+                });
+                $block.find('[data-disabled]').each(function () {
+                    visibilityBlock($(this), true, true);
+                });
+                break;
+        }
+    }
+
+    (function getDictionariesfns() {
+        let dicts = new Set();
+        $('[data-fns-dictionary]').each(function () {
+            let $this = $(this);
+            let options = $this.data('fns-dictionary');
+            if (!dicts.has(options.dictionary)) {
+                dicts.add(options.dictionary);
+                $.post('/SmevFns/GetFnsDepartments', null,
+                    function (dictionary) {
+                        if (dictionary.error) return;
+                        dictionary.sort((prev, next) => {
+                            if (next.code.startsWith(`${regionCode}`)) {
+                                return 1;
+                            } else return -1;
+                        });
+
+                        fillSelectFns(options.dictionary, dictionary);
+                    });
+            }
+        });
+    }());
+
+    function fillSelectFns(dictName, dictionary) {
+        $.each($(`[data-fns-dictionary*='"${dictName}"']`),
+            function () {
+                let $this = $(this);
+                let items = dictionary;
+
+                $this.empty();
+                if (!$this.hasClass('required')) {
+                    $this.append(new Option('Не выбрано', ''));
+                }
+                if ($this.is('[data-value-value]')) {
+                    items.forEach(function (item) {
+                        $this.append(new Option(item.name, item.name))
+                    });
+                } else {
+                    items.forEach(function (item) {
+                        $this.append(new Option(item.name, item.code))
+                    });
+                }
+
+                if ($this.data('fns-dictionary').default_value) {
+                    let defVal = $this.data('fns-dictionary').default_value;
+                    if (defVal) {
+                        $this.val(defVal).trigger('update');
+                        $this.attr('data-def', defVal);
+                    }
+                } else {
+                    $this.val('').trigger('update');
+                }
+            });
+    }
+</script>

@@ -1,0 +1,214 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+    var requestModel = Model.Model as AisLogistics.App.ViewModels.ApplicantPersonalAccount.SearchApplicantCasesHistoryRequestData;
+}
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                @if (Model.IsVisibleDescription)
+                {
+                    <div class="b-s-14">@Model.ViewDescription</div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <form id="applicant-cases-search-form">
+                    <input type="hidden" asp-for="@requestModel.Id" />
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive mt-3">
+                    <table id="@Model.TableName" data-action-table="@Model.TableMethodAction" class="directory_names-items table table-striped"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $tableCasesHistory = $('#@(Model.TableName)');
+
+    $(document).ready(function () {
+
+        $tableCasesHistory.DataTable({
+            sDom: "<'row'<'col-sm-12 col-md-6 'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            processing: true,
+            searching: false,
+            serverSide: true,
+            filter: true,
+            searchDelay: 1500,
+            ajax: {
+                url: $tableCasesHistory.data('action-table'),
+                type: "POST",
+                datatype: "json",
+                dataSrc: function (json) {
+                    return json.data;
+                }
+            },
+            columns: [
+                {
+                    data: "id",
+                    targets: 0,
+                    title: '',
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    title: 'Номер и дата',
+                    className: "case-number-column",
+                    name: 'caseId',
+                    orderable: false,
+                    render: function (data, type, row) {
+                        let content = `<div id="caseIdNumber">${row.caseId}</div>`;
+                        content += `<div class="r-l-12">${row.dateAddToString}</div>`;
+                        return content;
+                    }
+                },
+                {
+                    title: `Услуга`,
+                    name: 'servicesId',
+                    orderable: false,
+                    render: function (data, type, row) {
+                        let str = row.procedureName.length > 90 ? row.procedureName.slice(0, 90) + "..." : row.procedureName;
+                        let colorStatus = "";
+                        switch (row.statusId) {
+                            case 0:
+                                colorStatus = "warning";
+                                break;
+                            case 1:
+                                colorStatus = "success";
+                                break;
+                            case 2:
+                                colorStatus = "secondary";
+                                break;
+                            case 4:
+                                colorStatus = "secondary";
+                                break;
+                            case 5:
+                                colorStatus = "danger";
+                                break;
+                            case 6:
+                                colorStatus = "warning";
+                                break;
+                        };
+
+                        return `<div class="${colorStatus} m-auto d-inline">${row.statusName}</div>` +
+                            `<div class="mt-1" title="${row.procedureName}">${str}</div>` +
+                            `<div class="b-s-14">${row.providerName}</div>`;
+                    }
+                },
+                {
+                    title: `Исполнитель`,
+                    name: 'currentEmployee',
+                    orderable: false,
+                    render: function (data, type, row) {
+                        let content = '<div>';
+                        if (row.currentEmployeeName != null) {
+                            content += `<div class="b-s-14">${row.currentEmployeeName}</div>`;
+                        }
+                        if (row.currentJobName != null) {
+                            content += `<div class="r-l-12">${row.currentJobName}</div>`;
+                        }
+                        if (row.currentOfficeName != null) {
+                            content += `<div class="r-l-12">${row.currentOfficeName}</div>`;
+                        }
+                        content += '</div>';
+                        return content;
+                    }
+                },
+                {
+                    title: `Этап`,
+                    name: 'stageId',
+                    orderable: false,
+                    render: function (data, type, row) {
+                        let colorDay = row.days < 0 ? "danger" : row.days <= 3 ? "warning" : "success";
+                        let colorStage = "";
+                        switch (row.stageName) {
+                            case 'Принято':
+                                colorStage = "warning";
+                                break;
+                            case 'Обработка':
+                                colorStage = "success";
+                                break;
+                            case 'Курьер':
+                                colorStage = "warning";
+                                break;
+                            case 'Передано в ОИВ':
+                                colorStage = "success";
+                                break;
+                            case 'На выдачу':
+                                colorStage = "warning";
+                                break;
+                            case 'Выдано':
+                                colorStage = "success";
+                                break;
+                            case 'Ошибка':
+                                colorStage = "danger";
+                                break;
+                            case 'Прекращено заявителем':
+                                colorStage = "success";
+                                break;
+                            case 'Архив':
+                                colorStage = "warning";
+                                break;
+                            case 'Исполнено':
+                                colorStage = "success";
+                                break;
+                            case 'Приостановка':
+                                colorStage = "warning";
+                                break;
+                            case 'Ожидание':
+                                colorStage = "success";
+                                break;
+                            case 'Отказ ОИВ':
+                                colorStage = "warning";
+                                break;
+                            case 'Оператор':
+                                colorStage = "success";
+                                break;
+                            case 'Возврат ОИВ':
+                                colorStage = "warning";
+                                break;
+                            case 'Невостребованный':
+                                colorStage = "success";
+                                break;
+                            case 'Выдано в ОИВ':
+                                colorStage = "success";
+                                break;
+                            case 'Консультация':
+                                colorStage = "success";
+                                break;
+                        };
+                        return `<div class="d-flex">
+                                    ${row.days === null ? '' : `<div class= "${colorDay} m-1 col-auto">${row.days}</div>`}
+                                    <div class="${colorStage} m-1 col-auto">${row.stageName}</div>
+                                </div>`;
+                    }
+                }
+            ]
+        })
+
+        $tableCasesHistory.on("reload", () => {
+            $tableCasesHistory.DataTable().ajax.reload(null, false);
+        });
+
+        $tableCasesHistory.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+    });
+</script>
+
+

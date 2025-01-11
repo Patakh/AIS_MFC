@@ -1,0 +1,31 @@
+﻿@model AisLogistics.App.Models.AdditionalForms.KBR.Federal.UnregisterDeadModel
+@{
+}
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="Address" class="form-label">
+                        Прошу Вас снять с регистрационного учета по месту жительства, по адресу
+                    </label>
+                    <input asp-for="Address" class="form-control" type="text">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="RelativeType" class="form-label">Моего</label>
+                    <input asp-for="RelativeType" class="form-control" type="text">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label asp-for="DeadFullName" class="form-label">Ф.И.О. усопшего</label>
+                    <input asp-for="DeadFullName" class="form-control" type="text">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

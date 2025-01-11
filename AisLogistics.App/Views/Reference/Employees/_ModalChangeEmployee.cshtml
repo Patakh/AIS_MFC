@@ -1,0 +1,178 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.EmployeeModelDto
+
+<form asp-controller="Reference" asp-action="EmployeeSave" id="sendingForm" method="post" role="form">
+    <div class="pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.AspNetUserId)
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeePersonalNumber">Табельный номер</label>
+                    <input type="text" asp-for="EmployeePersonalNumber" class="form-control" placeholder="Табельный номер">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="EmployeeName">ФИО</label>
+                    <input type="text" asp-for="EmployeeName" maxlength="70" class="form-control" placeholder="ФИО" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeePhone">Номер телефона</label>
+                    <input type="text" asp-for="EmployeePhone" class="form-control" placeholder="Номер телефона">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeeEmail">Почта</label>
+                    <input type="text" asp-for="EmployeeEmail" class="form-control" placeholder="Почта">
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-12 mb-3 b-s-14">
+                    Документ удостоверяющий личность
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeeDocSerial">Серия</label>
+                    <input type="text" asp-for="EmployeeDocSerial" class="form-control" placeholder="Серия">
+                </div>
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeeDocNumber">Номер</label>
+                    <input type="text" asp-for="EmployeeDocNumber" class="form-control" placeholder="Номер">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-4 mb-3">
+                    <label class="form-label" asp-for="EmployeeDocIssueDate">Дата выдачи</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input type="text" asp-for="EmployeeDocIssueDate" class="form-control datepick" placeholder="ДД.ММ.ГГГГ">
+                    </div>
+                </div>
+                <div class="col-8 mb-3">
+                    <label class="form-label" asp-for="EmployeeDocIssuePlace">Кем выдан</label>
+                    <input type="text" asp-for="EmployeeDocIssuePlace" class="form-control" placeholder="Кем выдан">
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-4 mb-3">
+                    <label class="form-label" asp-for="EmployeeDocBirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input type="text" asp-for="EmployeeDocBirthDate" class="form-control datepick" placeholder="ДД.ММ.ГГГГ">
+                    </div>
+                </div>
+                <div class="col-8 mb-3">
+                    <label class="form-label" asp-for="EmployeeDocBirthPlace">Место рождения</label>
+                    <input type="text" asp-for="EmployeeDocBirthPlace" class="form-control" placeholder="Место рождения">
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeeSnils">СНИЛС</label>
+                    <input type="text" asp-for="EmployeeSnils" class="form-control" placeholder="СНИЛС">
+                </div>
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeeInn">ИНН</label>
+                    <input type="text" asp-for="EmployeeInn" class="form-control" placeholder="ИНН">
+                </div>
+            </div>
+
+               <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label" asp-for="EmployeeCertificateNumber">Номер сертификата</label>
+                    <input type="text" asp-for="EmployeeCertificateNumber" class="form-control" placeholder="Номер сертификата">
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function() {
+        $('#sendingForm select').select2({dropdownParent: $('#mainModal'), minimumResultsForSearch: -1 });
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    EmployeeName: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    EmployeeEmail: {
+                        validators: {
+                            emailAddress: {
+                                message: 'Поле не является email адресом',
+                            },
+                        },
+                    },
+                    EmployeeSnils: {
+                        validators: {
+                            checkSnils: {
+                                message: 'Неверно указан СНИЛС'
+                            }
+                        }
+                    },
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }).on('core.form.valid', function() {
+            var $form = $("#sendingForm");
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                dataType: 'json',
+                beforeSend: () => {
+                    $form.spinnerBtn("start");
+                },
+                complete: () => {
+                    $table.DataTable().ajax.reload(null, false);
+                    $updateInfo();
+                    $form.spinnerBtn("stop");
+                    $("#mainModal").modal('hide');
+                }
+            });
+            return false;
+        });
+
+        var dateinputs = $('#sendingForm .datepick');
+        dateinputs.datepicker({
+            language: "ru",
+            autoclose: true,
+            format: 'dd.mm.yyyy',
+        });
+
+        var defOpts = { clearIncomplete: true, showMaskOnHover: false };
+        $('#EmployeePhone').inputmask("+7 (999) 999-99-99", defOpts);
+        $('#EmployeeEmail').inputmask("email", defOpts);
+        $("#EmployeeDocSerial").inputmask("99 99", defOpts);
+        $("#EmployeeDocNumber").inputmask("999999", defOpts);
+        $("#EmployeeSnils").inputmask("999-999-999 99", defOpts);
+        $('#EmployeeInn').inputmask("9999999999", defOpts);
+        dateinputs.inputmask("datetime", { inputFormat: "dd.mm.yyyy", "clearIncomplete": true, showMaskOnHover: false, insertmode: true });
+    });
+</script>

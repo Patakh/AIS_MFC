@@ -1,0 +1,53 @@
+﻿@model _94_OUModel
+
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-8 mx-auto">
+            <h6 class="my-2">Ребенок</h6> 
+            <div class="row mb-3">
+                <div class="col-sm-8">
+                    <label class="form-label" asp-for="ChildFio">ФИО</label>
+                    <input type="text" asp-for="ChildFio" class="form-control">
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" asp-for="BirthDate">Дата рождения</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar3"></i>
+                        </span>
+                        <input asp-for="BirthDate" type="text" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+            <br /> 
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="TimeStay">желательный срок начала</label>
+                    <input type="text" asp-for="TimeStay" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="OU">группа посещения ОУ</label>
+                    <input type="text" asp-for="OU" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var additionalForm = $('#additional-data-content');
+
+    $(function () {
+
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+
+        additionalForm.find(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true
+        }).inputmask("99.99.9999", options);
+
+    });
+     
+</script>

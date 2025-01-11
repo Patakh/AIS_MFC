@@ -1,0 +1,292 @@
+﻿@model ViewModelBuilder
+@{
+    string Id = ViewData["Id"]?.ToString() ?? string.Empty;
+    (string customersOptions, string proceduresOptions) = (ValueTuple<string, string>)Model.Model;
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                @if (Model.IsVisibleDescription)
+                {
+                    <div class="b-s-14">@Model.ViewDescription</div>
+                }
+            </div>
+
+            <div class="col-6 pull-right">
+                @if (User.HasClaim(AccessKeyNames.ReferenceService, AccessKeyValues.Add))
+                {
+                    <div class="col-auto text-md-end">
+                        <a href="javascript:void(0);" data-btn-params='{"actionType":"@ActionType.Add", "serviceId" : "@Id" }' data-btn-type="add" data-for-table="@Model.TableName" class="r-a-14">
+                            <i class="bi bi-plus"></i> Добавить
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive mt-3">
+                    <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceService" class="directory_names-items table table-striped">
+                        <thead>
+                            <tr>
+                                <th rowspan="2"></th>
+                                <th rowspan="2">Получатель</th>
+                                <th colspan="3" class="text-center">Кол-во дней</th>
+                                <th rowspan="2">Тариф(МФЦ)</th>
+                                <th rowspan="2">Комментарий</th>
+                                <th rowspan="2"></th>
+                                <th rowspan="2"></th>
+                                <th rowspan="2">Действия</th>
+                            </tr>
+                            <tr>
+                                <th>Обработка</th>
+                                <th>Исполнение</th>
+                                <th>Возврат</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $tableTariffs = $('#@(Model.TableName)');
+    $(document).ready(function () {
+        let isCanAddTariffs = $tableTariffs.is('[data-action-add]'),
+            isCanEditTariffs = $tableTariffs.is('[data-action-edit]'),
+            isCanRemoveTariffs = $tableTariffs.is('[data-action-remove]');
+
+        $tableTariffs.DataTable({
+            sDom: "<'row me-5 pe-1'<'col-sm-12 col-md-6 'f>>" +
+                "<'row mb-3'<'col-sm-12 col-md-6'<'#customer'>><'col-sm-12 col-md-6'<'#procedure'>>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            processing: true,
+            serverSide: true,
+            filter: false,
+            language: {
+                "decimal": ","
+            },
+            ajax: {
+                url: $tableTariffs.data('action-table'),
+                type: "POST",
+                datatype: "json",
+                dataSrc: function (json) {
+                    return json.data;
+                }
+            },
+            initComplete: function () {
+                var customerColumn = this.api().column(10);
+                var procedureColumn = this.api().column(11);
+                var $customer = $('#customer');
+                $customer.html('<label class="form-label" for="selectCustomer">Получатель</label>');
+                var $customerSelect = $('<select id="selectCustomer" class="form-select form-select-sm"><option selected value="">ВСЕ</option>@Html.Raw(customersOptions)</select>')
+                    .appendTo($customer)
+                    .select2({ minimumResultsForSearch: Infinity })
+                    .on('change', function () {
+                        customerColumn.search($(this).val()).draw();
+                    });
+
+                var $procedure = $('#procedure');
+                $procedure.html('<label class="form-label" for="selectProcedure">Процедура</label>');
+                var $procedureSelect = $('<select id="selectProcedure" class="form-select form-select-sm"><option selected value="">ВСЕ</option>@Html.Raw(proceduresOptions)</select>')
+                    .appendTo($procedure)
+                    .select2({ minimumResultsForSearch: Infinity })
+                    .on('change', function () {
+                        procedureColumn.search($(this).val()).draw();
+                    });
+
+
+            },
+            columnDefs: [
+                // {
+                //     data: "id",
+                //     targets: 0,
+                //     title: '',
+                //     visible: false,
+                //     orderable: false
+                // },
+                // {
+                //     targets: 1,
+                //     title: 'Получатель',
+                //     orderable: false
+                // },
+                // {
+                //     targets: 2,
+                //     title: 'Тип',
+                //     orderable: false
+                // },
+                // {
+                //     targets: 3,
+                //     title: 'Тип дней',
+                //     orderable: false
+                // },
+                // {
+                //     targets: 4,
+                //     title: 'Кол-во дней на обработку',
+                //     className: 'text-center',
+                //     orderable: false
+                // },
+                // {
+                //     targets: 5,
+                //     title: 'Кол-во дней на исполнение',
+                //     className: 'text-center',
+                //     orderable: false
+                // },
+                // {
+                //     targets: 6,
+                //     title: 'Кол-во дней на возврат',
+                //     className: 'text-center',
+                //     orderable: false
+                // },
+                // {
+                //     targets: 7,
+                //     title: 'Тариф',
+                //     className: 'text-center',
+                //     render: $.fn.dataTable.render.number('', '.', 2, ''),
+                //     orderable: false
+                // },
+                // {
+                //     targets: 8,
+                //     title: 'Тариф МФЦ',
+                //     className: 'text-center',
+                //     render: $.fn.dataTable.render.number('', '.', 2, ''),
+                //     orderable: false
+                // },
+                // {
+                //     targets: 9,
+                //     title: 'Комментарий',
+                //     orderable: false
+                // },
+                // {
+                //     name: "customerType",
+                //     targets: 10,
+                //     title: '',
+                //     visible: false,
+                //     orderable: false
+                // },
+                // {
+                //     name: "sServicesProcedureName",
+                //     targets: 11,
+                //     title: '',
+                //     visible: false,
+                //     orderable: false
+                // },
+                // {
+                //     targets: -1,
+                //     title: 'Действия',
+                //     data: "id",
+                //     width: "80px",
+                //     className: 'text-center editor-edit',
+                //     sorting: false,
+                //     orderable: false
+                // }
+            ],
+            columns: [
+                {
+                    data: "id",
+                    visible: false,
+                    orderable: false
+                },
+                {
+                    orderable: false,
+                    data: "customerTypeName",
+                    render: function (data, type, row) {
+                        return `${data}
+                                ${row.sServicesProcedureName === null ? '' : '<br /><small>' + row.sServicesProcedureName + '</small>'}`;
+                    }
+                },
+                {
+                    orderable: false,
+                    data: "countDayProcessing"
+                },
+                {
+                    orderable: false,
+                    data: "countDayExecution",
+                    render: function (data, type, row) {
+                        let content = "";
+                        content += `<div>${data}</div>`;
+                        content += `<div class="text-muted">${row.weekTypeName}</div>`;
+                        return content;
+                    }
+                },
+                {
+                    orderable: false,
+                    data: "countDayReturn"
+                },
+                {
+                    orderable: false,
+                    data: "tariff",
+                    render: function (data, type, row) {
+                        let content = "";
+                        content += `<div>${data} (${row.tariffMfc})</div>`;
+                        content += `<div class="text-muted">${row.tariffTypeName}</div>`;
+                        return content;
+                    }
+                },
+                {
+                    orderable: false,
+                    data: "commentt"
+                },
+                {
+                    visible: false,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return "";
+                    }
+                },
+                {
+                    visible: false,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return "";
+                    }
+                },
+                {
+                    data: "id",
+                    width: "80px",
+                    className: 'text-center editor-edit',
+                    sorting: false,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        let content = "";
+                        if (isCanEditTariffs === true)
+                            content += EditBtnTariffs({ "id": data, "actionType": 1, "serviceId": "@Id" });
+                        if (isCanRemoveTariffs === true)
+                            content += DeleteBtnTariffs({ "id": data });
+                        return content;
+                    }
+                }
+            ]
+        });
+
+        $tableTariffs.on("reload", () => {
+            $tableTariffs.DataTable().ajax.reload(null, false);
+        });
+
+        $tableTariffs.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        let EditBtnTariffs = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="edit" data-bs-toggle="tooltip" title="Изменить" class="btn btn-sm btn-icon text-body">
+                    <i class="bi bi-pencil-square"></i></a>`;
+        }
+
+        let DeleteBtnTariffs = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-service-remove-btn-type data-bs-toggle="tooltip" title="Удалить" class="btn btn-sm btn-icon text-danger">
+                    <i class="bi bi-trash"></i></a>`;
+        }
+    });
+</script>

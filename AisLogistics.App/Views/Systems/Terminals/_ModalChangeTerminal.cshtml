@@ -1,0 +1,95 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Systems.TerminalModelDto
+<form asp-controller="Systems" asp-action="TermianlSave" id="sendingForm" method="post" role="form">
+    <div class="form-body pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+            <!-- Общие сведения START -->
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="SOfficesId">Офис</label>
+                    <select asp-for="SOfficesId" asp-items="@ViewBag.Offices" class="form-control" placeholder="Офис">
+                        <option selected value="">Не задано</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="AcquiringName">Наименование</label>
+                    <input type="text" asp-for="AcquiringName" maxlength="20" class="form-control" placeholder="Наименование" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label" asp-for="IpAddress">Ip Адрес</label>
+                    <input type="text" asp-for="IpAddress" maxlength="255" class="form-control" placeholder="Ip Адрес" required>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        $('#sendingForm select').select2({
+            dropdownParent: $("#mainModal")
+
+        });
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    SOfficesId: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    AcquiringName: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    },
+                    IpAddress: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            }
+                        }
+                    }, 
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }).on('core.form.valid', function () {
+                var $form = $("#sendingForm");
+                $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $table.DataTable().ajax.reload(null, false);
+                        $form.spinnerBtn("stop");
+                        $("#mainModal").modal('hide');
+                    }
+                });
+                return false;
+            });
+
+        var defOpts = { clearIncomplete: false, showMaskOnHover: false };
+        $('#IpAddress').inputmask({alias: "ip", greedy: false });
+ 
+    });
+</script>

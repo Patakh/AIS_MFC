@@ -1,0 +1,89 @@
+﻿@model _41_2_PfrAppointMonthlyCashPaymentsModel
+@* Подача заявления о возобновлении предоставления набора социальных услуг (социальной услуги) *@
+<div id="additional-data-content">
+    <div class="row g-3">
+        <div class="col-sm-8 mx-auto">
+            <h6 class="my-2">Возобновить услуги</h6>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="Service1" value="true">
+                        <label class="form-check-label" asp-for="Service1">
+                            набор социальных услуг, предусмотренных частью 1 статьи 6.2 Федерального закона
+                            от 17 июля 1999 г. № 178-ФЗ «О государственной социальной помощи» (далее – Федеральный закон от 17 июля 1999 г. № 178-ФЗ) (полного набора социальных услуг)
+                        </label>
+                    </div>
+                </div>
+                <br />
+                <hr />
+                <div class="col-sm-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="Service2" value="true">
+                        <label class="form-check-label" asp-for="Service2">
+                            социальную услугу, предусмотренную пунктом 1 части 1 статьи 6.2 Федерального закона
+                            от 17 июля 1999 г. № 178-ФЗ (по обеспечению в соответствии со стандартами медицинской помощи необходимыми лекарственными препаратами для медицинского применения по рецептам на лекарственные препараты, медицинскими изделиями по рецептам на медицинские изделия, а также специализированными продуктами лечебного питания для детей-инвалидов)
+                        </label>
+                    </div>
+                </div> 
+                <br />
+                <hr />
+                <div class="col-sm-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="Service3" value="true">
+                        <label class="form-check-label" asp-for="Service3">
+                            социальную услугу, предусмотренную пунктом 1.1 части 1 статьи 6.2 Федерального закона
+                            от 17 июля 1999 г. № 178-ФЗ  (по предоставлению при наличии медицинских показаний путевки на санаторно-курортное лечение, осуществляемое в целях профилактики основных заболеваний, в санаторно-курортные организации, определенные в соответствии с законодательством Российской Федерации о контрактной системе в сфере закупок товаров, работ, услуг для обеспечения государственных и муниципальных нужд)
+                        </label>
+                    </div>
+                </div>
+                <br />
+                <hr />
+                <div class="col-sm-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="Service4" value="true">
+                        <label class="form-check-label" asp-for="Service4">
+                            социальную услугу, предусмотренную пунктом 2 части 1 статьи 6.2 Федерального закона
+                            от 17 июля 1999 г. № 178-ФЗ (по бесплатному проезду на пригородном железнодорожном транспорте, а также на междугородном транспорте к месту лечения и обратно)
+                        </label>
+                    </div>
+                </div>
+                <br />
+                <hr />
+                <h6>Оплачивать за счет</h6>
+                <div class="col-sm-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="Cost" id="Cost1" value="1" checked="@(Model.Cost == "1")">
+                        <label class="form-check-label" for="Cost1">
+                            суммы
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="Cost" id="Cost2" value="2" checked="@(Model.Cost == "2")">
+                        <label class="form-check-label" for="Cost2">
+                            части суммы
+                        </label>
+                    </div>
+                </div>
+                <br />
+                <hr />
+                <div class="col-sm-3">
+                    <label class="form-label" asp-for="DateStart">с какой даты</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                        <input type="text" asp-for="DateStart" class="form-control pickdate">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        let options = { clearIncomplete: true, showMaskOnHover: false };
+        $(".pickdate").datepicker({
+            language: "ru",
+            autoclose: true,
+        }).inputmask("99.99.9999", options);
+    })
+</script>

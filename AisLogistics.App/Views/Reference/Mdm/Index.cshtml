@@ -1,0 +1,158 @@
+﻿@model ViewModelBuilder
+@{
+    ViewBag.Title = Model.ViewTitle;
+}
+@section Header
+    {
+    <style>
+        .dz-processing .my-progress {
+            position: absolute;
+            left: 1.25rem;
+            right: 1.25rem;
+            top: 70%;
+            z-index: 30
+        }
+    </style>
+}
+
+<div class="row directory_names" id="content-datatable">
+    <div class="col-12">
+        <div class="row justify-content-between align-items-center">
+            <div class="col">
+                @if (Model.IsVisibleDescription)
+                {
+                    <div class="b-s-14">@Model.ViewDescription</div>
+                }
+            </div>
+        </div>
+
+        <div class="table-responsive mt-3">
+            <table asp-for="Model" asp-access-key-name="@AccessKeyNames.ReferenceService" class="directory_names-items table"></table>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+    {
+    <script>
+        const $table = $('#@(Model.TableName)'),
+            isCanAdd = $table.is('[data-action-add]'),
+            isCanEdit = $table.is('[data-action-edit]'),
+            isCanRemove = $table.is('[data-action-remove]');
+
+        $(document).ready(function () {
+            //$('.dz-progress').hide();
+
+            $table.DataTable({
+                sDom: "<'row align-items-center'<'col-md-6'f><'col-md-auto mt-auto ms-auto'<'#btnCreate'>>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                processing: true,
+                serverSide: true,
+                filter: false,
+                searchDelay: 1500,
+                searching: true,
+                ordering: false,
+                ajax: {
+                    url: $table.data('action-table'),
+                    type: "POST",
+                    datatype: "json",
+                    dataSrc: function (json) {
+                        return json.data;
+                    }
+                },
+                initComplete: function () {
+                    $('[name="mainDataTable_length"]')
+                        .select2({ minimumResultsForSearch: Infinity });
+                },
+                columnDefs: [
+                    {
+                        data: "id",
+                        targets: 0,
+                        title: 'Id',
+                        sorting: false,
+                        orderable: false
+                    },
+                    {
+                        targets: 1,
+                        title: 'Наименование',
+                        orderable: false
+                    },
+                    {
+                        targets: 2,
+                        title: 'Индетификатор Цели ФРГУ',
+                        orderable: false
+                    },
+                    {
+                        targets: 3,
+                        title: 'Отправлять в ИС МДМ',
+                        orderable: false
+                    },
+                    {
+                        targets: -1,
+                        title: 'Действия',
+                        data: "id",
+                        width: "80px",
+                        className: 'text-center editor-edit',
+                        sorting: false,
+                        orderable: false
+                    }
+                ],
+                columns: [
+                    {},
+                    {
+                        render: function (data, type, row) {
+                            let content = `<div>${row.procedureName}</div>`;
+                            content += `<div class="small text-muted">${row.serviceName}</div>`;
+                            return content;
+                        }
+                    },
+                    { data: "frguTargetId" },
+                    {
+                        data: "isMdm",
+                        render: function (data, type, row) {
+                            return `${data === true ? '<i class="bi bi-check-circle text-success"></i>' : '<i class="bi bi-x-circle text-danger"></i>'}`;
+                        }
+                    },
+                    {
+                        render: function (data, type, row) {
+                            let content = "";
+                            if (isCanEdit === true)
+                                content += EditBtn({ "id": data, "actionType": 1 });
+                            if (isCanRemove === true)
+                                content += DeleteBtn({ "id": data });
+                            return content;
+                        }
+                    }
+                ]
+            });
+            $table.on("reload", () => {
+                $table.DataTable().ajax.reload(null, false);
+            });
+        });
+
+        $table.on('draw.dt', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    boundary: document.body
+                });
+            });
+        });
+
+        const EditBtn = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="edit" data-bs-toggle="tooltip" title="Изменить" class="btn btn-sm btn-icon text-body">
+                            <i class="bi bi-pencil-square"></i></a>`;
+        }
+
+        const DeleteBtn = (data) => {
+            const params = JSON.stringify(data);
+            return `<a href="javascript:void(0);" data-btn-params='${params}' data-btn-type="remove" data-bs-toggle="tooltip" title="Удалить" class="btn btn-sm btn-icon text-danger">
+                            <i class="bi bi-trash"></i></a>`;
+        }
+    </script>
+}
+
+
+

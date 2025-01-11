@@ -1,0 +1,123 @@
+﻿@model AisLogistics.DataLayer.Common.Dto.Reference.ServiceDocumentModelDto
+@{
+    var documentsNeedsTypes = Html.GetEnumSelectList<ServiceDocumentNeedsType>();
+    var documentsTypes = Html.GetEnumSelectList<ServiceDocumentType>();
+}
+
+<form asp-controller="Reference" asp-action="ServiceDocumentSave" id="sendingForm" method="post" role="form">
+    <div class="form-body pt-1">
+        <fieldset>
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.SServicesId)
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="SServicesProcedureId">Процедура</label>
+                    <select asp-for="SServicesProcedureId" asp-items="@ViewBag.Procedure" class="form-control">
+                        <option selected value="">Общий</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="SDocumentsId">Документ</label>
+                    <select asp-for="SDocumentsId" asp-items="@ViewBag.Documents" class="form-control">
+                        <option disabled selected value="">Не задано</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="DocumentNeeds">Обязательность</label>
+                    <select asp-for="DocumentNeeds" asp-items="@documentsNeedsTypes" class="form-control no-search">
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="DocumentType">Тип документа</label>
+                    <select asp-for="DocumentType" asp-items="@documentsTypes" class="form-control no-search">
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label" asp-for="DocumentCount">Количество</label>
+                    <input type="number" min="0" asp-for="DocumentCount" class="form-control" placeholder="Количество">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6">
+                    <input type="checkbox" asp-for="IsUploadingSite" class="checkbox">
+                    <label class="form-label" asp-for="IsUploadingSite">Выгрузка для сайта</label>
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+</form>
+
+<script>
+    $(function(){
+        document.querySelectorAll('#sendingForm select').forEach(item => {
+            if (item.classList.contains('no-search')) {
+                $(item).select2({ dropdownParent: $('#mainModal'), minimumResultsForSearch: -1 });
+                return;
+            }
+
+            $(item).select2({ dropdownParent: $('#mainModal') });
+        });
+
+        FormValidation.formValidation(document.getElementById('sendingForm'),
+            {
+                fields: {
+                    SDocumentsId: {
+                        validators: {
+                            notEmpty: {
+                                message: '@MessageDescription.FieldIsRequired'
+                            },
+                        }
+                    },
+                    DocumentCount: {
+                        validators: {
+                            integer: {
+                                message: 'Укажите число',
+                                thousandsSeparator: '',
+                                decimalSeparator: '.',
+                            },
+                        },
+                    },
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }) .on('core.form.valid', function() {
+            var $form = $("#sendingForm");
+            $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: () => {
+                        $form.spinnerBtn("start");
+                    },
+                    complete: () => {
+                        $table.DataTable().ajax.reload(null, false);
+                        $tableDocuments.DataTable().ajax.reload(null, false);
+                        $form.spinnerBtn("stop");
+                        $("#mainModal").modal('hide');
+                    }
+                });
+            return false;
+        });
+    });
+</script>
